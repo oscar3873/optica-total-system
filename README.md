@@ -23,7 +23,7 @@ cd optica-total
 
 cd Scripts
 
-```\.activate```
+```./activate```
 
 
 ### 2. Instalación de dependencias
