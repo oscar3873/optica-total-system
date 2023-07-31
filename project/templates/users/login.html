@@ -1,0 +1,13 @@
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="" class="form-label">Email</label>
+        {{form.email}}
+        <small id="emailHelpId" class="form-text text-muted">Help text</small>  
+    </div>
+    <div class="mb-3">
+        <label for="" class="form-label">Password</label>
+        {{form.password}}
+    </div>
+    <button type="submit" class="btn btn-primary">Iniciar sesion</button>
+</form>
