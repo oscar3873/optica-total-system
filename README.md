@@ -6,7 +6,7 @@ Este es un proyecto base de Django diseñado específicamente para estructurar y
 
 ### 1. Crear un entorno virtual
 
-Utilizamos `venv` para manejar entornos virtuales. Para crear un nuevo entorno virtual llamado `optica-total`, ejecuta:
+Utilizamos `venv` para manejar entornos virtuales. Para crear un nuevo entorno virtual llamado `venv-optica-total`, ejecuta:
 
 python3 -m venv optica-total
 
