@@ -1,5 +1,52 @@
-<form method="post" class="row g-3 needs-validation" novalidate>
+<!-- <form method="post" class="row g-3 needs-validation" novalidate>
     {% csrf_token %}
     {{form.as_p}}
     <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+</form> -->
+
+<main class="main" id="top">
+    <div class="container" data-layout="container">
+      <div class="row flex-center min-vh-100 py-6">
+        <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4" href="../../../index.html"><img class="me-2" src="../../../assets/img/icons/spot-illustrations/falcon.png" alt="" width="58" /><span class="font-sans-serif fw-bolder fs-5 d-inline-block">Optica Total</span></a>
+          <div class="card">
+            <div class="card-body p-4 p-sm-5">
+              <div class="row flex-between-center mb-2">
+                <div class="col-auto">
+                  <h5>Registrar</h5>
+                </div>
+                <div class="col-auto fs--1 text-600"><span class="mb-0 undefined">¿Ya tienes cuenta?</span> <span><a href="../../../pages/authentication/simple/login.html">Ingresar</a></span></div>
+              </div>
+              <form method="post" class="row g-3 needs-validation" novalidate>
+                {% csrf_token %}
+                <div class="mb-3">
+                    {{form.username}}
+                </div>
+                <div class="mb-3">
+                    {{form.email}}
+                </div>
+                <div class="row gx-2">
+                  <div class="mb-3 col-sm-6">
+                    {{form.password1}}
+                  </div>
+                  <div class="mb-3 col-sm-6">
+                    {{form.password2}}
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrarse</button>
+                </div>
+              </form>
+              <div class="position-relative mt-4">
+                <hr class="bg-300" />
+                <div class="divider-content-center">o registrarse con</div>
+              </div>
+              <div class="row g-2 mt-2">
+                <div class="col-sm-6"><a class="btn btn-outline-google-plus btn-sm d-block w-100" href="#"><span class="fab fa-google-plus-g me-2" data-fa-transform="grow-8"></span> google</a></div>
+                <div class="col-sm-6"><a class="btn btn-outline-facebook btn-sm d-block w-100" href="#"><span class="fab fa-facebook-square me-2" data-fa-transform="grow-8"></span> facebook</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
