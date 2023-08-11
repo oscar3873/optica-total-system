@@ -4099,9 +4099,11 @@ var themeControl = function themeControl() {
           {
             document.documentElement.classList[value === 'dark' ? 'add' : 'remove']('dark');
             const logoImage = document.getElementById('logoImage');
+            const logoImageMovil = document.getElementById('logoImageMovil');
             let darkLogo = document.getElementById('darkLogo').src;
             let lightLogo = document.getElementById('lightLogo').src;
             logoImage.src = value === 'dark' ? darkLogo : lightLogo;
+            logoImageMovil.src = value === 'dark' ? darkLogo : lightLogo;
             var clickControl = new CustomEvent('clickControl', {
               detail: {
                 control: control,
