@@ -110,19 +110,26 @@ class UpdatePasswordForm(forms.Form):
             'class' : 'form-control'
             })
     )
-    
+
     password1 = forms.CharField(
         required=True, 
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Contraseña nueva',
-            'class' : 'form-control'
+            'placeholder': 'Nueva contraseña'
             })
     )
     
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repetir contraseña nueva',
-            
+            'placeholder': 'Repita nueva contraseña'
             })
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
+        
+        if password1 and password2 and password1 != password2:
+            self.add_error('password2', 'Las contraseñas no coinciden')
+        return cleaned_data
