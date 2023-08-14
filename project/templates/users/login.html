@@ -1,3 +1,6 @@
+{% extends 'users/base-users.html' %}
+{% block title %}Login{% endblock title %}
+
 <!-- <form method="post">
     {% csrf_token %}
     <div class="mb-3">
@@ -12,14 +15,14 @@
     <button type="submit" class="btn btn-primary">Iniciar sesion</button>
 </form> -->
 
-
-
+{% block content %}
 <main class="main" id="top">
     <div class="container" data-layout="container">
       <div class="row flex-center min-vh-100 py-6">
-        <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4"
-            href="../../../index.html"><img class="me-2" src="../../../assets/img/icons/spot-illustrations/falcon.png"
-              alt="" width="58" /><span class="font-sans-serif fw-bolder fs-5 d-inline-block">Optica Total</span></a>
+        <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+          <a class="d-flex flex-center mb-4"
+            href="../../../index.html"><img class="" src="../../static/core/img/logo_optica_light.png"
+              alt="" width="430" /><span class="font-sans-serif fw-bolder fs-5 d-inline-block"></span></a>
           <div class="card">
             <div class="card-body p-4 p-sm-5">
               <div class="row flex-between-center mb-2">
@@ -51,7 +54,7 @@
                   <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Iniciar Sesión</button>
                 </div>
               </form>
-              <div class="position-relative mt-4">
+              <!-- <div class="position-relative mt-4">
                 <hr class="bg-300" />
                 <div class="divider-content-center">o iniciar con</div>
               </div>
@@ -60,10 +63,12 @@
                       class="fab fa-google-plus-g me-2" data-fa-transform="grow-8"></span> google</a></div>
                 <div class="col-sm-6"><a class="btn btn-outline-facebook btn-sm d-block w-100" href="#"><span
                       class="fab fa-facebook-square me-2" data-fa-transform="grow-8"></span> facebook</a></div>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
       </div>
     </div>
   </main>
+
+  {% endblock content %}
