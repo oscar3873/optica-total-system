@@ -2,9 +2,14 @@ from django.db import models
 #
 from django.contrib.auth.models import AbstractUser
 #
-from .managers import *
+from .managers import UserManager
 
 class User(AbstractUser):
+    USER_ROLE = [
+        ('AD','Administrador'),
+        ('EM','Empleado')
+    ]
+    role = models.CharField(max_length=2, choices=USER_ROLE, default='EM')
     username = models.CharField(max_length=80, unique=True)
     email = models.EmailField(unique=True)
     name = models.CharField(max_length=50, blank=True)
