@@ -46,7 +46,7 @@ class LoginView(FormView):
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return HttpResponseRedirect(reverse('users_app:login'))
+        return render(request, template_name='users/logout.html', context={})
     
 
 class UpdatePasswordView(LoginRequiredMixin, FormView):

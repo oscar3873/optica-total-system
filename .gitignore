@@ -14,6 +14,7 @@ dist/
 env/
 entorno/
 optica-total/
+venv-optica-total/
 
 #Bootstrap codigo fuente
 bootstrap-5.3.1/
