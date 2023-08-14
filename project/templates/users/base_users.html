@@ -4,14 +4,14 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
 
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}User{% endblock %}</title>
 
      <!-- ===============================================-->
     <!--    Stylesheets-->
@@ -30,29 +30,28 @@
 
      <!--Averiguar para que es-->
      <script>
-        var isRTL = JSON.parse(localStorage.getItem('isRTL'));
-        if (isRTL) {
-          var linkDefault = document.getElementById('style-default');
-          var userLinkDefault = document.getElementById('user-style-default');
-          linkDefault.setAttribute('disabled', true);
-          userLinkDefault.setAttribute('disabled', true);
-          document.querySelector('html').setAttribute('dir', 'rtl');
-        } else {
-          var linkRTL = document.getElementById('style-rtl');
-          var userLinkRTL = document.getElementById('user-style-rtl');
-          linkRTL.setAttribute('disabled', true);
-          userLinkRTL.setAttribute('disabled', true);
-        }
-      </script>
+      var isRTL = JSON.parse(localStorage.getItem('isRTL'));
+      if (isRTL) {
+        var linkDefault = document.getElementById('style-default');
+        var userLinkDefault = document.getElementById('user-style-default');
+        linkDefault.setAttribute('disabled', true);
+        userLinkDefault.setAttribute('disabled', true);
+        document.querySelector('html').setAttribute('dir', 'rtl');
+      } else {
+        var linkRTL = document.getElementById('style-rtl');
+        var userLinkRTL = document.getElementById('user-style-rtl');
+        linkRTL.setAttribute('disabled', true);
+        userLinkRTL.setAttribute('disabled', true);
+      }
+    </script>
     <!--Fin-->
 
-    <title>User</title>
+
 </head>
 <body>
     <div>
-        {% block content %}
-        {% endblock content %}
-        
+        {% block main %}
+        {% endblock main %}
     </div>
     <script>
         var darkLogoSrc = "{% static 'core/img/logo_optica_dark.png' %}";
