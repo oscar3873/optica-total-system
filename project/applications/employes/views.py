@@ -14,10 +14,21 @@ class EmployeeCreateView(UserPassesTestMixin, CreateView):
     model = Employee
     template_name = 'employes/employee_create_form.html'
     form_class = EmployeeCreateForm
-    success_url = reverse_lazy('users_app:reset_password')
+    success_url = reverse_lazy('core_app:home')
 
     def test_func(self):
         return self.request.user.is_staff and self.request.user.is_superuser
+
+    def form_valid(self, form):
+        employee = form.save(commit=False)
+        form.cleaned_data.pop('from_branch')
+        person_form = Person.objects.create_person_dict(**form.cleaned_data)
+
+        employee.person = person_form
+        employee.save()
+        
+        return super().form_valid(form)
+
 
 class EmployeeProfileView(LoginRequiredMixin, DetailView):
     model = Employee
