@@ -1,14 +1,17 @@
+from typing import Any
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.contrib.auth import views as auth_views
 from django.views.generic import (CreateView, View)
 from django.views.generic.edit import (FormView,)
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User
+from .services import get_email_provider
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 
 
@@ -68,5 +71,17 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
             usuario.save()
         
         logout(self.request)
+        
+        return super().form_valid(form)
+
+
+class ResetPasswordView(auth_views.PasswordResetView):
+    email_template_name = 'users/email_reset_password.html'
+    template_name = 'users/reset_password.html'
+    success_url = reverse_lazy('users_app:password_reset_done')
+
+    def form_valid(self, form):
+        receiver_email = form.cleaned_data.get('email')
+        to_send = get_email_provider(receiver_email)
         
         return super().form_valid(form)

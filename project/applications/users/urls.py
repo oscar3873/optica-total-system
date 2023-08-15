@@ -31,15 +31,7 @@ urlpatterns = [
     # DJANGO RESET PASSWORD -> PARA CAMBIO DE PASSWORD OLVIDADA
     path(
         'reset_password/', 
-        auth_views.PasswordResetView.as_view(
-            email_template_name = 'users/email_reset_password.html',
-                    # EMAIL PARA CAMBIAR PASSWORD 
-                    #   -> EJEMPLO DJANGO : \venv-optica-total\Lib\site-packages\django\contrib\admin\templates\registration\password_reset_email.html
-            template_name = 'users/reset_password.html', 
-                    # FORMULARIO DE CAMBIO DE PASSWORD 
-                    #   -> EJEMPLO DJANGO : \venv-optica-total\Lib\site-packages\django\contrib\admin\templates\registration\password_change_form.html
-            success_url = reverse_lazy('users_app:password_reset_done'),
-        ), 
+        views.ResetPasswordView.as_view(), 
         name='reset_password'
     ),
     path(
