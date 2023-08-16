@@ -30,8 +30,12 @@ urlpatterns = [
 
     # DJANGO RESET PASSWORD -> PARA CAMBIO DE PASSWORD OLVIDADA
     path(
-        'reset_password/', 
-        views.ResetPasswordView.as_view(), 
+        'reset_password/',
+        auth_views.PasswordResetView.as_view(
+            email_template_name = 'users/email_reset_password.html',
+            template_name = 'users/reset_password.html',
+            success_url = reverse_lazy('users_app:password_reset_done')
+        ),
         name='reset_password'
     ),
     path(
@@ -55,7 +59,7 @@ urlpatterns = [
     path(
         'reset_password_complete/', 
         auth_views.PasswordResetCompleteView.as_view(
-            template_name = 'users/complete_reset_password.html',
+            template_name = 'users/completed_reset_password.html',
                     # AVISO DE CAMBIO EXITOSO (CON BOTON VOLVER A LOGIN) 
         ),
         name='password_reset_complete'
