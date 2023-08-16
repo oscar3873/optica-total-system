@@ -72,13 +72,6 @@ class PersonForm(forms.ModelForm):
         }
     )
 
-    address = forms.CharField(
-        max_length=120,
-        label='Dirección',
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese su dirección'}),
-    )
-
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -111,12 +104,6 @@ class PersonForm(forms.ModelForm):
         if email and len(email) > 100:
             raise forms.ValidationError("El correo electrónico es demasiado largo.")
         return email
-
-    def clean_address(self):
-        address = self.cleaned_data['address']
-        if address and (len(address) < 5):
-            raise forms.ValidationError("Ingrese un Direccion válida.")
-        return address
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
