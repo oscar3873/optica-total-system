@@ -1,3 +1,4 @@
+import copy
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
@@ -17,12 +18,17 @@ class EmployeeCreateView(UserPassesTestMixin, CreateView):
     success_url = reverse_lazy('core_app:home')
 
     def test_func(self):
-        return self.request.user.is_staff and self.request.user.is_superuser
+        """
+        Para la verificacion de Administrador
+        """
+        return self.request.user.is_staff
 
     def form_valid(self, form):
         employee = form.save(commit=False)
-        form.cleaned_data.pop('from_branch')
-        person_form = Person.objects.create_person_dict(**form.cleaned_data)
+        data = copy(form.cleaned_data) # copio los datos de cleaned_data para pasarlos al manager de Person
+        data.pop('from_branch')
+        data.pop('address')
+        person_form = Person.objects.create_person_dict(**data)
 
         employee.person = person_form
         employee.save()

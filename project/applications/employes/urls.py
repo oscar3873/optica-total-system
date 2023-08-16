@@ -10,11 +10,11 @@ urlpatterns = [
     path(
         'new/', 
         views.EmployeeCreateView.as_view(),
-        name='new' # consumir en template con user.pk
+        name='new'
     ),
     path(
         'profile/<pk>/', 
         views.EmployeeProfileView.as_view(),
-        name='profile' # consumir en template con user.pk
+        name='profile'
     ),
 ]

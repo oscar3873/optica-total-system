@@ -16,3 +16,4 @@ class Employee(SoftDeletionModel, TimestampsModel):
     """
     person = models.ForeignKey(Person, on_delete=models.PROTECT)
     from_branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True)
+    address = models.CharField(max_length=120, blank=True, null=True)
