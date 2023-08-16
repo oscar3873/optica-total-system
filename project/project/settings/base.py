@@ -101,3 +101,18 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
+# Email settings for sending emails
+EMAIL_HOST = get_secret('EMAIL_HOST')
+EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+# Login
+LOGIN_URL = 'users_app:login'
+LOGIN_REDIRECT_URL = 'core_app:home'
+LOGOUT_URL = 'users_app:logout'
+LOGOUT_REDIRECT_URL = 'users_app:login'

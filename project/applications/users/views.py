@@ -1,14 +1,19 @@
+from typing import Any
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.contrib.auth import views as auth_views
 from django.views.generic import (CreateView, View)
 from django.views.generic.edit import (FormView,)
 
+from project.settings.base import EMAIL_HOST_USER
+
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User
+from .services import get_email_provider
 
-from django.http import HttpResponseRedirect
+from django.core.mail import get_connection
 from django.urls import reverse_lazy, reverse
 
 
@@ -46,7 +51,7 @@ class LoginView(FormView):
 class LogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return HttpResponseRedirect(reverse('users_app:login'))
+        return render(request, template_name='users/logout.html', context={})
     
 
 class UpdatePasswordView(LoginRequiredMixin, FormView):
@@ -59,7 +64,7 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         usuario = self.request.user
         user = authenticate(
             username=usuario.email,
-            password=form.cleaned_data['password1']
+            password=form.cleaned_data['passwordCurrent']
         )
         
         if user:

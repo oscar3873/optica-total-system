@@ -17,8 +17,11 @@ class UserManager(BaseUserManager, models.Manager):
         user.save(using=self.db)
         return user
 
-    def create_user(self, username, email, password=None, **extra_fields):
+    def create_user(self, username, email, password=None, **extra_fields): # Para Empleados
         return self._create_user(username, email, password, False, False, **extra_fields)
 
-    def create_superuser(self, username, email, password=None, **extra_fields):
+    def create_superuser(self, username, email, password=None, **extra_fields): # Para SuperAdmin (SALTACODE)
         return self._create_user(username, email, password, True, True, **extra_fields)
+    
+    def create_admin(self, username, email, password=None, **extra_fields): # Para Admin (OPTICA-TOTAL)
+        return self._create_user(username, email, password, True, False, **extra_fields)
