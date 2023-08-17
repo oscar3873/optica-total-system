@@ -14,8 +14,10 @@ dist/
 env/
 entorno/
 optica-total/
+venv-optica-total/
 
 #Bootstrap codigo fuente
+bootstrap/
 bootstrap-5.3.1/
 
 # Compiled Java class files
