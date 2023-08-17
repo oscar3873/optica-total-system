@@ -1,7 +1,6 @@
 from django.db import models
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
-from .managers import PersonManager
 
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
@@ -12,7 +11,6 @@ class Person(SoftDeletionModel, TimestampsModel):
     last_name = models.CharField(max_length=50, db_index=True)
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     dni = models.CharField(max_length=20, db_index=True)
-    email = models.EmailField(max_length=55, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
 
     class Meta:

@@ -14,28 +14,31 @@ class HealthInsurance(SoftDeletionModel, TimestampsModel):
     name = models.CharField(max_length=50, db_index=True)
     cuit = models.CharField(max_length=20)
 
+    class Meta:
+        verbose_name = "Obra Socail"
+        verbose_name_plural = "Obras Socailes"
+
     def __str__(self) -> str:
         return f'Obra Social: {self.name} - CUIT: {self.cuit}'
 
 
-class Customer(SoftDeletionModel, TimestampsModel):
+class Customer(Person, SoftDeletionModel, TimestampsModel):
     """
     Clase para Clientes
         se guardan datos para almacenar clientes:
-            -person: clave foranea de la Clase generica de Personas (datos generales)
             -address: direccion del cliente
     """
-    person = models.ForeignKey(Person, on_delete=models.PROTECT)
-    address = models.CharField(max_length=200)
+    address = models.CharField(max_length=200, null=True, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
 
     objects = CustomerManager()
 
     class Meta:
-        verbose_name = "Customer"
-        verbose_name_plural = "Customers"
+        verbose_name = "Cliente"
+        verbose_name_plural = "Clientes"
 
     def __str__(self) -> str:
-        return f'{self.person.last_name}, {self.person.name} - Email: {self.address}'
+        return f'{self.last_name}, {self.name}'
     
 
 class Customer_HealthInsurance(SoftDeletionModel, TimestampsModel):
@@ -59,6 +62,10 @@ class MedicalHistory(SoftDeletionModel, TimestampsModel):
     """
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='medical_history')
     diagnostic = models.CharField(max_length=250)
+
+    class Meta:
+        verbose_name = "Historia medico"
+        verbose_name_plural = "Historiales Medico"
 
     def __str__(self) -> str:
         return (f'Cliente: {self.customer}\n' +

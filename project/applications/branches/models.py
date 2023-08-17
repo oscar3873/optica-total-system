@@ -13,6 +13,10 @@ class Branch(SoftDeletionModel, TimestampsModel):
     open_hs = models.TimeField(verbose_name='Horario de apertura')
     close_hs = models.TimeField(verbose_name='Horario de cierre')
 
+    class Meta:
+        verbose_name = "Sucursal"
+        verbose_name_plural = "Sucursales"
+
     def __str__(self) -> str:
         return f'{self.name}\n- {self.address}\nHorarios: {self.open_hs} - {self.close_hs}'
     

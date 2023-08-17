@@ -18,7 +18,7 @@ class UserManager(BaseUserManager, models.Manager):
         user.save(using=self.db)
         return user
 
-    def create_user(self, role, username, email, password, **extra_fields): # Para Empleados
+    def create_user(self, username, email, password, **extra_fields): # Para Empleados
         is_staff = False
         is_superuser = False
         role = 'EM'
@@ -30,7 +30,7 @@ class UserManager(BaseUserManager, models.Manager):
         role = 'AD'
         return self._create_user(role, username, email, password, is_staff, is_superuser, **extra_fields)
     
-    def create_admin(self, role, username, email, password, **extra_fields): # Para Admin (OPTICA-TOTAL)
+    def create_admin(self, username, email, password, **extra_fields): # Para Admin (OPTICA-TOTAL)
         is_staff = True
         is_superuser = False
         role = 'AD'

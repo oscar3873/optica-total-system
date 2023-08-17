@@ -5,12 +5,12 @@ app_name = 'clients_app'
 
 urlpatterns = [
     path(
-        'new/customer/', 
+        'new/', 
         CustomerCreateView.as_view(),
         name='new_customer'
     ),
     path(
-        'new/health_insurance/',  
+        'health_insurance/new/',  
         HealthInsuranceCreateView.as_view(),
         name='new_hi'
     ),

@@ -6,8 +6,8 @@ from django.views.generic import (CreateView, View, DetailView)
 from django.views.generic.edit import (FormView,)
 
 from .models import HealthInsurance
+from .models import Customer
 from .forms import CustomerForm, HealthInsuranceForm
-from .services import set_person_to_customer
 
 # Create your views here.
 class CustomerCreateView(LoginRequiredMixin, FormView):
@@ -16,8 +16,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        set_person_to_customer(form)
-        
+        customer_data = form.cleaned_data
+        Customer.objects.create_customer(**customer_data)
         return super().form_valid(form)
     
 

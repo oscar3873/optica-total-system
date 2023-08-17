@@ -7,11 +7,8 @@ class CustomerManager(BaseUserManager, models.Manager):
     """
     Manager para Clientes
     """
-    def creat_customer(self, address, **extra_fields):
-        customer = self.model(
-            address = address,
-            **extra_fields
-        )
+    def create_customer(self, **data):
+        customer = self.model(**data)
         customer.save()
         return customer
 

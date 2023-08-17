@@ -37,7 +37,7 @@ class UserCreateView(FormView):
 class LoginView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
-    success_url = '/admin'
+    success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
         user = authenticate(
