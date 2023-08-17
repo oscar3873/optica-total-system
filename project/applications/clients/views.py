@@ -1,31 +1,21 @@
-from copy import copy
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
+from django.urls import reverse_lazy
 
 from django.views.generic import (CreateView, View, DetailView)
 from django.views.generic.edit import (FormView,)
 
-from .models import Customer
 from .forms import CustomerForm
-from applications.core.models import Person
+from .services import set_person_to_customer
 
 # Create your views here.
 class CustomerCreateView(LoginRequiredMixin, FormView):
     form_class = CustomerForm
-    template_name = 'customer/new_customer.html'
-    success_url = reverse('core_app:home')
+    template_name = 'clients/new_customer.html'
+    success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        data = copy(form.cleaned_data)
-        data.pop('address')
-        person = Person.objects.create_person_dict(**data)
-
-        Customer.objects.creat_customer(
-            person,
-            form.cleaned_data['address'],
-        )
+        set_person_to_customer(form)
         
         return super().form_valid(form)
     

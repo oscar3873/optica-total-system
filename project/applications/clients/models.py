@@ -3,6 +3,8 @@ from applications.core.models import Person
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
+from .managers import CustomerManager
+
 # Create your models here.
 class HealthInsurance(SoftDeletionModel, TimestampsModel):
     """
@@ -25,6 +27,8 @@ class Customer(SoftDeletionModel, TimestampsModel):
     """
     person = models.ForeignKey(Person, on_delete=models.PROTECT)
     address = models.CharField(max_length=200)
+
+    objects = CustomerManager()
 
     def __str__(self) -> str:
         return f'{self.person.last_name}, {self.person.name} - Email: {self.address}'

@@ -1,14 +1,25 @@
 from django import forms
 from .models import User
 from django.contrib.auth import authenticate
+from django.core.validators import RegexValidator
+
 
 
 class UserCreateForm(forms.ModelForm):
     """Formulario para crear un usuario nuevo."""
     
+    username = forms.CharField(
+        required = True,
+        widget = forms.TextInput(attrs={
+            'placeholder' : 'Usuario',
+            'class' : 'form-control'
+        }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre de usuario solo puede contener letras, números y guiones bajos.')]
+    )
+    
     password1 = forms.CharField(
-        required=True, 
-        widget=forms.PasswordInput(attrs={
+        required = True, 
+        widget = forms.PasswordInput(attrs={
             'placeholder' : 'Contraseña',
             'autocomplete' : "off",
             'class' : 'form-control'
@@ -25,20 +36,13 @@ class UserCreateForm(forms.ModelForm):
     )
 
     email = forms.EmailField(
-        required = True,
+        required = False,
         widget = forms.EmailInput(attrs={
             'placeholder' : 'Correo',
             'class' : 'form-control'
         })
     )
     
-    username = forms.CharField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Usuario',
-            'class' : 'form-control'
-        })
-    )
 
     class Meta:
         model = User
@@ -47,7 +51,7 @@ class UserCreateForm(forms.ModelForm):
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
+        if email and User.objects.filter(email=email).exists():
             raise forms.ValidationError('El email ya existe')
         return email
     
@@ -59,7 +63,7 @@ class UserCreateForm(forms.ModelForm):
     
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
-        if len(password1) < 6:
+        if password1 and len(password1) < 6:
             raise forms.ValidationError('La contraseña debe tener al menos 6 caracteres')
         return password1
 

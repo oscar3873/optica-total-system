@@ -1,10 +1,6 @@
-from typing import Any
 from django.db import models
 
 from django.contrib.auth.models import BaseUserManager
-
-from applications.clients.models import Customer_HealthInsurance
-from applications.sales.models import Sale
 
 
 class CustomerManager(BaseUserManager, models.Manager):
@@ -33,9 +29,9 @@ class CustomerManager(BaseUserManager, models.Manager):
         return history
 
     def all_insurance(self, customer):
-        h_insurance = Customer_HealthInsurance.objects.filter(customer=customer).order_by('h_insurance')
-        return h_insurance
+        health_insurances = customer.customer_insurance.all().order_by('h_insurance')
+        return health_insurances
     
     def all_buy(self, customer):
-        buy = Sale.objects.filter(customer=customer).order_by('created_at')
+        buy = customer.sales.all().order_by('created_at')
         return buy

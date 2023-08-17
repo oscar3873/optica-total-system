@@ -6,7 +6,7 @@ class PersonManager(BaseUserManager, models.Manager):
     
     def create_person_dict(self, **person_data):
         person = self.model(**person_data)
-        person.save()
+        person.save(using=self.db)
         return person
     
     

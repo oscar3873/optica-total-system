@@ -7,6 +7,7 @@ class CustomerForm(PersonForm):
     address = forms.CharField(
         max_length=150,
         label='Direccion',
+        required=False,
         widget=forms.TextInput(attrs={'placeholder': 'Direccion'}),
     )
 

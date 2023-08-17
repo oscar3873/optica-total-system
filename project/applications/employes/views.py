@@ -5,6 +5,8 @@ from django.urls import reverse_lazy
 
 from .models import Employee
 from .forms import EmployeeCreateForm
+from .services import  set_user_to_employee
+
 from applications.core.forms import PersonForm
 from applications.core.models import Person
 
@@ -13,7 +15,7 @@ from django.views.generic import (CreateView, DetailView, UpdateView, View)
 # Create your views here.
 class EmployeeCreateView(UserPassesTestMixin, CreateView):
     model = Employee
-    template_name = 'employes/employee_create_form.html'
+    template_name = 'employes/create_form.html'
     form_class = EmployeeCreateForm
     success_url = reverse_lazy('core_app:home')
 
@@ -25,13 +27,8 @@ class EmployeeCreateView(UserPassesTestMixin, CreateView):
 
     def form_valid(self, form):
         employee = form.save(commit=False)
-        data = copy(form.cleaned_data) # copio los datos de cleaned_data para pasarlos al manager de Person
-        data.pop('from_branch')
-        data.pop('address')
-        person_form = Person.objects.create_person_dict(**data)
 
-        employee.person = person_form
-        employee.save()
+        set_user_to_employee(employee, form)
         
         return super().form_valid(form)
 

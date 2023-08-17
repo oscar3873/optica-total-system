@@ -43,7 +43,7 @@ class PersonForm(forms.ModelForm):
     dni = forms.CharField(
         max_length=10,
         label='DNI',
-        required=False,
+        required=True,
         help_text='Sin punto de mil (".")',
         widget=forms.TextInput(attrs={'placeholder': 'Ingrese su DNI'}),
         error_messages={
@@ -88,7 +88,7 @@ class PersonForm(forms.ModelForm):
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         phone_str = str(phone_number)
-        if phone_str and (len(phone_str) < 7):
+        if phone_number and (len(phone_str) < 7):
             raise forms.ValidationError("Ingrese un número de teléfono válido.")
         return phone_number
 
