@@ -8,16 +8,9 @@ from django.core.validators import RegexValidator
 
 class EmployeeCreateForm(UserCreateForm, PersonForm):
 
-    address = forms.CharField(
-        max_length=120,
-        label='Dirección',
-        required=False,
-        widget=forms.TextInput(attrs={'placeholder': 'Dirección'}),
-    )
-
     class Meta:
         model = Employee
-        fields = ['from_branch','address']
+        fields = '__all__'
 
 
     def __init__(self, *args, **kwargs):

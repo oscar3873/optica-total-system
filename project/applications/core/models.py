@@ -15,7 +15,8 @@ class Person(SoftDeletionModel, TimestampsModel):
     email = models.EmailField(max_length=55, blank=True, null=True)
     birth_date = models.DateField(null=True, blank=True)
 
-    objects = PersonManager()
+    class Meta:
+        abstract = True
 
     def get_full_name(self):
         return f'{self.last_name}, {self.name}'

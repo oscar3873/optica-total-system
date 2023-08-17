@@ -7,9 +7,8 @@ class CustomerManager(BaseUserManager, models.Manager):
     """
     Manager para Clientes
     """
-    def creat_customer(self, person, address, **extra_fields):
+    def creat_customer(self, address, **extra_fields):
         customer = self.model(
-            person = person,
             address = address,
             **extra_fields
         )
@@ -17,7 +16,7 @@ class CustomerManager(BaseUserManager, models.Manager):
         return customer
 
     def update_phone_number(self, customer, phone_number):
-        customer.person.phone_number = phone_number
+        customer.phone_number = phone_number
         customer.save()
         
     def update_address(self, customer, address):

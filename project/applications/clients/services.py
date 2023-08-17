@@ -7,7 +7,7 @@ def set_person_to_customer(form):
     data = data_pop(form)
 
     Customer.objects.create_customer(
-        person = Person.objects.create_person_dict(**data),
+        person = Customer.objects.create_person_dict(**data),
         address = form.cleaned_data['address'],
     )
 

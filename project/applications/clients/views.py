@@ -5,7 +5,8 @@ from django.urls import reverse_lazy
 from django.views.generic import (CreateView, View, DetailView)
 from django.views.generic.edit import (FormView,)
 
-from .forms import CustomerForm
+from .models import HealthInsurance
+from .forms import CustomerForm, HealthInsuranceForm
 from .services import set_person_to_customer
 
 # Create your views here.
@@ -20,4 +21,14 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
     
 
-# class CustomerDetailView(LoginRequiredMixin, DetailView):
+class HealthInsuranceCreateView(LoginRequiredMixin, CreateView):
+    form_class = HealthInsuranceForm
+    template_name = 'clients/new_health_insurance.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def form_valid(self, form):
+        HealthInsurance.objects.create(
+            name = form.cleaned_data['name'],
+            cuit = form.cleaned_data['cuit']
+        )
+        return super().form_valid(form)

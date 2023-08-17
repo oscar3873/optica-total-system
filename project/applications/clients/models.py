@@ -30,6 +30,10 @@ class Customer(SoftDeletionModel, TimestampsModel):
 
     objects = CustomerManager()
 
+    class Meta:
+        verbose_name = "Customer"
+        verbose_name_plural = "Customers"
+
     def __str__(self) -> str:
         return f'{self.person.last_name}, {self.person.name} - Email: {self.address}'
     
