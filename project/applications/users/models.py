@@ -5,11 +5,6 @@ from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
 
 class User(AbstractUser):
-    USER_ROLE = [
-        ('AD','Administrador'),
-        ('EM','Empleado')
-    ]
-    role = models.CharField(max_length=2, choices=USER_ROLE, default='EM')
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(unique=True)
 
