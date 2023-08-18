@@ -19,7 +19,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
         customer_data = form.cleaned_data
         Customer.objects.create_customer(**customer_data)
         return super().form_valid(form)
-    
+
 
 class HealthInsuranceCreateView(LoginRequiredMixin, CreateView):
     form_class = HealthInsuranceForm
