@@ -10,69 +10,6 @@ class PersonForm(forms.ModelForm):
         model = Person
         fields = '__all__'
 
-    name = forms.CharField(
-        max_length=100,
-        label='Nombre',
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre'}),
-        error_messages={
-            'required': 'Este campo es obligatorio.'
-        }
-    )
-
-    last_name = forms.CharField(
-        max_length=100,
-        label='Apellido',
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese su apellido'}),
-        error_messages={
-            'required': 'Este campo es obligatorio.'
-        }
-    )
-
-    phone_number = forms.IntegerField(
-        label='Teléfono',
-        required=False,
-        help_text='Sin el + ni el 15',
-        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese su número de teléfono'}),
-        error_messages={
-            'invalid': 'Ingrese un número válido.'
-        }
-    )
-
-    dni = forms.CharField(
-        max_length=10,
-        label='DNI',
-        required=False,
-        help_text='Sin punto de mil (".")',
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese su DNI'}),
-        error_messages={
-            'invalid': 'Ingrese un DNI válido.'
-        }
-    )
-
-    email = forms.EmailField(
-        label='Correo electrónico',
-        required=False,
-        widget=forms.EmailInput(attrs={'placeholder': 'Ingrese su correo electrónico'}),
-        error_messages={
-            'invalid': 'Ingrese un correo electrónico válido.'
-        }
-    )
-
-    birth_date = forms.DateField(
-        label='Fecha de nacimiento',
-        required=False,
-        widget=forms.DateInput(
-            attrs={
-                'placeholder': 'Ingrese su fecha de nacimiento',
-                'type': 'date'}),
-        error_messages={
-            'invalid': 'Ingrese una fecha válida.'
-        }
-    )
-
-
     def clean_name(self):
         name = self.cleaned_data['name']
         if name and len(name) < 3:
@@ -88,7 +25,7 @@ class PersonForm(forms.ModelForm):
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         phone_str = str(phone_number)
-        if phone_str and (len(phone_str) < 7):
+        if phone_number and (len(phone_str) < 7):
             raise forms.ValidationError("Ingrese un número de teléfono válido.")
         return phone_number
 

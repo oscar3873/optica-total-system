@@ -2,6 +2,7 @@
 Configuracion base que todos necesitan para funcionar.
 """
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import timezone
 import json
 from pathlib import Path
 
@@ -33,6 +34,10 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     "applications.users",
+    "applications.clients",
+    "applications.branches",
+    "applications.core",
+    "applications.employes",
 )
 
 THIRD_PARTY_APPS = ()
@@ -100,6 +105,8 @@ USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+DATE_NOW = timezone.datetime.now()
 
 
 # Email settings for sending emails
