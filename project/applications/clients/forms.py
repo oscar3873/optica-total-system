@@ -5,6 +5,7 @@ def validate_length(field_value, min_length, error_message):
     if field_value and len(field_value) < min_length:
         raise forms.ValidationError(error_message)
 
+
 class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
@@ -15,15 +16,17 @@ class CustomerForm(forms.ModelForm):
         validate_length(address, 5, "Ingrese una dirección válida.")
         return address
 
+
 class MedicalHistoryForm(forms.ModelForm):
     class Meta:
         model = MedicalHistory
-        fields = '__all__'
+        fields = ['diagnostic',]
 
     def clean_diagnostic(self):
         diagnostic = self.cleaned_data['diagnostic']
         validate_length(diagnostic, 5, "Ingrese un diagnóstico válido.")
         return diagnostic
+
 
 class HealthInsuranceForm(forms.ModelForm):
     class Meta:
@@ -41,6 +44,7 @@ class HealthInsuranceForm(forms.ModelForm):
         validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
         return cuit
 
+
 class CustomerUpdateForm(forms.ModelForm):
     class Meta:
         model = Customer
@@ -51,15 +55,17 @@ class CustomerUpdateForm(forms.ModelForm):
         validate_length(address, 5, "Ingrese una dirección válida.")
         return address
 
+
 class MedicalHistoryUpdateForm(forms.ModelForm):
     class Meta:
         model = MedicalHistory
-        fields = '__all__'
+        fields = ['diagnostic',]
 
     def clean_diagnostic(self):
         diagnostic = self.cleaned_data['diagnostic']
         validate_length(diagnostic, 5, "Ingrese un diagnóstico válido.")
         return diagnostic
+
 
 class HealthInsuranceUpdateForm(forms.ModelForm):
     class Meta:
