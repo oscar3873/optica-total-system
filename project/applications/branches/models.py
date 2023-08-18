@@ -8,8 +8,8 @@ class Branch(SoftDeletionModel, TimestampsModel):
     Clase para Sucursales
         guarda datos generales de una sucursal
     """
-    name = models.CharField(max_length=100)
-    address = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Nombre')
+    address = models.CharField(max_length=100, verbose_name='Direccion')
     open_hs = models.TimeField(verbose_name='Horario de apertura')
     close_hs = models.TimeField(verbose_name='Horario de cierre')
 

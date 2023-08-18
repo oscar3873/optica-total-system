@@ -13,7 +13,10 @@ urlpatterns = [
     ),
     path(
         'login/',
-        LoginView.as_view(),
+        auth_views.LoginView.as_view(
+            template_name = "users/login.html",
+            success_url = reverse_lazy('core_app:home')
+        ),
         name = 'login'
     ),
     path(

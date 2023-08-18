@@ -3,16 +3,16 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.generic import (CreateView, DetailView, UpdateView, View)
 
 from .models import Employee
-from .forms import EmployeeForm
+from .forms import EmployeeForm, EmployeeUpdateForm
 from .services import data_pop
 from applications.users.models import User
 
-from django.views.generic import (CreateView, DetailView, UpdateView, View)
 
 # Create your views here.
-class EmployeeCreateView(UserPassesTestMixin, CreateView):
+class EmployeeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Employee
     template_name = 'employes/create_form.html'
     form_class = EmployeeForm
@@ -38,16 +38,29 @@ class EmployeeCreateView(UserPassesTestMixin, CreateView):
         return HttpResponseRedirect(self.success_url)
     
     def handle_no_permission(self):
-        if self.raise_exception:
-            raise PermissionDenied(self.get_permission_denied_message())
+        if not self.request.user.is_authenticated:
+            return super(LoginRequiredMixin, self).handle_no_permission()
         else:
-            context = {}  # Puedes agregar datos al contexto si es necesario
+            context = {}
             return render(self.request, 'users/denied_permission.html', context)
 
 
-    def get_permission_denied_message(self):
-        return {"No tienes permiso para acceder a esta página."}
+class EmployeeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Employee
+    template_name = 'employes/update_form.html'
+    form_class = EmployeeUpdateForm
+    success_url = reverse_lazy('core_app:home')
 
+    def test_func(self):
+        # Define aquí tu lógica de prueba personalizada para la actualización
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super(LoginRequiredMixin, self).handle_no_permission()
+        else:
+            context = {}
+            return render(self.request, 'users/denied_permission.html', context)
 
 
 class EmployeeProfileView(LoginRequiredMixin, DetailView):
