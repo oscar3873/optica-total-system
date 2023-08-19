@@ -13,7 +13,6 @@ from applications.users.models import User
 
 # Create your views here.
 class EmployeeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Employee
     template_name = 'employes/create_form.html'
     form_class = EmployeeForm
     success_url = reverse_lazy('core_app:home')

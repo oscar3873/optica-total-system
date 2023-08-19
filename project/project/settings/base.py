@@ -38,6 +38,7 @@ LOCAL_APPS = (
     "applications.branches",
     "applications.core",
     "applications.employes",
+    "applications.laboratory",
 )
 
 THIRD_PARTY_APPS = ()
