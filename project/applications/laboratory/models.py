@@ -1,20 +1,21 @@
 from django.db import models
+from django_timestamps.softDeletion import SoftDeletionModel
+from django_timestamps.timestamps import TimestampsModel
 
-from applications.employes.models import Employee
-# Create your models here.
-class Correction(models.Model):
+class EyeCorrection(SoftDeletionModel, TimestampsModel):
     esferic = models.CharField(max_length=20, null=True, blank=True)
     cilindric = models.CharField(max_length=20, null=True, blank=True)
-    other = models.CharField(max_length=10, null=True, blank=True)
+    eje = models.CharField(max_length=10, null=True, blank=True)
 
-class Eye_left(Correction):
-    pass
-class Eye_right(Correction):
-    pass
-class Distance_far(Eye_left, Eye_right):
-    pass
-class Distance_close(Eye_left, Eye_right):
-    pass
-class Laboratory(Distance_far, Distance_close):
-    detail = models.TextField(null=True, blank=True)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT)
+    class Meta:
+        abstract = True
+
+class Left_eye(EyeCorrection, SoftDeletionModel, TimestampsModel):
+    distance = models.CharField(max_length=20, null=True, blank=True)
+
+class Right_eye(EyeCorrection, SoftDeletionModel, TimestampsModel):
+    distance = models.CharField(max_length=20, null=True, blank=True)
+
+class Laboratory(SoftDeletionModel, TimestampsModel):
+    left_eye = models.ForeignKey(Left_eye, on_delete=models.CASCADE, null=True, blank=True)
+    right_eye = models.ForeignKey(Right_eye, on_delete=models.CASCADE, null=True, blank=True)

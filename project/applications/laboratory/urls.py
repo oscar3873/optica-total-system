@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import *
+from .views import LaboratoryCreateView
 
 app_name = 'lab_app'
 
