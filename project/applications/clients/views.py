@@ -12,7 +12,7 @@ from .forms import CustomerForm, HealthInsuranceForm
 # Create your views here.
 class CustomerCreateView(LoginRequiredMixin, FormView):
     form_class = CustomerForm
-    template_name = 'clients/new_customer.html'
+    template_name = 'clients/create_customer_form.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -23,7 +23,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
 
 class HealthInsuranceCreateView(LoginRequiredMixin, CreateView):
     form_class = HealthInsuranceForm
-    template_name = 'clients/new_health_insurance.html'
+    template_name = 'clients/create_h_i_form.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
