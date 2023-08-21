@@ -2,19 +2,16 @@ from typing import Any
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
-from django.contrib.auth import views as auth_views
-from django.views.generic import (CreateView, View)
+from django.views.generic import View
 from django.views.generic.edit import (FormView,)
 
 from project.settings.base import EMAIL_HOST_USER
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User
-from .services import get_email_provider
 
-from django.core.mail import get_connection
-from django.urls import reverse_lazy, reverse
 
 
 # Create your views here.
@@ -73,5 +70,4 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
             usuario.save()
         
         logout(self.request)
-        
         return super().form_valid(form)

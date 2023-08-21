@@ -1,8 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, DetailView, UpdateView, View)
+from django.views.generic import (FormView, DetailView, UpdateView, View)
 
 from .models import Employee
 from .forms import EmployeeForm, EmployeeUpdateForm
@@ -11,8 +10,8 @@ from applications.users.models import User
 
 from applications.core.views import CustomUserPassesTestMixin
 # Create your views here.
-class EmployeeCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, CreateView):
-    template_name = 'employes/create_form.html'
+class EmployeeCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
+    template_name = 'employes/employee_form.html'
     form_class = EmployeeForm
     success_url = reverse_lazy('core_app:home')
 
@@ -35,7 +34,7 @@ class EmployeeCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, CreateVi
 
 class EmployeeUpdateView(LoginRequiredMixin, CustomUserPassesTestMixin, UpdateView):
     model = Employee
-    template_name = 'employes/update_form.html'
+    template_name = 'employes/employee_form.html'
     form_class = EmployeeUpdateForm
     success_url = reverse_lazy('core_app:home')
 
