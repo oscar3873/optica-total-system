@@ -25,10 +25,10 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("applications.users.urls")),
     path("home/", include("applications.core.urls")),
-    path("staff/", include("applications.employes.urls")),
+    path("employees/", include("applications.employes.urls")),
     path("customers/", include("applications.clients.urls")),
-    path("branch/", include("applications.branches.urls")),
+    path("branches/", include("applications.branches.urls")),
     path("notes/", include("applications.notes.urls")),
-    path("items/", include("applications.products.urls")),
+    path("products/", include("applications.products.urls")),
     path("suppliers/", include("applications.suppliers.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
