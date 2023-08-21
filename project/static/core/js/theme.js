@@ -10553,7 +10553,7 @@ var weeklySalesInit = function weeklySalesInit() {
         },
         xAxis: {
           type: 'category',
-          data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+          data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'domingo'],
           boundaryGap: false,
           axisLine: {
             show: false
