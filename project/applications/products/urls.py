@@ -5,17 +5,17 @@ app_name = 'products_app'
 
 urlpatterns = [
     path(
-        'category/new/',
+        'new/category/',
         CategoryCreateView.as_view(),
         name='new_category'
     ),
     path(
-        'brand/new/',
+        'new/brand/',
         BrandCreateView.as_view(),
         name='new_brand'
     ),
     path(
-        'product/new/',
+        'new/product/',
         ProductCreateView.as_view(),
         name='new_product'
     )
