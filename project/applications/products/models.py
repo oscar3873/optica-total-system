@@ -12,7 +12,7 @@ class Category(SoftDeletionModel, TimestampsModel):
     name = models.CharField(max_length=100, blank=False, null=True)
 
     def __str__(self) -> str:
-        return f'Categoria: {self.name}'
+        return f'{self.name}'
 
 
 class Brand(SoftDeletionModel, TimestampsModel):
@@ -54,12 +54,40 @@ class Product_Supplier(SoftDeletionModel, TimestampsModel):
     """
     Clase intermedia de Producto y Proveedor almacenando sus PK para sus posteriores analisis
     """
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_suppliers', null=True)
-    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, related_name='product_suppliers', null=True)
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_suppliers', null=True, verbose_name='Producto')
+    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, related_name='product_suppliers', null=True, verbose_name='Proveedor')
 
     def __str__(self) -> str:
         return f'Producto: {self.product}\nProveedor: {self.supplier}'
 
+
+class Feature_type(SoftDeletionModel, TimestampsModel):
+    """
+    Clase del tipo de Carateristicas de una categoria para el producto 
+    """
+    name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Nombre')
+
+    def __str__(self) -> str:
+        return f'{self.name}'
+
+    class Meta:
+        verbose_name = 'Tipo Caracteristica'
+        verbose_name_plural = 'Tipos Caracteristicas'
+
+
+class Feature(SoftDeletionModel, TimestampsModel):
+    """
+    Clase para las caracteristicas nuevas del producto
+    """
+    value = models.CharField(max_length=100, blank=True, null=True, verbose_name='Valor')
+    type = models.ForeignKey(Feature_type, on_delete=models.PROTECT, related_name='feature', verbose_name='Tipo de caracteristica')
+
+    def __str__(self) -> str:
+        return f'Tipo: {self.type} - Valor: {self.value}'
+    
+    class Meta:
+        verbose_name = 'Caracteristica'
+        verbose_name_plural = 'Caracteristicas'
 
 # class Type_discount(SoftDeletionModel, TimestampsModel):
 #     """

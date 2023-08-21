@@ -1,0 +1,9 @@
+{% for product in products %}
+    <li>
+        <strong>{{ product.name }}</strong> - {{ product.description }}
+        <br>
+        Price: ${{ product.price }} | Stock: {{ product.stock }}
+    </li>
+{% empty %}
+    <li>No products available.</li>
+{% endfor %}
