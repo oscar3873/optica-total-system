@@ -1,6 +1,6 @@
 from typing import Any
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import redirect, render
+from django.contrib.auth import authenticate, login, logout, views as auth_view
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
@@ -42,7 +42,13 @@ class LoginView(FormView):
             password=form.cleaned_data['password']
         )
         login(self.request, user)
-        return super().form_valid(form)
+        
+        next_url = self.request.GET.get('next')  # Obtiene el valor del parámetro 'next' de la URL
+        
+        if next_url:
+            return redirect(next_url)  # Redirige a la URL especificada en 'next'
+        
+        return redirect('home')  # Si no hay 'next', redirige a una URL predeterminada
     
 
 class LogoutView(View):
