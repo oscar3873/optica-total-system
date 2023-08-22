@@ -60,6 +60,16 @@ urlpatterns = [
     # LISTING
 
     path(
+        'list/brands',
+        BrandListView.as_view(),
+        name= 'brand_list'
+    ),
+    path(
+        'list/categories',
+        CategoryListView.as_view(),
+        name= 'category_list'
+    ),
+    path(
         'list/products',
         ProductListView.as_view(),
         name= 'product_list'

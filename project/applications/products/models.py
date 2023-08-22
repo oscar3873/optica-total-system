@@ -24,6 +24,7 @@ class Brand(SoftDeletionModel, TimestampsModel):
     def __str__(self) -> str:
         return f'Marca: {self.name}'
 
+
 class Product(SoftDeletionModel, TimestampsModel):
     """
     Clase para Productos
@@ -37,7 +38,6 @@ class Product(SoftDeletionModel, TimestampsModel):
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand')
-    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, null=True, blank=True, related_name='product_supplier')
 
     def __str__(self) -> str:
         return (f'Nombre: {self.name}\n'+
@@ -77,10 +77,11 @@ class Feature_type(SoftDeletionModel, TimestampsModel):
 
 class Feature(SoftDeletionModel, TimestampsModel):
     """
-    Clase para las caracteristicas nuevas del producto
+    Clase Intermedia para las caracteristicas nuevas del producto
     """
     value = models.CharField(max_length=100, blank=True, null=True, verbose_name='Valor')
     type = models.ForeignKey(Feature_type, on_delete=models.PROTECT, related_name='feature', verbose_name='Tipo de caracteristica')
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='feature', verbose_name='Producto', null=True)
 
     def __str__(self) -> str:
         return f'Tipo: {self.type} - Valor: {self.value}'
@@ -88,6 +89,7 @@ class Feature(SoftDeletionModel, TimestampsModel):
     class Meta:
         verbose_name = 'Caracteristica'
         verbose_name_plural = 'Caracteristicas'
+
 
 # class Type_discount(SoftDeletionModel, TimestampsModel):
 #     """
