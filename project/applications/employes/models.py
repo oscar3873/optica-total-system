@@ -7,8 +7,6 @@ from applications.users.models import User
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
-from .managers import EmployeeManager
-
 # Create your models here.
 class Employee(Person, SoftDeletionModel, TimestampsModel):
     """
@@ -18,8 +16,6 @@ class Employee(Person, SoftDeletionModel, TimestampsModel):
     user = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
     from_branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True)
     address = models.CharField(max_length=120, blank=True, null=True)
-
-    objects = EmployeeManager()
 
     class Meta:
         verbose_name = "Empleado"

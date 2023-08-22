@@ -31,5 +31,4 @@ urlpatterns = [
     path("notes/", include("applications.notes.urls")),
     path("products/", include("applications.products.urls")),
     path("suppliers/", include("applications.suppliers.urls")),
-    path("lab/", include("applications.laboratory.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

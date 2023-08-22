@@ -7,9 +7,14 @@ from django.views.generic.edit import (FormView,)
 
 from .models import HealthInsurance
 from .models import Customer
-from .forms import CustomerForm, HealthInsuranceForm
+from .forms import CustomerForm, HealthInsuranceForm, CalibrationOrderForm
 
-# Create your views here.
+class CalibrationOrderCreateView(CreateView):
+    form_class = CalibrationOrderForm
+    template_name = 'clients/lab_form.html'
+    success_url = reverse_lazy('core_app:home')
+
+    
 class CustomerCreateView(LoginRequiredMixin, FormView):
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'

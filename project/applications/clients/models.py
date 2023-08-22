@@ -2,6 +2,7 @@ from django.db import models
 from applications.core.models import Person
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
+from applications.employes.models import Employee
 
 from .managers import CustomerManager
 
@@ -70,3 +71,76 @@ class MedicalHistory(SoftDeletionModel, TimestampsModel):
     def __str__(self) -> str:
         return (f'Cliente: {self.customer}\n' +
                 f'Diagnostico: {self.diagnostic}')
+
+
+class Correction(SoftDeletionModel, TimestampsModel):
+    lej_od_esferico = models.CharField(max_length=10, null=True, blank=True)
+    lej_od_cilindrico = models.CharField(max_length=10, null=True, blank=True)
+    lej_od_eje = models.CharField(max_length=10, null=True, blank=True)
+    lej_oi_esferico = models.CharField(max_length=10, null=True, blank=True)
+    lej_oi_cilindrico = models.CharField(max_length=10, null=True, blank=True)
+    lej_oi_eje = models.CharField(max_length=10, null=True, blank=True)
+    cer_od_esferico = models.CharField(max_length=10, null=True, blank=True)
+    cer_od_cilindrico = models.CharField(max_length=10, null=True, blank=True)
+    cer_od_eje = models.CharField(max_length=10, null=True, blank=True)
+    cer_oi_esferico = models.CharField(max_length=10, null=True, blank=True)
+    cer_oi_cilindrico = models.CharField(max_length=10, null=True, blank=True)
+    cer_oi_eje = models.CharField(max_length=10, null=True, blank=True)
+    
+###############################################################
+
+class Material(SoftDeletionModel, TimestampsModel):
+    policarbonato = models.BooleanField()
+    organic = models.BooleanField()
+    mineral = models.BooleanField()
+    m_r8 = models.BooleanField()
+
+class Color(SoftDeletionModel, TimestampsModel):
+    white = models.BooleanField()
+    full_gray = models.BooleanField()
+    gray_gradient = models.BooleanField()
+    flat_sepia = models.BooleanField()
+
+class Cristal(SoftDeletionModel, TimestampsModel):
+    monofocal = models.BooleanField()
+    bifocal_fv = models.BooleanField()
+    bifocal_k = models.BooleanField()
+    bifocal_pi = models.BooleanField()
+    progressive = models.BooleanField()
+
+class Tratamient(SoftDeletionModel, TimestampsModel):
+    antireflex = models.BooleanField()
+    filtro_azul = models.BooleanField()
+    fotocromatico = models.BooleanField()
+    ultravex = models.BooleanField()
+    polarizado = models.BooleanField()
+    neutrosolar = models.BooleanField()
+    
+###############################################################
+
+class Interpupillary(SoftDeletionModel, TimestampsModel):
+    lej_od_nanopupilar = models.CharField(max_length=10, null=True, blank=True)
+    lej_od_pelicula = models.CharField(max_length=10, null=True, blank=True)
+    lej_oi_nanopupilar = models.CharField(max_length=10, null=True, blank=True)
+    lej_oi_pelicula = models.CharField(max_length=10, null=True, blank=True)
+    lej_total = models.CharField(max_length=10, null=True, blank=True)
+    cer_od_nanopupilar = models.CharField(max_length=10, null=True, blank=True)
+    cer_od_pelicula = models.CharField(max_length=10, null=True, blank=True)
+    cer_oi_nanopupilar = models.CharField(max_length=10, null=True, blank=True)
+    cer_oi_pelicula = models.CharField(max_length=10, null=True, blank=True)
+    cer_total = models.CharField(max_length=10, null=True, blank=True)
+    
+###############################################################
+
+class Calibration_Order(SoftDeletionModel, TimestampsModel):
+    is_done = models.BooleanField(default=False)
+    correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True)
+    material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory')
+    type_cristal = models.ForeignKey(Cristal, on_delete=models.PROTECT, related_name='laboratory')
+    color = models.ForeignKey(Color, on_delete=models.PROTECT, related_name='laboratory')
+    tratamient = models.ForeignKey(Tratamient, on_delete=models.PROTECT, related_name='laboratory')
+    interpupillary = models.ForeignKey(Interpupillary, on_delete=models.PROTECT, related_name='laboratory', null = True)
+    medical_details = models.ForeignKey(MedicalHistory, on_delete=models.PROTECT, related_name='laboratory')
+    employees = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='laboratory')
+    armazon = models.CharField(max_length=100)
+    observations = models.CharField(max_length=200)

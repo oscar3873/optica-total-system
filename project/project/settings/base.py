@@ -41,7 +41,6 @@ LOCAL_APPS = (
     "applications.notes",
     "applications.products",
     "applications.suppliers",
-    "applications.laboratory",
 )
 
 THIRD_PARTY_APPS = ()

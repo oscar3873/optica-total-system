@@ -5,7 +5,6 @@ from django.views.generic import (FormView, DetailView, UpdateView, View)
 
 from .models import Employee
 from .forms import EmployeeForm, EmployeeUpdateForm
-from .services import data_pop
 from applications.users.models import User
 
 from applications.core.views import CustomUserPassesTestMixin
@@ -24,10 +23,10 @@ class EmployeeCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView
             email=form.cleaned_data['email'],
             password=form.cleaned_data['password1'],
         )
-
         Employee.objects.create_user(
             user = user,
-            **data_pop(form)
+            from_branch = form.cleaned_data['from_branch'],
+            address = form.cleaned_data['address'],
         )
         return HttpResponseRedirect(self.success_url)
 
