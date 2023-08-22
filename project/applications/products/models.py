@@ -1,5 +1,4 @@
 from django.db import models
-from applications.suppliers.models import Supplier
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
@@ -48,17 +47,6 @@ class Product(SoftDeletionModel, TimestampsModel):
                 f'Stock: {self.stock}\n'+
                 f'Descripcion: {self.description}'
                 )
-
-
-class Product_Supplier(SoftDeletionModel, TimestampsModel):
-    """
-    Clase intermedia de Producto y Proveedor almacenando sus PK para sus posteriores analisis
-    """
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_suppliers', null=True, verbose_name='Producto')
-    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, related_name='product_suppliers', null=True, verbose_name='Proveedor')
-
-    def __str__(self) -> str:
-        return f'Producto: {self.product}\nProveedor: {self.supplier}'
 
 
 class Feature_type(SoftDeletionModel, TimestampsModel):

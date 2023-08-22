@@ -57,7 +57,7 @@ class Sale(SoftDeletionModel, TimestampsModel):
     def __str__(self) -> str:
         return (f'Numero de factura: {self.invoice.invoice_num}\n'+
                 f'Tipo: {self.invoice.invoice_type}\n'+
-                f'Asesor: {self.employee.presentation()}')
+                f'Asesor: {self.employee}')
 
 
 class PaymentMethod_Sale(SoftDeletionModel, TimestampsModel):
