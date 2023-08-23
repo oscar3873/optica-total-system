@@ -78,7 +78,7 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
             type_cristal = cris,
             tratamient = trat,
             interpupillary = interpup,
-            medical_details = form.cleaned_data['medical_details'],
+            diagnostic = form.cleaned_data['diagnostic'],
             employees = form.cleaned_data['employees'],
             armazon = form.cleaned_data['armazon'],
             observations = form.cleaned_data['observations']

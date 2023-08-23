@@ -53,26 +53,6 @@ class Customer_HealthInsurance(SoftDeletionModel, TimestampsModel):
         return f'Cliente: {self.customer}\nObra Social: {self.h_insurance}'
 
 
-class MedicalHistory(SoftDeletionModel, TimestampsModel):
-    """
-    Clase de Historial Medico
-        se almacenan los datos de la historia clinica de los clientes para brindarles
-        los productos acorde a sus necesidades
-            -customer: cliente asociado
-            -diagnostic: diagnostico del cliente
-    """
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='medical_history')
-    diagnostic = models.CharField(max_length=250)
-
-    class Meta:
-        verbose_name = "Historia medico"
-        verbose_name_plural = "Historiales Medico"
-
-    def __str__(self) -> str:
-        return (f'Cliente: {self.customer}\n' +
-                f'Diagnostico: {self.diagnostic}')
-
-
 class Correction(SoftDeletionModel, TimestampsModel):
     lej_od_esferico = models.CharField(max_length=10, null=True, blank=True)
     lej_od_cilindrico = models.CharField(max_length=10, null=True, blank=True)
@@ -140,7 +120,7 @@ class Calibration_Order(SoftDeletionModel, TimestampsModel):
     color = models.ForeignKey(Color, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     tratamient = models.ForeignKey(Tratamient, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     interpupillary = models.ForeignKey(Interpupillary, on_delete=models.PROTECT, related_name='laboratory', null = True, blank=True)
-    medical_details = models.ForeignKey(MedicalHistory, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    diagnostic = models.CharField(max_length=200, null=True, blank=True)
     employees = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     armazon = models.CharField(max_length=100, null=True, blank=True)
     observations = models.CharField(max_length=200, null=True, blank=True)

@@ -17,17 +17,6 @@ class CustomerForm(forms.ModelForm):
         return address
 
 
-class MedicalHistoryForm(forms.ModelForm):
-    class Meta:
-        model = MedicalHistory
-        fields = ['diagnostic',]
-
-    def clean_diagnostic(self):
-        diagnostic = self.cleaned_data['diagnostic']
-        validate_length(diagnostic, 5, "Ingrese un diagnóstico válido.")
-        return diagnostic
-
-
 class HealthInsuranceForm(forms.ModelForm):
     class Meta:
         model = HealthInsurance
@@ -54,17 +43,6 @@ class CustomerUpdateForm(forms.ModelForm):
         address = self.cleaned_data['address']
         validate_length(address, 5, "Ingrese una dirección válida.")
         return address
-
-
-class MedicalHistoryUpdateForm(forms.ModelForm):
-    class Meta:
-        model = MedicalHistory
-        fields = ['diagnostic',]
-
-    def clean_diagnostic(self):
-        diagnostic = self.cleaned_data['diagnostic']
-        validate_length(diagnostic, 5, "Ingrese un diagnóstico válido.")
-        return diagnostic
 
 
 class HealthInsuranceUpdateForm(forms.ModelForm):
@@ -164,4 +142,4 @@ class CalibrationOrderForm(forms.ModelForm):
     
     class Meta:
         model = Calibration_Order
-        fields = ['is_done','medical_details', 'employees', 'armazon', 'observations']
+        fields = ['is_done','diagnostic', 'employees', 'armazon', 'observations']
