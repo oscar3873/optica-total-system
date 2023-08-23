@@ -90,31 +90,31 @@ class Correction(SoftDeletionModel, TimestampsModel):
 ###############################################################
 
 class Material(SoftDeletionModel, TimestampsModel):
-    policarbonato = models.BooleanField()
-    organic = models.BooleanField()
-    mineral = models.BooleanField()
-    m_r8 = models.BooleanField()
+    policarbonato = models.BooleanField(null=True, blank=True)
+    organic = models.BooleanField(null=True, blank=True)
+    mineral = models.BooleanField(null=True, blank=True)
+    m_r8 = models.BooleanField(null=True, blank=True)
 
 class Color(SoftDeletionModel, TimestampsModel):
-    white = models.BooleanField()
-    full_gray = models.BooleanField()
-    gray_gradient = models.BooleanField()
-    flat_sepia = models.BooleanField()
+    white = models.BooleanField(null=True, blank=True)
+    full_gray = models.BooleanField(null=True, blank=True)
+    gray_gradient = models.BooleanField(null=True, blank=True)
+    flat_sepia = models.BooleanField(null=True, blank=True)
 
 class Cristal(SoftDeletionModel, TimestampsModel):
-    monofocal = models.BooleanField()
-    bifocal_fv = models.BooleanField()
-    bifocal_k = models.BooleanField()
-    bifocal_pi = models.BooleanField()
-    progressive = models.BooleanField()
+    monofocal = models.BooleanField(null=True, blank=True)
+    bifocal_fv = models.BooleanField(null=True, blank=True)
+    bifocal_k = models.BooleanField(null=True, blank=True)
+    bifocal_pi = models.BooleanField(null=True, blank=True)
+    progressive = models.BooleanField(null=True, blank=True)
 
 class Tratamient(SoftDeletionModel, TimestampsModel):
-    antireflex = models.BooleanField()
-    filtro_azul = models.BooleanField()
-    fotocromatico = models.BooleanField()
-    ultravex = models.BooleanField()
-    polarizado = models.BooleanField()
-    neutrosolar = models.BooleanField()
+    antireflex = models.BooleanField(null=True, blank=True)
+    filtro_azul = models.BooleanField(null=True, blank=True)
+    fotocromatico = models.BooleanField(null=True, blank=True)
+    ultravex = models.BooleanField(null=True, blank=True)
+    polarizado = models.BooleanField(null=True, blank=True)
+    neutrosolar = models.BooleanField(null=True, blank=True)
     
 ###############################################################
 
@@ -133,14 +133,14 @@ class Interpupillary(SoftDeletionModel, TimestampsModel):
 ###############################################################
 
 class Calibration_Order(SoftDeletionModel, TimestampsModel):
-    is_done = models.BooleanField(default=False)
-    correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True)
-    material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory')
-    type_cristal = models.ForeignKey(Cristal, on_delete=models.PROTECT, related_name='laboratory')
-    color = models.ForeignKey(Color, on_delete=models.PROTECT, related_name='laboratory')
-    tratamient = models.ForeignKey(Tratamient, on_delete=models.PROTECT, related_name='laboratory')
-    interpupillary = models.ForeignKey(Interpupillary, on_delete=models.PROTECT, related_name='laboratory', null = True)
-    medical_details = models.ForeignKey(MedicalHistory, on_delete=models.PROTECT, related_name='laboratory')
-    employees = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='laboratory')
-    armazon = models.CharField(max_length=100)
-    observations = models.CharField(max_length=200)
+    is_done = models.BooleanField(default=False, null=True, blank=True)
+    correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    type_cristal = models.ForeignKey(Cristal, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    color = models.ForeignKey(Color, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    tratamient = models.ForeignKey(Tratamient, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    interpupillary = models.ForeignKey(Interpupillary, on_delete=models.PROTECT, related_name='laboratory', null = True, blank=True)
+    medical_details = models.ForeignKey(MedicalHistory, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    employees = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
+    armazon = models.CharField(max_length=100, null=True, blank=True)
+    observations = models.CharField(max_length=200, null=True, blank=True)

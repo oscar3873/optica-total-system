@@ -115,7 +115,7 @@ class InterpupillaryForm(forms.ModelForm):
         fields = ['lej_od_nanopupilar', 'lej_od_pelicula', 'lej_oi_nanopupilar', 'lej_oi_pelicula', 'lej_total', 'cer_od_nanopupilar', 'cer_od_pelicula', 'cer_oi_nanopupilar', 'cer_oi_pelicula', 'cer_total']
 
 class CalibrationOrderForm(forms.ModelForm):
-    lejos_od_esferico = forms.CharField(max_length=10, required=False)
+    lej_od_esferico = forms.CharField(max_length=10, required=False)
     lej_od_cilindrico = forms.CharField(max_length=10, required=False)
     lej_od_eje = forms.CharField(max_length=10, required=False)
     lej_oi_esferico = forms.CharField(max_length=10, required=False)
