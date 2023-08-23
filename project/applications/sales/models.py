@@ -52,7 +52,7 @@ class Sale(SoftDeletionModel, TimestampsModel):
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales')
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
-    refund_date = models.DateTimeField()
+    refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
 
     def __str__(self) -> str:
         return (f'Numero de factura: {self.invoice.invoice_num}\n'+

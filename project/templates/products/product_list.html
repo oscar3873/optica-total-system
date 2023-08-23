@@ -3,6 +3,11 @@
         <strong>{{ product.name }}</strong> - {{ product.description }}
         <br>
         Price: ${{ product.price }} | Stock: {{ product.stock }}
+        <br>
+        Caracteristicas: 
+        {% for feature in product.feature.all %}
+            {{ feature.value }}
+        {% endfor %}
     </li>
 {% empty %}
     <li>No products available.</li>

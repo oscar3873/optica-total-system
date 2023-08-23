@@ -60,17 +60,17 @@ urlpatterns = [
     # LISTING
 
     path(
-        'list/brands',
+        'list/brand',
         BrandListView.as_view(),
         name= 'brand_list'
     ),
     path(
-        'list/categories',
+        'list/category',
         CategoryListView.as_view(),
         name= 'category_list'
     ),
     path(
-        'list/products',
+        'list/product',
         ProductListView.as_view(),
         name= 'product_list'
     ),
@@ -78,8 +78,8 @@ urlpatterns = [
     # DETAILS
 
     path(
-        'detail/<pk>',
-        ProductListView.as_view(),
+        'detail/product/<pk>',
+        ProductDetailView.as_view(),
         name= 'detail'
     ),
 ]

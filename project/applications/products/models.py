@@ -2,6 +2,7 @@ from django.db import models
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
+from .managers import ProductManager
 
 # Create your models here.
 class Category(SoftDeletionModel, TimestampsModel):
@@ -37,6 +38,8 @@ class Product(SoftDeletionModel, TimestampsModel):
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand')
+
+    objects = ProductManager()
 
     def __str__(self) -> str:
         return (f'Nombre: {self.name}\n'+

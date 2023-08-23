@@ -30,9 +30,6 @@ class SupplierDetailView(DetailView):
     template_name = 'suppliers/supplier_detail.html'
     context_object_name = 'supplier'
 
-    def get_queryset(self):
-        return Supplier.objects.all()
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.get_object())

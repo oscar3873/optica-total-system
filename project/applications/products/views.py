@@ -1,7 +1,7 @@
-from typing import Any
-from django.db.models.query import QuerySet
+from typing import Any, Optional
+from django.db import models
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, FormView, ListView
+from django.views.generic import CreateView, UpdateView, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from applications.core.views import CustomUserPassesTestMixin # Para Autenticar usuario administrador
@@ -92,23 +92,27 @@ class ProductListView(LoginRequiredMixin, ListView):
     template_name = 'products/product_list.html'  # Reemplaza con la plantilla adecuada
     context_object_name = 'products'  # Nombre de la variable en el contexto
 
-    def get_queryset(self):
-        return Product.objects.all()
-
 
 class BrandListView(LoginRequiredMixin, ListView):
     model = Brand
     template_name = 'products/brand_list.html'
     context_object_name = 'brands'
 
-    def get_queryset(self):
-        return Brand.objects.all()
-    
 
 class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     template_name = 'products/category_list.html'
     context_object_name = 'categories'
 
-    def get_queryset(self):
-        return Category.objects.all()
+
+#################### DETAILS #####################
+
+class ProductDetailView(LoginRequiredMixin, DetailView):
+    model = Product
+    template_name = 'products/product_detail.html'
+    context_object_name = 'product'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['features'] = self.model.objects.get_features(self.get_object())
+        return context

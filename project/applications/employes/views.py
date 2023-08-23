@@ -17,11 +17,11 @@ class EmployeeCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView
 
     def form_valid(self, form):
         user = User.objects.create_user(
-            name=form.cleaned_data['name'],
-            last_name=form.cleaned_data['last_name'],
-            username=form.cleaned_data['username'],
-            email=form.cleaned_data['email'],
-            password=form.cleaned_data['password1'],
+            name= form.cleaned_data['name'],
+            last_name = form.cleaned_data['last_name'],
+            username = form.cleaned_data['username'],
+            email = form.cleaned_data['email'],
+            password = form.cleaned_data['password1'],
         )
         Employee.objects.create_user(
             user = user,
