@@ -5,8 +5,10 @@ from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager, models.Manager):
 
-    def _create_user(self, username, email, password, is_staff, is_superuser, **extra_fields):
+    def _create_user(self, name, last_name, username, email, password, is_staff, is_superuser, **extra_fields):
         user = self.model(
+            first_name = name,
+            last_name = last_name,
             username=username,
             email=email,
             is_staff=is_staff,
@@ -17,17 +19,17 @@ class UserManager(BaseUserManager, models.Manager):
         user.save(using=self.db)
         return user
 
-    def create_user(self, username, email, password, **extra_fields): # Para Empleados
+    def create_user(self, name, last_name, username, email, password, **extra_fields): # Para Empleados
         is_staff = False
         is_superuser = False
-        return self._create_user(username, email, password, is_staff, is_superuser, **extra_fields)
+        return self._create_user(name, last_name, username, email, password, is_staff, is_superuser, **extra_fields)
 
-    def create_superuser(self, username, email, password, **extra_fields): # Para SuperAdmin (SALTACODE)
+    def create_superuser(self, name, last_name, username, email, password, **extra_fields): # Para SuperAdmin (SALTACODE)
         is_staff = True
         is_superuser = True
-        return self._create_user(username, email, password, is_staff, is_superuser, **extra_fields)
+        return self._create_user(name, last_name, username, email, password, is_staff, is_superuser, **extra_fields)
     
-    def create_admin(self, username, email, password, **extra_fields): # Para Admin (OPTICA-TOTAL)
+    def create_admin(self, name, last_name, username, email, password, **extra_fields): # Para Admin (OPTICA-TOTAL)
         is_staff = True
         is_superuser = False
-        return self._create_user(username, email, password, is_staff, is_superuser, **extra_fields)
+        return self._create_user(name, last_name, username, email, password, is_staff, is_superuser, **extra_fields)
