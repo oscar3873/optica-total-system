@@ -10,6 +10,7 @@ class CustomerForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
+        exclude = ['user_made',]
 
     def clean_address(self):
         address = self.cleaned_data['address']
@@ -21,6 +22,7 @@ class HealthInsuranceForm(forms.ModelForm):
     class Meta:
         model = HealthInsurance
         fields = "__all__"
+        exclude = ['user_made',]
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -38,6 +40,7 @@ class CustomerUpdateForm(forms.ModelForm):
     class Meta:
         model = Customer
         fields = '__all__'
+        exclude = ['user_made',]
 
     def clean_address(self):
         address = self.cleaned_data['address']
@@ -49,6 +52,7 @@ class HealthInsuranceUpdateForm(forms.ModelForm):
     class Meta:
         model = HealthInsurance
         fields = "__all__"
+        exclude = ['user_made',]
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -66,31 +70,37 @@ class CorrectionForm(forms.ModelForm):
     class Meta:
         model = Correction
         fields = ['lej_od_esferico', 'lej_od_cilindrico', 'lej_od_eje', 'lej_oi_esferico', 'lej_oi_cilindrico', 'lej_oi_eje', 'cer_od_esferico', 'cer_od_cilindrico', 'cer_od_eje', 'cer_oi_esferico', 'cer_oi_cilindrico', 'cer_oi_eje']
+        exclude = ['user_made',]
 
 class MaterialForm(forms.ModelForm):
     class Meta:
         model = Material
         fields = ['policarbonato', 'organic', 'mineral', 'm_r8']
+        exclude = ['user_made',]
 
 class ColorForm(forms.ModelForm):
     class Meta:
         model = Color
         fields = ['white', 'full_gray', 'gray_gradient', 'flat_sepia']
+        exclude = ['user_made',]
 
 class CristalForm(forms.ModelForm):
     class Meta:
         model = Cristal
         fields = ['monofocal', 'bifocal_fv', 'bifocal_k', 'bifocal_pi', 'progressive']
+        exclude = ['user_made',]
 
 class TratamientForm(forms.ModelForm):
     class Meta:
         model = Tratamient
         fields = ['antireflex', 'filtro_azul', 'fotocromatico', 'ultravex', 'polarizado', 'neutrosolar']
+        exclude = ['user_made',]
 
 class InterpupillaryForm(forms.ModelForm):
     class Meta:
         model = Interpupillary
         fields = ['lej_od_nanopupilar', 'lej_od_pelicula', 'lej_oi_nanopupilar', 'lej_oi_pelicula', 'lej_total', 'cer_od_nanopupilar', 'cer_od_pelicula', 'cer_oi_nanopupilar', 'cer_oi_pelicula', 'cer_total']
+        exclude = ['user_made',]
 
 class CalibrationOrderForm(forms.ModelForm):
     lej_od_esferico = forms.CharField(max_length=10, required=False)
@@ -143,3 +153,4 @@ class CalibrationOrderForm(forms.ModelForm):
     class Meta:
         model = Calibration_Order
         fields = ['is_done','diagnostic', 'employees', 'armazon', 'observations']
+        exclude = ['user_made',]

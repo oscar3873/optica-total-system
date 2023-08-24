@@ -7,4 +7,4 @@ class SaleForm(forms.ModelForm):
     class Meta:
         model = Sale
         fields = '__all__'
-        exclude = ['refund_date']
+        exclude = ['refund_date','user_made',]

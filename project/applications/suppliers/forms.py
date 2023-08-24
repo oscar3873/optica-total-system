@@ -7,3 +7,4 @@ class SupplierForm(forms.ModelForm):
     class Meta:
         model = Supplier
         fields = '__all__'
+        exclude = ['user_made',]

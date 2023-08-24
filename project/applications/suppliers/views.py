@@ -1,18 +1,19 @@
 from django.urls import reverse_lazy
-from django.views.generic import (View, FormView, DeleteView, ListView, DetailView)
+from django.views.generic import (View, CreateView, DeleteView, ListView, DetailView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import SupplierForm
 from .models import Supplier
 
 # Create your views here.
-class SupplierCreateView(LoginRequiredMixin, FormView):
+class SupplierCreateView(LoginRequiredMixin, CreateView):
+    model = Supplier
     form_class = SupplierForm
     template_name = 'suppliers/supplier_form.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.save()
+        form.cleaned_data['user_made'] = self.request.user
         return super().form_valid(form)
     
 
@@ -34,3 +35,4 @@ class SupplierDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.get_object())
         return context
+    

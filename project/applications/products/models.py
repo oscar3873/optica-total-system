@@ -1,11 +1,11 @@
 from django.db import models
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
+
+from applications.core.models import BaseAbstractWithUser
 
 from .managers import ProductManager
 
 # Create your models here.
-class Category(SoftDeletionModel, TimestampsModel):
+class Category(BaseAbstractWithUser):
     """
     Clase para Categorias
     """
@@ -15,7 +15,7 @@ class Category(SoftDeletionModel, TimestampsModel):
         return f'{self.name}'
 
 
-class Brand(SoftDeletionModel, TimestampsModel):
+class Brand(BaseAbstractWithUser):
     """
     Clase para Marcas
     """
@@ -25,7 +25,7 @@ class Brand(SoftDeletionModel, TimestampsModel):
         return f'Marca: {self.name}'
 
 
-class Product(SoftDeletionModel, TimestampsModel):
+class Product(BaseAbstractWithUser):
     """
     Clase para Productos
         almacena datos necesarios para el manejo de productos
@@ -52,7 +52,7 @@ class Product(SoftDeletionModel, TimestampsModel):
                 )
 
 
-class Feature_type(SoftDeletionModel, TimestampsModel):
+class Feature_type(BaseAbstractWithUser):
     """
     Clase del tipo de Carateristicas de una categoria para el producto 
     """
@@ -66,7 +66,7 @@ class Feature_type(SoftDeletionModel, TimestampsModel):
         verbose_name_plural = 'Tipos Caracteristicas'
 
 
-class Feature(SoftDeletionModel, TimestampsModel):
+class Feature(BaseAbstractWithUser):
     """
     Clase Intermedia para las caracteristicas nuevas del producto
     """
@@ -82,14 +82,14 @@ class Feature(SoftDeletionModel, TimestampsModel):
         verbose_name_plural = 'Caracteristicas'
 
 
-# class Type_discount(SoftDeletionModel, TimestampsModel):
+# class Type_discount(BaseAbstractWithUser):
 #     """
 #     Clase para Tipo de Descuentos
 #     """
 #     name = models.CharField(max_length=50, blank=False, null=False)
 
 
-# class Discount(SoftDeletionModel, TimestampsModel):
+# class Discount(BaseAbstractWithUser):
 #     """
 #     Clase para Descuentos para productos
 #         -type: tipo de descuento (procentaje o monto)
@@ -102,7 +102,7 @@ class Feature(SoftDeletionModel, TimestampsModel):
 #         return f'Tipo: {self.type}\nValor: {self.value}'
 
 
-# class Promotion(SoftDeletionModel, TimestampsModel):
+# class Promotion(BaseAbstractWithUser):
 #     """
 #     Clase para la Promocion
 #         almacena datos necesarios para proveer promociones a clientes
@@ -120,7 +120,7 @@ class Feature(SoftDeletionModel, TimestampsModel):
 #         return f'{self.name}\n{self.description}\Validez: {self.start_date} - {self.end_date}'
     
 
-# class Discount_Product(SoftDeletionModel, TimestampsModel):
+# class Discount_Product(BaseAbstractWithUser):
 #     """
 #     Clase intermedia de Descuento y Producto
 #         almacena las PK del Descuento, del Producto y de la Promocion

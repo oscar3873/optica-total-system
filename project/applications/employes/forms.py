@@ -15,30 +15,7 @@ class EmployeeForm(UserCreateForm):
     class Meta:
         model = Employee
         fields = '__all__'
-        exclude = ['user',]
-
-    def clean_address(self):
-        address = self.cleaned_data['address']
-        if address and (len(address) < 5):
-            raise forms.ValidationError("Ingrese un Direccion válida.")
-        return address
-    
-    def clean_birth_date(self):
-        birth_date = self.cleaned_data['birth_date']
-        validate_birth_date(birth_date)
-        return birth_date
-
-class EmployeeUpdateForm(forms.ModelForm):
-    birth_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={'type':'date'}
-        )
-    )
-
-    class Meta:
-        model = Employee
-        fields = '__all__'
-        exclude = ['user',]
+        exclude = ['user','user_made']
 
     def clean_address(self):
         address = self.cleaned_data['address']

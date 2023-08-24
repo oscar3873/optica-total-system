@@ -44,8 +44,16 @@ LOCAL_APPS = (
     "applications.sales",
 )
 
-THIRD_PARTY_APPS = ()
-
+THIRD_PARTY_APPS = (
+    "channels",
+)
+#########################
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Puedes usar otro backend como Redis
+    },
+}
+#########################
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE = [

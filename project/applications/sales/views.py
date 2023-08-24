@@ -10,3 +10,7 @@ class SaleCreateView(LoginRequiredMixin, FormView):
     form_class = SaleForm
     template_name = 'sales/sale_form.html'
     success_url = reverse_lazy('core_app:home')
+
+    def form_valid(self, form):
+        form.cleaned_data['user_made'] = self.request.user
+        return super().form_valid(form)

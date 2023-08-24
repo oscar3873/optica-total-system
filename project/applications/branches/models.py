@@ -1,9 +1,8 @@
 from django.db import models
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
+from applications.core.models import BaseAbstractWithUser
 
 # Create your models here.
-class Branch(SoftDeletionModel, TimestampsModel):
+class Branch(BaseAbstractWithUser):
     """
     Clase para Sucursales
         guarda datos generales de una sucursal

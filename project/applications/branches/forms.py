@@ -22,6 +22,7 @@ class BranchForm(forms.ModelForm):
     class Meta:
         model= Branch
         fields = '__all__'
+        exclude = ['user_made',]
 
     def clean_name(self):
         name = self.cleaned_data['name']

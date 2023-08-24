@@ -1,13 +1,12 @@
 from django.db import models
 from applications.core.models import Person
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
-from applications.employes.models import Employee
+from applications.core.models import BaseAbstractWithUser
 
+from applications.employes.models import Employee
 from .managers import CustomerManager
 
 # Create your models here.
-class HealthInsurance(SoftDeletionModel, TimestampsModel):
+class HealthInsurance(BaseAbstractWithUser):
     """
     Clase para Obras Sociales
         se guardan datos basicos del cada obra social
@@ -23,7 +22,7 @@ class HealthInsurance(SoftDeletionModel, TimestampsModel):
         return f'Obra Social: {self.name} - CUIT: {self.cuit}'
 
 
-class Customer(Person, SoftDeletionModel, TimestampsModel):
+class Customer(Person, BaseAbstractWithUser):
     """
     Clase para Clientes
         se guardan datos para almacenar clientes:
@@ -42,7 +41,7 @@ class Customer(Person, SoftDeletionModel, TimestampsModel):
         return f'{self.last_name}, {self.name}'
     
 
-class Customer_HealthInsurance(SoftDeletionModel, TimestampsModel):
+class Customer_HealthInsurance(BaseAbstractWithUser):
     """
     Clase intermedia para Clientes y sus Obras sociales
     """
@@ -53,7 +52,7 @@ class Customer_HealthInsurance(SoftDeletionModel, TimestampsModel):
         return f'Cliente: {self.customer}\nObra Social: {self.h_insurance}'
 
 
-class Correction(SoftDeletionModel, TimestampsModel):
+class Correction(BaseAbstractWithUser):
     lej_od_esferico = models.CharField(max_length=10, null=True, blank=True)
     lej_od_cilindrico = models.CharField(max_length=10, null=True, blank=True)
     lej_od_eje = models.CharField(max_length=10, null=True, blank=True)
@@ -69,26 +68,26 @@ class Correction(SoftDeletionModel, TimestampsModel):
     
 ###############################################################
 
-class Material(SoftDeletionModel, TimestampsModel):
+class Material(BaseAbstractWithUser):
     policarbonato = models.BooleanField(null=True, blank=True)
     organic = models.BooleanField(null=True, blank=True)
     mineral = models.BooleanField(null=True, blank=True)
     m_r8 = models.BooleanField(null=True, blank=True)
 
-class Color(SoftDeletionModel, TimestampsModel):
+class Color(BaseAbstractWithUser):
     white = models.BooleanField(null=True, blank=True)
     full_gray = models.BooleanField(null=True, blank=True)
     gray_gradient = models.BooleanField(null=True, blank=True)
     flat_sepia = models.BooleanField(null=True, blank=True)
 
-class Cristal(SoftDeletionModel, TimestampsModel):
+class Cristal(BaseAbstractWithUser):
     monofocal = models.BooleanField(null=True, blank=True)
     bifocal_fv = models.BooleanField(null=True, blank=True)
     bifocal_k = models.BooleanField(null=True, blank=True)
     bifocal_pi = models.BooleanField(null=True, blank=True)
     progressive = models.BooleanField(null=True, blank=True)
 
-class Tratamient(SoftDeletionModel, TimestampsModel):
+class Tratamient(BaseAbstractWithUser):
     antireflex = models.BooleanField(null=True, blank=True)
     filtro_azul = models.BooleanField(null=True, blank=True)
     fotocromatico = models.BooleanField(null=True, blank=True)
@@ -98,7 +97,7 @@ class Tratamient(SoftDeletionModel, TimestampsModel):
     
 ###############################################################
 
-class Interpupillary(SoftDeletionModel, TimestampsModel):
+class Interpupillary(BaseAbstractWithUser):
     lej_od_nanopupilar = models.CharField(max_length=10, null=True, blank=True)
     lej_od_pelicula = models.CharField(max_length=10, null=True, blank=True)
     lej_oi_nanopupilar = models.CharField(max_length=10, null=True, blank=True)
@@ -112,7 +111,7 @@ class Interpupillary(SoftDeletionModel, TimestampsModel):
     
 ###############################################################
 
-class Calibration_Order(SoftDeletionModel, TimestampsModel):
+class Calibration_Order(BaseAbstractWithUser):
     is_done = models.BooleanField(default=False, null=True, blank=True)
     correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)

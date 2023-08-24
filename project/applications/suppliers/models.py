@@ -1,12 +1,11 @@
 from django.db import models
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
 
+from applications.core.models import BaseAbstractWithUser
 from applications.products.models import Product
 from .managers import SupplierManager
 
 # Create your models here.
-class Supplier(SoftDeletionModel, TimestampsModel):
+class Supplier(BaseAbstractWithUser):
     name = models.CharField(max_length=50, verbose_name='Nombre')
     phone_number = models.IntegerField(verbose_name='Telefono de contacto')
     email = models.EmailField(verbose_name='Correo electronico', null=True, blank=True)
@@ -21,7 +20,7 @@ class Supplier(SoftDeletionModel, TimestampsModel):
         return f'{self.name} | {self.phone_number} | {self.email}'
     
 
-class Product_Supplier(SoftDeletionModel, TimestampsModel):
+class Product_Supplier(BaseAbstractWithUser):
     """
     Clase intermedia de Producto y Proveedor almacenando sus PK para sus posteriores analisis
     """
