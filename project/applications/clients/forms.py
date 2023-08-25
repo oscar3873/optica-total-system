@@ -2,31 +2,9 @@ from datetime import timedelta
 from django import forms
 
 from project.settings.base import DATE_NOW
-
+from applications.core.forms import validate_length, validate_birth_date
 from .models import *
 
-################################################################
-def validate_length(field_value, min_length, error_message):
-    """
-    Valida longitud de una cadena.
-        Para nombres, apellidos, direcciones, telefonos, etc.
-        Muestra el error mandado por argumento.
-    """
-    if field_value and len(field_value) < min_length:
-        raise forms.ValidationError(error_message)
-
-def validate_birth_date(birth_date):
-    """
-    Valida fecha de nacimiento.
-        Debe tener por lo menos 3 meses de vida o no superar los 85 años.
-    """
-    if birth_date and birth_date >= DATE_NOW.date() - timedelta(days=30):
-        raise forms.ValidationError('La fecha establecida no puede registrarse.')
-
-    age_limit = DATE_NOW.date() - timedelta(days=85*365)
-    if birth_date and birth_date <= age_limit:
-        raise forms.ValidationError('La fecha establecida no puede superar los 85 años.')
-################################################################
 
 class CustomerForm(forms.ModelForm):
 
