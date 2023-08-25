@@ -18,6 +18,6 @@ class Note(BaseAbstractWithUser):
 
     def __str__(self) -> str:
         return (f'Asunto: {self.subject}\n'+
-                f'Mensaje: {self.description}'+
-                f'por asesor: {self.user} - Sucursal: {self.branch}'
+                f'Mensaje: {self.description}\n'+
+                f'Por: {self.user_made} - Sucursal: {self.branch}'
                 )

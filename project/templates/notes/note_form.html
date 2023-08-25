@@ -1,16 +1,6 @@
-{% extends 'core/base.html' %}
-
-{% block main %}
-
 <form method="post">
     {% csrf_token %}
-    <label for="titulo">Título:</label>
-    <input type="text" name="titulo" required>
-    <br>
-    <label for="contenido">Contenido:</label>
-    <textarea name="contenido" required></textarea>
-    <br>
+
+    {{form.as_p}}
     <button type="submit">Crear Nota</button>
 </form>
-
-{% endblock main %}

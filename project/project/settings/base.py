@@ -44,9 +44,7 @@ LOCAL_APPS = (
     "applications.sales",
 )
 
-THIRD_PARTY_APPS = (
-    "channels",
-)
+THIRD_PARTY_APPS = ()
 #########################
 CHANNEL_LAYERS = {
     "default": {

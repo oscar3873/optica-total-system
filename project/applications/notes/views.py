@@ -1,5 +1,3 @@
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -20,17 +18,5 @@ class NoteCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
             'description': form.cleaned_data['description'],
             'branch': form.cleaned_data['branch'],
         }
-
-        note = Note.objects.create(**note_data)
-
-        # Notificar a los usuarios conectados
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            "broadcast",  # Nombre del canal de transmisión (broadcast)
-            {
-                "type": "notify.object_created",
-                "object_data": f"Nueva nota creada: {note.subject}",
-            },
-        )
-
+        Note.objects.create(**note_data)
         return super().form_valid(form)
