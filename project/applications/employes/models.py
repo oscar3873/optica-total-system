@@ -4,11 +4,9 @@ from applications.core.models import Person
 from applications.branches.models import Branch
 from applications.users.models import User
 
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
 
 # Create your models here.
-class Employee(Person, SoftDeletionModel, TimestampsModel):
+class Employee(Person):
     """
     Clase de Empleados
         almacenamineto de datos de empleados con sus datos generales y a que surucrsal pertenece

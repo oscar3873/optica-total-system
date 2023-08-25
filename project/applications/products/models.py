@@ -42,13 +42,11 @@ class Product(BaseAbstractWithUser):
     objects = ProductManager()
 
     def __str__(self) -> str:
-        return (f'Nombre: {self.name}\n'+
-                f'{self.brand}\n'+
-                f'{self.category}\n'+
-                f'Codigo: {self.barcode}\n'+
-                f'Precio: {self.price}\n'+ 
-                f'Stock: {self.stock}\n'+
-                f'Descripcion: {self.description}'
+        return (f'{self.name} - '+
+                f'{self.brand} - '+
+                f'{self.category} - '+
+                f'Precio: {self.price} - '+ 
+                f'Stock: {self.stock}'
                 )
 
 
@@ -68,11 +66,10 @@ class Feature_type(BaseAbstractWithUser):
 
 class Feature(BaseAbstractWithUser):
     """
-    Clase Intermedia para las caracteristicas nuevas del producto
+    Clase para las caracteristicas nuevas de productos
     """
     value = models.CharField(max_length=100, blank=True, null=True, verbose_name='Valor')
     type = models.ForeignKey(Feature_type, on_delete=models.PROTECT, related_name='feature', verbose_name='Tipo de caracteristica')
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='feature', verbose_name='Producto', null=True)
 
     def __str__(self) -> str:
         return f'Tipo: {self.type} - Valor: {self.value}'
@@ -81,6 +78,20 @@ class Feature(BaseAbstractWithUser):
         verbose_name = 'Caracteristica'
         verbose_name_plural = 'Caracteristicas'
 
+class Product_feature(BaseAbstractWithUser):
+    """
+    Clase Intermedia para las caracteristicas nuevas del producto
+    """
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Producto')
+    feature = models.ForeignKey(Feature, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Caracteristica')
+
+    
+    def __str__(self) -> str:
+        return f'Producto: {self.product} | Caracteristica: {self.feature}'
+    
+    class Meta:
+        verbose_name = 'Producto x Categoria'
+        verbose_name_plural = 'Producto x Categoria'
 
 # class Type_discount(BaseAbstractWithUser):
 #     """

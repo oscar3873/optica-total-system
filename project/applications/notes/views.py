@@ -3,7 +3,9 @@ from channels.layers import get_channel_layer
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 from applications.core.views import CustomUserPassesTestMixin
+from .models import Note
 from .forms import NoteCreateForm
 
 class NoteCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
@@ -12,9 +14,14 @@ class NoteCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        note = form.save(commit=False)
-        note.user_made = self.request.user
-        note.save()
+        note_data = {
+            'user_made': self.request.user,
+            'subject': form.cleaned_data['subject'],
+            'description': form.cleaned_data['description'],
+            'branch': form.cleaned_data['branch'],
+        }
+
+        note = Note.objects.create(**note_data)
 
         # Notificar a los usuarios conectados
         channel_layer = get_channel_layer()
@@ -22,7 +29,7 @@ class NoteCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
             "broadcast",  # Nombre del canal de transmisión (broadcast)
             {
                 "type": "notify.object_created",
-                "object_data": f"Nueva nota creada: {note.titulo}",
+                "object_data": f"Nueva nota creada: {note.subject}",
             },
         )
 
