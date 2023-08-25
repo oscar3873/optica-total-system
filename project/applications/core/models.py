@@ -4,12 +4,13 @@ from django_timestamps.timestamps import TimestampsModel
 
 from applications.users.models import User
 
+
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
     """
     Clase para el almacenamiento de datos basicos de personas
     """
-    name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50, db_index=True)
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     dni = models.CharField(max_length=20, db_index=True)
@@ -19,7 +20,7 @@ class Person(SoftDeletionModel, TimestampsModel):
         abstract = True
 
     def get_full_name(self):
-        return f'{self.last_name}, {self.name}'
+        return f'{self.last_name}, {self.first_name}'
 
     def __str__(self) -> str:
         return f'{self.get_full_name()}\nDNI: {self.dni}'
@@ -36,4 +37,4 @@ class BaseAbstractWithUser(SoftDeletionModel, TimestampsModel):
         abstract = True
     
     def __str__(self) -> str:
-        return f'Por: {self.user}'
+        return f'Por: {self.user_made}'
