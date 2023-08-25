@@ -35,7 +35,7 @@ class PersonForm(forms.ModelForm):
         model = Person
         fields = '__all__'
 
-    def clean_name(self):
+    def clean_first_name(self):
         name = self.cleaned_data['first_name']
         validate_length(name, 3, "Ingrese un nombre válido.")
         return name
