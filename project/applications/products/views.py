@@ -1,5 +1,5 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DetailView, ListView
+from django.views.generic import FormView, UpdateView, DetailView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from applications.core.views import CustomUserPassesTestMixin # Para Autenticar usuario administrador
@@ -8,7 +8,7 @@ from .forms import *
 from .models import *
 # Create your views here.
 
-class CategoryCreateView(LoginRequiredMixin, CreateView):
+class CategoryCreateView(LoginRequiredMixin, FormView):
     """
     Crear una catogoria nueva para el producto
     """
@@ -17,11 +17,15 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        category_data = {
+            'user_made': self.request.user,
+            'name': form.cleaned_data['name'],
+        }
+        Category.objects.create(**category_data)
         return super().form_valid(form)
 
 
-class BrandCreateView(LoginRequiredMixin, CreateView):
+class BrandCreateView(LoginRequiredMixin, FormView):
     """
     Crear una marca nueva para los productos
     """
@@ -30,10 +34,14 @@ class BrandCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        brand_data = {
+            'user_made': self.request.user,
+            'name': form.cleaned_data['name'],
+        }
+        Brand.objects.create(**brand_data)
         return super().form_valid(form)
 
-class ProductCreateView(LoginRequiredMixin, CreateView):
+class ProductCreateView(LoginRequiredMixin, FormView):
     """
     Crear unun producto
     """
@@ -42,10 +50,24 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        produtct_data = {
+            'user_made': self.request.user,
+            'name': form.cleaned_data['name'],
+            'price': form.cleaned_data['price'],
+            'description': form.cleaned_data['description'],
+            'stock': form.cleaned_data['stock'],
+            'category': form.cleaned_data['category'],
+            'brand': form.cleaned_data['brand'],
+            'barcode': form.cleaned_data['barcode'],
+        }
+        prouct = Product.objects.create(**produtct_data)
+
+        for feature in form.cleaned_data['features']:
+            Product_feature.objects.create(feature=feature, product=prouct)
+
         return super().form_valid(form)
 
-class FeatureCreateView(LoginRequiredMixin, CreateView): # CARACTERISTICA Y SU TIPO (2)
+class FeatureCreateView(LoginRequiredMixin, FormView): # CARACTERISTICA Y SU TIPO (2)
     """
     Crear una caracteristica nueva para el producto
         Previa carga del Tipo de Caracteristica
@@ -55,10 +77,19 @@ class FeatureCreateView(LoginRequiredMixin, CreateView): # CARACTERISTICA Y SU T
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        feature_data = {
+            'user_made': self.request.user,
+            'value': form.cleaned_data['value'],
+            'type': form.cleaned_data['type'],
+        }
+        feature = Feature.objects.create(**feature_data)
+
+        for product in form.cleaned_data['products']:
+            Product_feature.objects.create(feature=feature, product=product)
+
         return super().form_valid(form)
 
-class FeatureTypeCreateView(LoginRequiredMixin, CreateView): # TIPO DE CARACTERISTICA (1)
+class FeatureTypeCreateView(LoginRequiredMixin, FormView): # TIPO DE CARACTERISTICA (1)
     """
     Crear un tipo para la caracteristica nueva para el producto
         Es lo primero que se crea, luego se crea la caracteristica (tipo -> caracteristica)
@@ -68,7 +99,11 @@ class FeatureTypeCreateView(LoginRequiredMixin, CreateView): # TIPO DE CARACTERI
     success_url = reverse_lazy('products_app:new_feature')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        feature_data = {
+            'user_made': self.request.user,
+            'name': form.cleaned_data['name'],
+        }
+        Feature_type.objects.create(**feature_data)
         return super().form_valid(form)
 
 
@@ -81,7 +116,7 @@ class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 class BrandUpdateView(LoginRequiredMixin, UpdateView):
@@ -91,7 +126,7 @@ class BrandUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
@@ -101,8 +136,25 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        form.instance.user_made = self.request.user
+        product = form.save()
+
+        selected_features = form.cleaned_data['features']
+        existing_features = product.product_feature.all()
+
+        # Elimina relaciones existentes que ya no están seleccionadas
+        for feature in existing_features:
+            if feature.feature not in selected_features:
+                product.product_feature.get(feature=feature.feature).delete()
+
+        # Crea nuevas relaciones solo para características no existentes
+        for feature in selected_features:
+            if feature not in existing_features.values_list('feature', flat=True):
+                Product_feature.objects.create(product=product, feature=feature)
+
         return super().form_valid(form)
+
+
 
 class FeatureUpdateView(LoginRequiredMixin, UpdateView):
     model = Feature
@@ -111,7 +163,7 @@ class FeatureUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 class FeatureTypeUpdateView(LoginRequiredMixin, UpdateView):
@@ -121,15 +173,15 @@ class FeatureTypeUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        form.cleaned_data['user_made'] = self.request.user
+        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 ################## LIST ######################
 
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
-    template_name = 'products/product_list.html'  # Reemplaza con la plantilla adecuada
-    context_object_name = 'products'  # Nombre de la variable en el contexto
+    template_name = 'products/product_list.html'
+    context_object_name = 'products'
 
 
 class BrandListView(LoginRequiredMixin, ListView):

@@ -1,13 +1,10 @@
-from typing import Any
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login, logout, views as auth_view
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
 from django.views.generic import View
 from django.views.generic.edit import (FormView,)
-
-from project.settings.base import EMAIL_HOST_USER
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User
@@ -15,19 +12,20 @@ from .models import User
 
 
 # Create your views here.
-class UserCreateView(FormView):
+class UserCreateView(FormView): # PARA CREAR USUARIOS PUROS (RECOMENDADO PARA CREAR ADMINISTRADORES)
     template_name = "users/signup.html"
     form_class = UserCreateForm
     success_url = '/'
     
     def form_valid(self, form):
-        
-        User.objects.create_user(
-            form.cleaned_data['username'],
-            form.cleaned_data['email'],
-            form.cleaned_data['password1'],
-        
-        )
+        data_user = {
+            'first_name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'username': form.cleaned_data['username'],
+            'email': form.cleaned_data['email'],
+            'password': form.cleaned_data['password1'],
+        }
+        User.objects.create_user(**data_user)
         return super().form_valid(form)
 
  

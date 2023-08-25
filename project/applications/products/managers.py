@@ -4,5 +4,8 @@ from django.contrib.auth.models import BaseUserManager
 class ProductManager(BaseUserManager, models.Manager):
 
     def get_features(self, product):
-        features = product.feature.all()
+        intermed = product.product_feature.all()
+        features = [item.feature for item in intermed]
         return features
+    
+    

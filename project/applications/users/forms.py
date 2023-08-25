@@ -8,6 +8,24 @@ from django.core.validators import RegexValidator
 class UserCreateForm(forms.ModelForm):
     """Formulario para crear un usuario nuevo."""
     
+    first_name = forms.CharField(
+        required = True,
+        widget = forms.TextInput(attrs={
+            'placeholder' : 'Nombre',
+            'class' : 'form-control'
+        }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre solo puede contener letras, números y guiones bajos.')]
+    )
+    
+    last_name = forms.CharField(
+        required = True,
+        widget = forms.TextInput(attrs={
+            'placeholder' : 'Apellido',
+            'class' : 'form-control'
+        }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El apellido solo puede contener letras, números y guiones bajos.')]
+    )
+
     username = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
@@ -42,12 +60,22 @@ class UserCreateForm(forms.ModelForm):
             'class' : 'form-control'
         })
     )
-    
 
     class Meta:
         model = User
-        fields = ('email', 'username',)
+        fields = ('email', 'username','first_name', 'last_name')
     
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get('first_name')
+        if first_name and len(first_name) < 3:
+            raise forms.ValidationError('El nombre debe tener al menos 3 caracteres')
+        return first_name
+    
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get('last_name')
+        if last_name and len(last_name) < 3:
+            raise forms.ValidationError('El apellido debe tener al menos 3 caracteres')
+        return last_name
     
     def clean_email(self):
         email = self.cleaned_data.get('email')

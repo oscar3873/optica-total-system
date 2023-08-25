@@ -5,8 +5,8 @@
         Price: ${{ product.price }} | Stock: {{ product.stock }}
         <br>
         Caracteristicas: 
-        {% for feature in product.feature.all %}
-            {{ feature.value }}
+        {% for product_feature in product.product_feature.all %}
+            {{ product_feature.feature.value }}
         {% endfor %}
     </li>
 {% empty %}

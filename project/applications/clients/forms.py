@@ -1,12 +1,18 @@
+from datetime import timedelta
 from django import forms
+
+from project.settings.base import DATE_NOW
+
 from .models import *
-
-def validate_length(field_value, min_length, error_message):
-    if field_value and len(field_value) < min_length:
-        raise forms.ValidationError(error_message)
-
+from applications.core.forms import validate_birth_date, validate_length
 
 class CustomerForm(forms.ModelForm):
+
+    birth_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={'type':'date'}
+        )
+    )
     class Meta:
         model = Customer
         fields = '__all__'
@@ -16,6 +22,11 @@ class CustomerForm(forms.ModelForm):
         address = self.cleaned_data['address']
         validate_length(address, 5, "Ingrese una dirección válida.")
         return address
+    
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        validate_birth_date(birth_date)
+        return birth_date
 
 
 class HealthInsuranceForm(forms.ModelForm):

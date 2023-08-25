@@ -1,5 +1,3 @@
-from django.http import HttpResponse
-from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
@@ -8,8 +6,6 @@ from django.views.generic.edit import (FormView,)
 
 from .models import *
 from .forms import CustomerForm, HealthInsuranceForm, CalibrationOrderForm
-
-
 
 class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     form_class = CalibrationOrderForm
@@ -99,8 +95,16 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        customer_data = form.cleaned_data
-        customer_data['user_made'] = self.request.user
+        customer_data = {
+            'user_made': self.request.user,
+            'first_name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'phone_number': form.cleaned_data['phone_number'],
+            'dni': form.cleaned_data['dni'],
+            'birth_date': form.cleaned_data['birth_date'],
+            'address': form.cleaned_data['address'],
+            'email': form.cleaned_data['email'],
+        }
         Customer.objects.create_customer(**customer_data)
         return super().form_valid(form)
 
@@ -111,7 +115,11 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        insurance = form.cleaned_data
-        insurance['user_made'] = self.request.user
-        HealthInsurance.objects.create(**insurance)
+        insurance_data = {
+            'user_made': self.request.user,
+            'name': form.cleaned_data['name'],
+            'phone_number': form.cleaned_data['phone_number'],
+            'cuit': form.cleaned_data['cuit'],
+        }
+        HealthInsurance.objects.create(**insurance_data)
         return super().form_valid(form)

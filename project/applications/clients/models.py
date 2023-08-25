@@ -12,6 +12,7 @@ class HealthInsurance(BaseAbstractWithUser):
         se guardan datos basicos del cada obra social
     """
     name = models.CharField(max_length=50, db_index=True)
+    phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     cuit = models.CharField(max_length=20)
 
     class Meta:
