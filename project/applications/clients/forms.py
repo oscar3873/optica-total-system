@@ -1,10 +1,8 @@
-from datetime import timedelta
 from django import forms
 
-from project.settings.base import DATE_NOW
-
 from .models import *
-from applications.core.forms import validate_birth_date, validate_length
+from applications.core.forms import validate_length, validate_birth_date
+
 
 class CustomerForm(forms.ModelForm):
 
