@@ -1,32 +1,55 @@
-from django.shortcuts import render
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.views.generic import (CreateView, DetailView, UpdateView, FormView)
 
 from .models import Employee
-from .forms import EmployeeCreateForm
-from applications.core.forms import PersonForm
-from applications.core.models import Person
+from .forms import EmployeeForm
+from applications.users.models import User
 
-from django.views.generic import (CreateView, DetailView, UpdateView, View)
-
+from applications.core.views import CustomUserPassesTestMixin
 # Create your views here.
-class EmployeeCreateView(UserPassesTestMixin, CreateView):
-    model = Employee
-    template_name = 'employes/employee_create_form.html'
-    form_class = EmployeeCreateForm
+class EmployeeCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
+    template_name = 'employes/employee_form.html'
+    form_class = EmployeeForm
     success_url = reverse_lazy('core_app:home')
 
-    def test_func(self):
-        return self.request.user.is_staff and self.request.user.is_superuser
+    def form_valid(self, form):
+        user_data = {
+            'name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'username': form.cleaned_data['username'],
+            'email': form.cleaned_data['email'],
+            'password': form.cleaned_data['password1'],
+        }
+        user = User.objects.create_user(**user_data)
+        
+        employee_data = {
+            'user': user,
+            'user_made': self.request.user,
+            'first_name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'phone_number': form.cleaned_data['phone_number'],
+            'dni': form.cleaned_data['dni'],
+            'birth_date': form.cleaned_data['birth_date'],
+            'from_branch': form.cleaned_data['from_branch'],
+            'address': form.cleaned_data['address'],
+        }
+        Employee.objects.create(**employee_data)
+        
+        return super().form_valid(form)
+
+
+
+class EmployeeUpdateView(LoginRequiredMixin, CustomUserPassesTestMixin, UpdateView):
+    model = Employee
+    template_name = 'employes/employee_form.html'
+    form_class = EmployeeForm
+    success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        employee = form.save(commit=False)
-        form.cleaned_data.pop('from_branch')
-        person_form = Person.objects.create_person_dict(**form.cleaned_data)
-
-        employee.person = person_form
-        employee.save()
-        
+        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 
@@ -41,9 +64,3 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         # context['key'] = value
 
         return context
-    
-
-class EmployeeUpdate_Person(UserPassesTestMixin, UpdateView):
-    model = Person
-    template_name = 'employes/employee_update_form.html'
-    form_class = PersonForm

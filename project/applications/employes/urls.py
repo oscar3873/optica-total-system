@@ -1,20 +1,22 @@
-from django.urls import path, reverse_lazy
-from django.contrib.auth import views as auth_views
-
-#
-from . import views
+from django.urls import path
+from .views import EmployeeCreateView, EmployeeProfileView, EmployeeUpdateView
 
 app_name = 'employees_app'
 
 urlpatterns = [
     path(
         'new/', 
-        views.EmployeeCreateView.as_view(),
-        name='new' # consumir en template con user.pk
+        EmployeeCreateView.as_view(),
+        name='new_employee'
+    ),
+    path(
+        'update/<pk>/',
+        EmployeeUpdateView.as_view(),
+        name='update_employee'
     ),
     path(
         'profile/<pk>/', 
-        views.EmployeeProfileView.as_view(),
-        name='profile' # consumir en template con user.pk
+        EmployeeProfileView.as_view(),
+        name='profile_employee'
     ),
 ]
