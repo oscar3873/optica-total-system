@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 class HomePageView(LoginRequiredMixin , TemplateView):
     template_name = "core/home_page.html"
 
-class CustomUserPassesTestMixin(UserPassesTestMixin):
+class CustomUserPassesTestMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
         """
         Para la verificacion de Administrador

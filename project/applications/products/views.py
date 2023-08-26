@@ -1,6 +1,5 @@
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 from applications.core.views import CustomUserPassesTestMixin # Para Autenticar usuario administrador
 
@@ -8,7 +7,7 @@ from .forms import *
 from .models import *
 # Create your views here.
 
-class CategoryCreateView(LoginRequiredMixin, FormView):
+class CategoryCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una catogoria nueva para el producto
     """
@@ -25,7 +24,7 @@ class CategoryCreateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class BrandCreateView(LoginRequiredMixin, FormView):
+class BrandCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una marca nueva para los productos
     """
@@ -41,7 +40,7 @@ class BrandCreateView(LoginRequiredMixin, FormView):
         Brand.objects.create(**brand_data)
         return super().form_valid(form)
 
-class ProductCreateView(LoginRequiredMixin, FormView):
+class ProductCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear unun producto
     """
@@ -67,7 +66,7 @@ class ProductCreateView(LoginRequiredMixin, FormView):
 
         return super().form_valid(form)
 
-class FeatureCreateView(LoginRequiredMixin, FormView): # CARACTERISTICA Y SU TIPO (2)
+class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y SU TIPO (2)
     """
     Crear una caracteristica nueva para el producto
         Previa carga del Tipo de Caracteristica
@@ -89,7 +88,7 @@ class FeatureCreateView(LoginRequiredMixin, FormView): # CARACTERISTICA Y SU TIP
 
         return super().form_valid(form)
 
-class FeatureTypeCreateView(LoginRequiredMixin, FormView): # TIPO DE CARACTERISTICA (1)
+class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
     """
     Crear un tipo para la caracteristica nueva para el producto
         Es lo primero que se crea, luego se crea la caracteristica (tipo -> caracteristica)
@@ -109,7 +108,7 @@ class FeatureTypeCreateView(LoginRequiredMixin, FormView): # TIPO DE CARACTERIST
 
 ####################### UPDATES #####################
 
-class CategoryUpdateView(LoginRequiredMixin, UpdateView):
+class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'products/category_form.html'
@@ -119,7 +118,7 @@ class CategoryUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.user_made = self.request.user
         return super().form_valid(form)
 
-class BrandUpdateView(LoginRequiredMixin, UpdateView):
+class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'products/brand_form.html'
@@ -129,7 +128,7 @@ class BrandUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.user_made = self.request.user
         return super().form_valid(form)
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'products/product_form.html'
@@ -156,7 +155,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 
 
 
-class FeatureUpdateView(LoginRequiredMixin, UpdateView):
+class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'products/feature_form.html'
@@ -166,7 +165,7 @@ class FeatureUpdateView(LoginRequiredMixin, UpdateView):
         form.instance.user_made = self.request.user
         return super().form_valid(form)
 
-class FeatureTypeUpdateView(LoginRequiredMixin, UpdateView):
+class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature_type
     form_class = FeatureForm
     template_name = 'products/feature_form.html'
@@ -178,19 +177,19 @@ class FeatureTypeUpdateView(LoginRequiredMixin, UpdateView):
 
 ################## LIST ######################
 
-class ProductListView(LoginRequiredMixin, ListView):
+class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
     template_name = 'products/product_list.html'
     context_object_name = 'products'
 
 
-class BrandListView(LoginRequiredMixin, ListView):
+class BrandListView(CustomUserPassesTestMixin, ListView):
     model = Brand
     template_name = 'products/brand_list.html'
     context_object_name = 'brands'
 
 
-class CategoryListView(LoginRequiredMixin, ListView):
+class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
     template_name = 'products/category_list.html'
     context_object_name = 'categories'
@@ -198,7 +197,7 @@ class CategoryListView(LoginRequiredMixin, ListView):
 
 #################### DETAILS #####################
 
-class ProductDetailView(LoginRequiredMixin, DetailView):
+class ProductDetailView(CustomUserPassesTestMixin, DetailView):
     model = Product
     template_name = 'products/product_detail.html'
     context_object_name = 'product'

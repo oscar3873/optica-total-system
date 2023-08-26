@@ -1,5 +1,4 @@
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import (FormView, DetailView, UpdateView, View)
 
 from .models import Branch
@@ -9,7 +8,7 @@ from applications.core.views import CustomUserPassesTestMixin
 
 
 # Create your views here.
-class BranchCreateView(LoginRequiredMixin, CustomUserPassesTestMixin, FormView):
+class BranchCreateView(CustomUserPassesTestMixin, CustomUserPassesTestMixin, FormView):
     form_class = BranchForm
     template_name = 'branches/branch_form.html'
     success_url = reverse_lazy('core_app:home')
