@@ -46,7 +46,7 @@ class LoginView(FormView):
         if next_url:
             return redirect(next_url)  # Redirige a la URL especificada en 'next'
         
-        return redirect('home')  # Si no hay 'next', redirige a una URL predeterminada
+        return redirect(self.success_url)  # Si no hay 'next', redirige a una URL predeterminada
     
 
 class LogoutView(View):
