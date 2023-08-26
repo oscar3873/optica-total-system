@@ -3,9 +3,9 @@ from .models import User
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
+from applications.core.forms import ValidationFormMixin
 
-
-class UserCreateForm(forms.ModelForm):
+class UserCreateForm(ValidationFormMixin):
     """Formulario para crear un usuario nuevo."""
     
     first_name = forms.CharField(
@@ -67,32 +67,27 @@ class UserCreateForm(forms.ModelForm):
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
-        if first_name and len(first_name) < 3:
-            raise forms.ValidationError('El nombre debe tener al menos 3 caracteres')
+        self.validate_length(first_name, 3, 'El nombre debe tener al menos 3 caracteres')
         return first_name
     
     def clean_last_name(self):
         last_name = self.cleaned_data.get('last_name')
-        if last_name and len(last_name) < 3:
-            raise forms.ValidationError('El apellido debe tener al menos 3 caracteres')
+        self.validate_length(last_name, 3, 'El apellido debe tener al menos 3 caracteres')
         return last_name
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if email and User.objects.filter(email=email).exists():
-            raise forms.ValidationError('El email ya existe')
+        self.validate_email(email)
         return email
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        if User.objects.filter(username=username).exists():
-            raise forms.ValidationError('El usuario ya existe')
+        self.validate_username(username)
         return username
     
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
-        if password1 and len(password1) < 6:
-            raise forms.ValidationError('La contraseña debe tener al menos 6 caracteres')
+        self.validate_length(password1, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password1
 
     def clean(self):

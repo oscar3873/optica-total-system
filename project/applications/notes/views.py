@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 
-from applications.core.views import CustomUserPassesTestMixin
+from applications.core.mixins import CustomUserPassesTestMixin
 from .models import Note
 from .forms import NoteCreateForm
 

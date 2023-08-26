@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView)
 
-from applications.core.views import CustomUserPassesTestMixin
+from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
 from .models import Supplier
 

@@ -1,7 +1,7 @@
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 
-from applications.core.views import CustomUserPassesTestMixin # Para Autenticar usuario administrador
+from applications.core.mixins import CustomUserPassesTestMixin # Para Autenticar usuario administrador
 
 from .forms import *
 from .models import *

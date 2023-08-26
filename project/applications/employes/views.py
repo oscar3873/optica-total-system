@@ -5,7 +5,7 @@ from .models import Employee
 from .forms import EmployeeForm
 from applications.users.models import User
 
-from applications.core.views import CustomUserPassesTestMixin
+from applications.core.mixins import CustomUserPassesTestMixin
 # Create your views here.
 class EmployeeCreateView(CustomUserPassesTestMixin, FormView):
     template_name = 'employes/employee_form.html'

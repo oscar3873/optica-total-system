@@ -1,10 +1,10 @@
 from django import forms
 
 from .models import *
-from applications.core.forms import validate_length, validate_birth_date
+from applications.core.forms import ValidationFormMixin
 
 
-class CustomerForm(forms.ModelForm):
+class CustomerForm(ValidationFormMixin):
 
     birth_date = forms.DateField(
         widget=forms.DateInput(
@@ -18,16 +18,16 @@ class CustomerForm(forms.ModelForm):
 
     def clean_address(self):
         address = self.cleaned_data['address']
-        validate_length(address, 5, "Ingrese una dirección válida.")
+        self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
     
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
-        validate_birth_date(birth_date)
+        self.validate_birth_date(birth_date)
         return birth_date
 
 
-class HealthInsuranceForm(forms.ModelForm):
+class HealthInsuranceForm(ValidationFormMixin):
     class Meta:
         model = HealthInsurance
         fields = "__all__"
@@ -35,17 +35,17 @@ class HealthInsuranceForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, "El nombre de la sucursal debe contener al menos 3 caracteres.")
+        self.validate_length(name, 3, "El nombre de la sucursal debe contener al menos 3 caracteres.")
         return name
 
     def clean_cuit(self):
         cuit = self.cleaned_data['cuit']
         cuit_str = str(cuit)
-        validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
+        self.validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
         return cuit
 
 
-class CustomerUpdateForm(forms.ModelForm):
+class CustomerUpdateForm(ValidationFormMixin):
     class Meta:
         model = Customer
         fields = '__all__'
@@ -53,11 +53,11 @@ class CustomerUpdateForm(forms.ModelForm):
 
     def clean_address(self):
         address = self.cleaned_data['address']
-        validate_length(address, 5, "Ingrese una dirección válida.")
+        self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
 
 
-class HealthInsuranceUpdateForm(forms.ModelForm):
+class HealthInsuranceUpdateForm(ValidationFormMixin):
     class Meta:
         model = HealthInsurance
         fields = "__all__"
@@ -65,13 +65,13 @@ class HealthInsuranceUpdateForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, "El nombre debe contener al menos 3 caracteres.")
+        self.validate_length(name, 3, "El nombre debe contener al menos 3 caracteres.")
         return name
 
     def clean_cuit(self):
         cuit = self.cleaned_data['cuit']
         cuit_str = str(cuit)
-        validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
+        self.validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
         return cuit
 
 
