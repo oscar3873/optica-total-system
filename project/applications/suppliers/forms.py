@@ -1,10 +1,10 @@
 from django import forms
 
 from .models import Supplier
-from applications.core.forms import validate_length
+from applications.core.forms import ValidationFormMixin
 
 
-class SupplierForm(forms.ModelForm):
+class SupplierForm(ValidationFormMixin):
 
     class Meta:
         model = Supplier
@@ -13,5 +13,5 @@ class SupplierForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, 'El nombre del proveedor debe tener al menos 3 car√°cteres.')
+        self.validate_length(name, 3, 'El nombre del proveedor debe tener al menos 3 car†cteres.')
         return name
