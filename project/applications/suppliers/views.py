@@ -1,12 +1,12 @@
 from django.urls import reverse_lazy
-from django.views.generic import (View, CreateView, DeleteView, ListView, DetailView, FormView)
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView)
 
+from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
 from .models import Supplier
 
 # Create your views here.
-class SupplierCreateView(LoginRequiredMixin, FormView):
+class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
     template_name = 'suppliers/supplier_form.html'
     success_url = reverse_lazy('core_app:home')
@@ -20,16 +20,20 @@ class SupplierCreateView(LoginRequiredMixin, FormView):
         }
         Supplier.objects.create(**supplier_data)
         return super().form_valid(form)
-    
 
-class SuppliersListView(LoginRequiredMixin, ListView):
+
+class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
+    model = Supplier
+    form_class = SupplierForm
+    template_name = 'suppliers/supplier_form.html'
+    success_url = reverse_lazy('core_app:home')
+
+
+class SuppliersListView(CustomUserPassesTestMixin, ListView):
     model = Supplier
     template_name = 'suppliers/supplier_list.html'
     context_object_name = 'suppliers'
-    
-    def get_queryset(self):
-        return Supplier.objects.all()
-    
+
 
 class SupplierDetailView(DetailView):
     model = Supplier
