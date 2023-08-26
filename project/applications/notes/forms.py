@@ -1,10 +1,10 @@
 from django import forms
 
 from .models import Note
-from applications.core.forms import validate_length
+from applications.core.forms import ValidationFormMixin
 
 
-class NoteCreateForm(forms.ModelForm):
+class NoteCreateForm(ValidationFormMixin):
     
     class Meta:
         model = Note
@@ -13,5 +13,5 @@ class NoteCreateForm(forms.ModelForm):
 
     def clean_subject(self):
         subject = self.cleaned_data.get('subject')
-        validate_length(subject, 3, 'El t√≠tulo debe tener al menos 3 car√°cteres.')
+        self.validate_length(subject, 3, 'El tÌtulo debe tener al menos 3 car·cteres.')
         return subject
