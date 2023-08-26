@@ -4,7 +4,7 @@ from django.views.generic import (FormView, DetailView, UpdateView, View)
 from .models import Branch
 from .forms import BranchForm
 
-from applications.core.views import CustomUserPassesTestMixin
+from applications.core.mixins import CustomUserPassesTestMixin
 
 
 # Create your views here.
