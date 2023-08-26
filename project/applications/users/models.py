@@ -9,7 +9,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']  # Don't forget 'username' which is inherited from AbstractUser
+    REQUIRED_FIELDS = ['username','first_name','last_name']  # Don't forget 'username' which is inherited from AbstractUser
 
     objects = UserManager()
 

@@ -8,7 +8,7 @@ from applications.core.views import CustomUserPassesTestMixin
 
 
 # Create your views here.
-class BranchCreateView(CustomUserPassesTestMixin, CustomUserPassesTestMixin, FormView):
+class BranchCreateView(CustomUserPassesTestMixin, FormView):
     form_class = BranchForm
     template_name = 'branches/branch_form.html'
     success_url = reverse_lazy('core_app:home')
