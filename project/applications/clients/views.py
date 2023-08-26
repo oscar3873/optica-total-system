@@ -28,13 +28,8 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
             cer_oi_eje = form.cleaned_data['cer_oi_eje'],
             user_made = self.request.user
         )
-        mat = Material.objects.create(
-            policarbonato = form.cleaned_data['policarbonato'],
-            organic = form.cleaned_data['organic'],
-            mineral = form.cleaned_data['mineral'],
-            m_r8 = form.cleaned_data['m_r8'],
-            user_made = self.request.user
-        )
+        mat = Material.objects.create_by_form(form, self.request.user)
+
         col = Color.objects.create(
             white = form.cleaned_data['white'],
             full_gray = form.cleaned_data['full_gray'],
@@ -87,6 +82,13 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
             user_made = self.request.user
         )
         return super().form_valid(form)
+    
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            correction = self.intance.correction
+    
 
     
 class CustomerCreateView(LoginRequiredMixin, FormView):

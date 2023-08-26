@@ -3,7 +3,8 @@ from applications.core.models import Person
 from applications.core.models import BaseAbstractWithUser
 
 from applications.employes.models import Employee
-from .managers import CustomerManager
+from .managers import CustomerManager, MaterialManager
+
 
 # Create your models here.
 class HealthInsurance(BaseAbstractWithUser):
@@ -74,6 +75,13 @@ class Material(BaseAbstractWithUser):
     organic = models.BooleanField(null=True, blank=True)
     mineral = models.BooleanField(null=True, blank=True)
     m_r8 = models.BooleanField(null=True, blank=True)
+
+    objects = MaterialManager()
+
+    class Meta:
+        verbose_name = 'Material'
+        verbose_name_plural = 'Materiales'
+
 
 class Color(BaseAbstractWithUser):
     white = models.BooleanField(null=True, blank=True)

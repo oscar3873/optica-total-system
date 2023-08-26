@@ -31,3 +31,28 @@ class CustomerManager(BaseUserManager, models.Manager):
     def all_buy(self, customer):
         buy = customer.sales.all().order_by('created_at')
         return buy
+    
+
+class MaterialManager(BaseUserManager, models.Manager):
+
+    def cerate_material(self, policarbonato, organic, mineral, m_r8, user_made, **extra_fields):
+        material = self.model(
+            policarbonato = policarbonato,
+            organic =organic,
+            mineral = mineral,
+            m_r8 = m_r8,
+            user_made = user_made
+            **extra_fields
+        )
+        mineral.save()
+        return material
+    
+    def create_by_form(self, form, user_made):
+        material = self.cerate_material(
+            policarbonato = form.cleaned_data['policarbonato'],
+            organic = form.cleaned_data['organic'],
+            mineral = form.cleaned_data['mineral'],
+            m_r8 = form.cleaned_data['m_r8'],
+            user_made = user_made
+        )
+        return material
