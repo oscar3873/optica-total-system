@@ -1,6 +1,9 @@
 from django.db import models
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
+from applications.cashregister.managers import CashRegisterManager
+
+
 
 
 class Currency(BaseAbstractWithUser):
@@ -23,6 +26,8 @@ class CashRegister(BaseAbstractWithUser):
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     is_close = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    
+    objects = CashRegisterManager()
     
     def __str__(self):
         return "Caja #" + str(self.pk) + " - " + str(self.date_open.__format__('%d/%m/%Y'))
