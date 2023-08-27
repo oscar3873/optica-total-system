@@ -62,7 +62,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         prouct = Product.objects.create(**produtct_data)
 
         for feature in form.cleaned_data['features']:
-            Product_feature.objects.create(feature=feature, product=prouct)
+            Product_feature.objects.create(feature=feature, product=prouct, user_made = self.request.user)
 
         return super().form_valid(form)
 
@@ -84,7 +84,7 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y
         feature = Feature.objects.create(**feature_data)
 
         for product in form.cleaned_data['products']:
-            Product_feature.objects.create(feature=feature, product=product)
+            Product_feature.objects.create(feature=feature, product=product, user_made = self.request.user)
 
         return super().form_valid(form)
 
@@ -149,7 +149,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         # Crea nuevas relaciones solo para características no existentes
         for feature in selected_features:
             if feature not in existing_features.values_list('feature', flat=True):
-                Product_feature.objects.create(product=product, feature=feature)
+                Product_feature.objects.create(product=product, feature=feature, user_made= self.request.user)
 
         return super().form_valid(form)
 
