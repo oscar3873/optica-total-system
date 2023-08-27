@@ -3,7 +3,8 @@ from applications.core.models import Person
 from applications.core.models import BaseAbstractWithUser
 
 from applications.employes.models import Employee
-from .managers import CustomerManager
+from .managers import CustomerManager, LabManager
+
 
 # Create your models here.
 class HealthInsurance(BaseAbstractWithUser):
@@ -75,6 +76,7 @@ class Material(BaseAbstractWithUser):
     mineral = models.BooleanField(null=True, blank=True)
     m_r8 = models.BooleanField(null=True, blank=True)
 
+
 class Color(BaseAbstractWithUser):
     white = models.BooleanField(null=True, blank=True)
     full_gray = models.BooleanField(null=True, blank=True)
@@ -124,3 +126,5 @@ class Calibration_Order(BaseAbstractWithUser):
     employees = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     armazon = models.CharField(max_length=100, null=True, blank=True)
     observations = models.CharField(max_length=200, null=True, blank=True)
+
+    objects = LabManager()
