@@ -33,26 +33,50 @@ class CustomerManager(BaseUserManager, models.Manager):
         return buy
     
 
-class MaterialManager(BaseUserManager, models.Manager):
+class LabManager(BaseUserManager, models.Manager):
 
-    def cerate_material(self, policarbonato, organic, mineral, m_r8, user_made, **extra_fields):
-        material = self.model(
-            policarbonato = policarbonato,
-            organic =organic,
-            mineral = mineral,
-            m_r8 = m_r8,
-            user_made = user_made
-            **extra_fields
+    def create_or_update_calibration_order(self, user_made,
+                    form, correction_form, material_form, color_form,
+                    cristal_form, tratamiento_form, pupilar_form):
+        
+        correction = correction_form.save(commit=False)
+        correction.user_made = user_made
+        correction.save()
+
+        material = material_form.save(commit=False)
+        material.user_made = user_made
+        material.save()
+
+        color = color_form.save(commit=False)
+        color.user_made = user_made
+        color.save()
+
+        cristal = cristal_form.save(commit=False)
+        cristal.user_made = user_made
+        cristal.save()
+
+        tratamiento = tratamiento_form.save(commit=False)
+        tratamiento.user_made = user_made
+        tratamiento.save()
+
+        pupilar = pupilar_form.save(commit=False)
+        pupilar.user_made = user_made
+        pupilar.save()
+
+        calibration_order = self.model(
+            is_done = form.cleaned_data['is_done'],
+            correction = correction,
+            material = material,
+            type_cristal = cristal,
+            color = color,
+            tratamient = tratamiento,
+            interpupillary = pupilar,
+            diagnostic = form.cleaned_data['diagnostic'],
+            armazon = form.cleaned_data['armazon'],
+            observations = form.cleaned_data['observations'],
+            user_made = user_made,
         )
-        mineral.save()
-        return material
-    
-    def create_by_form(self, form, user_made):
-        material = self.cerate_material(
-            policarbonato = form.cleaned_data['policarbonato'],
-            organic = form.cleaned_data['organic'],
-            mineral = form.cleaned_data['mineral'],
-            m_r8 = form.cleaned_data['m_r8'],
-            user_made = user_made
-        )
-        return material
+        # Set any other fields of the calibration_order as needed
+        calibration_order.save()
+
+        return calibration_order

@@ -1,7 +1,14 @@
-<form class="mt-3" method="post">
+<form enctype="multipart/form-data" method="post">
     {% csrf_token %}
-    <div class="mb-3">
-        {{form.as_p}}
-    </div>
-    <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
+
+    {{ named_formsets.correction.as_p }}
+    {{ named_formsets.material.as_p }}
+    {{ named_formsets.color.as_p }}
+    {{ named_formsets.cristal.as_p }}
+    {{ named_formsets.tratamiento.as_p }}
+    {{ named_formsets.pupilar.as_p }}
+    {{ named_formsets.form.as_p }}
+
+    {{ form.as_p }}
+    <button type="submit">Enviar</button>
 </form>
