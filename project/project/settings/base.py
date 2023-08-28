@@ -33,6 +33,7 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     "applications.users",
+    "applications.dashboard",
 )
 
 THIRD_PARTY_APPS = ()
