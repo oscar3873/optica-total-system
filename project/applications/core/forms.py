@@ -14,9 +14,10 @@ class ValidationFormMixin(forms.ModelForm):
             Para nombres, apellidos, direcciones, telefonos, etc.
             Muestra el error mandado por argumento.
         """
-        field_value = str(field_value)
-        if field_value and len(field_value) < min_length:
-            raise forms.ValidationError(error_message)
+        if field_value is not None:
+            field_value = str(field_value)
+            if len(field_value) < min_length:
+                raise forms.ValidationError(error_message)
 
     def validate_birth_date(self, birth_date):
         """
