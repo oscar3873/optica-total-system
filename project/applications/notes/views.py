@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.shortcuts import render
 from django.views.generic import FormView
 
 from applications.core.mixins import CustomUserPassesTestMixin
@@ -19,3 +20,7 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         }
         Note.objects.create(**note_data)
         return super().form_valid(form)
+
+
+def index(request):
+    return render(request, "chat/index.html")

@@ -44,7 +44,10 @@ LOCAL_APPS = (
     "applications.sales",
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    "daphne",
+    "chat",
+)
 #########################
 CHANNEL_LAYERS = {
     "default": {
@@ -52,7 +55,7 @@ CHANNEL_LAYERS = {
     },
 }
 #########################
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
