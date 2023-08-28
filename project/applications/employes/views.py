@@ -19,6 +19,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView):
             'username': form.cleaned_data['username'],
             'email': form.cleaned_data['email'],
             'password': form.cleaned_data['password1'],
+            'branch': form.cleaned_data['branch'],
         }
         user = User.objects.create_user(**user_data)
         
@@ -30,7 +31,6 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView):
             'phone_number': form.cleaned_data['phone_number'],
             'dni': form.cleaned_data['dni'],
             'birth_date': form.cleaned_data['birth_date'],
-            'from_branch': form.cleaned_data['from_branch'],
             'address': form.cleaned_data['address'],
         }
         Employee.objects.create(**employee_data)

@@ -1,8 +1,7 @@
 from django.db import models
-from applications.core.models import BaseAbstractWithUser
 
 # Create your models here.
-class Branch(BaseAbstractWithUser):
+class Branch(models.Model):
     """
     Clase para Sucursales
         guarda datos generales de una sucursal
