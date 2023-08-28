@@ -1,9 +1,13 @@
-// static/websocket.js
-var socket = new WebSocket("ws://yourdomain/ws/objects/");
+// global_messages.js
 
-socket.onmessage = function(event) {
-    var data = JSON.parse(event.data);
-    if (data.message_type === 'object_created') {
-        // Manipula la información del objeto creado
-    }
+const socket = new WebSocket(
+    'ws://' + window.location.host + '/ws/global/'
+);
+
+socket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const message = data.message;
+    const messageElement = document.createElement('div');
+    messageElement.textContent = message;
+    document.body.appendChild(messageElement);
 };
