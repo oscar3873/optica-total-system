@@ -2,6 +2,7 @@
 Configuracion base que todos necesitan para funcionar.
 """
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import timezone
 import json
 from pathlib import Path
 
@@ -33,11 +34,36 @@ DJANGO_APPS = (
 
 LOCAL_APPS = (
     "applications.users",
+    "applications.clients",
+    "applications.branches",
+    "applications.core",
+    "applications.employes",
+    "applications.notes",
+    "applications.products",
+    "applications.suppliers",
+    "applications.sales",
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    "daphne",
+)
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+
+###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+####################################################################
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -101,3 +127,20 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+DATE_NOW = timezone.datetime.now()
+
+
+# Email settings for sending emails
+EMAIL_HOST = get_secret('EMAIL_HOST')
+EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+# Login
+LOGIN_URL = 'users_app:login'
+LOGIN_REDIRECT_URL = 'core_app:home'
+LOGOUT_URL = 'users_app:logout'
+LOGOUT_REDIRECT_URL = 'users_app:login'

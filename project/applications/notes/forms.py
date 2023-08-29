@@ -13,5 +13,5 @@ class NoteCreateForm(ValidationFormMixin):
 
     def clean_subject(self):
         subject = self.cleaned_data.get('subject')
-        self.validate_length(subject, 3, 'El título debe tener al menos 3 carácteres.')
+        self.validate_length(subject, 3, 'El tÃ­tulo debe tener al menos 3 carÃ¡cteres.')
         return subject
