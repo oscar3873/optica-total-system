@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
 from applications.core.forms import ValidationFormMixin
+from applications.branches.models import Branch
 
 class UserCreateForm(ValidationFormMixin):
     """Formulario para crear un usuario nuevo."""
@@ -61,9 +62,15 @@ class UserCreateForm(ValidationFormMixin):
         })
     )
 
+    branch = forms.ModelChoiceField(
+        queryset=Branch.objects.all(),
+        label='Sucursal',
+        required=True,
+    )
+
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name', 'role', 'branch',)
+        fields = ('email', 'username','first_name', 'last_name', 'branch',)
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
