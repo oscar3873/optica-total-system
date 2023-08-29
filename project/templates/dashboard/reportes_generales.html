@@ -1,0 +1,29 @@
+{% extends 'dashboard/dashboard_page.html' %}
+{% load static %}
+{% block content %}
+<div class="row g-3 mb-3">
+    {% include 'dashboard/components/weekly_sales.html' %}
+    {% include 'dashboard/components/total_sales.html' %}
+    {% include 'dashboard/components/market_share.html' %}
+</div>
+<div class="row">
+    {% include 'dashboard/components/employee_objetives.html' %}
+    {% include 'dashboard/components/total_sales.html' %}
+</div>
+<div class="row">
+    {% include 'dashboard/components/stock_available.html' %}
+</div>
+<div class="row">
+    {% include 'dashboard/components/best_selling_products.html' %}
+    {% include 'dashboard/components/top_sales_brand.html' %}
+</div>
+<div class="row">
+    {% include 'dashboard/components/active_users.html' %}
+    {% include 'dashboard/components/complete_sales.html' %}
+</div>
+<div class="row">
+    {% include 'dashboard/components/top_products.html' %}
+</div>
+
+
+{% endblock content %}
