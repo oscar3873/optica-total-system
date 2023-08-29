@@ -1,7 +1,7 @@
 from .models import *
 from django import forms
 
-from applications.core.forms import ValidationFormMixin
+from applications.core.mixins import ValidationFormMixin
 
 
 class BranchForm(ValidationFormMixin):

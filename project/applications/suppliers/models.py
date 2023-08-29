@@ -1,9 +1,4 @@
 from django.db import models
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
-
-from applications.products.models import Product
-from .managers import SupplierManager
 
 from applications.core.models import BaseAbstractWithUser
 from applications.products.models import Product

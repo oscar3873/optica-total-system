@@ -1,7 +1,4 @@
 from django.db import models
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
-
 
 from applications.core.models import BaseAbstractWithUser
 
@@ -95,50 +92,3 @@ class Product_feature(BaseAbstractWithUser):
     class Meta:
         verbose_name = 'Producto x Categoria'
         verbose_name_plural = 'Producto x Categoria'
-
-# class Type_discount(BaseAbstractWithUser):
-#     """
-#     Clase para Tipo de Descuentos
-#     """
-#     name = models.CharField(max_length=50, blank=False, null=False)
-
-
-# class Discount(BaseAbstractWithUser):
-#     """
-#     Clase para Descuentos para productos
-#         -type: tipo de descuento (procentaje o monto)
-#         -value: valor del porcentaje o monto
-#     """
-#     type = models.ForeignKey(Type_discount, on_delete=models.PROTECT)
-#     value = models.FloatField()
-
-#     def __str__(self) -> str:
-#         return f'Tipo: {self.type}\nValor: {self.value}'
-
-
-# class Promotion(BaseAbstractWithUser):
-#     """
-#     Clase para la Promocion
-#         almacena datos necesarios para proveer promociones a clientes
-#             -is_active: para saber si la promocion esta activa, el booleano se pone en positivo si la fecha actual esta entre start_date y end_date
-#             start_date: fecha de comienzo de la promocion
-#             end_date: fecha de finalizacion de la promocion
-#     """
-#     is_active = models.BooleanField(default=False)
-#     name = models.CharField(max_length=20, blank=True, null=False)
-#     description = models.CharField(max_length=50, blank=False, null=False)
-#     start_date = models.DateField(null=False, blank=False)
-#     end_date = models.DateField(null=False, blank=False)
-
-#     def __str__(self) -> str:
-#         return f'{self.name}\n{self.description}\Validez: {self.start_date} - {self.end_date}'
-    
-
-# class Discount_Product(BaseAbstractWithUser):
-#     """
-#     Clase intermedia de Descuento y Producto
-#         almacena las PK del Descuento, del Producto y de la Promocion
-#     """
-#     product = models.ForeignKey(Product, on_delete=models.PROTECT)
-#     discount = models.ForeignKey(Discount, on_delete=models.PROTECT)
-#     promotion = models.ForeignKey(Promotion, on_delete=models.PROTECT)

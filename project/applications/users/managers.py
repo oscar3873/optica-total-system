@@ -5,7 +5,7 @@ from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
 
-    def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch, **extra_fields):
+    def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch=None, **extra_fields):
         user = self.model(
             first_name = first_name,
             last_name = last_name,
@@ -27,13 +27,13 @@ class UserManager(BaseUserManager):
         role = 'EMPLEADO'
         return self._create_user(first_name, last_name, username, email, password, is_staff, is_superuser, role, branch, **extra_fields)
 
-    def create_superuser(self, first_name, last_name, username, email, password, branch, **extra_fields): # Para SuperAdmin (SALTACODE)
+    def create_superuser(self, first_name, last_name, username, email, password, branch=None, **extra_fields): # Para SuperAdmin (SALTACODE)
         is_staff = True
         is_superuser = True
         role = 'ADMINISTRADOR'
         return self._create_user(first_name, last_name, username, email, password, is_staff, is_superuser, role, branch, **extra_fields)
     
-    def create_admin(self, first_name, last_name, username, email, password, branch, **extra_fields): # Para Admin (OPTICA-TOTAL)
+    def create_admin(self, first_name, last_name, username, email, password, branch=None, **extra_fields): # Para Admin (OPTICA-TOTAL)
         is_staff = True
         is_superuser = False
         role = 'ADMINISTRADOR'

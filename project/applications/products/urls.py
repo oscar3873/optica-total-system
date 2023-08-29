@@ -32,22 +32,22 @@ urlpatterns = [
     # UPDATES
 
     path(
-        'update/category/<pk>',
+        'update/category/<pk>/',
         CategoryUpdateView.as_view(),
         name='update_category'
     ),
     path(
-        'update/brand/<pk>',
+        'update/brand/<pk>/',
         BrandUpdateView.as_view(),
         name='update_brand'
     ),
     path(
-        'update/product/<pk>',
+        'update/product/<pk>/',
         ProductUpdateView.as_view(),
         name='update_product'
     ),
     path(
-        'update/feature/<pk>',
+        'update/feature/<pk>/',
         FeatureUpdateView.as_view(),
         name= 'update_feature'
     ),

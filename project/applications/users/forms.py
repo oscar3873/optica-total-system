@@ -3,7 +3,7 @@ from .models import User
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
-from applications.core.forms import ValidationFormMixin
+from applications.core.mixins import ValidationFormMixin
 from applications.branches.models import Branch
 
 class UserCreateForm(ValidationFormMixin):

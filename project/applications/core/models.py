@@ -4,6 +4,7 @@ from django_timestamps.timestamps import TimestampsModel
 
 from applications.users.models import User
 
+
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
     """
