@@ -1,12 +1,13 @@
 from django.db import models
 
-from applications.core.models import BaseAbstractWithUser
+from django_timestamps.softDeletion import SoftDeletionModel
+from django_timestamps.timestamps import TimestampsModel
 from applications.clients.models import Customer
 from applications.products.models import Product
 from applications.employes.models import Employee
 
 # Create your models here.
-class PaymentMethod(BaseAbstractWithUser):
+class PaymentMethod(SoftDeletionModel, TimestampsModel):
     """
     Clase de Metodo de pago
         instanciacion de metodos propios (efectivo, t. credito, t. debito, etc)
@@ -17,7 +18,7 @@ class PaymentMethod(BaseAbstractWithUser):
         return f'Metodo de pago: {self.method}'
 
 
-class Invoice(BaseAbstractWithUser):
+class Invoice(SoftDeletionModel, TimestampsModel):
     """
     Clase para Facturas
         almacena faturas emitidas por la empresa
@@ -28,7 +29,7 @@ class Invoice(BaseAbstractWithUser):
     client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='invoice', null=True , blank=True)
 
 
-class Receipt(BaseAbstractWithUser):
+class Receipt(SoftDeletionModel, TimestampsModel):
     """
     Clase para Recibos/Comprobantes de venta
         almacena recibos emitidos por la empresa
@@ -40,7 +41,7 @@ class Receipt(BaseAbstractWithUser):
     total = models.PositiveIntegerField()
 
 
-class Sale(BaseAbstractWithUser):
+class Sale(SoftDeletionModel, TimestampsModel):
     """
     Clase para venta
         almacena los datos necesarios para una venta realizada con estados de la misma
@@ -73,7 +74,7 @@ class Sale(BaseAbstractWithUser):
                 f'Asesor: {self.employee}')
 
 
-class PaymentMethod_Sale(BaseAbstractWithUser):
+class PaymentMethod_Sale(SoftDeletionModel, TimestampsModel):
     """
     Clase interemedia de Metodos de pago y Ventas
         (-sale, -payment): almacena las PK de Metodo de pago y de la Venta
@@ -87,7 +88,7 @@ class PaymentMethod_Sale(BaseAbstractWithUser):
         return f'Venta: {self.sale}\n{self.payment}\nMonto: {self.amount}'
 
 
-class OrderDetaill(BaseAbstractWithUser):
+class OrderDetaill(SoftDeletionModel, TimestampsModel):
     """
     Clase de Detalles de Venta
         -product: prodcuto asociado a la venta

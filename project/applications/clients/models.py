@@ -40,7 +40,7 @@ class Customer(Person, BaseAbstractWithUser):
         verbose_name_plural = "Clientes"
 
     def __str__(self) -> str:
-        return f'{self.last_name}, {self.name}'
+        return f'{self.last_name}, {self.first_name}'
     
 
 class Customer_HealthInsurance(BaseAbstractWithUser):
