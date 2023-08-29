@@ -22,8 +22,8 @@ class CashRegister(BaseAbstractWithUser):
     date_close = models.DateTimeField(null=True, blank=True)
     initial_balance = models.DecimalField(max_digits=10, decimal_places=2)
     final_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE)
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, blank=True, null=True)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, blank=True, null=True)
     is_close = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     
