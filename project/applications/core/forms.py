@@ -6,6 +6,7 @@ from project.settings.base import DATE_NOW
 from .models import Person
 from applications.users.models import User
 
+############################ Agrego la clase ####################################
 ################################################################
 class ValidationFormMixin(forms.ModelForm):
     def validate_length(self, field_value, min_length, error_message):
