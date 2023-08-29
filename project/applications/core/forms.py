@@ -12,7 +12,7 @@ class ValidationFormMixin(forms.ModelForm):
         """
         Valida longitud de una cadena.
             Para nombres, apellidos, direcciones, telefonos, etc.
-            Muestra el error mandado por argumento.
+            Muestra el error mandado por argumento. 
         """
         field_value = str(field_value)
         if field_value and len(field_value) < min_length:

@@ -20,4 +20,4 @@ class CustomUserPassesTestMixin(LoginRequiredMixin, UserPassesTestMixin):
             return super().handle_no_permission()
         else:
             context = {}
-            return render(self.request, 'users/denied_permission.html', context)
+            return render(self.request, 'users/denied_permission.html', context) 

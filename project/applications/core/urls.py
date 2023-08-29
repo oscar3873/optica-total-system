@@ -10,4 +10,4 @@ urlpatterns = [
         HomePageView.as_view(), 
         name='home'
     ),
-]
+] 

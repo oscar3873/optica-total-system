@@ -23,7 +23,7 @@ class Person(SoftDeletionModel, TimestampsModel):
 
     def __str__(self) -> str:
         return f'{self.get_full_name()}\nDNI: {self.dni}'
-
+ 
 
 class BaseAbstractWithUser(SoftDeletionModel, TimestampsModel):
     """
