@@ -63,7 +63,7 @@ class UserCreateForm(ValidationFormMixin):
 
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name')
+        fields = ('email', 'username','first_name', 'last_name', 'role', 'branch',)
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
