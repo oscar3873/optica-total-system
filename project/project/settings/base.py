@@ -47,7 +47,9 @@ LOCAL_APPS = (
 THIRD_PARTY_APPS = (
     "daphne",
 )
-#########################
+
+
+###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -58,7 +60,9 @@ CHANNEL_LAYERS = {
 }
 
 ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
-#########################
+####################################################################
+
+
 INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [

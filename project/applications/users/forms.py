@@ -68,17 +68,9 @@ class UserCreateForm(ValidationFormMixin):
         required=True,
     )
 
-    role = forms.ChoiceField(
-        choices= [
-            ('ADMINISTRADOR', 'ADMINISTRADOR'),
-            ('EMPLEADO', 'EMPLEADO')
-        ],
-        label='Tipo de usuario',
-        required=True,
-    )
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name', 'role', 'branch',)
+        fields = ('email', 'username','first_name', 'last_name', 'branch',)
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
