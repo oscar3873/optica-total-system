@@ -25,9 +25,8 @@ class UserCreateView(FormView): # PARA CREAR USUARIOS PUROS (RECOMENDADO PARA CR
             'email': form.cleaned_data['email'],
             'password': form.cleaned_data['password1'],
             'branch': form.cleaned_data['branch'],
-            'role': form.cleaned_data['role']
         }
-        User.objects.create_user(**data_user)
+        User.objects.create_user(**data_user) # Para empleados
         return super().form_valid(form)
 
  
@@ -43,7 +42,7 @@ class LoginView(FormView):
         )
         login(self.request, user)
         
-        next_url = self.request.GET.get('next')  # Obtiene el valor del parámetro 'next' de la URL
+        next_url = self.request.GET.get('next')  # Obtiene el valor del parï¿½metro 'next' de la URL
         
         if next_url:
             return redirect(next_url)  # Redirige a la URL especificada en 'next'
