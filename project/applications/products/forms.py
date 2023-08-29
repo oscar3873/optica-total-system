@@ -2,9 +2,9 @@ from django import forms
 
 from .models import Category, Brand, Product, Feature, Feature_type
 
-from applications.core.forms import validate_length
+from applications.core.forms import ValidationFormMixin
 
-class CategoryForm(forms.ModelForm):
+class CategoryForm(ValidationFormMixin):
     class Meta:
         model = Category
         fields = '__all__'
@@ -12,11 +12,11 @@ class CategoryForm(forms.ModelForm):
     
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
+        self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
         return name
 
 
-class BrandForm(forms.ModelForm):
+class BrandForm(ValidationFormMixin):
     class Meta:
         model = Brand
         fields = '__all__'
@@ -24,11 +24,11 @@ class BrandForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, 'El nombre de la marca debe tener al menos 3 caracteres.')
+        self.validate_length(name, 3, 'El nombre de la marca debe tener al menos 3 caracteres.')
         return name
 
 
-class ProductForm(forms.ModelForm):
+class ProductForm(ValidationFormMixin):
     features = forms.ModelMultipleChoiceField(
         queryset=Feature.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -49,10 +49,10 @@ class ProductForm(forms.ModelForm):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, 'El nombre del producto debe tener al menos 3 caracteres.')
+        self.validate_length(name, 3, 'El nombre del producto debe tener al menos 3 caracteres.')
         return name
 
-class FeatureForm(forms.ModelForm):
+class FeatureForm(ValidationFormMixin):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple,
@@ -63,7 +63,7 @@ class FeatureForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['user_made',]
 
-class FeatureTypeForm(forms.ModelForm):
+class FeatureTypeForm(ValidationFormMixin):
     class Meta:
         model = Feature_type
         fields = '__all__'
@@ -71,5 +71,5 @@ class FeatureTypeForm(forms.ModelForm):
 
         def clean_name(self):
             name = self.cleaned_data['name']
-            validate_length(name, 2, 'El nombre del tipo de característica debe tener al menos 3 caracteres.')
+            self.validate_length(name, 2, 'El nombre del tipo de caracter√≠stica debe tener al menos 3 caracteres.')
             return name
