@@ -2,7 +2,7 @@ from django import forms
 
 from .models import Category, Brand, Product, Feature, Feature_type
 
-from applications.core.forms import ValidationFormMixin
+from applications.core.mixins import ValidationFormMixin
 
 class CategoryForm(ValidationFormMixin):
     class Meta:

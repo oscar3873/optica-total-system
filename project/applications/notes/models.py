@@ -1,7 +1,6 @@
 from django.db import models
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
-from applications.users.models import User
 
 # Create your models here.
 class Note(BaseAbstractWithUser):

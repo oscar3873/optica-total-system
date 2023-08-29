@@ -1,6 +1,48 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import render
+from datetime import timedelta
+from django import forms
 
+from applications.users.models import User
+from project.settings.base import DATE_NOW
+
+class ValidationFormMixin(forms.ModelForm):
+    def validate_length(self, field_value, min_length, error_message):
+        """
+        Valida longitud de una cadena.
+            Para nombres, apellidos, direcciones, telefonos, etc.
+            Muestra el error mandado por argumento.
+        """
+        if field_value is not None:
+            field_value = str(field_value)
+            if len(field_value) < min_length:
+                raise forms.ValidationError(error_message)
+
+    def validate_birth_date(self, birth_date):
+        """
+        Valida fecha de nacimiento.
+            Debe tener por lo menos 3 meses de vida o no superar los 85 años.
+        """
+        if birth_date and birth_date >= DATE_NOW.date() - timedelta(days=30):
+            raise forms.ValidationError('La fecha establecida no puede registrarse.')
+
+        age_limit = DATE_NOW.date() - timedelta(days=85*365)
+        if birth_date and birth_date <= age_limit:
+            raise forms.ValidationError('La fecha establecida no puede superar los 85 años.')
+
+    def validate_email(self, email):
+        """
+        Valida la duplicacion de email en el sistema
+        """
+        if email and User.objects.filter(email=email).exists():
+            raise forms.ValidationError('El email ya existe')
+
+    def validate_username(self, username):
+        """
+        Valida la duplicacion de username
+        """
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError('El usuario ya existe')
 
 class CustomUserPassesTestMixin(LoginRequiredMixin, UserPassesTestMixin):
     """

@@ -1,5 +1,4 @@
 from django.urls import reverse_lazy
-from django.shortcuts import render
 from django.views.generic import FormView
 
 from applications.core.mixins import CustomUserPassesTestMixin

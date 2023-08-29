@@ -2,7 +2,7 @@ from django import forms
 
 from .models import Supplier, Product_Supplier
 from applications.products.models import Product
-from applications.core.forms import ValidationFormMixin
+from applications.core.mixins import ValidationFormMixin
 
 
 class SupplierForm(ValidationFormMixin):
