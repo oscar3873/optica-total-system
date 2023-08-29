@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import NoteCreateView, index, room
-
+from .views import NoteCreateView
 app_name = 'note_app'
 
 
@@ -11,13 +10,4 @@ urlpatterns = [
         NoteCreateView.as_view(),
         name='new_note'
     ),
-    path(
-        '',
-        index,
-        name='index'
-    ),
-    path(
-        "<str:room_name>/",
-        room,
-        name="room"),
 ]

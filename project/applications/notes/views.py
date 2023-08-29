@@ -24,10 +24,3 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         send_global_message(f"A new note has been created: {form.cleaned_data['subject']}")
 
         return super().form_valid(form)
-
-
-def index(request):
-    return render(request, "notes/index.html")
-
-def room(request, room_name):
-    return render(request, "notes/room.html", {"room_name": room_name})
