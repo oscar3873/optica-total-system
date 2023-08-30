@@ -46,14 +46,6 @@ class CashRegister(BaseAbstractWithUser):
         return "Caja #" + str(self.pk) + " - " + str(self.date_open.__format__('%d/%m/%Y'))
 
 
-class CashRegisterDetail(BaseAbstractWithUser):
-    cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
-    registered_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    counted_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    difference = models.DecimalField(max_digits=10, decimal_places=2)
-
-
 class TypeMethodePayment(BaseAbstractWithUser):
     
     name = models.CharField(max_length=50)
@@ -88,6 +80,14 @@ class Payment(BaseAbstractWithUser):
     description = models.TextField(null=True, blank=True, max_length=100, default='Sin descripcion')
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+
+
+class CashRegisterDetail(BaseAbstractWithUser):
+    cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    registered_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    counted_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    difference = models.DecimalField(max_digits=10, decimal_places=2)
 
 
 class TransactionType(BaseAbstractWithUser):
