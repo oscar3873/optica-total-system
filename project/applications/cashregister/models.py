@@ -83,8 +83,8 @@ class Payment(BaseAbstractWithUser):
 
 
 class CashRegisterDetail(BaseAbstractWithUser):
-    cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE, null=True, blank=True)
+    type_method = models.ForeignKey(TypeMethodePayment, on_delete=models.CASCADE, null=True, blank=True)
     registered_amount = models.DecimalField(max_digits=10, decimal_places=2)
     counted_amount = models.DecimalField(max_digits=10, decimal_places=2)
     difference = models.DecimalField(max_digits=10, decimal_places=2)
