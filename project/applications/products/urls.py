@@ -32,22 +32,22 @@ urlpatterns = [
     # UPDATES
 
     path(
-        'update/category/<pk>',
+        'update/category/<pk>/',
         CategoryUpdateView.as_view(),
         name='update_category'
     ),
     path(
-        'update/brand/<pk>',
+        'update/brand/<pk>/',
         BrandUpdateView.as_view(),
         name='update_brand'
     ),
     path(
-        'update/product/<pk>',
+        'update/product/<pk>/',
         ProductUpdateView.as_view(),
         name='update_product'
     ),
     path(
-        'update/feature/<pk>',
+        'update/feature/<pk>/',
         FeatureUpdateView.as_view(),
         name= 'update_feature'
     ),
@@ -60,17 +60,17 @@ urlpatterns = [
     # LISTING
 
     path(
-        'list/brands',
+        'list/brand',
         BrandListView.as_view(),
         name= 'brand_list'
     ),
     path(
-        'list/categories',
+        'list/category',
         CategoryListView.as_view(),
         name= 'category_list'
     ),
     path(
-        'list/products',
+        'list/product',
         ProductListView.as_view(),
         name= 'product_list'
     ),
@@ -78,8 +78,8 @@ urlpatterns = [
     # DETAILS
 
     path(
-        'detail/<pk>',
-        ProductListView.as_view(),
+        'detail/product/<pk>',
+        ProductDetailView.as_view(),
         name= 'detail'
     ),
 ]

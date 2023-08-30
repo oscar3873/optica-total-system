@@ -1,8 +1,10 @@
-from django.utils.timezone import datetime
 from .models import *
 from django import forms
 
-class BranchForm(forms.ModelForm):
+from applications.core.mixins import ValidationFormMixin
+
+
+class BranchForm(ValidationFormMixin):
     open_hs = forms.TimeField(
         label='Horario de Apertura',
         widget=forms.TimeInput(
@@ -22,16 +24,15 @@ class BranchForm(forms.ModelForm):
     class Meta:
         model= Branch
         fields = '__all__'
+        exclude = ['user_made',]
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        if name and len(name) < 3:
-            raise forms.ValidationError('El nombre debe contener por lo menos 4 carácteres.')
+        self.validate_length(name, 3, "Ingrese una dirección válida.")
         return name
     
     def clean_address(self):
         address = self.cleaned_data['address']
-        if address and len(address) < 3:
-            raise forms.ValidationError('Ingrese una dirección válida.')
+        self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
     

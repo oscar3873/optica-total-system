@@ -9,93 +9,103 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('employes', '0001_initial'),
+        ('products', '0001_initial'),
+        ('clients', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Brand',
+            name='Invoice',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
                 ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('name', models.CharField(max_length=100)),
+                ('invoice_num', models.PositiveBigIntegerField(verbose_name='Numero de factura')),
+                ('invoice_type', models.CharField(max_length=20, verbose_name='Tipo de factura')),
+                ('client', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='invoice', to='clients.customer')),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='Category',
+            name='PaymentMethod',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
                 ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('name', models.CharField(max_length=100, null=True)),
+                ('method', models.CharField(max_length=20)),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='Feature',
+            name='Receipt',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
                 ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('value', models.CharField(blank=True, max_length=100, null=True, verbose_name='Valor')),
-            ],
-            options={
-                'verbose_name': 'Caracteristica',
-                'verbose_name_plural': 'Caracteristicas',
-            },
-        ),
-        migrations.CreateModel(
-            name='Feature_type',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('name', models.CharField(blank=True, max_length=50, null=True, verbose_name='Nombre')),
-            ],
-            options={
-                'verbose_name': 'Tipo Caracteristica',
-                'verbose_name_plural': 'Tipos Caracteristicas',
-            },
-        ),
-        migrations.CreateModel(
-            name='Product',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
-                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('name', models.CharField(max_length=50)),
-                ('barcode', models.PositiveBigIntegerField(null=True, verbose_name='Codigo de barra')),
-                ('price', models.PositiveIntegerField()),
-                ('description', models.CharField(max_length=250)),
-                ('stock', models.PositiveSmallIntegerField()),
+                ('sale_num', models.IntegerField()),
+                ('total', models.PositiveIntegerField()),
+                ('client', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='receipt', to='clients.customer')),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='Product_feature',
+            name='Sale',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('deleted_at', models.DateTimeField(blank=True, null=True)),
                 ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
                 ('updated_at', models.DateTimeField(auto_now=True, null=True)),
-                ('feature', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='product_feature', to='products.feature', verbose_name='Caracteristica')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='product_feature', to='products.product', verbose_name='Producto')),
+                ('state', models.CharField(choices=[('COMPLETADO', 'COMPLETADO'), ('PENDIENTE', 'PENDIENTE'), ('DEVOLUCION', 'DEVOLUCION'), ('CANCELADO', 'CANCELADO')], default='PENDIENTE', max_length=10)),
+                ('total', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('refund_date', models.DateTimeField(blank=True, null=True, verbose_name='Fecha de devolucion')),
+                ('customer', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='sales', to='clients.customer')),
+                ('employee', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='sales', to='employes.employee')),
+                ('invoice', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='sales', to='sales.invoice')),
+                ('receipt', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='sales', to='sales.receipt')),
             ],
             options={
-                'verbose_name': 'Producto x Categoria',
-                'verbose_name_plural': 'Producto x Categoria',
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='PaymentMethod_Sale',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('deleted_at', models.DateTimeField(blank=True, null=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
+                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                ('amount', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('payment', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='paymentmethod_sale', to='sales.paymentmethod')),
+                ('sale', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='paymentmethod_sale', to='sales.sale')),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='OrderDetaill',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('deleted_at', models.DateTimeField(blank=True, null=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True, null=True)),
+                ('updated_at', models.DateTimeField(auto_now=True, null=True)),
+                ('quantity', models.IntegerField()),
+                ('price', models.FloatField()),
+                ('product', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='order_detaill', to='products.product')),
+                ('sell', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='order_detaill', to='sales.sale')),
+            ],
+            options={
+                'abstract': False,
             },
         ),
     ]
