@@ -5,7 +5,7 @@ from django.contrib.auth.models import BaseUserManager
 
 class UserManager(BaseUserManager):
 
-    def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch, **extra_fields):
+    def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch=None, **extra_fields):
         user = self.model(
             first_name = first_name,
             last_name = last_name,

@@ -8,6 +8,7 @@ from django.contrib import messages
 from applications.branches.models import Branch
 from applications.cashregister.models import Currency
 from applications.cashregister.models import CashRegister
+from applications.cashregister.forms import CloseCashRegisterForm
 
 
 # Create your views here.
@@ -22,7 +23,7 @@ class CashRegisterCreateView(FormView):
         return context
     
     def form_valid(self, form):
-        print("----------------Success form----------------")
+        print("----------------Success form creation cashregister----------------")
         print(form.data)
         
         #Esto hay que cambiarlo la sucursal la debe sacar de self.request.user.branch
@@ -46,21 +47,46 @@ class CashRegisterCreateView(FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("----------------Error form----------------")
+        print("----------------Error form creation cashregister----------------")
         print(form.data)
         messages.error(self.request, 'Existe un error en el formulario o Ya existe una caja abierta. Consulte al administrador del sistema por este mensaje')
         return super().form_invalid(form)
-    
+ 
 
 class CashRegisterView(TemplateView):
     template_name = 'cashregister/cashregister_page.html'
     model = CashRegister
+    form_class = CloseCashRegisterForm
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #Aqui se recupera la caja de la sucursal correspondiente al usuario logueado
-        context['cashregister'] = CashRegister.objects.first()
+        # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
+        branch = self.request.user.branch
+        try:
+            cashregister = CashRegister.objects.get(branch=branch, is_active=True, is_close=False)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+        context['cashregister'] = cashregister
         return context
+    
+    def post(self, request, *args, **kwargs):
+        print("----------------Success post close cashregister----------------")
+        print(request.POST)
+        
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
+            branch = request.user.branch
+            try:
+                cash_register = CashRegister.objects.get(branch=branch, is_active=True, is_close=False)
+            except CashRegister.DoesNotExist:
+                messages.error(request, 'No hay una caja registradora activa para esta sucursal')
+                return self.render_to_response(self.get_context_data(form=form))
+            cash_register.close_cash_register(form.cleaned_data['final_balance'])
+            return super().form_valid(form)
+        else:
+            return super().form_invalid(form)
+
     
 
 class MovementsView(TemplateView):

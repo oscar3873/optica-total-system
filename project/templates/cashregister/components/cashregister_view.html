@@ -29,7 +29,8 @@
     <!--    Card con la presentacion de la caja-->
     <!-- ===============================================-->
 
-    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    {% if cashregister %}
+      <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!--Card-->
         <div class="card bg-transparent-50 overflow-hidden">
             <div class="card-header position-relative">
@@ -42,7 +43,7 @@
                   <h3 class="text-primary mb-1">Caja del dia</h3>
                   <p class="mb-0">Abierta por <strong class="text-strong">{{cashregister.user_made.username}}</strong>.</p>
                 </div>
-                <div class="d-flex py-3">
+                <div class="d-flex pt-3">
                   <div class="pe-3">
                     <p class="text-600 fs--1 fw-medium">Balance inicial </p>
                     <h4 class="text-800 mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
@@ -55,7 +56,7 @@
               </div>
             </div>
             <div class="card-body">
-                <div class="d-flex py-3 justify-content-between">
+                <div class="d-flex pb-3 justify-content-between">
                     <div class="pe-3">
                       <p class="text-600 fs--1 fw-medium">El {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{ cashregister.date_open|time }}</p>
                     </div>
@@ -65,7 +66,34 @@
                   </div>
             </div>
         </div>
-    </div>
+      </div>
+    {% else %}
+      <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!--Card-->
+        <div class="card bg-transparent-50 overflow-hidden">
+            <div class="card-header position-relative">
+              <div class="bg-holder d-none d-md-block bg-card z-index-1" style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+              </div>
+              <!--/.bg-holder-->
+
+              <div class="position-relative z-index-2">
+                <div>
+                  <h3 class="text-primary mb-1">No hay una caja abierta</h3>
+                </div>
+                <div class="d-flex py-3">
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+                <div class="d-flex py-3 justify-content-between">
+                        <a href="{% url 'cashregister_app:cashregister_create' %}" class="btn btn-primary" type="submit">Abrir caja</a>
+                    </div>
+                  </div>
+            </div>
+        </div>
+      </div>
+    {% endif %}
+    
 
     <!-- ===============================================-->
     <!--   Fin Card con la presentacion de la caja-->
