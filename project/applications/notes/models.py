@@ -19,4 +19,4 @@ class Note(BaseAbstractWithUser):
         return (f'Asunto: {self.subject}\n'+
                 f'Mensaje: {self.description}\n'+
                 f'Por: {self.user_made} - Sucursal: {self.branch}'
-                ) 
+                )

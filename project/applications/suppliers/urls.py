@@ -10,6 +10,11 @@ urlpatterns = [
         name='new_supplier'
     ),
     path(
+        'update/<pk>/',
+        SupplierUpdateView.as_view(),
+        name='update_supplier'
+    ),
+    path(
         'list/',
         SuppliersListView.as_view(),
         name='list'

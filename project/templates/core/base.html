@@ -26,6 +26,7 @@
     <script src="{% static 'core/js/config.js' %}"></script>
     <script src="{% static 'vendors/overlayscrollbars/OverlayScrollbars.min.js' %}"></script>
 
+    <script src="{% static 'notes/js/websocket.js' %}"></script>
 
     <!-- ===============================================-->
     <!--    Stylesheets-->
@@ -39,6 +40,9 @@
     <link href="{% static 'core/css/theme.min.css' %}" rel="stylesheet" id="style-default">
     <link href="{% static 'core/css/user-rtl.min.css' %}" rel="stylesheet" id="user-style-rtl">
     <link href="{% static 'core/css/user.min.css' %}" rel="stylesheet" id="user-style-default">
+
+
+    <link href="{% static 'notes/css/notification.css' %}" rel="stylesheet" id="notes-notification">
     <!-- Bloque para hojas de estilo adicionales -->
     {% block extra_css %}{% endblock extra_css %}
 
@@ -59,7 +63,6 @@
         }
     </script>
     <!--Fin-->
-
 </head>
 
 <body>
@@ -67,7 +70,6 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
-
     <main class="main" id="top">
 
         <div class="container-fluid" data-layout="container">
@@ -862,6 +864,11 @@
                         </li>
                     </ul>
                 </nav>
+
+                <!-- NOTIFICACIONES GLOBALES -->
+                <div id="notifications-container"></div>
+                <!-- FIN DE NOTIFICACIONES GLOBALES -->
+                
                 {% block main %}
                 {% endblock main %}
                 <footer class="footer">
@@ -903,6 +910,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
     <script src="{% static 'core/js/theme.js' %}"></script>
+    <script src="{% static 'notes/js/notification.js' %}"></script> <!-- Agregar este enlace -->
 
     {% block extra_js %}{% endblock extra_js %}
 </body>

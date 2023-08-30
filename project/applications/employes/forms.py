@@ -1,26 +1,22 @@
-from datetime import timedelta
 from django import forms
-from project.settings.base import DATE_NOW
 from .models import Employee
+
 from applications.users.forms import UserCreateForm
-
-from applications.core.forms import ValidationFormMixin
-
-class EmployeeForm(UserCreateForm, ValidationFormMixin):
+class EmployeeForm(UserCreateForm):
 
     birth_date = forms.DateField(
         widget=forms.DateInput(
             attrs={'type':'date'}
-        )
+        ),
+        required=False
     )
     class Meta:
         model = Employee
-        fields = '__all__'
-        exclude = ['user','user_made']
+        fields = ['phone_number', 'birth_date', 'dni', 'address',]
 
     def clean_address(self):
         address = self.cleaned_data['address']
-        self.validate_length(address, 5, 'La direcci�n debe tener 5 caracter')
+        self.validate_length(address, 5, 'La dirección debe tener 5 caracter')
         return address
     
     def clean_birth_date(self):

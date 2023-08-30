@@ -1,7 +1,7 @@
 from django import forms
 
 from .models import *
-from applications.core.forms import ValidationFormMixin
+from applications.core.mixins import ValidationFormMixin
 
 
 class CustomerForm(ValidationFormMixin):
