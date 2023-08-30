@@ -30,7 +30,7 @@ class CashRegisterCreateView(FormView):
         branch = Branch.objects.all()[0]
         
         # Verifica si ya hay una caja registradora activa para la sucursal actual
-        if CashRegister.objects.filter(branch=branch, is_active=True).exists():
+        if CashRegister.objects.filter(branch=branch, is_close=False).exists():
             return super().form_invalid(form)
         
         initial_balance = form.cleaned_data['initial_balance']
@@ -63,7 +63,7 @@ class CashRegisterView(TemplateView):
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
         branch = self.request.user.branch
         try:
-            cashregister = CashRegister.objects.get(branch=branch, is_active=True, is_close=False)
+            cashregister = CashRegister.objects.get(branch=branch, is_close=False)
         except CashRegister.DoesNotExist:
             cashregister = None
         context['cashregister'] = cashregister
@@ -78,7 +78,7 @@ class CashRegisterView(TemplateView):
             # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
             branch = request.user.branch
             try:
-                cash_register = CashRegister.objects.get(branch=branch, is_active=True, is_close=False)
+                cash_register = CashRegister.objects.get(branch=branch, is_close=False)
             except CashRegister.DoesNotExist:
                 messages.error(request, 'No hay una caja registradora activa para esta sucursal')
                 return self.render_to_response(self.get_context_data(form=form))
