@@ -44,6 +44,7 @@ LOCAL_APPS = (
     "applications.suppliers",
     "applications.sales",
     "applications.cashregister",
+    "applications.notifications",
 )
 
 THIRD_PARTY_APPS = (

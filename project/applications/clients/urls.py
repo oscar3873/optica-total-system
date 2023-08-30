@@ -20,7 +20,7 @@ urlpatterns = [
     ),
     ####  UPDATE  ####
     path(
-        'update/lab/<pk>',  
+        'update/lab/<pk>/',  
         CalibrationOrderUpdateView.as_view(), 
         name='update_laboratory'
     ),

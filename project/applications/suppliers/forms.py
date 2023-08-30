@@ -9,7 +9,7 @@ class SupplierForm(ValidationFormMixin):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple,
-        required=True
+        required=False
         )
 
     class Meta:

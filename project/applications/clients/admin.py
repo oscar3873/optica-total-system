@@ -4,6 +4,8 @@ from .models import *
 
 # Register your models here.
 admin.site.register(Customer)
+admin.site.register(HealthInsurance)
+admin.site.register(Customer_HealthInsurance)
 admin.site.register(Material)
 admin.site.register(Correction)
 admin.site.register(Cristal)

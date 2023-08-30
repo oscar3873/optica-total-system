@@ -1,7 +1,6 @@
 from django.db import models
 
 from applications.core.models import Person
-from applications.branches.models import Branch
 from applications.users.models import User
 
 

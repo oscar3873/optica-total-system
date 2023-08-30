@@ -15,7 +15,6 @@ class BranchCreateView(CustomUserPassesTestMixin, FormView):
 
     def form_valid(self, form):
         branch_data = {
-            'user_made': self.request.user,
             'name': form.cleaned_data['name'],
             'address': form.cleaned_data['address'],
             'open_hs': form.cleaned_data['open_hs'],

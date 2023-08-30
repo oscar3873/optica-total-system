@@ -7,11 +7,14 @@ from channels.layers import get_channel_layer
 
 # Function to send a message to the global broadcast group
 def send_global_message(message):
+    """
+    Funcion para Enviar un mensaje en tiempo real
+    """
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)("global_broadcast", {"type": "chat.message", "message": message})
+    async_to_sync(channel_layer.group_send)("global_broadcast", {"type": "note.message", "message": message})
 
 
-class ChatConsumer(AsyncWebsocketConsumer):
+class NoteConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         # Add the consumer to a global broadcast group
         self.room_group_name = "global_broadcast"
@@ -30,10 +33,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         # Send the message to the global broadcast group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat.message", "message": message}
+            self.room_group_name, {"type": "note.message", "message": message}
         )
 
-    async def chat_message(self, event):
+    async def note_message(self, event):
         message = event["message"]
 
         # Send the message to the client

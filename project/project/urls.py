@@ -12,8 +12,9 @@ urlpatterns = [
     path("employees/", include("applications.employes.urls")),
     path("customers/", include("applications.clients.urls")),
     path("branches/", include("applications.branches.urls")),
-    path("chat/", include("applications.notes.urls")),
+    path("notes/", include("applications.notes.urls")),
     path("products/", include("applications.products.urls")),
     path("suppliers/", include("applications.suppliers.urls")),
     path("cashregister/", include("applications.cashregister.urls")),
+    path("notifications/", include("applications.notifications.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

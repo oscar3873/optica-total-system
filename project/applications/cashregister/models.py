@@ -15,17 +15,30 @@ class Currency(BaseAbstractWithUser):
         return self.name
 
 
-# Create your models here.
 class CashRegister(BaseAbstractWithUser):
-    
+    """Caja registradora
+
+        Atributos:
+            date_open: Fecha de apertura de la caja
+            date_close: Fecha de cierre de la caja
+            initial_balance: Saldo inicial de la caja
+            final_balance: Saldo final de la caja de sistema
+            counted_balance: Saldo contado de la caja fisica
+            difference: Faltante de la caja fisica ( difference + counted_balance = final_balance)
+            branch: Sucursal a la que pertenece la caja
+            currency: Moneda a la que pertenece la caja
+            is_close: Indica si la caja esta cerrada
+    """
     date_open = models.DateTimeField(auto_now_add=True)
     date_close = models.DateTimeField(null=True, blank=True)
     initial_balance = models.DecimalField(max_digits=10, decimal_places=2)
     final_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    counted_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    difference = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, blank=True, null=True)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, blank=True, null=True)
     is_close = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
     
     objects = CashRegisterManager()
     

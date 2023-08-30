@@ -10,7 +10,7 @@ urlpatterns = [
         name='new_supplier'
     ),
     path(
-        'update/<pk>',
+        'update/<pk>/',
         SupplierUpdateView.as_view(),
         name='update_supplier'
     ),

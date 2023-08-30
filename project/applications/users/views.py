@@ -42,7 +42,7 @@ class LoginView(FormView):
         )
         login(self.request, user)
         
-        next_url = self.request.GET.get('next')  # Obtiene el valor del parámetro 'next' de la URL
+        next_url = self.request.GET.get('next')  # Obtiene el valor del par�metro 'next' de la URL
         
         if next_url:
             return redirect(next_url)  # Redirige a la URL especificada en 'next'
