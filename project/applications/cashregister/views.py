@@ -27,7 +27,7 @@ class CashRegisterCreateView(FormView):
         print(form.data)
         
         #Esto hay que cambiarlo la sucursal la debe sacar de self.request.user.branch
-        branch = Branch.objects.all()[0]
+        branch = self.request.user.branch
         
         # Verifica si ya hay una caja registradora activa para la sucursal actual
         if CashRegister.objects.filter(branch=branch, is_close=False).exists():
