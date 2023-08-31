@@ -12,6 +12,8 @@ class Person(SoftDeletionModel, TimestampsModel):
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     dni = models.CharField(max_length=20, db_index=True, null=True, blank=False)
     birth_date = models.DateField(null=True, blank=True)
+    address = models.CharField(max_length=120, blank=True, null=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
 
     class Meta:
         abstract = True

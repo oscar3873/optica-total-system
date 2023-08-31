@@ -8,14 +8,14 @@ from django.views.generic.edit import (FormView,)
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User
-
+from applications.core.mixins import CustomUserPassesTestMixin
 
 
 # Create your views here.
-class UserCreateView(FormView): # PARA CREAR USUARIOS PUROS (RECOMENDADO PARA CREAR ADMINISTRADORES)
+class UserCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
     template_name = "users/signup.html"
     form_class = UserCreateForm
-    success_url = '/'
+    success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
         data_user = {
@@ -27,9 +27,31 @@ class UserCreateView(FormView): # PARA CREAR USUARIOS PUROS (RECOMENDADO PARA CR
             'branch': form.cleaned_data['branch'],
             'phone_number': form.cleaned_data['phone_number'],
             'dni': form.cleaned_data['dni'],
+            'address': form.cleaned_data['address'],
             'birth_date': form.cleaned_data['birth_date'],
         }
-        User.objects.create_user(**data_user) # para empleados
+        User.objects.create_user(**data_user) # Funcion que crea EMPLEADOS
+        return super().form_valid(form)
+    
+class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
+    template_name = "users/signup.html"
+    form_class = UserCreateForm
+    success_url = reverse_lazy('core_app:home')
+    
+    def form_valid(self, form):
+        data_user = {
+            'first_name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'username': form.cleaned_data['username'],
+            'email': form.cleaned_data['email'],
+            'password': form.cleaned_data['password1'],
+            'branch': form.cleaned_data['branch'],
+            'phone_number': form.cleaned_data['phone_number'],
+            'dni': form.cleaned_data['dni'],
+            'address': form.cleaned_data['address'],
+            'birth_date': form.cleaned_data['birth_date'],
+        }
+        User.objects.create_admin(**data_user) # Funcion que crea EMPLEADOS
         return super().form_valid(form)
 
  
@@ -40,7 +62,7 @@ class LoginView(FormView):
     
     def form_valid(self, form):
         user = authenticate(
-            username=form.cleaned_data['email'],
+            username=form.cleaned_data['username'],
             password=form.cleaned_data['password']
         )
         login(self.request, user)
@@ -53,7 +75,7 @@ class LoginView(FormView):
         return redirect(self.success_url)  # Si no hay 'next', redirige a una URL predeterminada
     
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return render(request, template_name='users/logout.html', context={})

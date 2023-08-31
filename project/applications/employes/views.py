@@ -1,5 +1,10 @@
+from typing import Any, Optional
+from django.db import models
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DetailView, UpdateView, FormView)
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 from .models import Employee
 from .forms import EmployeeForm
@@ -50,12 +55,18 @@ class EmployeeUpdateView(CustomUserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
 
-class EmployeeProfileView(DetailView):
-    model = Employee
+class EmployeeProfileView(LoginRequiredMixin, DetailView):
+    model = User
     template_name = 'users/profile.html'
+    context_object_name = 'employee'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')  # Obtén el valor del parámetro 'pk' de la URL
+        employee = User.objects.get(pk=pk)
+        return employee
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) # 'employee' -> Empleado de la pk
+        context = super().get_context_data(**kwargs) # object = 'EMPLEADO'
         
         # Mas detalles para el perfil del empleado:
         # context['key'] = value

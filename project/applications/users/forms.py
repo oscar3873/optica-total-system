@@ -7,7 +7,10 @@ from applications.core.mixins import ValidationFormMixin
 from applications.branches.models import Branch
 
 class UserCreateForm(ValidationFormMixin):
-    """Formulario para crear un usuario nuevo."""
+    """
+    Formulario para crear un usuario nuevo.
+        fields: [first_name, last_name, email, password(1,2), dni, phone_number, ]
+    """
     
     first_name = forms.CharField(
         required = True,
@@ -15,7 +18,7 @@ class UserCreateForm(ValidationFormMixin):
             'placeholder' : 'Nombre',
             'class' : 'form-control'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre solo puede contener letras, números y guiones bajos.')]
+        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El nombre solo puede contener letras.')]
     )
     
     last_name = forms.CharField(
@@ -24,7 +27,44 @@ class UserCreateForm(ValidationFormMixin):
             'placeholder' : 'Apellido',
             'class' : 'form-control'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El apellido solo puede contener letras, números y guiones bajos.')]
+        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El apellido solo puede contener letras.')]
+    )
+
+
+    dni = forms.CharField(
+        required = True,
+        widget = forms.TextInput(attrs={
+            'placeholder' : 'DNI',
+            'class' : 'form-control'
+        }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9]+$', 'Ingrese un DNI válido.')]
+    )
+
+
+    address = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder' : 'Dimicilio',
+            'class' : 'form-control'
+            })
+    )
+
+
+    phone_number = forms.IntegerField(
+        required = True,
+        widget = forms.TextInput(attrs={
+            'placeholder' : 'Telefono de contacto',
+            'class' : 'form-control'
+        }),
+    )
+
+    birth_date = forms.DateField(
+        required = True,
+        widget = forms.DateInput(attrs={
+            'placeholder' : 'Fecha de Nacimiento',
+            'class' : 'form-control',
+            'type' : 'date'
+        }),
     )
 
     username = forms.CharField(
@@ -65,27 +105,17 @@ class UserCreateForm(ValidationFormMixin):
     branch = forms.ModelChoiceField(
         queryset=Branch.objects.all(),
         label='Sucursal',
+        empty_label='Elija una sucursal',
         required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Sucursal',
+            'class' : 'form-control'
+        })
     )
 
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name', 'branch', 'birth_date', 'dni', 'phone_number')
-    
-    def clean_first_name(self):
-        first_name = self.cleaned_data.get('first_name')
-        self.validate_length(first_name, 3, 'El nombre debe tener al menos 3 caracteres')
-        return first_name
-    
-    def clean_last_name(self):
-        last_name = self.cleaned_data.get('last_name')
-        self.validate_length(last_name, 3, 'El apellido debe tener al menos 3 caracteres')
-        return last_name
-    
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        self.validate_email(email)
-        return email
+        fields = ('email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number', 'address', 'branch')
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -110,11 +140,12 @@ class UserCreateForm(ValidationFormMixin):
 class LoginForm(forms.Form):
     """Formulario para iniciar sesión."""
     
-    email = forms.EmailField(
-        label='Correo electrónico',
+    username = forms.CharField(
+        label='Usuario',
         required=True,
-        widget=forms.EmailInput(attrs={'placeholder': 'Ingrese su correo',
-                                       })
+        widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre de usuario',
+                                       }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre solo puede contener letras, números y guiones bajos.')]
     )
     
     password = forms.CharField(
@@ -125,11 +156,11 @@ class LoginForm(forms.Form):
     
     def clean(self):
         cleaned_data = super().clean()
-        email = cleaned_data.get('email')
+        username = cleaned_data.get('username')
         password = cleaned_data.get('password')
         
-        if email and password:
-            user = authenticate(email=email, password=password)
+        if username and password:
+            user = authenticate(username=username, password=password)
             if not user:
                 raise forms.ValidationError('Correo electrónico o contraseña incorrectos')
         return cleaned_data
