@@ -25,6 +25,9 @@ class UserCreateView(FormView): # PARA CREAR USUARIOS PUROS (RECOMENDADO PARA CR
             'email': form.cleaned_data['email'],
             'password': form.cleaned_data['password1'],
             'branch': form.cleaned_data['branch'],
+            'phone_number': form.cleaned_data['phone_number'],
+            'dni': form.cleaned_data['dni'],
+            'birth_date': form.cleaned_data['birth_date'],
         }
         User.objects.create_user(**data_user) # para empleados
         return super().form_valid(form)

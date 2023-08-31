@@ -5,7 +5,9 @@ from django.contrib.auth.models import AbstractUser
 from .managers import UserManager
 from applications.branches.models import Branch
 
-class User(AbstractUser):
+from applications.core.models import Person
+
+class User(Person, AbstractUser):
     ROLE = [
         ('ADMINISTRADOR', 'ADMINISTRADOR'),
         ('EMPLEADO', 'EMPLEADO')

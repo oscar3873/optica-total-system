@@ -70,7 +70,7 @@ class UserCreateForm(ValidationFormMixin):
 
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name', 'branch',)
+        fields = ('email', 'username','first_name', 'last_name', 'branch', 'birth_date', 'dni', 'phone_number')
     
     def clean_first_name(self):
         first_name = self.cleaned_data.get('first_name')
