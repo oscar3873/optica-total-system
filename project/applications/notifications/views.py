@@ -10,3 +10,9 @@ class NotificationsCreateView(LoginRequiredMixin, CreateView):
     model = Notifications
     form_class = NotificationsForm
     template_name = 'notifications/noti_form.html'
+
+
+class NotificationsListView(LoginRequiredMixin, ListView):
+    model = Notifications
+    template_name = 'notifications/noti_list.html'
+    

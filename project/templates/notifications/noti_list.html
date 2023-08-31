@@ -1,0 +1,9 @@
+
+{% if notifications_list %}
+    {% for notification in notifications_list %}
+        {{notification}}
+    {% endfor %}
+{% else %}
+    <p>Nothing</p>
+{% endif %}
+    

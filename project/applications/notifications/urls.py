@@ -9,5 +9,10 @@ urlpatterns = [
         'new/',
         NotificationsCreateView.as_view(),
         name='new_notifications'
+    ),
+    path(
+        'list/',
+        NotificationsCreateView.as_view(),
+        name='list_notifications'
     )
 ]
