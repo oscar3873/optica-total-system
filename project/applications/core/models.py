@@ -2,8 +2,6 @@ from django.db import models
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
-from applications.users.models import User
-
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
     """
@@ -12,8 +10,10 @@ class Person(SoftDeletionModel, TimestampsModel):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50, db_index=True)
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
-    dni = models.CharField(max_length=20, db_index=True)
+    dni = models.CharField(max_length=20, db_index=True, null=True, blank=False)
     birth_date = models.DateField(null=True, blank=True)
+    address = models.CharField(max_length=120, blank=True, null=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -30,7 +30,7 @@ class BaseAbstractWithUser(SoftDeletionModel, TimestampsModel):
     Clase abstracta para todos los modelos
         Para registrar el usuario quien genero el objeto con fecha de creacion y edicion
     """
-    user_made = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    user_made = models.ForeignKey('users.User', on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         abstract = True
