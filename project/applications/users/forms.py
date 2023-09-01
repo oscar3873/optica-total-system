@@ -76,7 +76,7 @@ class UserCreateForm(ValidationFormMixin):
         validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre de usuario solo puede contener letras, números y guiones bajos.')]
     )
     
-    password1 = forms.CharField(
+    password = forms.CharField(
         required = True, 
         widget = forms.PasswordInput(attrs={
             'placeholder' : 'Contraseña',
@@ -122,17 +122,17 @@ class UserCreateForm(ValidationFormMixin):
         self.validate_username(username)
         return username
     
-    def clean_password1(self):
-        password1 = self.cleaned_data.get('password1')
-        self.validate_length(password1, 6, 'La contraseña debe tener al menos 6 carácteres')
-        return password1
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
+        return password
 
     def clean(self):
         cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
+        password = cleaned_data.get('password')
         password2 = cleaned_data.get('password2')
         
-        if password1 and password2 and password1 != password2:
+        if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
     
@@ -176,7 +176,7 @@ class UpdatePasswordForm(forms.Form):
             })
     )
 
-    password1 = forms.CharField(
+    password = forms.CharField(
         required=True, 
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Nueva contraseña'
@@ -192,9 +192,9 @@ class UpdatePasswordForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
+        password = cleaned_data.get('password')
         password2 = cleaned_data.get('password2')
         
-        if password1 and password2 and password1 != password2:
+        if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data

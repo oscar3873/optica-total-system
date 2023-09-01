@@ -18,40 +18,19 @@ class UserCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEAD
     success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
-        data_user = {
-            'first_name': form.cleaned_data['first_name'],
-            'last_name': form.cleaned_data['last_name'],
-            'username': form.cleaned_data['username'],
-            'email': form.cleaned_data['email'],
-            'password': form.cleaned_data['password1'],
-            'branch': form.cleaned_data['branch'],
-            'phone_number': form.cleaned_data['phone_number'],
-            'dni': form.cleaned_data['dni'],
-            'address': form.cleaned_data['address'],
-            'birth_date': form.cleaned_data['birth_date'],
-        }
-        User.objects.create_user(**data_user) # Funcion que crea EMPLEADOS
+        form.cleaned_data.pop('password2')
+        User.objects.create_user(**form.cleaned_data) # Funcion que crea EMPLEADOS
         return super().form_valid(form)
     
-class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
+
+class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS
     template_name = "users/signup.html"
     form_class = UserCreateForm
     success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
-        data_user = {
-            'first_name': form.cleaned_data['first_name'],
-            'last_name': form.cleaned_data['last_name'],
-            'username': form.cleaned_data['username'],
-            'email': form.cleaned_data['email'],
-            'password': form.cleaned_data['password1'],
-            'branch': form.cleaned_data['branch'],
-            'phone_number': form.cleaned_data['phone_number'],
-            'dni': form.cleaned_data['dni'],
-            'address': form.cleaned_data['address'],
-            'birth_date': form.cleaned_data['birth_date'],
-        }
-        User.objects.create_admin(**data_user) # Funcion que crea EMPLEADOS
+        form.cleaned_data.pop('password2')
+        User.objects.create_admin(**form.cleaned_data) # Funcion que crea ADMINIS
         return super().form_valid(form)
 
  

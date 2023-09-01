@@ -12,13 +12,9 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        supplier_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-            'email': form.cleaned_data['email'],
-            'phone_number': form.cleaned_data['phone_number'],
-        }
-        supplier = Supplier.objects.create(**supplier_data)
+        supplier = form.save(commit=False)
+        supplier.user_made = self.request.user
+        supplier.save()
 
         for product in form.cleaned_data['products']:
             Product_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
