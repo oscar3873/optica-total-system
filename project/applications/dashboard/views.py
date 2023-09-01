@@ -4,7 +4,7 @@ from django.views.generic import View, TemplateView
 
 # Create your views here.
 class DashboardView(TemplateView):
-    template_name = 'dashboard/reportes_generales.html'
+    template_name = 'dashboard/general_reports.html'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         contex=super().get_context_data(**kwargs)
