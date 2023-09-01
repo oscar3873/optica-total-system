@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CustomerCreateView, HealthInsuranceCreateView, CalibrationOrderCreateView
+from .views import *
 app_name = 'clients_app'
 
 urlpatterns = [
@@ -17,5 +17,11 @@ urlpatterns = [
         'new/lab/',  
         CalibrationOrderCreateView.as_view(), 
         name='new_laboratory'
+    ),
+    ####  UPDATE  ####
+    path(
+        'update/lab/<pk>/',  
+        CalibrationOrderUpdateView.as_view(), 
+        name='update_laboratory'
     ),
 ]
