@@ -99,6 +99,8 @@ class CashRegisterClosedView(View):
     def post(self, request, *args, **kwargs):
         formset = CashRegisterDetailFormSet(request.POST)
         
+        #Falta implementar la logica completa para el arqueo y el cierre en los managers.py
+        
         if formset.is_valid():
             print("----------------Success formset create cashregister----------------")
             cashregister = CashRegister.objects.get(is_close=False)
