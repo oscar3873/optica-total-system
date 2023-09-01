@@ -8,91 +8,34 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("employes", "0002_initial"),
+        ("branches", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ("clients", "0001_initial"),
+        ("cashregister", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="calibration_order",
-            name="color",
+            model_name="cashregister",
+            name="branch",
             field=models.ForeignKey(
                 blank=True,
                 null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="clients.color",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="branches.branch",
             ),
         ),
         migrations.AddField(
-            model_name="calibration_order",
-            name="correction",
+            model_name="cashregister",
+            name="currency",
             field=models.ForeignKey(
                 blank=True,
                 null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="clients.correction",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.currency",
             ),
         ),
         migrations.AddField(
-            model_name="calibration_order",
-            name="employees",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="employes.employee",
-            ),
-        ),
-        migrations.AddField(
-            model_name="calibration_order",
-            name="interpupillary",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="clients.interpupillary",
-            ),
-        ),
-        migrations.AddField(
-            model_name="calibration_order",
-            name="material",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="clients.material",
-            ),
-        ),
-        migrations.AddField(
-            model_name="calibration_order",
-            name="tratamient",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="clients.tratamient",
-            ),
-        ),
-        migrations.AddField(
-            model_name="calibration_order",
-            name="type_cristal",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="laboratory",
-                to="clients.cristal",
-            ),
-        ),
-        migrations.AddField(
-            model_name="calibration_order",
+            model_name="cashregister",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,
@@ -102,7 +45,7 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="color",
+            model_name="currency",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,
@@ -112,59 +55,47 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="correction",
-            name="user_made",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                to=settings.AUTH_USER_MODEL,
-            ),
-        ),
-        migrations.AddField(
-            model_name="cristal",
-            name="user_made",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                to=settings.AUTH_USER_MODEL,
-            ),
-        ),
-        migrations.AddField(
-            model_name="customer",
-            name="user_made",
-            field=models.ForeignKey(
-                blank=True,
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                to=settings.AUTH_USER_MODEL,
-            ),
-        ),
-        migrations.AddField(
-            model_name="customer_healthinsurance",
-            name="customer",
+            model_name="movement",
+            name="cash_register",
             field=models.ForeignKey(
                 default=0,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="customer_insurance",
-                to="clients.customer",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.cashregister",
             ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name="customer_healthinsurance",
-            name="h_insurance",
+            model_name="movement",
+            name="currency",
             field=models.ForeignKey(
                 default=0,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="customer_insurance",
-                to="clients.healthinsurance",
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.currency",
             ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name="customer_healthinsurance",
+            model_name="movement",
+            name="payment_method",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.paymentmethod",
+            ),
+        ),
+        migrations.AddField(
+            model_name="movement",
+            name="transaction_id",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.transaction",
+            ),
+        ),
+        migrations.AddField(
+            model_name="movement",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,
@@ -174,7 +105,27 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="healthinsurance",
+            model_name="payment",
+            name="currency",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.currency",
+            ),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name="payment",
+            name="payment_method",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.paymentmethod",
+            ),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name="payment",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,
@@ -184,7 +135,17 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="interpupillary",
+            model_name="paymentmethod",
+            name="type_method",
+            field=models.ForeignKey(
+                default=0,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.typemethodepayment",
+            ),
+            preserve_default=False,
+        ),
+        migrations.AddField(
+            model_name="paymentmethod",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,
@@ -194,7 +155,37 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="material",
+            model_name="transaction",
+            name="branch",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="branches.branch",
+            ),
+        ),
+        migrations.AddField(
+            model_name="transaction",
+            name="original_transaction",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="cashregister.transaction",
+            ),
+        ),
+        migrations.AddField(
+            model_name="transaction",
+            name="transaction_type",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="cashregister.transactiontype",
+            ),
+        ),
+        migrations.AddField(
+            model_name="transaction",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,
@@ -204,7 +195,17 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AddField(
-            model_name="tratamient",
+            model_name="transactiontype",
+            name="user_made",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
+            ),
+        ),
+        migrations.AddField(
+            model_name="typemethodepayment",
             name="user_made",
             field=models.ForeignKey(
                 blank=True,

@@ -6,161 +6,119 @@
 
 <div class="container py-4">
 
-    <!-- ===============================================-->
-    <!--    Errores de Sistema (Backend)-->
-    <!-- ===============================================-->
+  <!-- ===============================================-->
+  <!--    Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
 
-    {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-            <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
-            <p class="mb-0 flex-1">{{ message }}</p>
-            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
+    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+    <p class="mb-0 flex-1">{{ message }}</p>
+    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <!-- ===============================================-->
+  <!--    Fin Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
+
+
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Titulo del formulario wizard -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+          class="fa-inverse fa-stack-1x text-primary fas fa-cash-register"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Caja del día</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aqui puede vizualizar la caja que tiene abierta actualmente</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===============================================-->
+  <!--    Card con la presentacion de la caja-->
+  <!-- ===============================================-->
+
+  {% if cashregister %}
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!--Card-->
+    <div class="card bg-transparent-50 overflow-hidden">
+      <div class="card-header position-relative">
+        <div class="bg-holder d-none d-md-block bg-card z-index-1"
+          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+        </div>
+        <!--/.bg-holder-->
+
+        <div class="position-relative z-index-2">
+          <div>
+            <p class="fs--2 mb-0">Abierta por <a class="link-600 fw-semi-bold"
+                href="#!">{{cashregister.user_made.username}}</a></p>
           </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- ===============================================-->
-    <!--    Fin Errores de Sistema (Backend)-->
-    <!-- ===============================================-->
-
-
-    <!-- ===============================================-->
-    <!--    Card con la presentacion de la caja-->
-    <!-- ===============================================-->
-
-    {% if cashregister %}
-      <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-        <!--Card-->
-        <div class="card bg-transparent-50 overflow-hidden">
-            <div class="card-header position-relative">
-              <div class="bg-holder d-none d-md-block bg-card z-index-1" style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-              </div>
-              <!--/.bg-holder-->
-
-              <div class="position-relative z-index-2">
-                <div>
-                  <h3 class="text-primary mb-1">Caja del dia</h3>
-                  <p class="mb-0">Abierta por <strong class="text-strong">{{cashregister.user_made.username}}</strong>.</p>
-                </div>
-                <div class="d-flex pt-3">
-                  <div class="pe-3">
-                    <p class="text-600 fs--1 fw-medium">Balance inicial </p>
-                    <h4 class="text-800 mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
-                  </div>
-                  <div class="ps-3">
-                    <p class="text-600 fs--1">Balance Actual </p>
-                    <h4 class="text-800 mb-0">$21,349.29 </h4>
-                  </div>
-                </div>
-              </div>
+          <div class="d-flex pt-3">
+            <div class="pe-3">
+              <p class="text-600 fs--1 fw-medium">Balance inicial </p>
+              <h4 class="text-800 mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
             </div>
-            <div class="card-body">
-                <div class="d-flex pb-3 justify-content-between">
-                    <div class="pe-3">
-                      <p class="text-600 fs--1 fw-medium">El {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{ cashregister.date_open|time }}</p>
-                    </div>
-                    <div class="ps-3">
-                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Cierre</button>
-                        <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                          <div class="modal-dialog modal-lg mt-6" role="document">
-                            <div class="modal-content border-0">
-                              <div class="position-absolute top-0 end-0 mt-3 me-3 z-index-1">
-                                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body p-0">
-                                <div class="bg-light rounded-top-lg py-3 ps-4 pe-6">
-                                  <h4 class="mb-1" id="staticBackdropLabel">Add a new illustration to the landing page</h4>
-                                  <p class="fs--2 mb-0">Abierta por <a class="link-600 fw-semi-bold" href="#!">{{cashregister.user_made.username}}</a></p>
-                                </div>
-                                <div class="p-4">
-                                  <div class="row">
-                                    <div class="col-lg-9">
-                                      <div class="d-flex"><span class="fa-stack ms-n1 me-3"><i class="fas fa-circle fa-stack-2x text-200"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-tag" data-fa-transform="shrink-2"></i></span>
-                                        <div class="flex-1">
-                                          <h5 class="mb-2 fs-0">Labels</h5>
-                                          <div class="d-flex"><span class="badge me-1 py-2 badge-soft-success">New</span><span class="badge me-1 py-2 badge-soft-primary">Goal</span><span class="badge me-1 py-2 badge-soft-info">Enhancement</span>
-                                            <div class="dropdown dropend">
-                                              <button class="btn btn-sm btn-secondary px-2 fsp-75 bg-400 border-400 dropdown-toggle dropdown-caret-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-plus"></span></button>
-                                              <div class="dropdown-menu">
-                                                <h6 class="dropdown-header py-0 px-3 mb-0">Select Label</h6>
-                                                <div class="dropdown-divider"></div>
-                                                <div class="px-3">
-                                                  <button class="badge-soft-danger dropdown-item rounded-1 mb-2" type="button">New</button>
-                                                  <button class="badge-soft-primary dropdown-item rounded-1 mb-2" type="button">Goal</button>
-                                                  <button class="badge-soft-info dropdown-item rounded-1 mb-2" type="button">Enhancement</button>
-                                                </div>
-                                                <div class="dropdown-divider"></div>
-                                                <div class="px-3">
-                                                  <button class="btn btn-sm d-block w-100 btn-outline-secondary border-400">Create Label</button>
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                          <hr class="my-4" />
-                                        </div>
-                                      </div>
-                                      <div class="d-flex"><span class="fa-stack ms-n1 me-3"><i class="fas fa-circle fa-stack-2x text-200"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-align-left" data-fa-transform="shrink-2"></i></span>
-                                        <div class="flex-1">
-                                          <h5 class="mb-2 fs-0">Description</h5>
-                                          <p class="text-word-break fs--1">The illustration must match to the contrast of the theme. The illustraion must described the concept of the design. To know more about the theme visit the page. </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                      <h6 class="mt-5 mt-lg-0">Add To Card</h6>
-                                      <ul class="nav flex-lg-column fs--1">
-                                        <li class="nav-item me-2 me-lg-0"><a class="nav-link nav-link-card-details" href="#!"><span class="fas fa-user me-2"></span>Members</a></li>
-                                        <li class="nav-item me-2 me-lg-0"><a class="nav-link nav-link-card-details" href="#!"><span class="fas fa-tag me-2"></span>Label</a></li>
-                                        <li class="nav-item me-2 me-lg-0"><a class="nav-link nav-link-card-details" href="#!"><span class="fas fa-paperclip me-2"></span>Attachments</a></li>
-                                        <li class="nav-item me-2 me-lg-0"><a class="nav-link nav-link-card-details" href="#!"><span class="fa fa-align-left me-2"></span>Description </a></li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <button class="btn btn-danger" type="submit">Confirma cierre de caja</button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                    </div>
-                  </div>
+            <div class="ps-3">
+              <p class="text-600 fs--1">Balance Actual </p>
+              <h4 class="text-800 mb-0">$21,349.29 </h4>
             </div>
+          </div>
         </div>
       </div>
-    {% else %}
-      <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-        <!--Card-->
-        <div class="card bg-transparent-50 overflow-hidden">
-            <div class="card-header position-relative">
-              <div class="bg-holder d-none d-md-block bg-card z-index-1" style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-              </div>
-              <!--/.bg-holder-->
-
-              <div class="position-relative z-index-2">
-                <div>
-                  <h3 class="text-primary mb-1">No hay una caja abierta</h3>
-                </div>
-                <div class="d-flex py-3">
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-                <div class="d-flex py-3 justify-content-between">
-                        <a href="{% url 'cashregister_app:cashregister_create' %}" class="btn btn-primary" type="submit">Abrir caja</a>
-                    </div>
-                  </div>
-            </div>
+      <div class="card-body">
+        <div class="d-flex pb-3 justify-content-between align-items-center">
+          <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
+          <div class="ps-3">
+            <a href="{% url 'cashregister_app:cashregister_close_view' %}" class="btn btn-primary"
+              type="button">Cierre</a>
+          </div>
         </div>
       </div>
-    {% endif %}
-    
+      <div class="card-footer">
+        <div class="pe-3">
+          <p class="text-600 fs--1 fw-medium">El {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!-- ===============================================-->
-    <!--   Fin Card con la presentacion de la caja-->
-    <!-- ===============================================-->
+  {% else %}
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!--Card-->
+    <div class="card bg-transparent-50 overflow-hidden">
+      <div class="card-header position-relative">
+        <div class="bg-holder d-none d-md-block bg-card z-index-1"
+          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+        </div>
+        <!--/.bg-holder-->
+
+        <div class="position-relative z-index-2">
+          <div>
+            <h3 class="text-primary mb-1">No hay una caja abierta</h3>
+          </div>
+          <div class="d-flex py-3">
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="d-flex py-3 justify-content-between">
+          <a href="{% url 'cashregister_app:cashregister_create' %}" class="btn btn-primary" type="submit">Abrir
+            caja</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<!-- ===============================================-->
+<!--   Fin Card con la presentacion de la caja-->
+<!-- ===============================================-->
 
 </div>
 
