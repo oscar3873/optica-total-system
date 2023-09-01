@@ -9,7 +9,7 @@ urlpatterns = [
     path(
         'signup/admin',
         AdminCreateView.as_view(),
-        name = 'signup'
+        name = 'signup_admin'
     ),
     path(
         'signup/',

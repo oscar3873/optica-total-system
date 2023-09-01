@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
 from applications.cashregister.managers import CashRegisterManager
@@ -123,3 +124,6 @@ class Movement(BaseAbstractWithUser):
     
     def __str__(self):
         return str(self.type_operation) + ' ' + str(self.amount) + ' ' + ' por ' + str(self.user_made) 
+    
+    def get_absolute_url(self):
+        return reverse('cashregister_app:movements_view')#  , kwargs={'pk': self.pk}) # PARA VER EL DETALLE DEL MOVIMIENTO MEDIANTE UNA VIEW DE DETALLE SI ES QUE HAY

@@ -1,5 +1,7 @@
-from django.shortcuts import render
-from django.views.generic import CreateView, ListView, FormView
+from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import NotificationsForm
@@ -10,9 +12,17 @@ class NotificationsCreateView(LoginRequiredMixin, CreateView):
     model = Notifications
     form_class = NotificationsForm
     template_name = 'notifications/noti_form.html'
+    success_url = reverse_lazy('notifications_app:list')
 
 
 class NotificationsListView(LoginRequiredMixin, ListView):
     model = Notifications
     template_name = 'notifications/noti_list.html'
     
+    
+class DynamicDetail(LoginRequiredMixin, View):
+    def get(self, request, model_name, pk):
+        content_type = ContentType.objects.get(model=model_name)
+        model_class = content_type.model_class()
+        obj = model_class.objects.get(pk=pk)
+        return redirect(obj.get_absolute_url())

@@ -122,3 +122,9 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         }
         HealthInsurance.objects.create(**insurance_data)
         return super().form_valid(form)
+    
+
+class CustomerDetailView(LoginRequiredMixin, DetailView):
+    model = Customer
+    template_name = 'clients/customer_detail.html'
+    context_object_name = 'customer'

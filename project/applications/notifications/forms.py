@@ -6,4 +6,4 @@ class NotificationsForm(forms.ModelForm):
 
     class Meta:
         model = Notifications
-        fields = '__all__'
+        fields = ['details', 'content_type', 'object_id']

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import NotificationsCreateView
+from .views import NotificationsCreateView, NotificationsListView, DynamicDetail
 
 app_name = 'notifications_app'
 
@@ -8,11 +8,16 @@ urlpatterns = [
     path(
         'new/',
         NotificationsCreateView.as_view(),
-        name='new_notifications'
+        name='new'
     ),
     path(
         'list/',
-        NotificationsCreateView.as_view(),
-        name='list_notifications'
-    )
+        NotificationsListView.as_view(),
+        name='list'
+    ),
+    path('dynamic_detail/<str:model_name>/<int:pk>/',
+        DynamicDetail.as_view(),
+        name='dynamic_detail'
+        ),
+
 ]

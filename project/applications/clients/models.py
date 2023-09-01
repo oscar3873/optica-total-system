@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from applications.core.models import Person
 from applications.core.models import BaseAbstractWithUser
 
@@ -37,6 +38,9 @@ class Customer(Person, BaseAbstractWithUser):
 
     def __str__(self) -> str:
         return f'{self.last_name}, {self.first_name}'
+    
+    def get_absolute_url(self):
+        return reverse('clients_app:detail', kwargs={'pk': self.pk})
     
 
 class Customer_HealthInsurance(BaseAbstractWithUser):

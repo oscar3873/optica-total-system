@@ -11,4 +11,4 @@ class Notifications(BaseAbstractWithUser):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self) -> str:
-        return f'{self.content_type}, {self.content_object}'
+        return f'{self.content_object}'

@@ -1,6 +1,7 @@
 from django.db import models
 #
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 #
 from .managers import UserManager
 from applications.branches.models import Branch
@@ -25,3 +26,6 @@ class User(Person, AbstractUser):
     
     def __str__(self):
         return f"{self.get_full_name()} | {self.email or 'Sin email'}"
+
+    def get_absolute_url(self):
+        return reverse('employees_app:profile_employee', kwargs={'pk': self.pk})
