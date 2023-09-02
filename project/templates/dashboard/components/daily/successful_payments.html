@@ -1,0 +1,22 @@
+<div class="col-xxl-9">
+    <div class="card rounded-3 overflow-hidden h-100">
+        <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
+            <div class="row align-items-center g-0">
+                <div class="col light">
+                    <h4 class="text-white mb-0">Hoy $764.39</h4>
+                    <p class="fs--1 fw-semi-bold text-white">Ayer <span class="opacity-50">$684.87</span></p>
+                </div>
+                <div class="col-auto d-none d-sm-block">
+                    <select class="form-select form-select-sm mb-3" id="dashboard-chart-select">
+                        <option value="all">Todos los pagos</option>
+                        <option value="successful" selected="selected">Pagos exitosos</option>
+                        <option value="failed">Pagos incompletos(fallidos)</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Find the JS file for the following calendar at: src/js/charts/echarts/line-payment.js-->
+            <!-- If you are not using gulp based workflow, you can find the transpiled code at: public/assets/js/theme.js-->
+            <div class="echart-line-payment" style="height:200px" data-echart-responsive="true"></div>
+        </div>
+    </div>
+</div>
