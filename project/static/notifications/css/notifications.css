@@ -18,5 +18,6 @@
 
 @keyframes fadeOut {
     0% { opacity: 1; }
+    70% { opacity: 1; } /* Mantiene la opacidad durante 3 segundos (70% de 5 segundos) */
     100% { opacity: 0; display: none; }
 }
