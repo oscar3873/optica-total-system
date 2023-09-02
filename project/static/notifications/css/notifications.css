@@ -1,0 +1,13 @@
+/* Estilo básico para la notificación */
+.notifications {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background-color: #cdd1d6;
+    border: 1px solid #b9a11e;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    max-width: 300px;
+    z-index: 1000; /* Coloca la notificación por encima de todo */
+    display: none; /* Inicialmente oculta la notificación */
+}

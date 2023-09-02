@@ -1,0 +1,20 @@
+const notificationSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/notifications/global/'
+);
+
+notificationSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const message_note = data.message;
+    
+    const notificationElement = document.createElement('div');
+    notificationElement.classList.add('notes');
+    notificationElement.textContent = message_note;
+
+    const notesContainer = document.getElementById('notifications-container'); 
+    notesContainer.appendChild(notificationElement);
+
+    // Eliminar la notificación después de 10 segundos (ajusta el tiempo según tus necesidades)
+    setTimeout(function() {
+        notesContainer.removeChild(notificationElement);
+    }, 10000); // 10000 milisegundos = 10 segundos
+};
