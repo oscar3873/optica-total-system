@@ -50,7 +50,11 @@ Dentro de la raíz del proyecto, crea un archivo llamado `secret.json` con la si
     "SECRET_KEY": "clave_secreta_pedir_administrador_del_sistema",
     "DB_NAME": "name_db",
     "DB_USER": "name_user_db",
-    "DB_PASSWORD": "password_db"
+    "DB_PASSWORD": "password_db",
+
+    "EMAIL_HOST":"smtp.gmail.com",
+    "EMAIL_HOST_USER":"optica.total.saltaar@gmail.com",
+    "EMAIL_HOST_PASSWORD":" <<password>>"
 }
 ```
 Nota: Asegúrate de cambiar los valores de SECRET_KEY, DB_NAME, DB_USER y DB_PASSWORD a los apropiados para tu configuración.

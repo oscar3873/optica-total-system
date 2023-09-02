@@ -1,10 +1,9 @@
 from django.db import models
+
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
-
 from applications.clients.models import Customer
 from applications.products.models import Product
-from applications.employes.models import Employee
 
 # Create your models here.
 class PaymentMethod(SoftDeletionModel, TimestampsModel):
@@ -21,11 +20,24 @@ class PaymentMethod(SoftDeletionModel, TimestampsModel):
 class Invoice(SoftDeletionModel, TimestampsModel):
     """
     Clase para Facturas
-        almacena el tipo de facturas/ticket disponibles que provee la institucion
+        almacena faturas emitidas por la empresa
     """
 
     invoice_num = models.PositiveBigIntegerField(verbose_name='Numero de factura')
     invoice_type = models.CharField(max_length=20, verbose_name='Tipo de factura')
+    client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='invoice', null=True , blank=True)
+
+
+class Receipt(SoftDeletionModel, TimestampsModel):
+    """
+    Clase para Recibos/Comprobantes de venta
+        almacena recibos emitidos por la empresa
+    """ 
+
+    # receipt_type = models.CharField(max_length=20, verbose_name='Tipo de recibo')
+    client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='receipt', null=True , blank=True)
+    sale_num = models.IntegerField()
+    total = models.PositiveIntegerField()
 
 
 class Sale(SoftDeletionModel, TimestampsModel):
@@ -33,11 +45,10 @@ class Sale(SoftDeletionModel, TimestampsModel):
     Clase para venta
         almacena los datos necesarios para una venta realizada con estados de la misma
             -state: estado de la venta (predeterminado 'PENDIENTE' -al instanciar-)
-            -employee: asesor que realiza la venta
             -invoice: factura correspondiente a la venta a realizar
             -customer (opcional): cliente asociado a la venta
             -total: total de los items a vender
-            -refund_date (casos):  
+            -refund_date (posibles casos): fecha de devolucion 
     """
 
     STATE = [
@@ -48,16 +59,15 @@ class Sale(SoftDeletionModel, TimestampsModel):
     ]
 
     state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='sales')
-    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales')
+    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
+    receipt = models.ForeignKey(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
-    refund_date = models.DateTimeField()
+    refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
 
     def __str__(self) -> str:
         return (f'Numero de factura: {self.invoice.invoice_num}\n'+
-                f'Tipo: {self.invoice.invoice_type}\n'+
-                f'Asesor: {self.employee.presentation()}')
+                f'Tipo: {self.invoice.invoice_type}\n')
 
 
 class PaymentMethod_Sale(SoftDeletionModel, TimestampsModel):

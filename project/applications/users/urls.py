@@ -1,11 +1,16 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
-from .views import LoginView, LogoutView, UserCreateView, UpdatePasswordView
+from .views import LoginView, LogoutView, UserCreateView, UpdatePasswordView, AdminCreateView
 
 app_name = 'users_app'
 
 urlpatterns = [
+    path(
+        'signup/admin',
+        AdminCreateView.as_view(),
+        name = 'signup_admin'
+    ),
     path(
         'signup/',
         UserCreateView.as_view(),
@@ -13,7 +18,7 @@ urlpatterns = [
     ),
     path(
         'login/',
-        auth_views.LoginView.as_view(
+        LoginView.as_view(
             template_name = "users/login.html",
             success_url = reverse_lazy('core_app:home')
         ),

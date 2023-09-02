@@ -1,0 +1,7 @@
+{% for category in categories %}
+    <li>
+        <strong>{{ category.name }}</strong>
+    </li>
+{% empty %}
+    <li>No Categorias available.</li>
+{% endfor %}

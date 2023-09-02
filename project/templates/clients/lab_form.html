@@ -1,0 +1,14 @@
+<form enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+
+    {{ named_formsets.correction.as_p }}
+    {{ named_formsets.material.as_p }}
+    {{ named_formsets.color.as_p }}
+    {{ named_formsets.cristal.as_p }}
+    {{ named_formsets.tratamiento.as_p }}
+    {{ named_formsets.pupilar.as_p }}
+    {{ named_formsets.form.as_p }}
+
+    {{ form.as_p }}
+    <button type="submit">Enviar</button>
+</form>

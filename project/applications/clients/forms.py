@@ -1,84 +1,111 @@
 from django import forms
-from .models import Customer, MedicalHistory, HealthInsurance
 
-def validate_length(field_value, min_length, error_message):
-    if field_value and len(field_value) < min_length:
-        raise forms.ValidationError(error_message)
+from .models import *
+from applications.core.mixins import ValidationFormMixin
 
 
-class CustomerForm(forms.ModelForm):
+class CustomerForm(ValidationFormMixin):
+
+    birth_date = forms.DateField(
+        widget=forms.DateInput(
+            attrs={'type':'date'}
+        )
+    )
     class Meta:
         model = Customer
         fields = '__all__'
+        exclude = ['user_made','deleted_at']
 
     def clean_address(self):
         address = self.cleaned_data['address']
-        validate_length(address, 5, "Ingrese una dirección válida.")
+        self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
+    
+    def clean_birth_date(self):
+        birth_date = self.cleaned_data['birth_date']
+        self.validate_birth_date(birth_date)
+        return birth_date
 
 
-class MedicalHistoryForm(forms.ModelForm):
-    class Meta:
-        model = MedicalHistory
-        fields = ['diagnostic',]
-
-    def clean_diagnostic(self):
-        diagnostic = self.cleaned_data['diagnostic']
-        validate_length(diagnostic, 5, "Ingrese un diagnóstico válido.")
-        return diagnostic
-
-
-class HealthInsuranceForm(forms.ModelForm):
+class HealthInsuranceForm(ValidationFormMixin):
     class Meta:
         model = HealthInsurance
         fields = "__all__"
+        exclude = ['user_made','deleted_at']
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        validate_length(name, 3, "El nombre de la sucursal debe contener al menos 3 caracteres.")
+        self.validate_length(name, 3, "El nombre de la sucursal debe contener al menos 3 caracteres.")
         return name
 
     def clean_cuit(self):
         cuit = self.cleaned_data['cuit']
         cuit_str = str(cuit)
-        validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
+        self.validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
         return cuit
 
 
-class CustomerUpdateForm(forms.ModelForm):
+class CorrectionForm(forms.ModelForm):
     class Meta:
-        model = Customer
+        model = Correction
         fields = '__all__'
+        exclude = ['user_made','deleted_at']
 
-    def clean_address(self):
-        address = self.cleaned_data['address']
-        validate_length(address, 5, "Ingrese una dirección válida.")
-        return address
-
-
-class MedicalHistoryUpdateForm(forms.ModelForm):
+class MaterialForm(forms.ModelForm):
     class Meta:
-        model = MedicalHistory
-        fields = ['diagnostic',]
+        model = Material
+        exclude = ['user_made', 'deleted_at']
+        widgets = {
+            'policarbonato': forms.CheckboxInput,
+            'organic': forms.CheckboxInput,
+            'mineral': forms.CheckboxInput,
+            'm_r8': forms.CheckboxInput,
+        }
 
-    def clean_diagnostic(self):
-        diagnostic = self.cleaned_data['diagnostic']
-        validate_length(diagnostic, 5, "Ingrese un diagnóstico válido.")
-        return diagnostic
-
-
-class HealthInsuranceUpdateForm(forms.ModelForm):
+class ColorForm(forms.ModelForm):
     class Meta:
-        model = HealthInsurance
-        fields = "__all__"
+        model = Color
+        exclude = ['user_made', 'deleted_at']
+        widgets = {
+            'white': forms.CheckboxInput,
+            'full_gray': forms.CheckboxInput,
+            'gray_gradient': forms.CheckboxInput,
+            'flat_sepia': forms.CheckboxInput,
+        }
 
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        validate_length(name, 3, "El nombre debe contener al menos 3 caracteres.")
-        return name
+class CristalForm(forms.ModelForm):
+    class Meta:
+        model = Cristal
+        exclude = ['user_made', 'deleted_at']
+        widgets = {
+            'monofocal': forms.CheckboxInput,
+            'bifocal_fv': forms.CheckboxInput,
+            'bifocal_k': forms.CheckboxInput,
+            'bifocal_pi': forms.CheckboxInput,
+            'progressive': forms.CheckboxInput,
+        }
 
-    def clean_cuit(self):
-        cuit = self.cleaned_data['cuit']
-        cuit_str = str(cuit)
-        validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
-        return cuit
+class TratamientForm(forms.ModelForm):
+    class Meta:
+        model = Tratamient
+        exclude = ['user_made', 'deleted_at']
+        widgets = {
+            'antireflex': forms.CheckboxInput,
+            'filtro_azul': forms.CheckboxInput,
+            'fotocromatico': forms.CheckboxInput,
+            'ultravex': forms.CheckboxInput,
+            'polarizado': forms.CheckboxInput,
+            'neutrosolar': forms.CheckboxInput,
+        }
+
+class InterpupillaryForm(forms.ModelForm):
+    class Meta:
+        model = Interpupillary
+        fields = '__all__'
+        exclude = ['user_made','deleted_at']
+
+class Calibration_OrderForm(forms.ModelForm):
+    class Meta:
+        model = Calibration_Order
+        fields = ['is_done','diagnostic', 'armazon', 'observations']
+

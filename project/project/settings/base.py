@@ -30,6 +30,7 @@ DJANGO_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize"
 )
 
 LOCAL_APPS = (
@@ -38,11 +39,34 @@ LOCAL_APPS = (
     "applications.branches",
     "applications.core",
     "applications.employes",
+    "applications.notes",
+    "applications.products",
+    "applications.suppliers",
+    "applications.sales",
+    "applications.cashregister",
+    "applications.notifications",
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    "daphne",
+)
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+
+###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+####################################################################
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -52,6 +76,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -96,11 +121,13 @@ AUTH_USER_MODEL = "users.User"
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "es"
 
 TIME_ZONE = "UTC"
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
@@ -108,6 +135,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 DATE_NOW = timezone.datetime.now()
 
+# Separadores de miles y decimales
+# https://docs.djangoproject.com/en/4.2/ref/settings/#localization
+
+THOUSAND_SEPARATOR = ','
+DECIMAL_SEPARATOR = '.'
 
 # Email settings for sending emails
 EMAIL_HOST = get_secret('EMAIL_HOST')

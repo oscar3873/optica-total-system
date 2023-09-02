@@ -3417,13 +3417,13 @@ var listInit = function listInit() {
 
 var lottieInit = function lottieInit() {
   var lotties = document.querySelectorAll('.lottie');
-
+  console.log(lotties);
   if (lotties.length) {
     lotties.forEach(function (item) {
       var options = utils.getData(item, 'options');
       window.bodymovin.loadAnimation(_objectSpread({
         container: item,
-        path: '../img/animated-icons/warning-light.json',
+        path: options.path,
         renderer: 'svg',
         loop: true,
         autoplay: true,
@@ -4398,25 +4398,18 @@ var wizardInit = function wizardInit() {
   var tabProgressBar = document.querySelector('.theme-wizard .progress');
   wizards.forEach(function (wizard) {
     var tabToggleButtonEl = wizard.querySelectorAll('[data-wizard-step]');
-    var inputEmail = wizard.querySelector('[data-wizard-validate-email]');
-    var emailPattern = inputEmail.getAttribute('pattern');
-    var inputPassword = wizard.querySelector('[data-wizard-validate-password]');
-    var inputConfirmPassword = wizard.querySelector('[data-wizard-validate-confirm-password]');
     var form = wizard.querySelector('[novalidate]');
+    // se sacaron acceso a algunos inputs por defecto para que funcione el formulario
+    //por cualquier cambio revizar el codigo fuente de falcon
     var nextButton = wizard.querySelector('.next button');
     var prevButton = wizard.querySelector('.previous button');
     var cardFooter = wizard.querySelector('.theme-wizard .card-footer');
     var count = 0;
 
-    var validatePattern = function validatePattern(pattern, value) {
-      var regexPattern = new RegExp(pattern);
-      return regexPattern.test(String(value).toLowerCase());
-    };
-
     prevButton.classList.add('d-none'); // on button click tab change
-
+    console.log(form);
     nextButton.addEventListener('click', function () {
-      if ((!(inputEmail.value && validatePattern(emailPattern, inputEmail.value)) || !inputPassword.value || !inputConfirmPassword.value) && form.className.includes('needs-validation')) {
+      if (form.className.includes('needs-validation')) {
         form.classList.add('was-validated');
       } else {
         count += 1;
@@ -4434,7 +4427,7 @@ var wizardInit = function wizardInit() {
       tabToggleButtonEl.forEach(function (item, index) {
         /* eslint-disable */
         item.addEventListener('show.bs.tab', function (e) {
-          if ((!(inputEmail.value && validatePattern(emailPattern, inputEmail.value)) || !inputPassword.value || !inputConfirmPassword.value) && form.className.includes('needs-validation')) {
+          if (form.className.includes('needs-validation')) {
             e.preventDefault();
             form.classList.add('was-validated');
             return null;

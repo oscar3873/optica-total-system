@@ -1,74 +1,75 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
+from typing import Any, Optional
+from django.db import models
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, DetailView, UpdateView, View)
+from django.views.generic import (CreateView, DetailView, UpdateView, FormView)
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 from .models import Employee
-from .forms import EmployeeForm, EmployeeUpdateForm
-from .services import data_pop
+from .forms import EmployeeForm
 from applications.users.models import User
 
-
+from applications.core.mixins import CustomUserPassesTestMixin
 # Create your views here.
-class EmployeeCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
-    model = Employee
-    template_name = 'employes/create_form.html'
+class EmployeeCreateView(CustomUserPassesTestMixin, FormView):
+    template_name = 'employes/employee_form.html'
     form_class = EmployeeForm
     success_url = reverse_lazy('core_app:home')
 
-    def test_func(self):
-        """
-        Para la verificacion de Administrador
-        """
-        return self.request.user.is_staff
-
     def form_valid(self, form):
-        user = User.objects.create_user(
-            username=form.cleaned_data['username'],
-            email=form.cleaned_data['email'],
-            password=form.cleaned_data['password1']
-        )
+        user_data = {
+            'first_name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'username': form.cleaned_data['username'],
+            'email': form.cleaned_data['email'],
+            'password': form.cleaned_data['password1'],
+            'branch': form.cleaned_data['branch'],
+        }
+        user = User.objects.create_user(**user_data)
+        
+        employee_data = {
+            'user': user,
+            'user_made': self.request.user,
+            'first_name': form.cleaned_data['first_name'],
+            'last_name': form.cleaned_data['last_name'],
+            'phone_number': form.cleaned_data['phone_number'],
+            'dni': form.cleaned_data['dni'],
+            'birth_date': form.cleaned_data['birth_date'],
+            'address': form.cleaned_data['address'],
+        }
+        Employee.objects.create(**employee_data)
+        
+        return super().form_valid(form)
 
-        Employee.objects.create_user(
-            user = user,
-            **data_pop(form)
-        )
-        return HttpResponseRedirect(self.success_url)
-    
-    def handle_no_permission(self):
-        if not self.request.user.is_authenticated:
-            return super(LoginRequiredMixin, self).handle_no_permission()
-        else:
-            context = {}
-            return render(self.request, 'users/denied_permission.html', context)
 
 
-class EmployeeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EmployeeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Employee
-    template_name = 'employes/update_form.html'
-    form_class = EmployeeUpdateForm
+    template_name = 'employes/employee_form.html'
+    form_class = EmployeeForm
     success_url = reverse_lazy('core_app:home')
 
-    def test_func(self):
-        # Define aquí tu lógica de prueba personalizada para la actualización
-        return self.request.user.is_staff
-
-    def handle_no_permission(self):
-        if not self.request.user.is_authenticated:
-            return super(LoginRequiredMixin, self).handle_no_permission()
-        else:
-            context = {}
-            return render(self.request, 'users/denied_permission.html', context)
+    def form_valid(self, form):
+        form.instance.user_made = self.request.user
+        return super().form_valid(form)
 
 
+
+
+############## UNICA VIEW DISPONIBLE PARA EL USO #############
 class EmployeeProfileView(LoginRequiredMixin, DetailView):
-    model = Employee
+    model = User
     template_name = 'users/profile.html'
+    context_object_name = 'employee'
+
+    def get_object(self, queryset=None):
+        pk = self.kwargs.get('pk')  # Obtén el valor del parámetro 'pk' de la URL
+        employee = User.objects.get(pk=pk)
+        return employee
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) # 'employee' -> Empleado de la pk
+        context = super().get_context_data(**kwargs) # object = 'EMPLEADO'
         
         # Mas detalles para el perfil del empleado:
         # context['key'] = value

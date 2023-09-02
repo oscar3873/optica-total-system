@@ -1,23 +1,31 @@
 from django.db import models
 #
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 #
 from .managers import UserManager
+from applications.branches.models import Branch
 
-class User(AbstractUser):
-    USER_ROLE = [
-        ('AD','Administrador'),
-        ('EM','Empleado')
+from applications.core.models import Person
+
+class User(Person, AbstractUser):
+    ROLE = [
+        ('ADMINISTRADOR', 'ADMINISTRADOR'),
+        ('EMPLEADO', 'EMPLEADO')
     ]
-    role = models.CharField(max_length=2, choices=USER_ROLE, default='EM')
-    username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(unique=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']  # Don't forget 'username' which is inherited from AbstractUser
+    role = models.CharField(max_length=15, choices=ROLE, default='EMPLEADO', null=True, blank=True)
+    username = models.CharField(max_length=50, unique=True)
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     objects = UserManager()
 
     
     def __str__(self):
-        return f"{self.username} | {self.email or 'Sin email'}"
+        return f"{self.get_full_name()} | {self.email or 'Sin email'}"
+
+    def get_absolute_url(self):
+        return reverse('employees_app:profile_employee', kwargs={'pk': self.pk})
