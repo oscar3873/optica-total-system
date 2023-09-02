@@ -2,6 +2,7 @@
 Configuracion base que todos necesitan para funcionar.
 """
 from django.core.exceptions import ImproperlyConfigured
+from django.utils import timezone
 import json
 from pathlib import Path
 
@@ -29,15 +30,43 @@ DJANGO_APPS = (
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.humanize"
 )
 
 LOCAL_APPS = (
     "applications.users",
+    "applications.clients",
+    "applications.branches",
+    "applications.core",
+    "applications.employes",
+    "applications.notes",
+    "applications.products",
+    "applications.suppliers",
+    "applications.sales",
+    "applications.cashregister",
+    "applications.notifications",
 )
 
-THIRD_PARTY_APPS = ()
+THIRD_PARTY_APPS = (
+    "daphne",
+)
 
-INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
+
+###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
+
+ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+####################################################################
+
+
+INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -47,6 +76,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -91,13 +121,37 @@ AUTH_USER_MODEL = "users.User"
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "es"
 
 TIME_ZONE = "UTC"
 
 USE_I18N = True
 
+USE_L10N = True
+
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+DATE_NOW = timezone.datetime.now()
+
+# Separadores de miles y decimales
+# https://docs.djangoproject.com/en/4.2/ref/settings/#localization
+
+THOUSAND_SEPARATOR = ','
+DECIMAL_SEPARATOR = '.'
+
+# Email settings for sending emails
+EMAIL_HOST = get_secret('EMAIL_HOST')
+EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+# Login
+LOGIN_URL = 'users_app:login'
+LOGIN_REDIRECT_URL = 'core_app:home'
+LOGOUT_URL = 'users_app:logout'
+LOGOUT_REDIRECT_URL = 'users_app:login'

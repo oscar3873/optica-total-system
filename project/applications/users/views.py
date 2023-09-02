@@ -1,52 +1,63 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 
-from django.views.generic import (CreateView, View)
+from django.views.generic import View
 from django.views.generic.edit import (FormView,)
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User
-
-from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy, reverse
+from applications.core.mixins import CustomUserPassesTestMixin
 
 
 # Create your views here.
-class UserCreateView(FormView):
+class UserCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
     template_name = "users/signup.html"
     form_class = UserCreateForm
-    success_url = '/'
+    success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
-        
-        User.objects.create_user(
-            form.cleaned_data['username'],
-            form.cleaned_data['email'],
-            form.cleaned_data['password1'],
-        
-        )
+        form.cleaned_data.pop('password2')
+        User.objects.create_user(**form.cleaned_data) # Funcion que crea EMPLEADOS
+        return super().form_valid(form)
+    
+
+class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS
+    template_name = "users/signup.html"
+    form_class = UserCreateForm
+    success_url = reverse_lazy('core_app:home')
+    
+    def form_valid(self, form):
+        form.cleaned_data.pop('password2')
+        User.objects.create_admin(**form.cleaned_data) # Funcion que crea ADMINIS
         return super().form_valid(form)
 
  
 class LoginView(FormView):
     template_name = "users/login.html"
     form_class = LoginForm
-    success_url = '/admin'
+    success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
         user = authenticate(
-            username=form.cleaned_data['email'],
+            username=form.cleaned_data['username'],
             password=form.cleaned_data['password']
         )
         login(self.request, user)
-        return super().form_valid(form)
+        
+        next_url = self.request.GET.get('next')  # Obtiene el valor del par�metro 'next' de la URL
+        
+        if next_url:
+            return redirect(next_url)  # Redirige a la URL especificada en 'next'
+        
+        return redirect(self.success_url)  # Si no hay 'next', redirige a una URL predeterminada
     
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return HttpResponseRedirect(reverse('users_app:login'))
+        return render(request, template_name='users/logout.html', context={})
     
 
 class UpdatePasswordView(LoginRequiredMixin, FormView):
@@ -59,7 +70,7 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         usuario = self.request.user
         user = authenticate(
             username=usuario.email,
-            password=form.cleaned_data['password1']
+            password=form.cleaned_data['passwordCurrent']
         )
         
         if user:
@@ -68,5 +79,4 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
             usuario.save()
         
         logout(self.request)
-        
         return super().form_valid(form)

@@ -78,7 +78,7 @@ urlpatterns = [
     # DETAILS
 
     path(
-        'detail/product/<pk>',
+        'detail/product/<pk>/',
         ProductDetailView.as_view(),
         name= 'detail'
     ),

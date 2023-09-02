@@ -1,0 +1,15 @@
+
+{% extends 'core/base.html' %}
+{% block main %}
+{% if notifications_list %}
+    {% for notification in notifications_list %}
+    <p>
+        <a href="{% url 'notifications_app:dynamic_detail' notification.content_type.model notification.content_object.pk %}">
+            {{ notification.content_object }}
+        </a>
+    </p>
+    {% endfor %}
+{% else %}
+    <p>Nothing</p>
+{% endif %}
+{% endblock main %}
