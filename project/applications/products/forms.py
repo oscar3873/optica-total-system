@@ -5,10 +5,20 @@ from .models import Category, Brand, Product, Feature, Feature_type
 from applications.core.mixins import ValidationFormMixin
 
 class CategoryForm(ValidationFormMixin):
+
+    name = forms.CharField(max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                }
+        )
+    )
+        
+
     class Meta:
         model = Category
-        fields = '__all__'
-        exclude = ['user_made',]
+        #necesario para el front 
+        fields = ('name',)
     
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -17,10 +27,18 @@ class CategoryForm(ValidationFormMixin):
 
 
 class BrandForm(ValidationFormMixin):
+    name = forms.CharField(max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                }
+        )
+    )
     class Meta:
         model = Brand
-        fields = '__all__'
-        exclude = ['user_made',]
+        #necesario para el front 
+        fields = ('name',)
+    
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -31,14 +49,24 @@ class BrandForm(ValidationFormMixin):
 class ProductForm(ValidationFormMixin):
     features = forms.ModelMultipleChoiceField(
         queryset=Feature.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={'class':'form-control'}
+        ),
         required=False,
+    )
+
+    name = forms.CharField(max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                }
+        )
     )
 
     class Meta:
         model = Product
-        fields = '__all__'
-        exclude = ['user_made',]
+        #necesario para el front 
+        fields = ('name',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,19 +83,45 @@ class ProductForm(ValidationFormMixin):
 class FeatureForm(ValidationFormMixin):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(
+            attrs={'class':'form-control'}
+        ),
         required=False,
     )
+
+    value = forms.CharField(
+        max_length=100,
+        widget = forms.TextInput(
+            attrs={'class':'form-control'}
+        ),
+    )
+    
+    type  = forms.ModelChoiceField(
+        queryset=Feature_type.objects.all(),
+    )
+
+    """ type = forms.ModelChoiceField(queryset= Feature_type.objects.all()) """
+
     class Meta:
         model = Feature
-        fields = '__all__'
-        exclude = ['user_made',]
+        fields = ['value','type','products']
+    
+    def __init__(self,*args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['type'].widget.attrs.update({'class':'form-control'}) 
+
 
 class FeatureTypeForm(ValidationFormMixin):
+    name = forms.CharField(max_length=100,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                }
+        )
+    )
     class Meta:
         model = Feature_type
-        fields = '__all__'
-        exclude = ['user_made',]
+        fields = ['name']
 
         def clean_name(self):
             name = self.cleaned_data['name']

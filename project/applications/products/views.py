@@ -12,7 +12,7 @@ class CategoryCreateView(CustomUserPassesTestMixin, FormView):
     Crear una catogoria nueva para el producto
     """
     form_class = CategoryForm
-    template_name = 'products/category_form.html'
+    template_name = 'products/category_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -29,7 +29,7 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
     Crear una marca nueva para los productos
     """
     form_class = BrandForm
-    template_name = 'products/brand_form.html'
+    template_name = 'products/brand_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -42,10 +42,10 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
 
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     """
-    Crear unun producto
+    Crear un producto
     """
     form_class = ProductForm
-    template_name = 'products/product_form.html'
+    template_name = 'products/product_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -72,7 +72,7 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y
         Previa carga del Tipo de Caracteristica
     """
     form_class = FeatureForm
-    template_name = 'products/category_form.html'
+    template_name = 'products/feature_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -94,7 +94,7 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
         Es lo primero que se crea, luego se crea la caracteristica (tipo -> caracteristica)
     """
     form_class = FeatureTypeForm
-    template_name = 'products/category_form.html'
+    template_name = 'products/featureType_create_page.html'
     success_url = reverse_lazy('products_app:new_feature')
 
     def form_valid(self, form):
@@ -111,7 +111,7 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
-    template_name = 'products/category_form.html'
+    template_name = 'products/category_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -121,7 +121,7 @@ class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
 class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
-    template_name = 'products/brand_form.html'
+    template_name = 'products/brand_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -131,7 +131,7 @@ class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
 class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
-    template_name = 'products/product_form.html'
+    template_name = 'products/product_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -158,7 +158,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
 class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
-    template_name = 'products/feature_form.html'
+    template_name = 'products/feature_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -168,7 +168,7 @@ class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
 class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature_type
     form_class = FeatureForm
-    template_name = 'products/feature_form.html'
+    template_name = 'products/featureType_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -179,19 +179,19 @@ class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
 
 class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
-    template_name = 'products/product_list.html'
+    template_name = 'products/product_list_page.html'
     context_object_name = 'products'
 
 
 class BrandListView(CustomUserPassesTestMixin, ListView):
     model = Brand
-    template_name = 'products/brand_list.html'
+    template_name = 'products/brand_list_page.html'
     context_object_name = 'brands'
 
 
 class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
-    template_name = 'products/category_list.html'
+    template_name = 'products/category_list_page.html'
     context_object_name = 'categories'
 
 
@@ -199,7 +199,7 @@ class CategoryListView(CustomUserPassesTestMixin, ListView):
 
 class ProductDetailView(CustomUserPassesTestMixin, DetailView):
     model = Product
-    template_name = 'products/product_detail.html'
+    template_name = 'products/product_page.html'
     context_object_name = 'product'
 
     def get_context_data(self, **kwargs):
