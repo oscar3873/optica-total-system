@@ -16,9 +16,6 @@ urlpatterns = [
     path("notes/", include("applications.notes.urls")),
     path("products/", include("applications.products.urls")),
     path("suppliers/", include("applications.suppliers.urls")),
-<<<<<<< HEAD
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-=======
     path("cashregister/", include("applications.cashregister.urls")),
+    path("notifications/", include("applications.notifications.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
->>>>>>> f33938137641aa7ae00305dbe1000dec1b8b131b

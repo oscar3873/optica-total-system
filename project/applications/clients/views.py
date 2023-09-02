@@ -1,6 +1,4 @@
-from typing import Type
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, UpdateView, DetailView, FormView)
 
@@ -94,17 +92,9 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        customer_data = {
-            'user_made': self.request.user,
-            'first_name': form.cleaned_data['first_name'],
-            'last_name': form.cleaned_data['last_name'],
-            'phone_number': form.cleaned_data['phone_number'],
-            'dni': form.cleaned_data['dni'],
-            'birth_date': form.cleaned_data['birth_date'],
-            'address': form.cleaned_data['address'],
-            'email': form.cleaned_data['email'],
-        }
-        Customer.objects.create_customer(**customer_data)
+        customer = form.save(commit=False)
+        customer.user_made = self.request.user
+        customer.save()
         return super().form_valid(form)
 
 
@@ -114,11 +104,13 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        insurance_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-            'phone_number': form.cleaned_data['phone_number'],
-            'cuit': form.cleaned_data['cuit'],
-        }
-        HealthInsurance.objects.create(**insurance_data)
+        insurance = form.save(commit=False)
+        insurance.user_made = self.request.user
+        insurance.save()
         return super().form_valid(form)
+    
+
+class CustomerDetailView(LoginRequiredMixin, DetailView):
+    model = Customer
+    template_name = 'clients/customer_detail.html'
+    context_object_name = 'customer'

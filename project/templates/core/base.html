@@ -26,8 +26,6 @@
     <script src="{% static 'core/js/config.js' %}"></script>
     <script src="{% static 'vendors/overlayscrollbars/OverlayScrollbars.min.js' %}"></script>
 
-    <script src="{% static 'notes/js/websocket.js' %}"></script>
-
     <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
@@ -41,8 +39,9 @@
     <link href="{% static 'core/css/user-rtl.min.css' %}" rel="stylesheet" id="user-style-rtl">
     <link href="{% static 'core/css/user.min.css' %}" rel="stylesheet" id="user-style-default">
 
-
-    <link href="{% static 'notes/css/notification.css' %}" rel="stylesheet" id="notes-notification">
+    <link href="{% static 'notes/css/notes.css' %}" rel="stylesheet" id="notes-notification">
+    <link href="{% static 'notifications/css/notifications.css' %}" rel="stylesheet" id="global-notification">
+    
     <!-- Bloque para hojas de estilo adicionales -->
     {% block extra_css %}{% endblock extra_css %}
 
@@ -168,7 +167,7 @@
                                             class="nav-link-text ps-1">Movimientos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_closed' %}" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_close_view' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock"></span></span><span
@@ -866,8 +865,11 @@
                 </nav>
 
                 <!-- NOTIFICACIONES GLOBALES -->
+                <div id="notes-container"></div>
+
+                <!-- NOTIFICACIONES GLOBALES -->
                 <div id="notifications-container"></div>
-                <!-- FIN DE NOTIFICACIONES GLOBALES -->
+
                 
                 {% block main %}
                 
@@ -911,7 +913,9 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
     <script src="{% static 'core/js/theme.js' %}"></script>
-    <script src="{% static 'notes/js/notification.js' %}"></script> <!-- Agregar este enlace -->
+    
+    <script src="{% static 'notifications/js/notifications.js' %}"></script> <!-- Agregar este enlace -->
+    <script src="{% static 'notes/js/notes.js' %}"></script> <!-- Agregar este enlace -->
 
     {% block extra_js %}{% endblock extra_js %}
 </body>

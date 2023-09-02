@@ -1,8 +1,9 @@
 from django.db import models
+from django.urls import reverse
 from applications.core.models import Person
 from applications.core.models import BaseAbstractWithUser
 
-from applications.employes.models import Employee
+from applications.users.models import User
 from .managers import CustomerManager, LabManager
 
 
@@ -27,12 +28,8 @@ class HealthInsurance(BaseAbstractWithUser):
 class Customer(Person, BaseAbstractWithUser):
     """
     Clase para Clientes
-        se guardan datos para almacenar clientes:
-            -address: direccion del cliente
+        se guardan datos para almacenar clientes
     """
-    address = models.CharField(max_length=200, null=True, blank=True)
-    email = models.EmailField(unique=True, null=True, blank=True)
-
     objects = CustomerManager()
 
     class Meta:
@@ -41,6 +38,9 @@ class Customer(Person, BaseAbstractWithUser):
 
     def __str__(self) -> str:
         return f'{self.last_name}, {self.first_name}'
+    
+    def get_absolute_url(self):
+        return reverse('clients_app:detail', kwargs={'pk': self.pk})
     
 
 class Customer_HealthInsurance(BaseAbstractWithUser):
@@ -123,7 +123,6 @@ class Calibration_Order(BaseAbstractWithUser):
     tratamient = models.ForeignKey(Tratamient, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     interpupillary = models.ForeignKey(Interpupillary, on_delete=models.PROTECT, related_name='laboratory', null = True, blank=True)
     diagnostic = models.CharField(max_length=200, null=True, blank=True)
-    employees = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     armazon = models.CharField(max_length=100, null=True, blank=True)
     observations = models.CharField(max_length=200, null=True, blank=True)
 

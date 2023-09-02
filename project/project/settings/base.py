@@ -42,12 +42,10 @@ LOCAL_APPS = (
     "applications.notes",
     "applications.products",
     "applications.suppliers",
-<<<<<<< HEAD
     "applications.dashboard",
-=======
     "applications.sales",
     "applications.cashregister",
->>>>>>> f33938137641aa7ae00305dbe1000dec1b8b131b
+    "applications.notifications",
 )
 
 THIRD_PARTY_APPS = (

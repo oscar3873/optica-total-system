@@ -17,6 +17,11 @@ urlpatterns = [
         name = 'cashregister_view'
     ),
     path(
+        'close/',
+        CashRegisterClosedView.as_view(),
+        name = 'cashregister_close_view'
+    ),
+    path(
         'movements',
         MovementsView.as_view(),
         name = 'movements_view'

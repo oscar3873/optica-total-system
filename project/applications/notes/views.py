@@ -12,14 +12,10 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        note_data = {
-            'user_made': self.request.user,
-            'subject': form.cleaned_data['subject'],
-            'description': form.cleaned_data['description'],
-            'branch': form.cleaned_data['branch'],
-        }
-        Note.objects.create(**note_data)
+        note = form.save(commit=False)
+        note.user_made = self.request.user
+        note.save()
         # Send a global message using the send_global_message function
-        send_global_message(f"A new note has been created: {form.cleaned_data['subject']}")
+        send_global_message(f"A new note has been created: {note.subject}")
 
         return super().form_valid(form)

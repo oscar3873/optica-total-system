@@ -1,16 +1,11 @@
-from django.db import models
+from applications.core.managers import BaseManager
 
-from django.contrib.auth.models import BaseUserManager
-
-
-class CustomerManager(BaseUserManager, models.Manager):
+class CustomerManager(BaseManager):
     """
     Manager para Clientes
     """
-    def create_customer(self, **data):
-        customer = self.model(**data)
-        customer.save()
-        return customer
+    def all(self):
+        return self.filter(deleted_at=None)
 
     def update_phone_number(self, customer, phone_number):
         customer.phone_number = phone_number
@@ -33,8 +28,13 @@ class CustomerManager(BaseUserManager, models.Manager):
         return buy
     
 
-class LabManager(BaseUserManager, models.Manager):
-
+class LabManager(BaseManager):
+    """
+    Manager para el Pedido de laboratorio (Calibration order)
+    """
+    def all(self):
+        return self.filter(deleted_at=None)
+    
     def create_or_update_calibration_order(self, user_made,
                     form, correction_form, material_form, color_form,
                     cristal_form, tratamiento_form, pupilar_form):

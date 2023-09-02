@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+
 app_name = 'clients_app'
 
 urlpatterns = [
@@ -24,4 +25,10 @@ urlpatterns = [
         CalibrationOrderUpdateView.as_view(), 
         name='update_laboratory'
     ),
+    #### LIST ####
+    path(
+        'detail/<pk>/',
+        CustomerDetailView.as_view(),
+        name='detail'
+    )
 ]

@@ -1,7 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import (FormView, DetailView, UpdateView, View)
 
-from .models import Branch
 from .forms import BranchForm
 
 from applications.core.mixins import CustomUserPassesTestMixin
@@ -14,12 +13,8 @@ class BranchCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        branch_data = {
-            'name': form.cleaned_data['name'],
-            'address': form.cleaned_data['address'],
-            'open_hs': form.cleaned_data['open_hs'],
-            'close_hs': form.cleaned_data['close_hs'],
-        }
-        Branch.objects.create(**branch_data)
+        branch = form.save(commit=False)
+        branch.user_made = self.request.user
+        branch.save()
         return super().form_valid(form)
 

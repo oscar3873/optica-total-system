@@ -7,8 +7,8 @@ from django.contrib import messages
 #Importaciones temporales
 from applications.branches.models import Branch
 from applications.cashregister.models import Currency
-from applications.cashregister.models import CashRegister
-from applications.cashregister.forms import CloseCashRegisterForm
+from applications.cashregister.models import CashRegister, CashRegisterDetail, TypeMethodePayment
+from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailForm, CashRegisterDetailFormSet
 
 
 # Create your views here.
@@ -27,7 +27,7 @@ class CashRegisterCreateView(FormView):
         print(form.data)
         
         #Esto hay que cambiarlo la sucursal la debe sacar de self.request.user.branch
-        branch = Branch.objects.all()[0]
+        branch = self.request.user.branch
         
         # Verifica si ya hay una caja registradora activa para la sucursal actual
         if CashRegister.objects.filter(branch=branch, is_close=False).exists():
@@ -51,7 +51,6 @@ class CashRegisterCreateView(FormView):
         print(form.data)
         messages.error(self.request, 'Existe un error en el formulario o Ya existe una caja abierta. Consulte al administrador del sistema por este mensaje')
         return super().form_invalid(form)
- 
 
 class CashRegisterView(TemplateView):
     template_name = 'cashregister/cashregister_page.html'
@@ -87,7 +86,39 @@ class CashRegisterView(TemplateView):
         else:
             return super().form_invalid(form)
 
+
+class CashRegisterClosedView(View):
+    template_name = 'cashregister/cashregister_closed_page.html'
     
+    def get(self, request, *args, **kwargs):
+        initial_data = [{'type_method': method} for method in TypeMethodePayment.objects.all()]
+        formset = CashRegisterDetailFormSet(initial=initial_data)
+        
+        return render(request, self.template_name, {'formset': formset})
+    
+    def post(self, request, *args, **kwargs):
+        formset = CashRegisterDetailFormSet(request.POST)
+        
+        #Falta implementar la logica completa para el arqueo y el cierre en los managers.py
+        
+        if formset.is_valid():
+            print("----------------Success formset create cashregister----------------")
+            cashregister = CashRegister.objects.get(is_close=False)
+            for form in formset:
+                if form.is_valid():
+                    instance = form.save(commit=False)
+                    instance.user_made = request.user
+                    instance.cash_register = cashregister
+                    instance.save()
+            # IMPORTANTE CON ESTO SE CIERRA LA CAJA
+            cashregister.is_close = True
+            cashregister.save()
+            
+        else:
+            print("----------------Error formset create cashregister----------------")
+            messages.error(request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
+        return render(request, self.template_name, {'formset': formset})
+
 
 class MovementsView(TemplateView):
     template_name = 'cashregister/movements_page.html'

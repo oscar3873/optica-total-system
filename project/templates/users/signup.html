@@ -3,18 +3,62 @@
 
 {% block main %}
 <main class="main" id="top">
-  <div class="col-md-6 col-xxl-3">
-    <div class="card h-md-100">
-      <div class="card-header pb-0">
-        <h6 class="mb-0 mt-2">Total Order</h6>
-      </div>
-      <div class="card-body d-flex flex-column justify-content-end">
-        <div class="row justify-content-between">
-          <div class="col-auto align-self-end">
-            <div class="fs-4 fw-normal font-sans-serif text-700 lh-1 mb-1">58.4K</div><span class="badge rounded-pill fs--2 bg-200 text-primary"><span class="fas fa-caret-up me-1"></span>13.6%</span>
-          </div>
-          <div class="col-auto ps-0 mt-n4">
-            <div class="echart-default-total-order" data-echarts='{"tooltip":{"trigger":"axis","formatter":"{b0} : {c0}"},"xAxis":{"data":["Week 4","Week 5","week 6","week 7"]},"series":[{"type":"line","data":[20,40,100,120],"smooth":true,"lineStyle":{"width":3}}],"grid":{"bottom":"2%","top":"2%","right":"10px","left":"10px"}}' data-echart-responsive="true"></div>
+  <div class="container" data-layout="container">
+    <div class="row flex-center min-vh-100 py-6">
+      <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4"
+        href="{% url 'users_app:login' %}"><img src="../../static/core/img/logo_optica_light.png" alt="logo-optica-total"
+            width="430" /><span class="font-sans-serif fw-bolder fs-5 d-inline-block"></span></a>
+        <div class="card">
+          <div class="card-body p-4 p-sm-5">
+            <div class="row flex-between-center mb-2">
+              <div class="col-auto">
+                <h5>Registrar</h5>
+              </div>
+              <div class="col-auto fs--1 text-600"><span class="mb-0 undefined">¿Ya tienes cuenta?</span> <span><a
+                    href="{% url 'users_app:login' %}">Ingresar</a></span></div>
+            </div>
+            <form method="post" class="row g-3 needs-validation" novalidate>
+              {% csrf_token %}
+              {{form.errors}}
+              <div class="mb-3">
+                {{form.branch}}
+              </div>
+              <div class="mb-3">
+                {{form.first_name}}
+              </div>
+              <div class="mb-3">
+                {{form.last_name}}
+              </div>
+              <div class="mb-3">
+                {{form.dni}}
+              </div>
+              <div class="mb-3">
+                {{form.phone_number}}
+              </div>
+              <div class="mb-3">
+                {{form.address}}
+              </div>
+              <div class="mb-3">
+                {{form.birth_date}}
+              </div>
+              <div class="mb-3">
+                {{form.username}}
+              </div>
+              <div class="mb-3">
+                {{form.email}}
+              </div>
+              <div class="row gx-2">
+                <div class="mb-3 col-sm-6">
+                  {{form.password}}
+                </div>
+                <div class="mb-3 col-sm-6">
+                  {{form.password2}}
+                </div>
+              </div>
+              <div class="mb-3">
+                <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrarse</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

@@ -4,7 +4,6 @@ from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 from applications.clients.models import Customer
 from applications.products.models import Product
-from applications.employes.models import Employee
 
 # Create your models here.
 class PaymentMethod(SoftDeletionModel, TimestampsModel):
@@ -46,7 +45,6 @@ class Sale(SoftDeletionModel, TimestampsModel):
     Clase para venta
         almacena los datos necesarios para una venta realizada con estados de la misma
             -state: estado de la venta (predeterminado 'PENDIENTE' -al instanciar-)
-            -employee: asesor que realiza la venta
             -invoice: factura correspondiente a la venta a realizar
             -customer (opcional): cliente asociado a la venta
             -total: total de los items a vender
@@ -61,7 +59,6 @@ class Sale(SoftDeletionModel, TimestampsModel):
     ]
 
     state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False)
-    employee = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='sales')
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     receipt = models.ForeignKey(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
@@ -70,8 +67,7 @@ class Sale(SoftDeletionModel, TimestampsModel):
 
     def __str__(self) -> str:
         return (f'Numero de factura: {self.invoice.invoice_num}\n'+
-                f'Tipo: {self.invoice.invoice_type}\n'+
-                f'Asesor: {self.employee}')
+                f'Tipo: {self.invoice.invoice_type}\n')
 
 
 class PaymentMethod_Sale(SoftDeletionModel, TimestampsModel):
