@@ -64,10 +64,13 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         return context
 
     def get_named_formsets(self):
+        """
+        Funcion para obtener el formulario formset para GET y POST
+        """
         if self.request.method == "GET":
-            return {'variants': FeatureFormSet(prefix='variants')}
+            return FeatureFormSet(prefix='variants')
         else:
-            return {'variants': FeatureFormSet(self.request.POST, prefix='variants')}
+            return FeatureFormSet(self.request.POST, prefix='variants')
 
     @transaction.atomic
     def form_valid(self, form):
@@ -82,28 +85,16 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             product.user_made = self.request.user
             product.save()
 
-        feature_formset = self.get_named_formsets()['variants']
+        feature_formset = self.get_named_formsets()
         if feature_formset.is_valid():
+
+            Product_feature.objects.IO_features_form(form, product, self.request.user)
             feature_dict = {}
-            # Guardar o actualizar el producto según el modo
-            # if not self.create_mode:
-            selected_features = form.cleaned_data['features']
-            existing_features = product.product_feature.all()
-
-            # Elimina relaciones existentes que ya no están seleccionadas
-            for feature in existing_features:
-                if feature.feature not in selected_features:
-                    product.product_feature.get(feature=feature.feature).delete()
-
-            # Crea nuevas relaciones solo para características no existentes
-            for feature in selected_features:
-                if feature not in existing_features.values_list('feature', flat=True):
-                    prueba = Product_feature.objects.create(product=product, feature=feature, user_made= self.request.user)
-
 
             for feature_form in feature_formset:
                 feature_type_name = feature_form.cleaned_data.get('type', '').strip().lower()
                 feature_value = feature_form.cleaned_data.get('value', '').strip().lower()
+
                 if feature_type_name and feature_value:
                     # Create FeatureType if it doesn't exist
                     feature_type, created = Feature_type.objects.get_or_create(
@@ -121,7 +112,9 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
                     product=product,
                     feature=feature
                 )
-                print(intermedia == prueba, created)
+                if created:
+                    intermedia.user_made = self.request.user
+                    intermedia.save()
 
         return super().form_valid(form)
 

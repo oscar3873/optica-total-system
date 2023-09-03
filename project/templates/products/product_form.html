@@ -3,7 +3,7 @@
     <div class="mb-3">
         {{form.as_p}}
     </div>
-    {% with named_formsets.variants as formset %}
+    {% with named_formsets as formset %}
         {{ formset.management_form }}
         <script type="text/html" id="variants-template">
             <tr id="variants-__prefix__" class="hide_all">
@@ -19,29 +19,25 @@
             </tr>
         </script>
         <div class="table-responsive card mt-4">
-            <div class="card-header card-header-secondary">
-                <h4 class="card-title">Add Variants</h4>
-            </div>
-            <table class="table card-header">
-                <tbody id="item-variants">
-                    {% for formss in formset %}
-                        {{ formss.management_form }}
-                        <tr id="variants-{{ forloop.counter0 }}" class="hide_all">
-                            {{ formss.id }}
-                            {% for field in formss.visible_fields %}
-                                <td>
-                                    {{field.label}}: {{field}}
-                                </td>
-                            {% endfor %}
+            Add Features
+            <div id="item-variants">
+                {% for formss in formset %}
+                    {{ formss.management_form }}
+                    <tr id="variants-{{ forloop.counter0 }}" class="hide_all">
+                        {{ formss.id }}
+                        {% for field in formss.visible_fields %}
                             <td>
-                                {% if formss.instance.pk %}
-                                    <button type="button" class="btn btn-danger delete-variant">Delete</button>
-                                {% endif %}
+                                {{field.label}}: {{field}}
                             </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                        {% endfor %}
+                        <td>
+                            {% if formss.instance.pk %}
+                                <button type="button" class="btn btn-danger delete-variant">Delete</button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </div>
             <a href="#" id="add-variant-button" class="btn btn-secondary add-variants">Add More</a>
         </div>
     {% endwith %}
