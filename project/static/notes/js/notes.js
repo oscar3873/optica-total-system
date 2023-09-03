@@ -1,8 +1,8 @@
-const notificationSocket = new WebSocket(
+const noteSocket = new WebSocket(
     'ws://' + window.location.host + '/ws/notes/global/'
 );
 
-notificationSocket.onmessage = function(e) {
+noteSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     const message_note = data.message; // Cambiar "notification" por "message"
     

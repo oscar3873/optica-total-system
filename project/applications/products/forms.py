@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Category, Brand, Product, Feature, Feature_type
+from .models import *
 
 from applications.core.mixins import ValidationFormMixin
 
@@ -8,7 +8,7 @@ class CategoryForm(ValidationFormMixin):
     class Meta:
         model = Category
         fields = '__all__'
-        exclude = ['user_made',]
+        exclude = ['user_made','deleted_at']
     
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -20,7 +20,7 @@ class BrandForm(ValidationFormMixin):
     class Meta:
         model = Brand
         fields = '__all__'
-        exclude = ['user_made',]
+        exclude = ['user_made','deleted_at']
 
     def clean_name(self):
         name = self.cleaned_data['name']
@@ -38,7 +38,7 @@ class ProductForm(ValidationFormMixin):
     class Meta:
         model = Product
         fields = '__all__'
-        exclude = ['user_made',]
+        exclude = ['user_made','deleted_at']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -60,16 +60,41 @@ class FeatureForm(ValidationFormMixin):
     )
     class Meta:
         model = Feature
-        fields = '__all__'
-        exclude = ['user_made',]
+        fields = [ 'type', 'value',]
 
 class FeatureTypeForm(ValidationFormMixin):
     class Meta:
         model = Feature_type
-        fields = '__all__'
-        exclude = ['user_made',]
+        fields = ['name']
 
         def clean_name(self):
             name = self.cleaned_data['name']
             self.validate_length(name, 2, 'El nombre del tipo de característica debe tener al menos 3 caracteres.')
             return name
+
+
+
+
+class FeatureForm_to_formset(ValidationFormMixin):
+    type = forms.CharField(
+        max_length=20,
+        label="Tipo de caracteristica",
+        required=False
+    )
+    value = forms.CharField(
+        max_length=20,
+        label="Valor",
+        required=False
+    )
+    class Meta:
+        model = Feature
+        fields = [ 'type', 'value',]
+
+
+FeatureFormSet = forms.inlineformset_factory(
+    Product, 
+    Product_feature,
+    form=FeatureForm_to_formset,
+    extra=1,
+    can_delete=False
+    )

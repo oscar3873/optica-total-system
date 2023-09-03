@@ -43,7 +43,7 @@ urlpatterns = [
     ),
     path(
         'update/product/<pk>/',
-        ProductUpdateView.as_view(),
+        ProductCreateView.as_view(),
         name='update_product'
     ),
     path(

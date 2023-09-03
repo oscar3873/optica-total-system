@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 
@@ -36,23 +37,94 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
         brand.save()
         return super().form_valid(form)
 
+
+from django.shortcuts import get_object_or_404
+
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     """
-    Crear unun producto
+    Crear o actualizar un producto
     """
     form_class = ProductForm
     template_name = 'products/product_form.html'
     success_url = reverse_lazy('core_app:home')
+    create_mode = True  # Indica si estamos en modo de creación o actualización
 
+    def dispatch(self, request, *args, **kwargs):
+        # Verificar si estamos en modo de actualización
+        if 'pk' in self.kwargs:
+            self.create_mode = False
+            self.object = Product.objects.get(pk=self.kwargs['pk'])
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not self.create_mode:
+            context['form'] = ProductForm(instance = self.object)
+        context['named_formsets'] = self.get_named_formsets()
+        return context
+
+    def get_named_formsets(self):
+        if self.request.method == "GET":
+            return {'variants': FeatureFormSet(prefix='variants')}
+        else:
+            return {'variants': FeatureFormSet(self.request.POST, prefix='variants')}
+
+    @transaction.atomic
     def form_valid(self, form):
-        product = form.save(commit=False)
-        product.user_made = self.request.user
-        product.save()
+        if not self.create_mode:
+            # Actualiza los campos del objeto con los datos del formulario POST
+            form.instance.pk = self.object.pk  # Mantén la clave primaria
+            form.instance.user_made = self.request.user  # Actualiza el usuario
+            product = form.save()  # Guarda los cambios en el objeto existente
+        else:
+            # Si es un nuevo producto, simplemente guarda el formulario
+            product = form.save(commit=False)
+            product.user_made = self.request.user
+            product.save()
 
-        for feature in form.cleaned_data['features']:
-            Product_feature.objects.create(feature=feature, product=product, user_made = self.request.user)
+        feature_formset = self.get_named_formsets()['variants']
+        if feature_formset.is_valid():
+            feature_dict = {}
+            # Guardar o actualizar el producto según el modo
+            # if not self.create_mode:
+            selected_features = form.cleaned_data['features']
+            existing_features = product.product_feature.all()
+
+            # Elimina relaciones existentes que ya no están seleccionadas
+            for feature in existing_features:
+                if feature.feature not in selected_features:
+                    product.product_feature.get(feature=feature.feature).delete()
+
+            # Crea nuevas relaciones solo para características no existentes
+            for feature in selected_features:
+                if feature not in existing_features.values_list('feature', flat=True):
+                    prueba = Product_feature.objects.create(product=product, feature=feature, user_made= self.request.user)
+
+
+            for feature_form in feature_formset:
+                feature_type_name = feature_form.cleaned_data.get('type', '').strip().lower()
+                feature_value = feature_form.cleaned_data.get('value', '').strip().lower()
+                if feature_type_name and feature_value:
+                    # Create FeatureType if it doesn't exist
+                    feature_type, created = Feature_type.objects.get_or_create(
+                                                user_made=self.request.user,
+                                                name=feature_type_name)
+                    value, created = Feature.objects.get_or_create(
+                                        user_made=self.request.user,
+                                        type=feature_type,
+                                        value=feature_value
+                                    )
+                    feature_dict[value] = feature_type
+
+            for feature, feature_type_name in feature_dict.items():
+                intermedia, created = Product_feature.objects.get_or_create(
+                    product=product,
+                    feature=feature
+                )
+                print(intermedia == prueba, created)
 
         return super().form_valid(form)
+
 
 class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y SU TIPO (2)
     """

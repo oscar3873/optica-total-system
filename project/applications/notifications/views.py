@@ -21,7 +21,7 @@ class NotificationsCreateView(LoginRequiredMixin, CreateView):
         notification = form.save(commit=False)
         notification.user_made = self.request.user
         notification.save()
-        send_notifications(f"A new note has been created: {notification.details}")
+        send_notifications(f"{notification.user_made} a generado un {notification.content_object._meta.verbose_name}: {notification.details}")
 
         return super().form_valid(form)
 
@@ -35,4 +35,4 @@ class DynamicDetail(LoginRequiredMixin, View):
         content_type = ContentType.objects.get(model=model_name)
         model_class = content_type.model_class()
         obj = model_class.objects.get(pk=pk)
-        return redirect(obj.get_absolute_url())
+        return redirect(obj.objects.get_absolute_url())
