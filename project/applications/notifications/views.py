@@ -1,4 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, View
@@ -6,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import NotificationsForm
 from .models import Notifications
+from applications.notes.consumers import send_notifications
 # Create your views here.
 
 class NotificationsCreateView(LoginRequiredMixin, CreateView):
@@ -14,6 +17,13 @@ class NotificationsCreateView(LoginRequiredMixin, CreateView):
     template_name = 'notifications/noti_form.html'
     success_url = reverse_lazy('notifications_app:list')
 
+    def form_valid(self, form):
+        notification = form.save(commit=False)
+        notification.user_made = self.request.user
+        notification.save()
+        send_notifications(f"A new note has been created: {notification.details}")
+
+        return super().form_valid(form)
 
 class NotificationsListView(LoginRequiredMixin, ListView):
     model = Notifications

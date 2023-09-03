@@ -4,6 +4,9 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
+    def all(self):
+        users_active = self.model.filter(is_active=True)
+        return users_active
 
     def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch=None, **extra_fields):
         user = self.model(

@@ -55,6 +55,9 @@ class EmployeeUpdateView(CustomUserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
 
+
+
+############## UNICA VIEW DISPONIBLE PARA EL USO #############
 class EmployeeProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'users/profile.html'

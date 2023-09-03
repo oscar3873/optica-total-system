@@ -16,11 +16,9 @@ class CategoryCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        category_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-        }
-        Category.objects.create(**category_data)
+        category = form.save(commit=False)
+        category.user_made = self.request.user
+        category.save()
         return super().form_valid(form)
 
 
@@ -33,11 +31,9 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        brand_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-        }
-        Brand.objects.create(**brand_data)
+        brand = form.save(commit=False)
+        brand.user_made = self.request.user
+        brand.save()
         return super().form_valid(form)
 
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
@@ -49,20 +45,12 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        produtct_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-            'price': form.cleaned_data['price'],
-            'description': form.cleaned_data['description'],
-            'stock': form.cleaned_data['stock'],
-            'category': form.cleaned_data['category'],
-            'brand': form.cleaned_data['brand'],
-            'barcode': form.cleaned_data['barcode'],
-        }
-        prouct = Product.objects.create(**produtct_data)
+        product = form.save(commit=False)
+        product.user_made = self.request.user
+        product.save()
 
         for feature in form.cleaned_data['features']:
-            Product_feature.objects.create(feature=feature, product=prouct, user_made = self.request.user)
+            Product_feature.objects.create(feature=feature, product=product, user_made = self.request.user)
 
         return super().form_valid(form)
 
