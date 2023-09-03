@@ -11,11 +11,26 @@ class SupplierForm(ValidationFormMixin):
         widget=forms.CheckboxSelectMultiple,
         required=False
         )
+    name = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    phone = forms.IntegerField(
+        widget=forms.NumberInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    email=forms.CharField(
+        widget=forms.EmailInput(
+            attrs={'class':'form-control'}
+        )
+    )
 
     class Meta:
         model = Supplier
-        fields = '__all__'
-        exclude = ['user_made',]
+        fields = ('name','phone','email','products',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
