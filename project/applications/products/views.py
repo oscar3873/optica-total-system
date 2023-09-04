@@ -1,4 +1,6 @@
 from django.db import transaction
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 
@@ -49,7 +51,7 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y
     def form_valid(self, form):
         feature = form.save(commit=False)
         feature.user_made = self.request.user
-        feature = Feature.objects.create(**feature)
+        feature.save()
 
         for product in form.cleaned_data['products']:
             Product_feature.objects.create(feature=feature, product=product, user_made = self.request.user)
@@ -68,7 +70,7 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
     def form_valid(self, form):
         feature_type = form.save(commit=False)
         feature_type.user_made = self.request.user
-        Feature_type.objects.create(**feature_type)
+        feature_type.save()
         return super().form_valid(form)
 
 
@@ -197,3 +199,27 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['features'] = self.model.objects.get_features(self.get_object())
         return context
+
+
+
+
+def crear_feature_type(request):
+    if request.method == 'POST':
+        form = FeatureTypeForm(request.POST)
+        if form.is_valid():
+            feature_type = form.save(commit=False)
+            feature_type.user_made = request.user
+            feature_type.save()
+            return HttpResponse('<script>window.close();</script>')
+
+    form = FeatureTypeForm()
+    return render(request, 'products/featureType_create_form.html', {'form': form})
+
+
+def obtener_ultimo_feature_type(request):
+    ultimo_feature_type = Feature_type.objects.latest('id')
+    data = {
+        'type_id': ultimo_feature_type.pk,
+        'type_nombre': ultimo_feature_type.name,
+    }
+    return JsonResponse(data)

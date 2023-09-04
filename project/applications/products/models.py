@@ -91,5 +91,5 @@ class Product_feature(BaseAbstractWithUser):
         return f'Producto: {self.product} | Caracteristica: {self.feature}'
     
     class Meta:
-        verbose_name = 'Producto x Categoria'
-        verbose_name_plural = 'Producto x Categoria'
+        verbose_name = 'Producto x Caracteristica'
+        verbose_name_plural = 'Producto x Caracteristica'

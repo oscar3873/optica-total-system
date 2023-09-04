@@ -133,7 +133,7 @@ class FeatureForm(ValidationFormMixin):
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple(
-            attrs={'class':'form-control'}
+            # attrs={'class':'form-control'}
         ),
         required=False,
     )
@@ -169,10 +169,10 @@ class FeatureTypeForm(ValidationFormMixin):
         model = Feature_type
         fields = ('name',)
 
-        def clean_name(self):
-            name = self.cleaned_data['name']
-            self.validate_length(name, 2, 'El nombre del tipo de característica debe tener al menos 3 caracteres.')
-            return name
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        self.validate_length(name, 2, 'El nombre del tipo de característica debe tener al menos 3 caracteres.')
+        return name
 
 
 
