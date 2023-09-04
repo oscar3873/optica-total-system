@@ -5,10 +5,11 @@ from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
 from .models import Supplier, Product_Supplier
 
+
 # Create your views here.
 class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_form.html'
+    template_name = 'suppliers/supplier_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -24,7 +25,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_form.html'
+    template_name = 'suppliers/supplier_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -49,17 +50,17 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
 
 class SuppliersListView(CustomUserPassesTestMixin, ListView):
     model = Supplier
-    template_name = 'suppliers/supplier_list.html'
+    template_name = 'suppliers/supplier_list_page.html'
     context_object_name = 'suppliers'
 
 
 class SupplierDetailView(DetailView):
     model = Supplier
-    template_name = 'suppliers/supplier_detail.html'
+    template_name = 'suppliers/supplier_page.html'
     context_object_name = 'supplier'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.object)
         return context
-    
+

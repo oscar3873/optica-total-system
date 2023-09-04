@@ -1,8 +1,12 @@
 from applications.core.managers import BaseManager
 
+from . import models
 class ProductManager(BaseManager):
 
     def get_features(self, product):
+        """
+        Obtiene todas caractefristicas relacionadas a un producto (argumento)
+        """
         intermed = product.product_feature.all()
         features = [item.feature for item in intermed]
         return features
@@ -12,11 +16,11 @@ class ProductManager(BaseManager):
     
 
 class ProductFeatureManager(BaseManager):
-    def IO_features_form(self, form, product, user):
+    def form_in_out_features(self, form, product, user):
         """
         PARA FORMULARIOS:
-            Verifica el estado de las caracteristicas cargadas para el producto
-            En caso de requerir poner/sacar caracteristicas de un producto
+            Verifica el estado de las caracteristicas cargadas para el producto.
+            En caso de requerir poner/sacar caracteristicas de un producto.
         """
         selected_features = form.cleaned_data['features']
         existing_features = product.product_feature.all()
@@ -31,7 +35,12 @@ class ProductFeatureManager(BaseManager):
             if feature not in existing_features.values_list('feature', flat=True):
                 product.product_feature.create(feature=feature, user_made=user)
 
-    def create_features_to_products(self, product, feature_formset):
+
+    def form_create_features_formset(self, product, feature_formset):
+        """
+        PARA FORMULARIOS:
+            Obtiene o crea las caracteristicas para relacionarlo con el producto (mediante tabla interemedia).
+        """
         feature_dict = {}
 
         for feature_form in feature_formset:
@@ -40,15 +49,15 @@ class ProductFeatureManager(BaseManager):
 
             if feature_type_name and feature_value:
                 # Create FeatureType if it doesn't exist
-                feature_type, created = Feature_type.objects.get_or_create(
-                                            user_made=self.request.user,
-                                            name=feature_type_name)
-                value, created = Feature.objects.get_or_create(
+                type, created = models.Feature_type.objects.get_or_create(
                                     user_made=self.request.user,
-                                    type=feature_type,
+                                    name=feature_type_name)
+                value, created = models.Feature.objects.get_or_create(
+                                    user_made=self.request.user,
+                                    type=type,
                                     value=feature_value
                                 )
-                feature_dict[value] = feature_type
+                feature_dict[value] = type
 
         for feature, feature_type_name in feature_dict.items():
             intermedia, created = self.model.objects.get_or_create(

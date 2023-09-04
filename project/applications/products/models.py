@@ -47,7 +47,7 @@ class Product(BaseAbstractWithUser):
                 f'{self.category} - '+
                 f'Precio: {self.price} - '+ 
                 f'Stock: {self.stock}'
-                )
+                ) 
 
 
 class Feature_type(BaseAbstractWithUser):
