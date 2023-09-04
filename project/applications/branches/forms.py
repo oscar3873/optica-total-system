@@ -52,7 +52,7 @@ class BranchForm(ValidationFormMixin):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        self.validate_length(name, 3, "Ingrese una dirección válida.") #ingrese un nombre valido
+        self.validate_length(name, 3, "Ingrese un nombre válido.")
         return name
     
     def clean_address(self):

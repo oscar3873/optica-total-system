@@ -40,27 +40,61 @@
                         <form method="POST" class="mt-3" novalidate="">
                             {% csrf_token %}
                             <div class="row justify-content-sm-center">
-                                <div class="col">
+                                <div class="col-md-10">
                                     {{ form.name.label }}
-                                    {{ form.name }}
-                                    <div class="valid-feedback">Looks good!</div>
+                                    <div class="mb-3">
+                                        {{ form.name}}
+                                    </div>
+                                    {% if form.name.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.name.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row justify-content-sm-center">
                                 <div class="col">
                                     {{ form.address.label }}
-                                    {{ form.address }}
-                                    <div class="invalid-feedback">Please provide a valid city.</div>
+                                    <div class="mb-3">
+                                        {{ form.address}}
+                                    </div>
+                                    {% if form.address.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.address.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row justify-content-md-center">
                                 <div class="col-md-3 my-2">
                                     {{ form.open_hs.label }}
-                                    {{ form.open_hs }}
+                                    <div class="mb-3">
+                                        {{ form.open_hs}}
+                                    </div>
+                                    {% if form.open_hs.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.open_hs.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="col-md-3 my-2">
                                     {{ form.close_hs.label }}
-                                    {{ form.close_hs }}
+                                    <div class="mb-3">
+                                        {{ form.close_hs}}
+                                    </div>
+                                    {% if form.close_hs.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.close_hs.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="">
