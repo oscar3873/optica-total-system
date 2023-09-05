@@ -366,7 +366,7 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_list' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
@@ -392,14 +392,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'note_app:new_note' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-square"></span></span><span
                                             class="nav-link-text ps-1">Añadir Nota</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'note_app:note_list' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
@@ -444,14 +444,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:branch_list' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver sucursales</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-square"></span></span><span
@@ -867,7 +867,7 @@
                 <!-- NOTIFICACIONES GLOBALES -->
                 <div id="notes-container">
                     <audio autoplay>
-                        <source src="{% static 'notes/audio/audio.mp3' %}" type="audio/mp3">
+                        <source src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
                     </audio>
                 </div>
 

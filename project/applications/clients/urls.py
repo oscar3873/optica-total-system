@@ -30,5 +30,11 @@ urlpatterns = [
         'detail/<pk>/',
         CustomerDetailView.as_view(),
         name='detail'
-    )
+    ),
+
+    path(
+        'list/customer',
+        CustomerListView.as_view(),
+        name='customer_list'
+    ),
 ]
