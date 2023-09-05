@@ -56,13 +56,13 @@
                                     <td class="adress">{{ branch.address }}</td>
                                     <td class="open_hs">{{ branch.open_hs }}</td>
                                     <td class="close_hs">{{ branch.close_hs }}</td>
-                                    <td class="text-end">
+                                    <td class="text-center">
                                         <div>
                                             <a href="{% url 'branches_app:update_branch' pk=branch.pk %}"><button class="btn p-0" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Edit"><span
+                                                data-bs-placement="top" title="Editar"><span
                                                     class="text-500 fas fa-edit"></span></button></a>
                                             <button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Delete"><span
+                                                data-bs-placement="top" title="Eliminar"><span
                                                     class="text-500 fas fa-trash-alt"></span></button>
                                         </div>
                                     </td>
