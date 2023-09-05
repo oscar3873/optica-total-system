@@ -1,5 +1,10 @@
+{% extends 'core/base.html' %}
 {% load static %}
 {% load humanize %}
+
+
+{% block main %}
+   
 <!-- ===============================================-->
 <!--    Contentenedor del block main-->
 <!-- ===============================================-->
@@ -24,10 +29,33 @@
     <!--    Fin Errores de Sistema (Backend)-->
     <!-- ===============================================-->
 
+    <!-- ===============================================-->
+    <!--    Formulario de Categoria   -->
+    <!-- ===============================================-->
+    
+    <h4>Categoria</h4>
+    {{category_form.as_p}}
 
     <!-- ===============================================-->
-    <!--    Card con la presentacion de la caja-->
+    <!--    Fin Formulario de Categoria   -->
     <!-- ===============================================-->
+
+    <!-- ===============================================-->
+    <!--    Formulario de Categoria   -->
+    <!-- ===============================================-->
+    
+    <h4>Marca</h4>
+    {{brand_form.as_p}}
+
+    <!-- ===============================================-->
+    <!--    Fin Formulario de Categoria   -->
+    <!-- ===============================================-->
+
+
+    <!-- ===============================================-->
+    <!--    Formulario de Producto/Caracteristica   -->
+    <!-- ===============================================-->
+    <h4>Producto</h4>
 		<div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
 			<div class="card theme-wizard h-100 mb-5">     
 				<div class="card-body py-4" id="wizard-controller">
@@ -86,12 +114,19 @@
 			</div>
 		</div>    
 
-    <!-- ===============================================-->
-    <!--   Fin Card con la presentacion de la caja-->
-    <!-- ===============================================-->
+    <!-- =================================================-->
+    <!--   Fin de Formulario de Producto/Caracteristica   -->
+    <!-- =================================================-->
 
 </div>
 
 <!-- ===============================================-->
 <!--    Fin Contentenedor del block main-->
 <!-- ===============================================-->
+{% endblock main %}
+
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="{% static 'products/js/formset.js' %}"></script> <!-- Agregar este enlace -->
+{% endblock extra_js %}

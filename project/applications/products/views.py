@@ -1,5 +1,6 @@
+from typing import Any, Dict
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 
@@ -97,52 +98,54 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
     template_name = 'products/product_create_page.html'
     success_url = reverse_lazy('core_app:home')
-    create_mode = True  # Indica si estamos en modo de creación o actualización
-
-    def dispatch(self, request, *args, **kwargs):
-        # Verificar si estamos en modo de actualización
-        if 'pk' in self.kwargs:
-            self.create_mode = False
-            self.object = Product.objects.get(pk=self.kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if not self.create_mode:
-            context['form'] = ProductForm(instance = self.object)
-        context['named_formsets'] = self.get_named_formsets()
+        context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
-
-    def get_named_formsets(self):
-        """
-        Funcion para obtener el formulario formset para GET y POST
-        """
-        if self.request.method == "GET":
-            return FeatureFormSet(prefix='variants')
-        else:
-            return FeatureFormSet(self.request.POST, prefix='variants')
 
     @transaction.atomic
     def form_valid(self, form):
-        if not self.create_mode:
-            # Actualiza los campos del objeto con los datos del formulario POST
-            form.instance.pk = self.object.pk  # Mantén la clave primaria
-            form.instance.user_made = self.request.user  # Actualiza el usuario
-            product = form.save()  # Guarda los cambios en el objeto existente
-        else:
-            # Si es un nuevo producto, simplemente guarda el formulario
-            product = form.save(commit=False)
-            product.user_made = self.request.user
-            product.save()
+        # Si es un nuevo producto, simplemente guarda el formulario
+        product = form.save(commit=False)
+        product.user_made = self.request.user
+        product.save()
 
-        feature_formset = self.get_named_formsets()
+        feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
+        form_in_out_features(form, product, self.request.user)
         if feature_formset.is_valid():
-            form_in_out_features(form, product, self.request.user)
-            form_create_features_formset(product, feature_formset)
+            form_create_features_formset(self.request.user, product, feature_formset)
 
         return super().form_valid(form)
     
 ####################### UPDATES #####################
+
+class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
+    """
+    Crear o actualizar un producto
+    """
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_update_page.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['named_formsets'] = FeatureFormSet(prefix='variants')
+        return context
+
+    @transaction.atomic
+    def form_valid(self, form):
+        # Si es un nuevo producto, simplemente guarda el formulario
+        product = form.instance
+        product.user_made = self.request.user
+
+        feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
+        form_in_out_features(form, product, self.request.user)
+        if feature_formset.is_valid():
+            form_create_features_formset(self.request.user, product, feature_formset)
+
+        return super().form_valid(form)
 
 class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
@@ -215,3 +218,51 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['features'] = self.model.objects.get_features(self.get_object())
         return context
+
+
+#################### FORMULARIO WIZARD #####################
+class ProductFormComplete(CustomUserPassesTestMixin, FormView):
+    form_class = ProductForm
+    template_name = 'products/components/create/product_wizard_form.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category_form'] = CategoryForm
+        context['brand_form'] = BrandForm
+        context['named_formsets'] = FeatureFormSet(prefix='variants')
+        return context
+    
+    def form_valid(self, form):
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.user_made = self.request.user
+            product.save()
+        else:
+            print(form.errors)
+
+        category_form = Category(self.request.POST)
+        brand_form = Brand(self.request.POST)
+        feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
+
+        form_in_out_features(form, product, self.request.user) # Para el feature_formset
+        if feature_formset.is_valid():
+            form_create_features_formset(self.request.user, product, feature_formset)
+        else:
+            print(feature_formset.errors)
+        
+        if category_form.is_valid():
+            category_form.save(commit=False)
+            category_form.user_made = self.request.user
+            category_form.save()
+        else:
+            print(category_form.errors)
+        
+        if brand_form.is_valid():
+            brand_form.save(commit=False)
+            brand_form.user_made = self.request.user
+            brand_form.save()
+        else:
+            print(brand_form.errors)
+
+        return super().form_valid(form)
