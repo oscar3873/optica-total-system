@@ -1,3 +1,12 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
 <form enctype="multipart/form-data" method="post">
     {% csrf_token %}
 
@@ -11,4 +20,109 @@
 
     {{ form.as_p }}
     <button type="submit">Enviar</button>
+
+    <div class="card theme-wizard mb-5">
+        <div class="card-header bg-light pt-3 pb-2">
+            <ul class="nav justify-content-between nav-wizard">
+                <li class="nav-item"><a class="nav-link active fw-semi-bold" href="#bootstrap-wizard-tab1"
+                        data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
+                            class="nav-item-circle-parent"><span class="nav-item-circle"><span
+                                    class="fas fa-lock"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Corrección</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-tab2" data-bs-toggle="tab"
+                        data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                                class="nav-item-circle"><span class="fas fa-user"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Características</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-tab3" data-bs-toggle="tab"
+                        data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                                class="nav-item-circle"><span class="fas fa-dollar-sign"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Tratamiento</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-tab4" data-bs-toggle="tab"
+                        data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                                class="nav-item-circle"><span class="fas fa-thumbs-up"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Pupilar</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-tab5" data-bs-toggle="tab"
+                        data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                                class="nav-item-circle"><span class="fas fa-thumbs-up"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Done</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-tab6" data-bs-toggle="tab"
+                        data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                                class="nav-item-circle"><span class="fas fa-thumbs-up"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Guardar Laboratorio</span></a></li>
+            </ul>
+        </div>
+        <div class="card-body py-4">
+            <div class="tab-content">
+                <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab1"
+                    id="bootstrap-wizard-tab1">
+                    <form novalidate="novalidate">
+                        {{ named_formsets.correction.as_p }}
+                    </form>
+                </div>
+                <div class="tab-pane px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab2"
+                    id="bootstrap-wizard-tab2">
+                    <form>
+                        <div class="row">
+                            <div class="col">
+                                {{ named_formsets.material.as_p }}
+                            </div>
+                            <div class="col">
+                                {{ named_formsets.color.as_p }}
+                            </div>
+                            <div class="col">
+                                {{ named_formsets.cristal.as_p }}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab3"
+                    id="bootstrap-wizard-tab3">
+                    <form class="form-validation">
+
+                        {{ named_formsets.tratamiento.as_p }}
+                    </form>
+                </div>
+                <div class="tab-pane px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab3"
+                    id="bootstrap-wizard-tab4">
+                    <form class="form-validation">
+                        {{ named_formsets.pupilar.as_p }}
+                    </form>
+                </div>
+                <div class="tab-pane px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab3"
+                    id="bootstrap-wizard-tab5">
+                    <form class="form-validation">
+                        {{ named_formsets.form.as_p }}
+                    </form>
+                </div>
+                <div class="tab-pane text-center px-sm-3 px-md-5" role="tabpanel"
+                    aria-labelledby="bootstrap-wizard-tab6" id="bootstrap-wizard-tab4">
+                    <div class="wizard-lottie-wrapper">
+                        <div class="lottie wizard-lottie mx-auto my-3"
+                            data-options='{"path":"../../assets/img/animated-icons/celebration.json"}'></div>
+                    </div>
+                    <h4 class="mb-1">Your account is all set!</h4>
+                    <p>Now you can access to your account</p><a class="btn btn-primary px-5 my-3"
+                        href="../../modules/forms/wizard.html">Start Over</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="px-sm-3 px-md-5">
+                <ul class="pager wizard list-inline mb-0">
+                    <li class="previous">
+                        <button class="btn btn-link ps-0" type="button"><span class="fas fa-chevron-left me-2"
+                                data-fa-transform="shrink-3"></span>Prev</button>
+                    </li>
+                    <li class="next">
+                        <button class="btn btn-primary px-5 px-sm-6" type="submit">Next<span
+                                class="fas fa-chevron-right ms-2" data-fa-transform="shrink-3"> </span></button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </form>
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}
