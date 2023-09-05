@@ -65,7 +65,10 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         pk = self.kwargs.get('pk')  # Obtén el valor del parámetro 'pk' de la URL
-        employee = User.objects.get(pk=pk)
+        try:
+            employee = User.objects.get(pk=pk)
+        except:
+            employee = None
         return employee
 
     def get_context_data(self, **kwargs):
