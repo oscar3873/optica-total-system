@@ -7,6 +7,8 @@
 
 {% block main %}
 
+
+
 <div class="container py-4">
     {% if messages %}
     {% for message in messages %}
@@ -20,16 +22,14 @@
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
-        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
-                    style="color: #000000;"></i></span>
-            <div class="col">
-                <h5 class="mb-0 text-primary position-relative"><span
-                        class="bg-200 dark__bg-1100 pe-3">Notas</span><span
-                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-                <p class="mb-0">Nueva Nota</p>
-            </div>
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg" style="color: #000000;"></i></span>
+          <div class="col">
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Sucursales</span><span
+                class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+            <p class="mb-0">Nueva Sucursal</p>
+          </div>
         </div>
-    </div>
+      </div>
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 mb-5">
@@ -40,35 +40,27 @@
                         <form method="POST" class="mt-3" novalidate="">
                             {% csrf_token %}
                             <div class="row justify-content-sm-center">
-                                <div class="col-md-10">
-                                    <label for="id_subject"
-                                        class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Asunto</span>
-                                    </label>
+                                <div class="col">
+                                    {{ form.name.label }}
                                     <div class="mb-3">
-                                        {{ form.subject }}
+                                        {{ form.name}}
                                     </div>
-                                    {% if form.subject.errors %}
+                                    {% if form.name.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in form.subject.errors %}
+                                        {% for error in form.name.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
-                            </div>
-                            <div class="row justify-content-sm-center">
-                                <div class="col-md-10 my-2">
-                                    <label for="id_subject"
-                                        class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Descripción</span>
-                                    </label>
+                                <div class="col">
+                                    {{ form.address.label }}
                                     <div class="mb-3">
-                                        {{ form.description }}
+                                        {{ form.address}}
                                     </div>
-                                    {% if form.description.errors %}
+                                    {% if form.address.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in form.description.errors %}
+                                        {% for error in form.address.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -76,24 +68,34 @@
                                 </div>
                             </div>
                             <div class="row justify-content-md-center">
-                                <div class="col-md-10 my-2">
-                                    <label for="id_subject"
-                                        class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Sucursal</span>
-                                    </label>
+                                <div class="col-md-3 my-2">
+                                    {{ form.open_hs.label }}
                                     <div class="mb-3">
-                                        {{ form.branch }}
+                                        {{ form.open_hs}}
                                     </div>
-                                    {% if form.branch.errors %}
+                                    {% if form.open_hs.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in form.branch.errors %}
+                                        {% for error in form.open_hs.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3 my-2">
+                                    {{ form.close_hs.label }}
+                                    <div class="mb-3">
+                                        {{ form.close_hs}}
+                                    </div>
+                                    {% if form.close_hs.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.close_hs.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="">
                                 <div class="col-12">
                                     <button type="submit" class="btn btn-primary" name="submit">Registrar</button>
                                 </div>
@@ -105,6 +107,8 @@
         </div>
     </div>
 </div>
+
+
 
 {% endblock main %}
 
