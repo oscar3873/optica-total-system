@@ -39,14 +39,32 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
         brand.save()
         return super().form_valid(form)
 
-class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y SU TIPO (2)
+class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     """
-    Crear una caracteristica nueva para el producto
-        Previa carga del Tipo de Caracteristica
+    Crear una característica nueva para el producto
+    Previa carga del Tipo de Característica
     """
     form_class = FeatureForm
     template_name = 'products/feature_create_page.html'
     success_url = reverse_lazy('core_app:home')
+
+    def post(self, request, *args, **kwargs):
+        # Manejar la creación de tipos de características dinámicamente
+        feature_type_form = FeatureTypeForm(request.POST)
+        if feature_type_form.is_valid():
+            feature_type = feature_type_form.save(commit=False)
+            feature_type.user_made = self.request.user
+            feature_type.save()
+
+            # Actualizar el selector 'type' en tiempo real
+            new_option = f'<option value="{feature_type.id}">{feature_type.name}</option>'
+            response_data = {'status': 'success', 'new_option': new_option}
+
+            return JsonResponse(response_data)
+
+        # Si el formulario no es válido, devolver los errores
+        errors = feature_type_form.errors
+        return JsonResponse({'status': 'error', 'errors': errors})
 
     def form_valid(self, form):
         feature = form.save(commit=False)
@@ -54,9 +72,10 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView): # CARACTERISTICA Y
         feature.save()
 
         for product in form.cleaned_data['products']:
-            Product_feature.objects.create(feature=feature, product=product, user_made = self.request.user)
+            Product_feature.objects.create(feature=feature, product=product, user_made=self.request.user)
 
         return super().form_valid(form)
+
 
 class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
     """
@@ -210,6 +229,7 @@ def crear_feature_type(request):
             feature_type = form.save(commit=False)
             feature_type.user_made = request.user
             feature_type.save()
+            print('###########\nEN CREATE\n\n ')
             return HttpResponse('<script>window.close();</script>')
 
     form = FeatureTypeForm()
@@ -217,6 +237,7 @@ def crear_feature_type(request):
 
 
 def obtener_ultimo_feature_type(request):
+    print('###########\nGET\n\n')
     ultimo_feature_type = Feature_type.objects.latest('id')
     data = {
         'type_id': ultimo_feature_type.pk,

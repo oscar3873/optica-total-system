@@ -1,38 +1,31 @@
-$(document).ready(function () {
-    $('#agregarTipo').click(function () {
-        // Abre una nueva ventana emergente con una URL vacía
-        var nuevaVentana = window.open('', 'Nuevo Tipo de Caracteristica', 'width=600,height=400');
+jQuery(document).ready(function() {
+    // Abrir una ventana emergente al hacer clic en el botón "agregarTipo"
+    $('#agregarTipo').click(function() {
+        var nuevaVentana = window.open('{% url "products_app:new_feature_type" %}', '_blank', 'height=400,width=600');
+        // Establecer las dimensiones y características de la ventana emergente
+        if (window.focus) {
+            nuevaVentana.focus();
+        }
+    });
 
-        // Cuando la ventana se abra, asigna la URL correcta
-        nuevaVentana.location.href = $(this).data('url');
-
-        // Espera a que se cierre la ventana emergente y luego realiza una petición AJAX para obtener el último Feature_type creado
-        var comprobarCierre = setInterval(function () {
-            if (nuevaVentana.closed !== false) {
-                clearInterval(comprobarCierre);
-
-                // Realiza una petición AJAX para obtener el último Feature_type creado y actualizar el campo type
-                $.ajax({
-                    type: 'GET',
-                    url: '{% url "products_app:obtener_ultimo_feature_type" %}',
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data.type_id) {
-                            console.log("Feature_type obtenido con éxito");
-                            console.log(data);
-
-                            // Actualiza el campo type con el Feature_type recién creado
-                            $('#id_type').append($('<option>', {
-                                value: data.type_id,
-                                text: data.type_nombre
-                            })).val(data.type_id);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error en la petición AJAX:", error);
-                    }
-                });
+    // Manejar la creación de tipos de características y actualizar el selector 'type' (si es necesario)
+    $('#crearTipoCaracteristica').click(function() {
+        // Realizar una solicitud AJAX para crear el tipo de característica, si es necesario
+        $.ajax({
+            url: '{% url "products_app:new_feature_type" %}',
+            method: 'POST',
+            data: $('#formTipoCaracteristica').serialize(),
+            success: function(data) {
+                if (data.status === 'success') {
+                    // Agregar el nuevo tipo de característica al campo 'type' (si lo deseas)
+                    $('#id_type').append(data.new_option);
+                    // Cierra la ventana emergente después de crear el tipo de característica
+                    window.close();
+                } else {
+                    // Manejar errores si es necesario
+                    console.log(data.errors);
+                }
             }
-        }, 1000);
+        });
     });
 });
