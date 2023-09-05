@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView)
+from django.shortcuts import render
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
@@ -58,7 +59,26 @@ class SupplierDetailView(DetailView):
     model = Supplier
     template_name = 'suppliers/supplier_page.html'
     context_object_name = 'supplier'
-
+    
+    def get_object(self, queryset=None):
+        # Intenta obtener el objeto Product o retorna None si no se encuentra
+        try:
+            obj = super().get_object(queryset=queryset)
+        # Puedes retornar None o cualquier otro valor que desees
+        except:
+            obj=None
+        return obj
+    def get(self, request, *args, **kwargs):
+        # Obtén el objeto utilizando el método get_object()
+        self.object = self.get_object()
+        
+        if self.object is None:
+            # El objeto no se encontró, renderiza una plantilla personalizada
+            return render(request, 'suppliers/supplier_page.html')
+        # El objeto se encontró, continúa con el comportamiento predeterminado
+        context =self.get_context_data()
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.object)

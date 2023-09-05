@@ -47,25 +47,6 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     form_class = FeatureForm
     template_name = 'products/feature_create_page.html'
     success_url = reverse_lazy('core_app:home')
-
-    def post(self, request, *args, **kwargs):
-        # Manejar la creación de tipos de características dinámicamente
-        feature_type_form = FeatureTypeForm(request.POST)
-        if feature_type_form.is_valid():
-            feature_type = feature_type_form.save(commit=False)
-            feature_type.user_made = self.request.user
-            feature_type.save()
-
-            # Actualizar el selector 'type' en tiempo real
-            new_option = f'<option value="{feature_type.id}">{feature_type.name}</option>'
-            response_data = {'status': 'success', 'new_option': new_option}
-
-            return JsonResponse(response_data)
-
-        # Si el formulario no es válido, devolver los errores
-        errors = feature_type_form.errors
-        return JsonResponse({'status': 'error', 'errors': errors})
-
     def form_valid(self, form):
         feature = form.save(commit=False)
         feature.user_made = self.request.user
@@ -218,8 +199,26 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['features'] = self.model.objects.get_features(self.get_object())
         return context
+    
+    def get_object(self, queryset=None):
+        # Intenta obtener el objeto Product o retorna None si no se encuentra
+        try:
+            obj = super().get_object(queryset=queryset)
+        # Puedes retornar None o cualquier otro valor que desees
+        except:
+            obj=None
+        return obj
 
-
+    def get(self, request, *args, **kwargs):
+        # Obtén el objeto utilizando el método get_object()
+        self.object = self.get_object()
+        
+        if self.object is None:
+            # El objeto no se encontró, renderiza una plantilla personalizada
+            return render(request, 'products/product_page.html')
+        # El objeto se encontró, continúa con el comportamiento predeterminado
+        context =self.get_context_data()
+        return self.render_to_response(context) 
 
 
 def crear_feature_type(request):

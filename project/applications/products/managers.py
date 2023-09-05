@@ -35,7 +35,6 @@ class ProductFeatureManager(BaseManager):
             if feature not in existing_features.values_list('feature', flat=True):
                 product.product_feature.create(feature=feature, user_made=user)
 
-
     def form_create_features_formset(self, product, feature_formset):
         """
         PARA FORMULARIOS:
