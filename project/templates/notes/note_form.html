@@ -41,7 +41,10 @@
                             {% csrf_token %}
                             <div class="row justify-content-sm-center">
                                 <div class="col-md-10">
-                                    {{ form.subject.label }}
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Asunto</span>
+                                    </label>
                                     <div class="mb-3">
                                         {{ form.subject }}
                                     </div>
@@ -56,7 +59,10 @@
                             </div>
                             <div class="row justify-content-sm-center">
                                 <div class="col-md-10 my-2">
-                                    {{ form.description.label }}
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Descripción</span>
+                                    </label>
                                     <div class="mb-3">
                                         {{ form.description }}
                                     </div>
@@ -71,7 +77,10 @@
                             </div>
                             <div class="row justify-content-md-center">
                                 <div class="col-md-10 my-2">
-                                    {{ form.branch.label }}
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Sucursal</span>
+                                    </label>
                                     <div class="mb-3">
                                         {{ form.branch }}
                                     </div>
@@ -97,7 +106,7 @@
     </div>
 </div>
 
-    {% endblock main %}
+{% endblock main %}
 
-    {% block extra_js %}
-    {% endblock extra_js %}
+{% block extra_js %}
+{% endblock extra_js %}
