@@ -82,6 +82,4 @@ urlpatterns = [
         ProductDetailView.as_view(),
         name= 'detail'
     ),
-    path('crear_feature_type/', crear_feature_type, name='crear_feature_type'),
-    path('obtener_ultimo_feature_type/', obtener_ultimo_feature_type, name='obtener_ultimo_feature_type'),
 ]

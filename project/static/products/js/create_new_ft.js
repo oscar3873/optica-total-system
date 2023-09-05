@@ -1,30 +1,51 @@
-jQuery(document).ready(function() {
-    // Abrir una ventana emergente al hacer clic en el botón "agregarTipo"
-    $('#agregarTipo').click(function() {
-        var nuevaVentana = window.open('{% url "products_app:new_feature_type" %}', '_blank', 'height=400,width=600');
-        // Establecer las dimensiones y características de la ventana emergente
-        if (window.focus) {
-            nuevaVentana.focus();
-        }
-    });
+document.addEventListener("DOMContentLoaded", function() {
+    var featureTypeModal = document.getElementById("Feature-type-modal");
 
-    // Manejar la creación de tipos de características y actualizar el selector 'type' (si es necesario)
-    $('#crearTipoCaracteristica').click(function() {
-        // Realizar una solicitud AJAX para crear el tipo de característica, si es necesario
+    // Función para abrir el modal
+    function openModal() {
+        $('#Feature-type-modal').modal('show');
+    }
+
+    // Función para cerrar el modal
+    function closeModal() {
+        $('#Feature-type-modal').modal('hide');
+    }
+
+    // Abrir el modal al hacer clic en el botón "Agregar Tipo"
+    document.getElementById("addType").addEventListener("click", openModal);
+
+    // Manejar la creación de un nuevo Tipo de Características
+    document.getElementById("save-ft").addEventListener("click", function() {
+        var formData = new FormData(document.getElementById("Feature-Type-form"));
+
         $.ajax({
-            url: '{% url "products_app:new_feature_type" %}',
+            url: `/products/new/feature_type/`,
             method: 'POST',
-            data: $('#formTipoCaracteristica').serialize(),
+            data: formData,
+            processData: false,
+            contentType: false,
             success: function(data) {
                 if (data.status === 'success') {
-                    // Agregar el nuevo tipo de característica al campo 'type' (si lo deseas)
-                    $('#id_type').append(data.new_option);
-                    // Cierra la ventana emergente después de crear el tipo de característica
-                    window.close();
+                    var newOption = new Option(data.new_type.name, data.new_type.id);
+                    var idTypeSelect = document.getElementById("id_type");
+                    idTypeSelect.appendChild(newOption);
+                    newOption.selected = true;
+                    closeModal();  // Cerrar el modal después de agregar el nuevo tipo
                 } else {
-                    // Manejar errores si es necesario
-                    console.log(data.errors);
+                    var errorField = document.getElementById("id_name"); // Reemplaza "id_name" con el ID de tu campo
+                    var errorMessage = document.createElement("div");
+                    errorMessage.className = "text-danger";
+                    errorMessage.style.fontSize = "0.8rem";
+                    errorMessage.style.fontStyle = "italic"; // Estilo en cursiva
+                    errorMessage.textContent = "Este campo es requerido.";
+                
+                    // Resaltar el campo en rojo
+                    errorField.style.borderColor = "red";
+                
+                    // Agregar el mensaje de error debajo del campo
+                    errorField.parentNode.appendChild(errorMessage);
                 }
+                
             }
         });
     });

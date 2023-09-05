@@ -1,6 +1,5 @@
 from django.db import transaction
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 
@@ -8,6 +7,7 @@ from applications.core.mixins import CustomUserPassesTestMixin # Para Autenticar
 
 from .forms import *
 from .models import *
+from .utils import *
 # Create your views here.
 
 class CategoryCreateView(CustomUserPassesTestMixin, FormView):
@@ -47,6 +47,12 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     form_class = FeatureForm
     template_name = 'products/feature_create_page.html'
     success_url = reverse_lazy('core_app:home')
+
+    def get_context_data(self, **kwargs) :
+        context =  super().get_context_data(**kwargs)
+        context['type_form'] = FeatureTypeForm()
+        return context
+
     def form_valid(self, form):
         feature = form.save(commit=False)
         feature.user_made = self.request.user
@@ -71,7 +77,17 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
         feature_type = form.save(commit=False)
         feature_type.user_made = self.request.user
         feature_type.save()
-        return super().form_valid(form)
+                
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_type_data = {
+                'id': feature_type.id,
+                'name': feature_type.name
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_type': new_type_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
 
 
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
@@ -121,8 +137,8 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
 
         feature_formset = self.get_named_formsets()
         if feature_formset.is_valid():
-            Product_feature.objects.form_in_out_features(form, product, self.request.user)
-            Product_feature.objects.form_create_features_formset(product, feature_formset)
+            form_in_out_features(form, product, self.request.user)
+            form_create_features_formset(product, feature_formset)
 
         return super().form_valid(form)
     
