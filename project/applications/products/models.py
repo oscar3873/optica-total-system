@@ -2,7 +2,7 @@ from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
 
-from .managers import ProductManager, ProductFeatureManager
+from .managers import ProductManager
 
 # Create your models here.
 class Category(BaseAbstractWithUser):
@@ -84,8 +84,6 @@ class Product_feature(BaseAbstractWithUser):
     """
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Producto')
     feature = models.ForeignKey(Feature, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Caracteristica')
-
-    objects = ProductFeatureManager()
 
     def __str__(self) -> str:
         return f'Producto: {self.product} | Caracteristica: {self.feature}'
