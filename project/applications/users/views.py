@@ -38,7 +38,12 @@ class LoginView(views.RedirectURLMixin, FormView):
     template_name = "users/login.html"
     form_class = LoginForm
     success_url = reverse_lazy('core_app:home')
-    
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect(self.success_url)
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         user = authenticate(
             username=form.cleaned_data['username'],

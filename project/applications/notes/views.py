@@ -3,7 +3,7 @@ from django.views.generic import FormView, ListView
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .consumers import send_global_message
-from .models import Note, Branch
+from .models import Note
 from .forms import NoteCreateForm
 
 class NoteCreateView(CustomUserPassesTestMixin, FormView):
@@ -23,7 +23,7 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         
         #Comento esta seccion, me da error  -> Error 111 connecting to 127.0.0.1:6379. 111.
         # Send a global message using the send_global_message function
-        #send_global_message(f"A new note has been created: {note.subject}")
+        # send_global_message(f"A new note has been created: {note.subject}")
 
         return super().form_valid(form)
 

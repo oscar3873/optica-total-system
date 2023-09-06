@@ -239,7 +239,7 @@ class ProductFormComplete(CustomUserPassesTestMixin, FormView):
             product.user_made = self.request.user
             product.save()
         else:
-            print(form.errors)
+            print('PRODUCTO_FORM_ERRORS: ',form.errors)
 
         category_form = Category(self.request.POST)
         brand_form = Brand(self.request.POST)
@@ -249,20 +249,20 @@ class ProductFormComplete(CustomUserPassesTestMixin, FormView):
         if feature_formset.is_valid():
             form_create_features_formset(self.request.user, product, feature_formset)
         else:
-            print(feature_formset.errors)
+            print('CARACTERISTICAS_FORM_ERRORS: ',feature_formset.errors)
         
         if category_form.is_valid():
             category_form.save(commit=False)
             category_form.user_made = self.request.user
             category_form.save()
         else:
-            print(category_form.errors)
+            print('CATEGORIA_FORM_ERRORS: ',category_form.errors)
         
         if brand_form.is_valid():
             brand_form.save(commit=False)
             brand_form.user_made = self.request.user
             brand_form.save()
         else:
-            print(brand_form.errors)
+            print('MARCA_FORM_ERRORS: ',brand_form.errors)
 
         return super().form_valid(form)
