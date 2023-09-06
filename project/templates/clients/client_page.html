@@ -56,26 +56,17 @@
                                     <td class="dni">{{ customer.dni }}</td>
                                     <td class="h_insurance">
                                         <span>
-                                        {% with first_customer_insurance=customer.customer_insurance.all.first %}
-                                            {% if first_customer_insurance %}
-                                                <p>{{ first_customer_insurance.h_insurance.name }}
-                                                {% with additional_insurances=customer.customer_insurance.all|slice:"1:" %}
-                                                    {% if additional_insurances %}
-                                                        + {{ additional_insurances|length }}</p>
-                                                    {% endif %}
-                                                {% endwith %}
-                                            {% else %}
-                                            Sin Obra Social
-                                            {% endif %}
-                                        {% endwith %}
+                                            
                                         </span>
                                     </td>
                                     <td class="text-center">
                                         <div>
-                                            <a href="{% url 'clients_app:detail' pk=customer.pk %}"><button class="btn p-0" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Ver"><span
-                                                    class="text-500 far fa-eye"></span></button></a>
-                                            <a href=""><button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
+                                            <a href="{% url 'clients_app:detail' pk=customer.pk %}"><button
+                                                    class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                                    data-bs-placement="top" title="Ver"><span
+                                                        class="text-500 far fa-eye"></span></button></a>
+                                            <a href="{% url 'clients_app:update_customer' pk=customer.pk %}"><button
+                                                    class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="Editar"><span
                                                         class="text-500 fas fa-edit"></span></button></a>
                                             <button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
@@ -105,6 +96,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 {% endblock main %}
 
