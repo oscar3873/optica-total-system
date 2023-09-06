@@ -31,7 +31,7 @@ class BaseAbstractWithUser(SoftDeletionModel, TimestampsModel):
     Clase abstracta para todos los modelos
         Para registrar el usuario quien genero el objeto con fecha de creacion y edicion
     """
-    user_made = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True)
+    user_made = models.ForeignKey(User, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Hecho por")
 
     class Meta:
         abstract = True
