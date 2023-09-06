@@ -1,71 +1,15 @@
 from django import forms
 
 from .models import *
+from applications.core.forms import PersonForm
 from applications.core.mixins import ValidationFormMixin
 
 
-class CustomerForm(ValidationFormMixin):
-
-    first_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    last_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    phone_number = forms.IntegerField(
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-    
-    dni = forms.IntegerField(
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    birth_date = forms.DateField(
-        widget=forms.DateInput(
-            attrs={'type':'date',
-                   'class': 'form-control datetimepicker'
-                   }
-        )
-    )
-
-    email = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    address = forms.CharField(
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-
+class CustomerForm(PersonForm):
     class Meta:
         model = Customer
         fields = '__all__'
         exclude = ['user_made','deleted_at']
-
-    def clean_address(self):
-        address = self.cleaned_data['address']
-        self.validate_length(address, 5, "Ingrese una dirección válida.")
-        return address
     
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
