@@ -238,6 +238,7 @@ class ProductFormComplete(CustomUserPassesTestMixin, FormView):
             product = form.save(commit=False)
             product.user_made = self.request.user
             product.save()
+            form_in_out_features(form, product, self.request.user)
         else:
             print('PRODUCTO_FORM_ERRORS: ',form.errors)
 
@@ -245,7 +246,6 @@ class ProductFormComplete(CustomUserPassesTestMixin, FormView):
         brand_form = Brand(self.request.POST)
         feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
 
-        form_in_out_features(form, product, self.request.user) # Para el feature_formset
         if feature_formset.is_valid():
             form_create_features_formset(self.request.user, product, feature_formset)
         else:

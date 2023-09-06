@@ -102,12 +102,10 @@ class LoginForm(forms.Form):
 
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        username = username.lower()
         return username
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        password = password.lower()
         return password
     
     def clean(self):
