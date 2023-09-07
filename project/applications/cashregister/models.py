@@ -119,16 +119,15 @@ class Movement(BaseAbstractWithUser):
         ('out', 'Egreso')
     ]
     
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    date_movement = models.DateField(auto_now_add=True)
-    cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE)
-    description = models.CharField(max_length=50, null=True, blank=True)
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE, null=True, blank=True)
-    type_operation = models.CharField(max_length=50, choices=TYPE_OPERATION)
-    transaction_id = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=True, blank=True)
-    withdrawal_reason = models.CharField(max_length=100, null=True, blank=True, help_text="Campo para ingresar el motivo de devolucion")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
+    date_movement = models.DateField(auto_now_add=True, verbose_name="Fecha")
+    cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE, verbose_name="Caja")
+    description = models.CharField(max_length=50, null=True, blank=True, verbose_name="Descripción")
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name="Moneda")
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Metodo de pago")
+    type_operation = models.CharField(max_length=50, choices=TYPE_OPERATION, verbose_name="Operacion")
+    transaction_id = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Transacción")
+    withdrawal_reason = models.CharField(max_length=100, null=True, blank=True, help_text="Campo para ingresar el motivo de devolucion", verbose_name="Razon de devolución")
     
     def __str__(self):
-        return str(self.type_operation) + ' ' + str(self.amount) + ' ' + ' por ' + str(self.user_made) 
-    
+        return str(self.type_operation) + ' ' + str(self.amount) + ' ' + ' por ' + str(self.user_made)

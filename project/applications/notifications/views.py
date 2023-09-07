@@ -1,6 +1,5 @@
 from django.contrib.contenttypes.models import ContentType
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, View
@@ -21,9 +20,10 @@ class NotificationsCreateView(LoginRequiredMixin, CreateView):
         notification = form.save(commit=False)
         notification.user_made = self.request.user
         notification.save()
-        send_notifications(f"{notification.user_made} a generado un {notification.content_object._meta.verbose_name}: {notification.details}")
+        send_notifications(f"{notification.user_made}: Nuevo {notification.content_object._meta.verbose_name}: {notification.details}")
 
         return super().form_valid(form)
+
 
 class NotificationsListView(LoginRequiredMixin, ListView):
     model = Notifications
@@ -36,3 +36,11 @@ class DynamicDetail(LoginRequiredMixin, View):
         model_class = content_type.model_class()
         obj = model_class.objects.get(pk=pk)
         return redirect(obj.objects.get_absolute_url())
+    
+
+class LoadNotificationsView(View): # NOTIFICACIONES SOLO SON VISIBLES PARA LOS ADMINS
+    def get(self, request, *args, **kwargs):
+        notifications = list(Notifications.objects.all().order_by('-created_at')[:5].values())
+        return JsonResponse({'notifications': notifications}, safe=False)
+    
+

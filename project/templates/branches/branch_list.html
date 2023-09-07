@@ -18,7 +18,6 @@
     </div>
     {% endfor %}
     {% endif %}
-
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
@@ -27,7 +26,7 @@
                 <h5 class="mb-0 text-primary position-relative"><span
                         class="bg-200 dark__bg-1100 pe-3">Sucursales</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-                <p class="mb-0">Nueva Sucursal</p>
+                <p class="mb-0">Aqui se visualizan las sucursales registradas</p>
             </div>
         </div>
     </div>
@@ -36,34 +35,92 @@
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-body py-4" id="wizard-controller">
                 {% if branches %}
-                <div id="tableBranch"
-                    data-list='{"valueNames":["name","address","open_hs","close_hs"],"page":5,"pagination":true}'>
+                <div class="card-header">
+                    <div class="row flex-between-center">
+                        <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
+                            <h5 class="fs-0 mb-0 text-nowrap py-2 py-xl-0">Sucrusales </h5>
+                        </div>
+                        <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+                            <div class="d-none" id="table-purchases-actions">
+                                <div class="d-flex">
+                                    <select class="form-select form-select-sm" aria-label="Bulk actions">
+                                        <option selected="">Bulk actions</option>
+                                        <option value="Refund">Refund</option>
+                                        <option value="Delete">Delete</option>
+                                        <option value="Archive">Archive</option>
+                                    </select>
+                                    <button class="btn btn-falcon-default btn-sm ms-2" type="button">Apply</button>
+                                </div>
+                            </div>
+                            <div id="table-purchases-replace-element">
+                                <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus"
+                                        data-fa-transform="shrink-3 down-2"></span><span
+                                        class="d-none d-sm-inline-block ms-1">New</span></button>
+                                <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span
+                                        class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span
+                                        class="d-none d-sm-inline-block ms-1">Filter</span></button>
+                                <button class="btn btn-falcon-default btn-sm" type="button"><span
+                                        class="fas fa-external-link-alt"
+                                        data-fa-transform="shrink-3 down-2"></span><span
+                                        class="d-none d-sm-inline-block ms-1">Export</span></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body px-0 py-0">
                     <div class="table-responsive scrollbar">
-                        <table class="table table-bordered table-striped fs--1 mb-0">
+                        <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                             <thead class="bg-200 text-900">
                                 <tr>
-                                    <th class="sort" data-sort="name">Nombre</th>
-                                    <th class="sort" data-sort="address">Direccion</th>
-                                    <th class="sort" data-sort="open_hs">Horario de Apertura</th>
-                                    <th class="sort" data-sort="close_hs">Horario de Cierre</th>
-                                    <th class="" scope="col">Actions</th>
+                                    <th class="white-space-nowrap">
+                                        <div class="form-check mb-0 d-flex align-items-center">
+                                            <input class="form-check-input" id="checkbox-bulk-purchases-select"
+                                                type="checkbox"
+                                                data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
+                                        </div>
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">Nombre
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">Direccion
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="payment">Horario de
+                                        apertura
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">Horario de
+                                        Cierre</th>
+                                    <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody class="list">
+                            <tbody class="list" id="table-purchase-body">
                                 {% for branch in branches %}
-                                <tr class="transition">
-                                    <td class="name">{{ branch.name }}</td>
-                                    <td class="adress">{{ branch.address }}</td>
-                                    <td class="open_hs">{{ branch.open_hs }}</td>
-                                    <td class="close_hs">{{ branch.close_hs }}</td>
-                                    <td class="text-center">
-                                        <div>
-                                            <a href="{% url 'branches_app:update_branch' pk=branch.pk %}"><button class="btn p-0" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Editar"><span
-                                                    class="text-500 fas fa-edit"></span></button></a>
-                                            <button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Eliminar"><span
-                                                    class="text-500 fas fa-trash-alt"></span></button>
+                                <tr class="btn-reveal-trigger">
+                                    <td class="align-middle" style="width: 28px;">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" id="recent-purchase-0"
+                                                data-bulk-select-row="data-bulk-select-row" />
+                                        </div>
+                                    </td>
+                                    <th class="align-middle white-space-nowrap name">{{ branch.name }}</th>
+                                    <td class="align-middle white-space-nowrap address">{{ branch.address }}</td>
+                                    <td class="align-middle white-space-nowrap open_hs">{{ branch.open_hs }}
+                                    </td>
+                                    <td class="align-middle white-space-nowrap close_hs">{{ branch.close_hs }}
+                                    </td>
+                                    <td class="align-middle white-space-nowrap text-center">
+                                        <div class="dropstart font-sans-serif position-static d-inline-block">
+                                            <button
+                                                class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                                type="button" id="dropdown0" data-bs-toggle="dropdown"
+                                                data-boundary="window" aria-haspopup="true" aria-expanded="false"
+                                                data-bs-reference="parent">
+                                                <span class="fas fa-ellipsis-h fs--1"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end border py-2"
+                                                aria-labelledby="dropdown0">
+                                                <a class="dropdown-item" href="#!">View</a>
+                                                <a class="dropdown-item"
+                                                    href="{% url 'branches_app:update_branch' pk=branch.pk %}"">Edit</a>
+                                                    <a class=" dropdown-item text-danger" href="#!">Delete</a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -71,22 +128,46 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-center mt-3">
-                        <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous"
-                            data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
-                        <ul class="pagination mb-0"></ul>
-                        <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next"
-                            data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+                </div>
+                <div class="card-footer">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="mb-0 fs--1">
+                                <span class="d-none d-sm-inline-block me-2">
+                                    {% if page_obj.has_previous %}
+                                    <a class="btn btn-sm btn-primary" href="?page=1">Primera</a>
+                                    <a class="btn btn-sm btn-primary"
+                                        href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                                    {% endif %}
+                                </span>
+                                <span class="d-none d-sm-inline-block me-2">&mdash; </span>
+                                <span>Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                                <span class="d-none d-sm-inline-block me-2">&mdash; </span>
+                                <span>Total {{ page_obj.paginator.count }} sucursales</span>
+                                <span class="d-none d-sm-inline-block me-2">&mdash; </span>
+                                <a class="fw-semi-bold" href="?page=1">Ver todo</a>
+                            </p>
+                        </div>
+                        <div class="col-auto d-flex">
+                            <span class="d-none d-sm-inline-block me-2">
+                                {% if page_obj.has_next %}
+                                <a class="btn btn-sm btn-primary" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                                <a class="btn btn-sm btn-primary"
+                                    href="?page={{ page_obj.paginator.num_pages }}">Ultima</a>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
                 </div>
-                {% else %}
-                <div class="text-center py-5">
-                    <h3>No hay sucursales disponibles</h3>
-                </div>
-                {% endif %}
             </div>
+            {% else %}
+            <div class="text-center py-5">
+                <h3>No hay sucursales disponibles</h3>
+            </div>
+            {% endif %}
         </div>
     </div>
+</div>
 </div>
 
 

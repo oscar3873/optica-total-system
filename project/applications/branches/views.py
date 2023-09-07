@@ -42,3 +42,4 @@ class BranchListView(CustomUserPassesTestMixin, ListView):
     model = Branch
     template_name = 'branches/branch_list.html'
     context_object_name = 'branches'
+    paginate_by = 8
