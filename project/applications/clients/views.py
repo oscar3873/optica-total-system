@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, UpdateView, DetailView, FormView, ListView)
 
-from project.applications.core.mixins import CustomUserPassesTestMixin
+from applications.core.mixins import CustomUserPassesTestMixin
 
 from .models import *
 from .forms import *
