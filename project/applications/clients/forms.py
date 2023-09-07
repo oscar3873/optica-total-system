@@ -11,6 +11,17 @@ class CustomerForm(PersonForm):
         fields = '__all__'
         exclude = ['user_made','deleted_at']
     
+    h_insurence = forms.ModelChoiceField(
+        queryset=HealthInsurance.objects.all(),
+        label='Obra Social',
+        empty_label='Elija una Obra Social',
+        required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Obra Social',
+            'class' : 'form-control'
+        })
+    )
+    
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
@@ -22,6 +33,30 @@ class HealthInsuranceForm(ValidationFormMixin):
         model = HealthInsurance
         fields = "__all__"
         exclude = ['user_made','deleted_at']
+
+    name = forms.CharField( 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    phone_number = forms.CharField( 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cuit = forms.CharField( 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
 
     def clean_name(self):
         name = self.cleaned_data['name']
