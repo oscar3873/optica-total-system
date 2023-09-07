@@ -1,0 +1,41 @@
+{% extends 'dashboard/dashboard_page.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row g-3 pb-3">
+    {% include 'dashboard/components/daily/successful_payments.html' %}
+</div>
+
+
+<div class="pb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            {% include 'dashboard/components/daily/customers.html' %}
+        </div>
+        <div class="col">
+            {% include 'dashboard/components/daily/orders.html' %}
+        </div>
+        <div class="col">
+            {% include 'dashboard/components/daily/revenues.html' %}
+        </div>
+    </div>
+</div>
+
+
+<div class="container pb-3">
+    {% include 'dashboard/components/daily/table_last_sales.html' %}
+</div>
+<div class="container pb-3">
+    {% include 'dashboard/components/daily/table_last_movements.html' %}
+</div>
+
+{% endblock content %}
+
+<!-- ASI ES COMO ESTABA EN FALCON -->
+<!-- <div class="row g-3 mb-3">
+    <div class="col-sm-6 col-md-4">
+        {% include 'dashboard/components/daily/customers.html' %}
+        {% include 'dashboard/components/daily/orders.html' %}
+    </div>
+    {% include 'dashboard/components/daily/revenues.html' %}
+</div> -->

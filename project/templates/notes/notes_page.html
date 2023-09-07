@@ -2,9 +2,89 @@
 
 {% block extra_css %}
 {% load static %}
-{% endblock extra_css  %}
+{% endblock extra_css %}
 
 {% block main %}
+
+
+
+<div class="container py-4">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
+    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+    <p class="mb-0 flex-1">{{ message }}</p>
+    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
+          style="color: #000000;"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Notas</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aqui se visualizan las notas existentes</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="card theme-wizard h-100 mb-5">
+      <div class="card-body py-4" id="wizard-controller">
+        {% if notes %}
+        {% for note in notes %}
+        <div class="card mb-3">
+          <div class="bg-holder d-none d-lg-block bg-card"
+            style="background-image:url(../../assets/img/icons/spot-illustrations/corner-4.png);">
+          </div> <!--/.bg-holder-->
+          <div class="card-body position-relative">
+            <div class="row">
+              <div class="col-lg-8">
+                <h3>{{ note.subject }}</h3>
+                <p class="mt-2">{{ note.description }}</p><a class="btn btn-link ps-0 btn-sm"
+                  href="../../documentation/getting-started.html" target="_blank">{{ note.branch }}<span
+                    class="fas fa-chevron-right ms-1 fs--2"></span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <!--Nav de paginacion-->
+        <nav aria-label="Notes page navigation">
+          <ul class="pagination justify-content-center">
+            <!-- Enlace a la página anterior -->
+            <li class="page-item{% if not page_obj.has_previous %} disabled{% endif %}">
+              <a class="page-link"
+                href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}" tabindex=""
+                aria-disabled="true">Anterior</a>
+            </li>
+
+            <!-- Números de página -->
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item{% if num == page_obj.number %} active{% endif %}">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            <!-- Enlace a la página siguiente -->
+            <li class="page-item{% if not page_obj.has_next %} disabled{% endif %}">
+              <a class="page-link" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
+        {% else %}
+        <div class="text-center py-5">
+          <h3>No hay notas disponibles</h3>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 
 {% endblock main %}
 

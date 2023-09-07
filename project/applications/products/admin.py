@@ -5,6 +5,7 @@ from .models import *
 
 class GenericAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'name',  # Mostrar el nombre del producto en la lista del admin
         'updated_at',  # Mostrar la fecha de actualización
     ]

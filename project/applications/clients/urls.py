@@ -21,6 +21,11 @@ urlpatterns = [
     ),
     ####  UPDATE  ####
     path(
+        'update/customer/<pk>', 
+        CustomerUpdateView.as_view(),
+        name='update_customer'
+    ),
+    path(
         'update/lab/<pk>/',  
         CalibrationOrderUpdateView.as_view(), 
         name='update_laboratory'
@@ -30,5 +35,11 @@ urlpatterns = [
         'detail/<pk>/',
         CustomerDetailView.as_view(),
         name='detail'
-    )
+    ),
+
+    path(
+        'list/customer',
+        CustomerListView.as_view(),
+        name='customer_list'
+    ),
 ]

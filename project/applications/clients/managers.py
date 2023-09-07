@@ -1,3 +1,4 @@
+from django.urls import reverse
 from applications.core.managers import BaseManager
 
 class CustomerManager(BaseManager):
@@ -26,7 +27,9 @@ class CustomerManager(BaseManager):
     def all_buy(self, customer):
         buy = customer.sales.all().order_by('created_at')
         return buy
-    
+        
+    def get_absolute_url(self):
+        return reverse('clients_app:detail', kwargs={'pk': self.pk})
 
 class LabManager(BaseManager):
     """

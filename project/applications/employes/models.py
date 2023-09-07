@@ -5,6 +5,8 @@ from applications.users.models import User
 
 
 # Create your models here.
+
+#No se usa el modelo
 class Employee(Person):
     """
     Clase de Empleados

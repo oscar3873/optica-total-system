@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
+<div class="container py-4">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
+        <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+        <p class="mb-0 flex-1">{{ message }}</p>
+        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
+                    style="color: #000000;"></i></span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span
+                        class="bg-200 dark__bg-1100 pe-3">Cliente</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="card theme-wizard h-100 mb-5">
+            <div class="card-body py-4" id="wizard-controller">
+                <div class="text-center mb-3">
+                    <p class="h2">{{ customer.first_name }}, {{ customer.last_name }} </p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="text-center mb-3">
+                            <h3>Información Personal</h3>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <span>
+                                        <p class="text-decoration-underline d-inline">DNI:</p>
+                                        <p class="user-select-all d-inline mx-2">{{ customer.dni }}</p>
+                                    </span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>
+                                        <p class="text-decoration-underline d-inline">Fecha de Nacimiento:</p>
+                                        <p class="user-select-all d-inline mx-2">{{ customer.birth_date }}</p>
+                                    </span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>
+                                        <p class="text-decoration-underline d-inline">Telefono:</p>
+                                        <p class="user-select-all d-inline mx-2">{{ customer.phone_number }}</p>
+                                    </span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>
+                                        <p class="text-decoration-underline d-inline">Direccion:</p>
+                                        <p class="user-select-all d-inline mx-2">{{ customer.address }}</p>
+                                    </span>
+                                </li>
+                                <li class="list-group-item">
+                                    <span>
+                                        <p class="text-decoration-underline d-inline">Correo Electronico:</p>
+                                        <p class="user-select-all d-inline mx-2">{{ customer.email }}</p>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ">
+                        <div class="text-center mb-3">
+                            <h3>Obra social</h3>
+                            <ul class="list-group list-group-flush">
+                                {% if customer.customer_insurance.all %}
+                                    {% for insurance in customer.customer_insurance.all %}
+                                        <li class="list-group-item">{{ insurance.h_insurance.name }} - CUIT: {{ insurance.h_insurance.cuit }}</li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li class="list-group-item">Sin obra social</li>
+                                {% endif %}
+                            </ul>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="card theme-wizard h-100 mb-5">
+            <div class="card-body py-4" id="wizard-controller">
+                <div class="text-center mb-3">
+                    <p class="h2">Tratamientos </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}
