@@ -61,6 +61,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-# Ignorar todos los archivos .py en la carpeta migrations
-project/applications/*/migrations/*.py
