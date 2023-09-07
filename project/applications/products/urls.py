@@ -5,6 +5,10 @@ app_name = 'products_app'
 
 urlpatterns = [
     path(
+        'new/product/wizard/',
+        ProductFormComplete.as_view(),
+        name='new_product_w'
+    ),path(
         'new/category/',
         CategoryCreateView.as_view(),
         name='new_category'
@@ -43,7 +47,7 @@ urlpatterns = [
     ),
     path(
         'update/product/<pk>/',
-        ProductCreateView.as_view(),
+        ProductUpdateView.as_view(),
         name='update_product'
     ),
     path(
@@ -82,6 +86,4 @@ urlpatterns = [
         ProductDetailView.as_view(),
         name= 'detail'
     ),
-    path('crear_feature_type/', crear_feature_type, name='crear_feature_type'),
-    path('obtener_ultimo_feature_type/', obtener_ultimo_feature_type, name='obtener_ultimo_feature_type'),
 ]

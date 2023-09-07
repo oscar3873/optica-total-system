@@ -1,13 +1,13 @@
 {% load static %}
 {% load humanize %}
 <!-- ===============================================-->
-<!--    Contentenedor del block main-->
+<!-- Contentenedor del block main-->
 <!-- ===============================================-->
 
 <div class="container py-4">
 
     <!-- ===============================================-->
-    <!--    Errores de Sistema (Backend)-->
+    <!-- Errores de Sistema (Backend)-->
     <!-- ===============================================-->
 
     {% if messages %}
@@ -21,52 +21,68 @@
     {% endif %}
 
     <!-- ===============================================-->
-    <!--    Fin Errores de Sistema (Backend)-->
+    <!-- Fin Errores de Sistema (Backend)-->
     <!-- ===============================================-->
 
-
     <!-- ===============================================-->
-    <!--    Card con la presentacion de la caja-->
+    <!-- Card con la presentación de la caja -->
     <!-- ===============================================-->
-		<div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-			<div class="card theme-wizard h-100 mb-5">     
-				<div class="card-body py-4" id="wizard-controller">
-					<div class="tab-content">
-						<div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-							<form class="mt-3" method="post">
-									{% csrf_token %}
-									<div class="mb-3">
-                    <label for="id_value" class="form-label">Valor</label>
-                    {{ form.value }}
-                    
-                    <label for="id_type" class="form-label">Tipo de Características</label>
-                    <div class="input-group">
-                        {{ form.type }}
-                        <button type="button" class="btn btn-primary" id="agregarTipo" data-url="/products/new/feature_type/">+</button>
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="card theme-wizard h-100 mb-5">
+            <div class="card-body py-4" id="wizard-controller">
+                <div class="tab-content">
+                    <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                        <form class="mt-3" method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="id_value" class="form-label">Valor</label>
+                                {{ form.value }}
+                                
+                                <label for="id_type" class="form-label">Tipo de Características</label>
+                                <div class="input-group">
+                                    {{ form.type }}
+                                    <button id="addType" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Feature-type-modal">+</button>
+                                </div>
+                                
+                                <label for="id_products" class="form-label">Productos</label>
+                                {{ form.products }}
+                            </div>
+                            <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
+                        </form>
                     </div>
-                    
-                    <label for="id_products" class="form-label">Productos</label>
-                    {{ form.products }}
                 </div>
-                <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
-							</form>
-						</div>
-					</div>
-					</div>
-				</div>
-			</div>
-		</div>    
+            </div>
+        </div>
+    </div>
 
     <!-- ===============================================-->
-    <!--   Fin Card con la presentacion de la caja-->
+    <!-- Fin Card con la presentación de la caja -->
     <!-- ===============================================-->
 
+    <!-- Modal para crear Tipo de Características -->
+    <div class="modal fade" id="Feature-type-modal" tabindex="-1" aria-labelledby="Feature-type-modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="Feature-type-modalLabel">Crear Tipo de Características</h5>
+              </div>
+              <div class="modal-body">
+                <form id="Feature-Type-form" method="post">
+                  {% csrf_token %}
+                  {{ type_form.as_p }}
+                  <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                  <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
+                  <!-- Fin del formulario de creación de Tipo de Características -->
+                </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+              </div>
+          </div>
+      </div>
+    </div>
 </div>
 
 <!-- ===============================================-->
-<!--    Fin Contentenedor del block main-->
+<!-- Fin Contentenedor del block main -->
 <!-- ===============================================-->
-
-
-
-

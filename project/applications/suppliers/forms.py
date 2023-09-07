@@ -12,8 +12,8 @@ class SupplierForm(ValidationFormMixin):
             attrs={'class':'form-control'}
         )
     )
-    phone = forms.IntegerField(
-        widget=forms.NumberInput(
+    phone_number = forms.IntegerField(
+        widget=forms.TextInput(
             attrs={'class':'form-control'}
         )
     )
@@ -29,7 +29,7 @@ class SupplierForm(ValidationFormMixin):
         )
     class Meta:
         model = Supplier
-        fields = ('name','phone','email','products',)
+        fields = ('name','phone_number','email','products',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
