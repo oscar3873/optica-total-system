@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import EmployeeProfileView
+from .views import EmployeeProfileView,EmployeeListView
 
 app_name = 'employees_app'
 
@@ -19,4 +19,9 @@ urlpatterns = [
         EmployeeProfileView.as_view(),
         name='profile_employee'
     ),
+    path(
+        'list/',
+        EmployeeListView.as_view(),
+        name='list_employee'
+    )
 ]

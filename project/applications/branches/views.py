@@ -1,13 +1,16 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (FormView, DetailView, UpdateView, View, ListView) #aqui
 
 from .forms import BranchForm
 from .models import Branch
 
-from applications.core.mixins import CustomUserPassesTestMixin
+from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 
 
 # Create your views here.
+
+####################### CREATE #####################
 class BranchCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una nueva sucursal
@@ -34,6 +37,31 @@ class BranchUpdateView(CustomUserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.user_made = self.request.user
         return super().form_valid(form)
+
+####################### DETAILS #####################
+
+class BranchDetailView(CustomUserPassesTestMixin, DetailView):
+    model = Branch
+    template_name = 'branches/branch_form.html'
+    context_object_name = 'Branch'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['features'] = self.model.objects.get_features(self.get_object())
+        return context
+
+####################### DELETE #####################
+
+class BranchDeleteView(LoginRequiredMixin, FormView):
+    model = Branch
+    form_class = BranchForm
+    template_name = 'branches/branch_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
 
 
 ################## LIST ######################

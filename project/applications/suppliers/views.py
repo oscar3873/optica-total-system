@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView)
 from django.shortcuts import render
@@ -84,3 +85,13 @@ class SupplierDetailView(DetailView):
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.object)
         return context
 
+class SupplierDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Supplier
+    form_class = SupplierForm
+    template_name = 'suppliers/supplier_detail.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())

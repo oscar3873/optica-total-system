@@ -59,8 +59,11 @@
 						<p class="fs--2 mb-0">{{product.price}} </p>
 						<p class="fs--2 mb-0">{{product.description}} </p>
 						<p class="fs--2 mb-0">{{product.stock}} </p>
-						<p class="fs--2 mb-0">{{product.category.name}} </p>
-						<p class="fs--2 mb-0">{{product.brand.name}} </p>
+						<p class="fs--2 mb-0">{{product.category}} </p>
+						<p class="fs--2 mb-0">{{product.brand}} </p>
+            {%for feature in features%}
+              <p class="fs--2 mb-0">{{feature.value}} </p>
+            {% endfor %}
           </div>
         </div>
       </div>
