@@ -64,6 +64,3 @@ Thumbs.db
 
 # Ignorar todos los archivos .py en la carpeta migrations
 project/applications/*/migrations/*.py
-
-# Permitir que el archivo __init__.py sea rastreado
-!project/applications/*/migrations/__init__.py
