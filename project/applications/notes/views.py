@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView
 
@@ -23,7 +24,7 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         
         #Comento esta seccion, me da error  -> Error 111 connecting to 127.0.0.1:6379. 111.
         # Send a global message using the send_global_message function
-        # send_global_message(f"A new note has been created: {note.subject}")
+        send_global_message(f"A new note has been created: {note.subject}")
 
         return super().form_valid(form)
 
@@ -34,7 +35,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     model = Note
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
-    paginate_by = 4
+    paginate_by = 6
     
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente

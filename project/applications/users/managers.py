@@ -1,13 +1,15 @@
-from django.db import models
-#
 from django.contrib.auth.models import BaseUserManager
 from django.urls import reverse
 
-
 class UserManager(BaseUserManager):
+
+    def get_employees_branch(self, branch):
+        employees_per_branch = self.get_all_employeers().filter(branch=branch)
+        return employees_per_branch
+
     def all(self):
-        users_active = self.filter(deleted_at=None)
-        return users_active
+        users = self.filter(deleted_at=None)
+        return users
 
     """ Esto lo agrego Joaquin """
     def get_all_employeers(self):
