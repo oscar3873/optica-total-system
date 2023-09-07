@@ -47,7 +47,7 @@ class Product(BaseAbstractWithUser):
                 f'{self.category} - '+
                 f'Precio: {self.price} - '+ 
                 f'Stock: {self.stock}'
-                )
+                ) 
 
 
 class Feature_type(BaseAbstractWithUser):
@@ -85,10 +85,9 @@ class Product_feature(BaseAbstractWithUser):
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Producto')
     feature = models.ForeignKey(Feature, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Caracteristica')
 
-    
     def __str__(self) -> str:
         return f'Producto: {self.product} | Caracteristica: {self.feature}'
     
     class Meta:
-        verbose_name = 'Producto x Categoria'
-        verbose_name_plural = 'Producto x Categoria'
+        verbose_name = 'Producto x Caracteristica'
+        verbose_name_plural = 'Producto x Caracteristica'

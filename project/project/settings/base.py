@@ -42,7 +42,8 @@ LOCAL_APPS = (
     "applications.notes",
     "applications.products",
     "applications.suppliers",
-    "applications.sales",
+    "applications.dashboard",
+    # "applications.sales",
     "applications.cashregister",
     "applications.notifications",
 )

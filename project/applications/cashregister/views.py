@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.views.generic import *
-from applications.cashregister.forms import CashRegisterForm
+from applications.cashregister.forms import CashRegisterForm, MovementForm
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.utils import timezone
+from django.http import JsonResponse
 
-#Importaciones temporales
+#Importaciones de la app
 from applications.branches.models import Branch
-from applications.cashregister.models import Currency
-from applications.cashregister.models import CashRegister, CashRegisterDetail, TypeMethodePayment
+from applications.cashregister.models import CashRegister, CashRegisterDetail, TypeMethodePayment, Currency, Movement
 from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailForm, CashRegisterDetailFormSet
+from applications.cashregister.utils import obtener_nombres_de_campos
 
 
 # Create your views here.
@@ -122,8 +124,91 @@ class CashRegisterClosedView(View):
 
 class MovementsView(TemplateView):
     template_name = 'cashregister/movements_page.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
+        branch = self.request.user.branch
+        try:
+            cashregister = CashRegister.objects.get(branch=branch, is_close=False)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+        
+        movements = Movement.objects.filter(cash_register=cashregister)    
+        
+        context['movements'] = movements
+        context['table_column'] = obtener_nombres_de_campos(Movement, "description", "currency", "transaction_id",  "id", "deleted_at", "created_at", "updated_at", "withdrawal_reason")
+        
+        return context
+
+class MovementsCreateView(FormView):
+    template_name = 'cashregister/movements_create_page.html'
+    model = Movement
+    form_class = MovementForm
+    success_url = reverse_lazy('cashregister_app:movements_view')
+    
+    def form_valid(self, form):
+        print("----------------Success form creation movements----------------")
+        print(form.data)
+        
+        branch = self.request.user.branch
+        cash_register = CashRegister.objects.get(branch=branch, is_close=False)
+        
+        form.instance.date_movement = timezone.now()
+        form.instance.cash_register = cash_register
+        form.instance.currency = cash_register.currency
+        form.instance.user_made = self.request.user
+        form.save()
+        
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print("----------------Error form creation movements----------------")
+        print(form.data)
+        return super().form_invalid(form)
+
+
+class MovementsDeleteView(DeleteView):
+    template_name = 'cashregister/movements_delete_page.html'
+    model = Movement
+    success_url = reverse_lazy('cashregister_app:movements_view')
+    
+    def delete(self, request, *args, **kwargs):
+        print("----------------Success delete movements----------------")
+        print(request.POST)
+        return super().delete(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = "Eliminar movimiento"
+        context['form_description'] = "¿Está seguro que desea eliminar este movimiento?"
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        print("----------------Success post delete movements----------------")
+        print(request.POST)
+        return super().post(request, *args, **kwargs)
+    
+
+class MovementsUpdateView(UpdateView):
+    template_name = 'cashregister/movements_update_page.html'
+    model = Movement
+    form_class = MovementForm
+    
+    def form_valid(self, form):
+        print("----------------Success form update movements----------------")
+        print(form.data)
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print("----------------Error form update movements----------------")
+        print(form.data)
+        return super().form_invalid(form)
 
 
 class MovementsClosedView(TemplateView):
     template_name = 'cashregister/cashregister_closed_page.html'
-    
+
+
+#------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
+

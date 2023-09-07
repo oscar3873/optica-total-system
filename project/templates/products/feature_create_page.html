@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'products/components/create/feature_create_form.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'products/js/create_new_featuretype.js' %}" ></script>
+{% endblock extra_js %}

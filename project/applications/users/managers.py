@@ -1,6 +1,7 @@
 from django.db import models
 #
 from django.contrib.auth.models import BaseUserManager
+from django.urls import reverse
 
 
 class UserManager(BaseUserManager):
@@ -41,3 +42,6 @@ class UserManager(BaseUserManager):
         is_superuser = False
         role = 'ADMINISTRADOR'
         return self._create_user(first_name, last_name, username, email, password, is_staff, is_superuser, role, branch, **extra_fields)
+
+    def get_absolute_url(self):
+        return reverse('employees_app:profile_employee', kwargs={'pk': self.pk})

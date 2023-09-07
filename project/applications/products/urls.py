@@ -5,6 +5,10 @@ app_name = 'products_app'
 
 urlpatterns = [
     path(
+        'new/product/wizard/',
+        ProductFormComplete.as_view(),
+        name='new_product_w'
+    ),path(
         'new/category/',
         CategoryCreateView.as_view(),
         name='new_category'

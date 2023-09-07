@@ -6,16 +6,30 @@ from applications.core.mixins import ValidationFormMixin
 
 
 class SupplierForm(ValidationFormMixin):
+    name = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    phone_number = forms.IntegerField(
+        widget=forms.TextInput(
+            attrs={'class':'form-control'}
+        )
+    )
+    email=forms.CharField(
+        widget=forms.EmailInput(
+            attrs={'class':'form-control'}
+        )
+    )
     products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
         )
-
     class Meta:
         model = Supplier
-        fields = '__all__'
-        exclude = ['user_made',]
+        fields = ('name','phone_number','email','products',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -29,7 +43,6 @@ class SupplierForm(ValidationFormMixin):
             related_products = Product_Supplier.objects.values_list('product__id', flat=True)
             available_products = all_products.exclude(id__in=related_products)
             self.fields['products'].queryset = available_products
-
 
     def clean_name(self):
         name = self.cleaned_data['name']
