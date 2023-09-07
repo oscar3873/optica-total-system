@@ -1,6 +1,6 @@
 from typing import Any, Dict
 from django.db import transaction
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 
@@ -193,18 +193,26 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Product.objects.filter(deleted_at=None)
 
 
 class BrandListView(CustomUserPassesTestMixin, ListView):
     model = Brand
     template_name = 'products/brand_list_page.html'
     context_object_name = 'brands'
-
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Product.objects.filter(deleted_at=None)
 
 class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
     template_name = 'products/category_list_page.html'
     context_object_name = 'categories'
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Product.objects.filter(deleted_at=None)
 
 
 #################### DETAILS #####################
@@ -266,3 +274,60 @@ class ProductFormComplete(CustomUserPassesTestMixin, FormView):
             print('MARCA_FORM_ERRORS: ',brand_form.errors)
 
         return super().form_valid(form)
+
+########################### DELETE ####################################
+
+class CategoryDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Category
+    form_class = CategoryForm
+    template_name = 'products/category_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
+
+class BrandDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Brand
+    form_class = BrandForm
+    template_name = 'products/brand_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
+
+class productDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/product_detail.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
+    
+class FeatureDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Feature
+    form_class = FeatureForm
+    template_name = 'products/category_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
+
+class FeatureTypeDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Feature_type
+    form_class = FeatureTypeForm
+    template_name = 'products/category_form.html'
+    success_url = reverse_lazy('products_app:new_feature')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())

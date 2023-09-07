@@ -35,3 +35,21 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
     paginate_by = 4
+    
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Note.objects.filter(deleted_at=None)
+
+
+########################### DELETE ####################################
+
+class NoteDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Note
+    form_class = NoteCreateForm
+    template_name = 'notes/note_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())

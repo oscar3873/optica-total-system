@@ -1,5 +1,6 @@
 from typing import Any, Optional
 from django.db import models
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DetailView, UpdateView, FormView,ListView)
@@ -84,4 +85,18 @@ class EmployeeListView(LoginRequiredMixin,ListView):
     context_object_name = 'employees'
 
     def get_queryset(self):
-        return User.objects.get_all_employeers() 
+        return User.objects.get_all_employeers()
+    
+
+########################### DELETE ####################################
+
+class EmployeeDeleteView(LoginRequiredMixin, FormView):
+    model = Employee
+    form_class = EmployeeForm
+    template_name = 'employes/employee_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())

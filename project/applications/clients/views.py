@@ -1,10 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, UpdateView, DetailView, FormView, ListView)
+
+from project.applications.core.mixins import CustomUserPassesTestMixin
 
 from .models import *
 from .forms import *
 
+########################### CREATE ####################################
 class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     model = Calibration_Order
     form_class = Calibration_OrderForm
@@ -123,7 +127,17 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         insurance.user_made = self.request.user
         insurance.save()
         return super().form_valid(form)
+class HealthInsuranceUpdateView(CustomUserPassesTestMixin, UpdateView):
+    model = HealthInsurance
+    form_class = HealthInsuranceForm
+    template_name = 'clients/insurance_form.html'
+    success_url = reverse_lazy('core_app:home')
     
+    def form_valid(self, form):
+        insurance = form.save(commit=False)
+        insurance.user_made = self.request.user
+        insurance.save()
+        return super().form_valid(form)
 
 
 class CustomerDetailView(LoginRequiredMixin, DetailView):
@@ -135,3 +149,41 @@ class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'clients/client_page.html'
     context_object_name = 'customers'
+
+########################### DELETE ####################################
+
+class CalibrationOrderDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Calibration_Order
+    form_class = Calibration_OrderForm
+    template_name = 'clients/lab_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
+
+class CustomerDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Customer
+    form_class = CustomerForm
+    template_name = 'clients/customer_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
+
+class HealthInsuranceDeleteView(CustomUserPassesTestMixin, FormView):
+    model = HealthInsurance
+    form_class = HealthInsuranceForm
+    template_name = 'clients/insurance_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        lista  = Customer_HealthInsurance.objects.filter(customer=self.object)
+        for i in lista:
+            i.delete()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
