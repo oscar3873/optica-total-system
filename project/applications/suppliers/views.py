@@ -1,24 +1,22 @@
 from django.urls import reverse_lazy
 from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView)
+from django.shortcuts import render
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
 from .models import Supplier, Product_Supplier
 
+
 # Create your views here.
 class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_form.html'
+    template_name = 'suppliers/supplier_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        supplier_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-            'email': form.cleaned_data['email'],
-            'phone_number': form.cleaned_data['phone_number'],
-        }
-        supplier = Supplier.objects.create(**supplier_data)
+        supplier = form.save(commit=False)
+        supplier.user_made = self.request.user
+        supplier.save()
 
         for product in form.cleaned_data['products']:
             Product_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
@@ -28,7 +26,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_form.html'
+    template_name = 'suppliers/supplier_update_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
@@ -53,17 +51,36 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
 
 class SuppliersListView(CustomUserPassesTestMixin, ListView):
     model = Supplier
-    template_name = 'suppliers/supplier_list.html'
+    template_name = 'suppliers/supplier_list_page.html'
     context_object_name = 'suppliers'
 
 
 class SupplierDetailView(DetailView):
     model = Supplier
-    template_name = 'suppliers/supplier_detail.html'
+    template_name = 'suppliers/supplier_page.html'
     context_object_name = 'supplier'
-
+    
+    def get_object(self, queryset=None):
+        # Intenta obtener el objeto Product o retorna None si no se encuentra
+        try:
+            obj = super().get_object(queryset=queryset)
+        # Puedes retornar None o cualquier otro valor que desees
+        except:
+            obj=None
+        return obj
+    def get(self, request, *args, **kwargs):
+        # Obtén el objeto utilizando el método get_object()
+        self.object = self.get_object()
+        
+        if self.object is None:
+            # El objeto no se encontró, renderiza una plantilla personalizada
+            return render(request, 'suppliers/supplier_page.html')
+        # El objeto se encontró, continúa con el comportamiento predeterminado
+        context =self.get_context_data()
+        return self.render_to_response(context)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.object)
         return context
-    
+

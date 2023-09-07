@@ -1,0 +1,12 @@
+.notes {
+    background-color: #00e83e;
+    padding: 5px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    animation: fadeOut 10s; /* Agregar una animación para desvanecer */
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}

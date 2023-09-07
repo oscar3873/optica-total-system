@@ -1,16 +1,12 @@
-from django.db import models
+from django.urls import reverse
+from applications.core.managers import BaseManager
 
-from django.contrib.auth.models import BaseUserManager
-
-
-class CustomerManager(BaseUserManager, models.Manager):
+class CustomerManager(BaseManager):
     """
     Manager para Clientes
     """
-    def create_customer(self, **data):
-        customer = self.model(**data)
-        customer.save()
-        return customer
+    def all(self):
+        return self.filter(deleted_at=None)
 
     def update_phone_number(self, customer, phone_number):
         customer.phone_number = phone_number
@@ -31,10 +27,17 @@ class CustomerManager(BaseUserManager, models.Manager):
     def all_buy(self, customer):
         buy = customer.sales.all().order_by('created_at')
         return buy
+        
+    def get_absolute_url(self):
+        return reverse('clients_app:detail', kwargs={'pk': self.pk})
+
+class LabManager(BaseManager):
+    """
+    Manager para el Pedido de laboratorio (Calibration order)
+    """
+    def all(self):
+        return self.filter(deleted_at=None)
     
-
-class LabManager(BaseUserManager, models.Manager):
-
     def create_or_update_calibration_order(self, user_made,
                     form, correction_form, material_form, color_form,
                     cristal_form, tratamiento_form, pupilar_form):

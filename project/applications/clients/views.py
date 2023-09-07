@@ -1,8 +1,6 @@
-from typing import Type
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, UpdateView, DetailView, FormView)
+from django.views.generic import (CreateView, UpdateView, DetailView, FormView, ListView)
 
 from .models import *
 from .forms import *
@@ -34,8 +32,14 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
         tratamiento_form = TratamientForm(self.request.POST)
         pupilar_form = InterpupillaryForm(self.request.POST)
 
-        if (correction_form.is_valid() and material_form.is_valid() and color_form.is_valid() and
-            cristal_form.is_valid() and tratamiento_form.is_valid() and pupilar_form.is_valid()):
+        if (
+            correction_form.is_valid() and
+            material_form.is_valid() and 
+            color_form.is_valid() and
+            cristal_form.is_valid() and 
+            tratamiento_form.is_valid() and 
+            pupilar_form.is_valid()
+            ):
 
             # Create the main form instance
             Calibration_Order.objects.create_or_update_calibration_order(
@@ -91,20 +95,21 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
 class CustomerCreateView(LoginRequiredMixin, FormView):
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:customer_list')
+    def form_valid(self, form):
+        customer = form.save(commit=False)
+        customer.user_made = self.request.user
+        customer.save()
+        return super().form_valid(form)
+    
+class CustomerUpdateView(LoginRequiredMixin, UpdateView):
+    model = Customer
+    form_class = CustomerForm
+    template_name = 'clients/customer_form.html'
+    success_url = reverse_lazy('clients_app:customer_list')
 
     def form_valid(self, form):
-        customer_data = {
-            'user_made': self.request.user,
-            'first_name': form.cleaned_data['first_name'],
-            'last_name': form.cleaned_data['last_name'],
-            'phone_number': form.cleaned_data['phone_number'],
-            'dni': form.cleaned_data['dni'],
-            'birth_date': form.cleaned_data['birth_date'],
-            'address': form.cleaned_data['address'],
-            'email': form.cleaned_data['email'],
-        }
-        Customer.objects.create_customer(**customer_data)
+        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 
@@ -114,11 +119,19 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        insurance_data = {
-            'user_made': self.request.user,
-            'name': form.cleaned_data['name'],
-            'phone_number': form.cleaned_data['phone_number'],
-            'cuit': form.cleaned_data['cuit'],
-        }
-        HealthInsurance.objects.create(**insurance_data)
+        insurance = form.save(commit=False)
+        insurance.user_made = self.request.user
+        insurance.save()
         return super().form_valid(form)
+    
+
+
+class CustomerDetailView(LoginRequiredMixin, DetailView):
+    model = Customer
+    template_name = 'clients/customer_detail.html'
+    context_object_name = 'customer'
+
+class CustomerListView(LoginRequiredMixin, ListView):
+    model = Customer
+    template_name = 'clients/client_page.html'
+    context_object_name = 'customers'

@@ -1,11 +1,14 @@
 from django.db import models
 #
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 #
 from .managers import UserManager
 from applications.branches.models import Branch
 
-class User(AbstractUser):
+from applications.core.models import Person
+
+class User(Person, AbstractUser):
     ROLE = [
         ('ADMINISTRADOR', 'ADMINISTRADOR'),
         ('EMPLEADO', 'EMPLEADO')
@@ -13,11 +16,10 @@ class User(AbstractUser):
 
     role = models.CharField(max_length=15, choices=ROLE, default='EMPLEADO', null=True, blank=True)
     username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(unique=True)
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True)
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name']  # Don't forget 'username' which is inherited from AbstractUser
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     objects = UserManager()
 

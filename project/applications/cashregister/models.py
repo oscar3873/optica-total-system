@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
 from applications.cashregister.managers import CashRegisterManager
