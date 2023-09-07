@@ -35,7 +35,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     model = Note
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
-    paginate_by = 4
+    paginate_by = 6
     
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente

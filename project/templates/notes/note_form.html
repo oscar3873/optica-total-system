@@ -58,21 +58,14 @@
                                 </div>
                             </div>
                             <div class="row justify-content-sm-center">
-                                <div class="col-md-10 my-2">
+                                <div class="col-md-10">
                                     <label for="id_subject"
                                         class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Descripción</span>
+                                        <span>Sucursal Actual</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ form.description }}
+                                        <h6 class="fs-1">{{ user.branch }}</h6>
                                     </div>
-                                    {% if form.description.errors %}
-                                    <div class="alert alert-warning" role="alert">
-                                        {% for error in form.description.errors %}
-                                        {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row justify-content-md-center">
@@ -87,6 +80,42 @@
                                     {% if form.branch.errors %}
                                     <div class="alert alert-warning" role="alert">
                                         {% for error in form.branch.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-md-10 my-2">
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Tipo de Nota</span>
+                                    </label>
+                                    <div class="mb-3">
+                                        {{ form.label }}
+                                    </div>
+                                    {% if form.label.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.branch.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-md-10 my-2">
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Descripción</span>
+                                    </label>
+                                    <div class="mb-3">
+                                        {{ form.description }}
+                                    </div>
+                                    {% if form.description.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.description.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>

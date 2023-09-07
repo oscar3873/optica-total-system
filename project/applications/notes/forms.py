@@ -1,4 +1,4 @@
-from .models import Note, Branch
+from .models import Note, Branch, Label
 from django import forms
 from applications.core.mixins import ValidationFormMixin
 
@@ -27,6 +27,17 @@ class NoteCreateForm(ValidationFormMixin):
                    'rows': '5',
                    }
         ),
+    )
+
+    label = forms.ModelChoiceField(
+        queryset=Label.objects.all(),
+        label='Tipo de Nota',
+        empty_label='Elija un tipo',
+        required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Sucursal',
+            'class' : 'form-control'
+        })
     )
     
     branch = forms.ModelChoiceField(
@@ -61,3 +72,9 @@ class NoteCreateForm(ValidationFormMixin):
         if branch is None:
             raise forms.ValidationError('Debe seleccionar una sucursal')
         return branch
+    
+    def clean_label(self):
+        label = self.cleaned_data.get('label')
+        if label is None:
+            raise forms.ValidationError('Debe seleccionar el tipo de nota')
+        return label
