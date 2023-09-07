@@ -2,7 +2,7 @@ from typing import Any, Optional
 from django.db import models
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import (CreateView, DetailView, UpdateView, FormView)
+from django.views.generic import (CreateView, DetailView, UpdateView, FormView,ListView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
@@ -58,6 +58,7 @@ class EmployeeUpdateView(CustomUserPassesTestMixin, UpdateView):
 
 
 ############## UNICA VIEW DISPONIBLE PARA EL USO #############
+# Perfil de empleado
 class EmployeeProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'users/profile.html'
@@ -65,16 +66,22 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         pk = self.kwargs.get('pk')  # Obtén el valor del parámetro 'pk' de la URL
+        
+
         try:
-            employee = User.objects.get(pk=pk)
-        except:
+            employee = User.objects.get(pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO')
+            #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
+        except User.DoesNotExist:
+            #si no encuentro lo pongo en None para manejar las vistas en los templates
             employee = None
         return employee
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) # object = 'EMPLEADO'
-        
-        # Mas detalles para el perfil del empleado:
-        # context['key'] = value
+#Listar
 
-        return context
+class EmployeeListView(LoginRequiredMixin,ListView):
+    model = User
+    template_name = 'users/employee_list_page.html'
+    context_object_name = 'employees'
+
+    def get_queryset(self):
+        return User.objects.get_all_employeers() 
