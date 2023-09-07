@@ -22,9 +22,19 @@ urlpatterns = [
         name = 'cashregister_close_view'
     ),
     path(
-        'movements',
+        'movements/',
         MovementsView.as_view(),
         name = 'movements_view'
+    ),
+    path(
+        'movements/create',
+        MovementsCreateView.as_view(),
+        name = 'movements_create_view'
+    ),
+    path(
+        'movements/delete/<pk>',
+        MovementsDeleteView.as_view(),
+        name = 'movements_delete_view'
     ),
     path(
         'closed',

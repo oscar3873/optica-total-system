@@ -27,8 +27,8 @@
         <!--Titulo -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-lock-open"></i></span>
             <div class="col">
-              <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Apertura de caja</span><span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-              <p class="mb-0">Aqui puede realizar la apertura de su caja diaria</p>
+              <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Crear movimiento manualmente</span><span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+              <p class="mb-0">Aqui puede realizar movimientos en general para ingresos y egresos manuales</p>
             </div>
         </div>
     </div>
@@ -54,32 +54,48 @@
                     <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
                         <form method="post" class="row g-3 needs-validation" novalidate="">
                             {% csrf_token %}
-                            <div class="col-md-7">
-                              <label for="id_initial_balance" class="col-7 col-form-label d-flex justify-content-between align-items-center">
+                            <div class="col-md-6">
+                              <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                   <span class="fa-stack me-2 ms-n1">
                                     <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fa-cash-register"></i>
+                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fa-dollar-sign"></i>
                                   </span>
-                                  <span>Monto Incial</span>
+                                  <span>Monto</span>
                               </label>
-                              {% if not cashregister %}
-                                {{form.initial_balance}}
-                              {% else %}
-                                <input class="form-control" type="number" disabled placeholder="0.00">
-                              {% endif %}
-                              
+                                {{form.amount}}
+                                <p class="fs--2 mb-0 pt-1 text-secondary">Monto del ingreso o egreso</p>
                               <div class="valid-feedback">Perfecto!</div>
                               <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
                             </div>
-                            {% if not cashregister %}
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit">Abrir caja</button>
+                            <div class="col-md-6">
+                              <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                  <span class="fa-stack me-2 ms-n1">
+                                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fas fa-exchange-alt"></i>
+                                  </span>
+                                  <span>Tipo de operacion</span>
+                              </label>
+                                {{form.type_operation}}
+                                <p class="fs--2 mb-0 pt-1 text-secondary">(Ingreso - Egreso)</p>
+                              <div class="valid-feedback">Perfecto!</div>
+                              <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
                             </div>
-                            {% else %}
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit" disabled>Abrir caja</button>
+                            <div class="col-md-12">
+                              <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                  <span class="fa-stack me-2 ms-n1">
+                                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fas fa-align-left"></i>
+                                  </span>
+                                  <span>Descripcion</span>
+                              </label>
+                                {{form.description}}
+                                <p class="fs--2 mb-0 pt-1 text-secondary">Motivo o razon del egreso o ingreso</p>
+                              <div class="valid-feedback">Perfecto!</div>
+                              <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
                             </div>
-                            {% endif %}
+                            <div class="col-12">
+                                <button class="btn btn-warning" type="submit">Confirmar movimiento</button>
+                            </div>
                 
                             {% if form.initial_balance.errors %}
                             <div class="col-12">
