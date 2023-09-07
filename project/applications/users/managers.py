@@ -6,8 +6,13 @@ from django.urls import reverse
 
 class UserManager(BaseUserManager):
     def all(self):
-        users_active = self.model.filter(is_active=True)
+        users_active = self.filter(deleted_at=None)
         return users_active
+
+    """ Esto lo agrego Joaquin """
+    def get_all_employeers(self):
+        employeers = self.filter(role='EMPLEADO',is_staff=False,is_superuser=False)
+        return employeers
 
     def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch=None, **extra_fields):
         user = self.model(
