@@ -35,12 +35,20 @@ class DynamicDetail(LoginRequiredMixin, View):
         content_type = ContentType.objects.get(model=model_name)
         model_class = content_type.model_class()
         obj = model_class.objects.get(pk=pk)
-        return redirect(obj.objects.get_absolute_url())
+        return redirect(obj.objects.get_absolute_url)
     
 
-class LoadNotificationsView(View): # NOTIFICACIONES SOLO SON VISIBLES PARA LOS ADMINS
+class LoadNotificationsView(View):
     def get(self, request, *args, **kwargs):
-        notifications = list(Notifications.objects.all().order_by('-created_at')[:5].values())
-        return JsonResponse({'notifications': notifications}, safe=False)
-    
-
+        notifications = Notifications.objects.all().order_by('-created_at')[:5]
+        notif_list = []
+        for notification in notifications:
+            notif_list.append(
+                {
+                    'details': notification.details,
+                    'user_made': str(notification.user_made.get_full_name()),
+                    'reference_obj_verbose_name': str(notification.content_object.__class__._meta.verbose_name),
+                    'created_at': notification.created_at
+                }
+            )
+        return JsonResponse({'notifications': notif_list}, safe=False)

@@ -5,7 +5,6 @@
     left: 0;
     right: 0;
     color: #fff;
-    text-align: center;
     padding: 10px;
     z-index: 9999; /* Asegura que esté por encima de todo */
 }
