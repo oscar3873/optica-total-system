@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
@@ -34,11 +34,16 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
         return super().form_valid(form)
 
  
-class LoginView(FormView):
+class LoginView(views.RedirectURLMixin, FormView):
     template_name = "users/login.html"
     form_class = LoginForm
     success_url = reverse_lazy('core_app:home')
-    
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect(self.success_url)
+        return super().dispatch(request, *args, **kwargs)
+
     def form_valid(self, form):
         user = authenticate(
             username=form.cleaned_data['username'],

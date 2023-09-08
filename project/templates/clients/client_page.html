@@ -17,7 +17,6 @@
     </div>
     {% endfor %}
     {% endif %}
-
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
@@ -35,52 +34,68 @@
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-body py-4" id="wizard-controller">
                 {% if customers %}
-                <div id="tableCustomer"
-                    data-list='{"valueNames":["first_name","last_name","dni","h_insurance"],"page":5,"pagination":true}'>
+                <div class="card-body px-0 py-0">
                     <div class="table-responsive scrollbar">
-                        <table class="table table-bordered table-striped fs--1 mb-0">
+                        <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                             <thead class="bg-200 text-900">
                                 <tr>
-                                    <th class="sort" data-sort="name">Nombre</th>
-                                    <th class="sort" data-sort="address">Apellido</th>
-                                    <th class="sort" data-sort="open_hs">Dni</th>
-                                    <th class="sort" data-sort="close_hs">Obra Social</th>
-                                    <th class="" scope="col">Actions</th>
+                                    <th class="white-space-nowrap">
+                                        <div class="form-check mb-0 d-flex align-items-center">
+                                            <input class="form-check-input" id="checkbox-bulk-purchases-select"
+                                                type="checkbox"
+                                                data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
+                                        </div>
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">Nombre
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">Apellido
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="payment">DNI
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">Direccion
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">Telefono
+                                    </th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">Correo
+                                        Electronico
+                                    </th>
+                                    <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody class="list">
+                            <tbody class="list" id="table-purchase-body">
                                 {% for customer in customers %}
-                                <tr class="transition">
-                                    <td class="first_name">{{ customer.first_name }}</td>
-                                    <td class="last_name">{{ customer.last_name}}</td>
-                                    <td class="dni">{{ customer.dni }}</td>
-                                    <td class="h_insurance">
-                                        <span>
-                                        {% with first_customer_insurance=customer.customer_insurance.all.first %}
-                                            {% if first_customer_insurance %}
-                                                <p>{{ first_customer_insurance.h_insurance.name }}
-                                                {% with additional_insurances=customer.customer_insurance.all|slice:"1:" %}
-                                                    {% if additional_insurances %}
-                                                        + {{ additional_insurances|length }}</p>
-                                                    {% endif %}
-                                                {% endwith %}
-                                            {% else %}
-                                            Sin Obra Social
-                                            {% endif %}
-                                        {% endwith %}
-                                        </span>
+                                <tr class="btn-reveal-trigger">
+                                    <td class="align-middle" style="width: 28px;">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" id="recent-purchase-0"
+                                                data-bulk-select-row="data-bulk-select-row" />
+                                        </div>
                                     </td>
-                                    <td class="text-center">
-                                        <div>
-                                            <a href="{% url 'clients_app:detail' pk=customer.pk %}"><button class="btn p-0" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Ver"><span
-                                                    class="text-500 far fa-eye"></span></button></a>
-                                            <a href=""><button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
-                                                    data-bs-placement="top" title="Editar"><span
-                                                        class="text-500 fas fa-edit"></span></button></a>
-                                            <button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" title="Eliminar"><span
-                                                    class="text-500 fas fa-trash-alt"></span></button>
+                                    <th class="align-middle white-space-nowrap name">{{ customer.first_name }}</th>
+                                    <td class="align-middle white-space-nowrap address">{{ customer.last_name }}</td>
+                                    <td class="align-middle white-space-nowrap open_hs">{{ customer.dni }}
+                                    </td>
+                                    <td class="align-middle white-space-nowrap close_hs">{{ customer.address }}
+                                    </td>
+                                    <td class="align-middle white-space-nowrap close_hs">{{ customer.phone_number }}
+                                    </td>
+                                    <td class="align-middle white-space-nowrap close_hs">{{ customer.email }}
+                                    </td>
+                                    <td class="align-middle white-space-nowrap text-center">
+                                        <div class="dropstart font-sans-serif position-static d-inline-block">
+                                            <button
+                                                class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                                type="button" id="dropdown0" data-bs-toggle="dropdown"
+                                                data-boundary="window" aria-haspopup="true" aria-expanded="false"
+                                                data-bs-reference="parent">
+                                                <span class="fas fa-ellipsis-h fs--1"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end border py-2"
+                                                aria-labelledby="dropdown0">
+                                                <a class="dropdown-item" href="{% url 'clients_app:detail' pk=customer.pk %}">Detalle</a>
+                                                <a class="dropdown-item"
+                                                    href="{% url 'clients_app:update_customer' pk=customer.pk %}"">Editar</a>
+                                                    <a class=" dropdown-item text-danger" href="">Eliminar</a>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -88,12 +103,36 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-center mt-3">
-                        <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous"
-                            data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
-                        <ul class="pagination mb-0"></ul>
-                        <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next"
-                            data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+                </div>
+                <div class="card-footer">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <p class="mb-0 fs--1">
+                                <span class="d-none d-sm-inline-block me-2">
+                                    {% if page_obj.has_previous %}
+                                    <a class="btn btn-sm btn-primary" href="?page=1">Primera</a>
+                                    <a class="btn btn-sm btn-primary"
+                                        href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                                    {% endif %}
+                                </span>
+                                <span class="d-none d-sm-inline-block me-2">&mdash; </span>
+                                <span>Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+                                <span class="d-none d-sm-inline-block me-2">&mdash; </span>
+                                <span>Total {{ page_obj.paginator.count }} clientes</span>
+                                <span class="d-none d-sm-inline-block me-2">&mdash; </span>
+                                <a class="fw-semi-bold" href="?page=1">Ver todo</a>
+                            </p>
+                        </div>
+                        <div class="col-auto d-flex">
+                            <span class="d-none d-sm-inline-block me-2">
+                                {% if page_obj.has_next %}
+                                <a class="btn btn-sm btn-primary"
+                                    href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                                <a class="btn btn-sm btn-primary"
+                                    href="?page={{ page_obj.paginator.num_pages }}">Ultima</a>
+                                {% endif %}
+                            </span>
+                        </div>
                     </div>
                 </div>
                 {% else %}
@@ -105,6 +144,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 {% endblock main %}
 

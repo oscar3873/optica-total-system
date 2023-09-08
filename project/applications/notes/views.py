@@ -1,9 +1,10 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .consumers import send_global_message
-from .models import Note, Branch
+from .models import Note
 from .forms import NoteCreateForm
 
 class NoteCreateView(CustomUserPassesTestMixin, FormView):
@@ -23,7 +24,7 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         
         #Comento esta seccion, me da error  -> Error 111 connecting to 127.0.0.1:6379. 111.
         # Send a global message using the send_global_message function
-        #send_global_message(f"A new note has been created: {note.subject}")
+        send_global_message(f"A new note has been created: {note.subject}")
 
         return super().form_valid(form)
 
@@ -34,4 +35,22 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     model = Note
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
-    paginate_by = 4
+    paginate_by = 6
+    
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Note.objects.filter(deleted_at=None)
+
+
+########################### DELETE ####################################
+
+class NoteDeleteView(CustomUserPassesTestMixin, FormView):
+    model = Note
+    form_class = NoteCreateForm
+    template_name = 'notes/note_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())

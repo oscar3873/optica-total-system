@@ -61,7 +61,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-# migrations
-project/applications/*/migrations/
-*/migrations/

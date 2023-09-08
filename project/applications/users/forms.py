@@ -4,9 +4,10 @@ from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
 from applications.core.mixins import ValidationFormMixin
+from applications.core.forms import PersonForm
 from applications.branches.models import Branch
 
-class UserCreateForm(ValidationFormMixin):
+class UserCreateForm(PersonForm):
     """
     Formulario para crear un usuario nuevo.
         fields: [first_name, last_name, email, password(1,2), dni, phone_number, ]
@@ -84,16 +85,17 @@ class UserCreateForm(ValidationFormMixin):
     )
     
     password = forms.CharField(
-        required = True, 
+        required = False, 
         widget = forms.PasswordInput(attrs={
             'placeholder' : 'Contraseña',
             'autocomplete' : "off",
-            'class' : 'form-control',
-        })
+            'class' : 'form-control'
+        }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre de usuario solo puede contener letras, números y guiones bajos.')]
     )
     
     password2 = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.PasswordInput(attrs={
             'placeholder' : 'Repetir contraseña',
             'autocomplete' : "off",
@@ -127,13 +129,20 @@ class UserCreateForm(ValidationFormMixin):
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
+        username = username.lower()
         self.validate_username(username)
         return username
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
+        password = password.lower()
         self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password
+    
+    def clean_password2(self):
+        password2 = self.cleaned_data.get('password')
+        password2 = password2.lower()
+        return password2
 
     def clean(self):
         cleaned_data = super().clean()
@@ -151,10 +160,9 @@ class LoginForm(forms.Form):
     username = forms.CharField(
         label='Usuario',
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre de usuario',
-                                      'class' : 'form-control'
-                                       }),
-        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre solo puede contener letras, números y guiones bajos.')]
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Ingrese su nombre de usuario',
+            }),
     )
     
     password = forms.CharField(
@@ -163,6 +171,14 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña',
                                           'class' : 'form-control'})
     )
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        return username
+    
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        return password
     
     def clean(self):
         cleaned_data = super().clean()
@@ -176,7 +192,7 @@ class LoginForm(forms.Form):
         return cleaned_data
     
 
-class UpdatePasswordForm(forms.Form):
+class UpdatePasswordForm(ValidationFormMixin):
 
     passwordCurrent = forms.CharField(
         required=True, 
@@ -199,6 +215,18 @@ class UpdatePasswordForm(forms.Form):
             'placeholder': 'Repita nueva contraseña'
             })
     )
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        username = username.lower()
+        self.validate_username(username)
+        return username
+    
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        password = password.lower()
+        self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
+        return password
 
     def clean(self):
         cleaned_data = super().clean()

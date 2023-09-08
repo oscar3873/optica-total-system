@@ -411,7 +411,6 @@
         <!--/.bg-holder-->
 
         <div class="position-relative z-index-2">
-         
         </div>
       </div>
       <div class="card-body">
@@ -462,7 +461,7 @@
 									</tr>
 								</thead>
 								<tbody class="list" id="table-purchase-body">
-									{% for product in products %}
+									{% for supplier in suppliers %}
 										<tr class="btn-reveal-trigger">
 											<td class="align-middle" style="width: 28px;">
 												<div class="form-check mb-0">
@@ -472,8 +471,8 @@
 											
 											<th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">{{ supplier.name }}</a></th>
 											{% comment %} <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">{{ product.name }}</a></th> {% endcomment %}
-											<td class="align-middle white-space-nowrap email">{{ supplier.phone_number }}</td>
-											<td class="align-middle white-space-nowrap product">{{ supplier.email}}</td>
+											<td class="align-middle white-space-nowrap phone_number">{{ supplier.phone}}</td>
+											<td class="align-middle white-space-nowrap email">{{ supplier.email}}</td>
 											
 											<td class="align-middle text-end amount">asdqwopek</td>
 										</tr>

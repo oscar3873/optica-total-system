@@ -373,7 +373,7 @@
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:new_customer' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -721,108 +721,13 @@
                                                     href="#">Marcar todo como leido</a></div>
                                         </div>
                                     </div>
-                                    <div class="scrollbar-overlay" style="max-height:19rem">
-                                        <div class="list-group list-group-flush fw-normal fs--1">
-                                            <div class="list-group-title border-bottom">Nuevo</div>
-                                            <div class="list-group-item">
-                                                <a class="notification notification-flush notification-unread"
-                                                    href="#!">
-                                                    <div class="notification-avatar">
-                                                        <div class="avatar avatar-2xl me-3">
-                                                            <img class="rounded-circle"
-                                                                src="assets/img/team/1-thumb.png" alt="" />
+                                    <div class="scrollbar-overlay" style="max-height: 19rem">
+                                        <div class="list-group list-group-flush fw-normal fs--1" id="notification-list">
 
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-body">
-                                                        <p class="mb-1"><strong>Emma Watson</strong> replied to your
-                                                            comment : "Hello world 😍"</p>
-                                                        <span class="notification-time"><span class="me-2" role="img"
-                                                                aria-label="Emoji">💬</span>Just now</span>
 
-                                                    </div>
-                                                </a>
+                                            <!-- Aquí se cargarán las notificaciones a través de AJAX -->
 
-                                            </div>
-                                            <div class="list-group-item">
-                                                <a class="notification notification-flush notification-unread"
-                                                    href="#!">
-                                                    <div class="notification-avatar">
-                                                        <div class="avatar avatar-2xl me-3">
-                                                            <div class="avatar-name rounded-circle"><span>AB</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-body">
-                                                        <p class="mb-1"><strong>Albert Brooks</strong> reacted to
-                                                            <strong>Mia Khalifa's</strong> status
-                                                        </p>
-                                                        <span class="notification-time"><span
-                                                                class="me-2 fab fa-gratipay text-danger"></span>9hr</span>
 
-                                                    </div>
-                                                </a>
-
-                                            </div>
-                                            <div class="list-group-title border-bottom">EARLIER</div>
-                                            <div class="list-group-item">
-                                                <a class="notification notification-flush" href="#!">
-                                                    <div class="notification-avatar">
-                                                        <div class="avatar avatar-2xl me-3">
-                                                            <img class="rounded-circle"
-                                                                src="assets/img/icons/weather-sm.jpg" alt="" />
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-body">
-                                                        <p class="mb-1">The forecast today shows a low of 20&#8451; in
-                                                            California. See today's weather.</p>
-                                                        <span class="notification-time"><span class="me-2" role="img"
-                                                                aria-label="Emoji">🌤️</span>1d</span>
-
-                                                    </div>
-                                                </a>
-
-                                            </div>
-                                            <div class="list-group-item">
-                                                <a class="border-bottom-0 notification-unread  notification notification-flush"
-                                                    href="#!">
-                                                    <div class="notification-avatar">
-                                                        <div class="avatar avatar-xl me-3">
-                                                            <img class="rounded-circle"
-                                                                src="assets/img/logos/oxford.png" alt="" />
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-body">
-                                                        <p class="mb-1"><strong>University of Oxford</strong> created an
-                                                            event : "Causal Inference Hilary 2019"</p>
-                                                        <span class="notification-time"><span class="me-2" role="img"
-                                                                aria-label="Emoji">✌️</span>1w</span>
-
-                                                    </div>
-                                                </a>
-
-                                            </div>
-                                            <div class="list-group-item">
-                                                <a class="border-bottom-0 notification notification-flush" href="#!">
-                                                    <div class="notification-avatar">
-                                                        <div class="avatar avatar-xl me-3">
-                                                            <img class="rounded-circle" src="assets/img/team/10.jpg"
-                                                                alt="" />
-
-                                                        </div>
-                                                    </div>
-                                                    <div class="notification-body">
-                                                        <p class="mb-1"><strong>James Cameron</strong> invited to join
-                                                            the group: United Nations International Children's Fund</p>
-                                                        <span class="notification-time"><span class="me-2" role="img"
-                                                                aria-label="Emoji">🙋‍</span>2d</span>
-
-                                                    </div>
-                                                </a>
-
-                                            </div>
                                         </div>
                                     </div>
                                     <div class="card-footer text-center border-top"><a class="card-link d-block"
@@ -844,7 +749,7 @@
                                         <span class="fas fa-user"></span>
                                         Perfil
                                     </a>
-                                    <a class="dropdown-item" href="pages/user/profile.html">
+                                    <a class="dropdown-item" href="{% url 'users_app:update_password' %}">
                                         <span class="fas fa-user-circle"></span>
                                         Cuenta
                                     </a>
@@ -866,13 +771,13 @@
 
                 <!-- NOTIFICACIONES GLOBALES -->
                 <div id="notes-container">
-                    <audio autoplay>
-                        <source src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
-                    </audio>
+                    <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
                 </div>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notifications-container"></div>
+                <div id="notifications-app-container">
+                    <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
+                </div>
 
                 
                 {% block main %}
@@ -918,8 +823,10 @@
     <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
     <script src="{% static 'core/js/theme.js' %}"></script>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'notifications/js/notifications.js' %}"></script> <!-- Agregar este enlace -->
     <script src="{% static 'notes/js/notes.js' %}"></script> <!-- Agregar este enlace -->
+
 
     {% block extra_js %}{% endblock extra_js %}
 </body>

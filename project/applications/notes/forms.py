@@ -1,4 +1,4 @@
-from .models import Note, Branch
+from .models import Note, Branch, Label
 from django import forms
 from applications.core.mixins import ValidationFormMixin
 
@@ -8,9 +8,9 @@ class NoteCreateForm(ValidationFormMixin):
     Formulario para ingresar una nueva nota
         fields: [subject,description,branch]
     """
-    branches = Branch.objects.all()
-    branch_choices = [(0,'Seleccione una sucursal')]
-    branch_choices += [(branch.id,branch.name) for branch in branches]
+    # branches = Branch.objects.all()
+    # branch_choices = [(0,'Seleccione una sucursal')]
+    # branch_choices += [(branch.id,branch.name) for branch in branches]
 
     subject = forms.CharField(
         label = 'Asunto',
@@ -28,16 +28,27 @@ class NoteCreateForm(ValidationFormMixin):
                    }
         ),
     )
+
+    label = forms.ModelChoiceField(
+        queryset=Label.objects.all(),
+        label='Tipo de Nota',
+        empty_label='Elija un tipo',
+        required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Sucursal',
+            'class' : 'form-control'
+        })
+    )
     
     branch = forms.ModelChoiceField(
+        queryset=Branch.objects.all(),
         label='Sucursal',
-        queryset=Branch.objects.all(),  # Queryset con todas las sucursales
-        empty_label='Seleccione una sucursal',  # Etiqueta para la opción vacía
-        widget=forms.Select(
-            attrs={
-                'class': 'form-select'
-                }
-        ),
+        empty_label='Elija una sucursal',
+        required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Sucursal',
+            'class' : 'form-control'
+        })
     )
 
     class Meta:
@@ -61,3 +72,9 @@ class NoteCreateForm(ValidationFormMixin):
         if branch is None:
             raise forms.ValidationError('Debe seleccionar una sucursal')
         return branch
+    
+    def clean_label(self):
+        label = self.cleaned_data.get('label')
+        if label is None:
+            raise forms.ValidationError('Debe seleccionar el tipo de nota')
+        return label

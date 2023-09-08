@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import formset_factory
-from applications.cashregister.models import CashRegister, CashRegisterDetail
+from applications.cashregister.models import CashRegister, CashRegisterDetail, Movement
 
 
 
@@ -41,6 +41,7 @@ class CloseCashRegisterForm(forms.Form):
         model = CashRegister
         fields = ['final_balance']
 
+
 class CashRegisterDetailForm(forms.ModelForm):
     
     class Meta:
@@ -55,6 +56,31 @@ class CashRegisterDetailForm(forms.ModelForm):
             'counted_amount': forms.NumberInput(attrs={'class': 'form-control'}),
             'difference': forms.NumberInput(attrs={'class': 'form-control'}),
         }
+        
 
+class MovementForm(forms.ModelForm):
+    
+    class Meta:
+        model = Movement
+        fields = ['amount', 'type_operation', 'description']
+        widgets = {
+            'amount': forms.NumberInput(
+                attrs={'class': 'form-control',
+                       'placeholder': '0.00'
+                       }
+            ),
+            'type_operation': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Seleccione una opción'
+                    }
+                ),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': '5',
+                'placeholder': 'Se retiro para compra de ...'
+            }),
+        }
+        
 
 CashRegisterDetailFormSet = formset_factory(CashRegisterDetailForm, extra=0)

@@ -19,7 +19,6 @@
     {% endif %}
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-        <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
                     style="color: #000000;"></i></span>
             <div class="col">
@@ -76,17 +75,29 @@
                     </div>
                     <div class="col-md-6 ">
                         <div class="text-center mb-3">
-                            <h3>Obra social</h3>
+                            <h3>Obra social
+                                <a href="{% url 'clients_app:update_customer' pk=customer.pk %}">
+                                    <button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Agregar Obra Social">
+                                        <span class="text-1000 far fa-plus-square"></span>
+                                    </button>
+                                </a>
+                            </h3>
                             <ul class="list-group list-group-flush">
                                 {% if customer.customer_insurance.all %}
-                                    {% for insurance in customer.customer_insurance.all %}
-                                        <li class="list-group-item">{{ insurance.h_insurance.name }} - CUIT: {{ insurance.h_insurance.cuit }}</li>
-                                    {% endfor %}
+                                {% for insurance in customer.customer_insurance.all %}
+                                <li class="list-group-item">
+                                    <a href="DETAIL_HI">
+                                        {{ insurance.h_insurance.name }}
+                                    </a>
+                                    
+                                </li>
+                                {% endfor %}
                                 {% else %}
-                                    <li class="list-group-item">Sin obra social</li>
+                                <li class="list-group-item">Sin obra social</li>
                                 {% endif %}
                             </ul>
-                            
+
                         </div>
                     </div>
 
@@ -99,11 +110,20 @@
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-body py-4" id="wizard-controller">
                 <div class="text-center mb-3">
-                    <p class="h2">Tratamientos </p>
+                    <p class="h2">Tratamientos
+                        <a href="{% url 'clients_app:new_laboratory' %}">
+                            <button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Nuevo Laboratorio">
+                                <span class="text-1000 far fa-plus-square"></span>
+                            </button>
+                        </a> 
+                    </p>
+                    
                 </div>
             </div>
         </div>
     </div>
+    
 
 
 </div>

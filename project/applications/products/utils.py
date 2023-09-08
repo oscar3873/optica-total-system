@@ -1,6 +1,6 @@
 from .models import Feature, Feature_type, Product_feature
 
-def form_in_out_features(self, form, product, user):
+def form_in_out_features(form, product, user):
         """
         PARA FORMULARIOS:
             Verifica el estado de las caracteristicas cargadas para el producto.
@@ -10,14 +10,17 @@ def form_in_out_features(self, form, product, user):
         existing_features = product.product_feature.all()
 
         # Elimina relaciones existentes que ya no están seleccionadas
-        for feature in existing_features:
-            if feature.feature not in selected_features:
-                product.product_feature.get(feature=feature.feature).delete()
+        for intermedia in existing_features:
+            if intermedia.feature not in selected_features:
+                product.product_feature.get(feature=intermedia.feature).delete()
 
         # Crea nuevas relaciones solo para características no existentes
         for feature in selected_features:
             if feature not in existing_features.values_list('feature', flat=True):
-                product.product_feature.create(feature=feature, user_made=user)
+                intermedia, created = product.product_feature.get_or_create(feature=feature)
+                if created:
+                    intermedia.user_made = user
+                    intermedia.save()
 
 
 def form_create_features_formset(user, product, feature_formset):
@@ -33,21 +36,18 @@ def form_create_features_formset(user, product, feature_formset):
 
             if feature_type_name and feature_value:
                 # Create FeatureType if it doesn't exist
-                type, created = Feature_type.objects.get_or_create(
+                type, created_type = Feature_type.objects.get_or_create(
                                     user_made=user,
                                     name=feature_type_name)
-                value, created = Feature.objects.get_or_create(
+                value, created_value = Feature.objects.get_or_create(
                                     user_made=user,
                                     type=type,
                                     value=feature_value
                                 )
                 feature_dict[value] = type
 
-        for feature, feature_type_name in feature_dict.items():
-            intermedia, created = Product_feature.objects.get_or_create(
-                product=product,
-                feature=feature
-            )
+        for feature, feature_type in feature_dict.items():
+            intermedia, created = product.product_feature.get_or_create(feature=feature)
             if created:
                 intermedia.user_made = user
                 intermedia.save()
