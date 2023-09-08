@@ -15,8 +15,9 @@ class UserCreateForm(ValidationFormMixin):
     first_name = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'Nombre',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: Javier',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         }),
         validators=[RegexValidator(r'^[a-zA-Z]+$', 'El nombre solo puede contener letras.')]
     )
@@ -24,8 +25,9 @@ class UserCreateForm(ValidationFormMixin):
     last_name = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'Apellido',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: Torres',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         }),
         validators=[RegexValidator(r'^[a-zA-Z]+$', 'El apellido solo puede contener letras.')]
     )
@@ -34,8 +36,9 @@ class UserCreateForm(ValidationFormMixin):
     dni = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'DNI',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: 32432567',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         }),
         validators=[RegexValidator(r'^[a-zA-Z0-9]+$', 'Ingrese un DNI válido.')]
     )
@@ -44,8 +47,9 @@ class UserCreateForm(ValidationFormMixin):
     address = forms.CharField(
         required=False,
         widget=forms.TextInput(attrs={
-            'placeholder' : 'Dimicilio',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: Zuviria 580',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
             })
     )
 
@@ -53,8 +57,9 @@ class UserCreateForm(ValidationFormMixin):
     phone_number = forms.IntegerField(
         required = True,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'Telefono de contacto',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: 3875123321',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         }),
     )
 
@@ -63,15 +68,17 @@ class UserCreateForm(ValidationFormMixin):
         widget = forms.DateInput(attrs={
             'placeholder' : 'Fecha de Nacimiento',
             'class' : 'form-control',
-            'type' : 'date'
+            'type' : 'date',
+            'autocomplete' : 'off',
         }),
     )
 
     username = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'Usuario',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: Javi28',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         }),
         validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre de usuario solo puede contener letras, números y guiones bajos.')]
     )
@@ -81,7 +88,7 @@ class UserCreateForm(ValidationFormMixin):
         widget = forms.PasswordInput(attrs={
             'placeholder' : 'Contraseña',
             'autocomplete' : "off",
-            'class' : 'form-control'
+            'class' : 'form-control',
         })
     )
     
@@ -97,8 +104,9 @@ class UserCreateForm(ValidationFormMixin):
     email = forms.EmailField(
         required = False,
         widget = forms.EmailInput(attrs={
-            'placeholder' : 'Correo',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: javier_torres28@gmail.com',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         })
     )
 
@@ -144,6 +152,7 @@ class LoginForm(forms.Form):
         label='Usuario',
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'Ingrese su nombre de usuario',
+                                      'class' : 'form-control'
                                        }),
         validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre solo puede contener letras, números y guiones bajos.')]
     )
@@ -151,7 +160,8 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         label='Contraseña',
         required=True,
-        widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña'})
+        widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña',
+                                          'class' : 'form-control'})
     )
     
     def clean(self):
