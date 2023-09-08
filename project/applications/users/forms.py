@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Employee
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
@@ -164,3 +164,22 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
+    
+
+class EmployeeCreateForm(UserCreateForm):
+    employment_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date',
+            })
+    )
+    class Meta:
+        model = Employee
+        fields = ['employment_date',]
+
+    def clean_employment_date(self):
+        employment_date = self.cleaned_data['employment_date']
+        self.validate_date(employment_date)
+        return employment_date
