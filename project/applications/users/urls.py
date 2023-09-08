@@ -2,19 +2,19 @@ from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
 from .forms import LoginForm
-from .views import LoginView, LogoutView, UserCreateView, UpdatePasswordView, AdminCreateView
+from .views import LoginView, LogoutView, EmployeeCreateView, UpdatePasswordView, AdminCreateView
 
 app_name = 'users_app'
 
 urlpatterns = [
     path(
-        'signup/admin',
+        'signup/admin/',
         AdminCreateView.as_view(),
         name = 'signup_admin'
     ),
     path(
-        'signup/',
-        UserCreateView.as_view(),
+        'signup/employee/',
+        EmployeeCreateView.as_view(),
         name = 'signup'
     ),
     path(
