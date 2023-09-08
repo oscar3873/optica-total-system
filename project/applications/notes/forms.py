@@ -66,13 +66,6 @@ class NoteCreateForm(ValidationFormMixin):
         self.validate_length(description,5,'El contenido del mensaje debe ser de al menos 5 caracteres.')
         return description
     
-
-    def clean_branch(self):
-        branch = self.cleaned_data.get('branch')
-        if branch is None:
-            raise forms.ValidationError('Debe seleccionar una sucursal')
-        return branch
-    
     def clean_label(self):
         label = self.cleaned_data.get('label')
         if label is None:

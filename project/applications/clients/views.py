@@ -103,6 +103,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         customer = form.save(commit=False)
         customer.user_made = self.request.user
+        customer.branch = self.request.user.branch
         customer.save()
         return super().form_valid(form)
     
