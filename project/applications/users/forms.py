@@ -162,6 +162,8 @@ class LoginForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese su nombre de usuario',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
             }),
     )
     
