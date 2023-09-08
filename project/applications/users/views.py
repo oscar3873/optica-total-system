@@ -13,7 +13,7 @@ from applications.core.mixins import CustomUserPassesTestMixin
 
 # Create your views here.
 class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
-    template_name = "users/employee_signup.html"
+    template_name = "users/signup.html"
     form_class = EmployeeCreateForm
     success_url = reverse_lazy('core_app:home')
     
