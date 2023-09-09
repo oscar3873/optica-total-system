@@ -33,11 +33,13 @@
 				<div class="card-body py-4" id="wizard-controller">
 					<div class="tab-content">
 						<div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-							<form class="mt-3" method="post">
+            <form class="mt-3" method="post">
                 {% csrf_token %}
                 <div class="mb-3">
                   <!-- FORMULARIO DE PRODUCTO CON FEATURES -->
-                    
+                    <label for="id_name" class="form-label">Nombre</label>
+                    {{ form.branch}}
+
                     <label for="id_name" class="form-label">Nombre</label>
                     {{ form.name}}
                     
@@ -59,10 +61,10 @@
                             <button id="addCategory" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-category-modal">+</button>
                         </div>
                         
-                    <label for="id_category" class="form-label">Marca</label>
+                    <label for="id_brand" class="form-label">Marca</label>
                         <div class="input-group">
-                            {{ form.category }}
-                            <button id="addCategory" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-category-modal">+</button>
+                            {{ form.brand }}
+                            <button id="addBrand" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-brand-modal">+</button>
                         </div>
                 </div>
                 {% with named_formsets as formset %}
@@ -134,39 +136,38 @@
                         {% csrf_token %}
                         {{ category_form.as_p }}
                         <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                            <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
-                            <!-- Fin del formulario de creación de Category-->
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-                    </div>
+                        <button class="btn btn-primary" type="button" id="save-category">Guardar</button>
+                        <!-- Fin del formulario de creación de Category-->
+                    </form>
                 </div>
-            </div>
-        </div>
-        <!-- Modal para crear Brand-->
-        <div class="modal fade" id="Product-brand-modal" tabindex="-1" aria-labelledby="Product-brand-modalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="Product-brand-modalLabel">Crear Marca</h5>
-                    </div>
-                    <div class="modal-body">
-                        <form id="Product-Brand-form" method="post">
-                            {% csrf_token %}
-                            {{ brand_form.as_p }}
-                            <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                            <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
-                            <!-- Fin del formulario de creación de Brand-->
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal para crear Brand-->
+    <div class="modal fade" id="Product-brand-modal" tabindex="-1" aria-labelledby="Product-brand-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Product-brand-modalLabel">Crear Marca</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="Product-Brand-form" method="post">
+                        {% csrf_token %}
+                        {{ brand_form.as_p }}
+                        <button class="btn btn-primary" type="button" id="save-brand">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     
 
 

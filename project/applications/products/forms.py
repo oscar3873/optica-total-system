@@ -43,6 +43,17 @@ class BrandForm(ValidationFormMixin):
 
 
 class ProductForm(ValidationFormMixin):
+    branch = forms.ModelChoiceField(
+        queryset=Branch.objects.all(),
+        label='Sucursal',
+        empty_label='Elija una sucursal',
+        required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Sucursal',
+            'class' : 'form-control'
+        })
+    )
+
     name = forms.CharField(
         max_length=100,
         label='Nombre del producto',
@@ -114,7 +125,7 @@ class ProductForm(ValidationFormMixin):
     class Meta:
         model = Product
         #necesario para el front 
-        fields = ('name', 'barcode', 'price', 'description', 'stock', 'category', 'brand')
+        fields = ('name', 'barcode', 'price', 'description', 'stock', 'category', 'brand', 'branch')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -144,26 +155,28 @@ class FeatureForm(ValidationFormMixin):
         ),
     )
     type  = forms.ModelChoiceField(
-        label='Categoría',
+        label='Tipos de Caracteristicas',
         queryset=Feature_type.objects.all(),
+        empty_label='Elija el tipo de caracteristica',
+        widget=forms.Select(
+            attrs={
+                'class':'form-control'
+            })
     )
 
     class Meta:
         model = Feature
         fields = ('value','type')
-    
-    def __init__(self,*args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['type'].widget.attrs.update({'class':'form-control'}) 
+
 
 
 class FeatureTypeForm(ValidationFormMixin):
-    name = forms.CharField(max_length=100,
+    name = forms.CharField(
+        max_length=100,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
-                }
-        )
+            })
     )
     class Meta:
         model = Feature_type

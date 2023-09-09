@@ -1,6 +1,6 @@
 from typing import Any, Dict
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView,DeleteView
 
@@ -11,7 +11,7 @@ from .models import *
 from .utils import *
 # Create your views here.
 
-class CategoryCreateView(CustomUserPassesTestMixin, FormView):
+class CategoryCreateView(FormView):
     """
     Crear una catogoria nueva para el producto
     """
@@ -23,8 +23,17 @@ class CategoryCreateView(CustomUserPassesTestMixin, FormView):
         category = form.save(commit=False)
         category.user_made = self.request.user
         category.save()
-        return super().form_valid(form)
 
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_category_data = {
+                'id': category.id,
+                'name': category.name
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_category': new_category_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
 
 class BrandCreateView(CustomUserPassesTestMixin, FormView):
     """
@@ -38,9 +47,19 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
         brand = form.save(commit=False)
         brand.user_made = self.request.user
         brand.save()
-        return super().form_valid(form)
 
-class FeatureCreateView( CustomUserPassesTestMixin,FormView):
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_brand_data = {
+                'id': brand.id,
+                'name': brand.name
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_brand': new_brand_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
+
+class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una característica nueva para el producto
     Previa carga del Tipo de Característica
@@ -161,19 +180,6 @@ class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
         category.user_made = self.request.user
         category.save()
                 
-        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
-            new_category_data = {
-                'id': category.id,
-                'name': category.name
-            }
-            # Si es una solicitud AJAX, devuelve una respuesta JSON
-            return JsonResponse({'status': 'success', 'new_category': new_category})
-        else:
-            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
-            return super().form_valid(form)
-    
-    def form_valid(self, form):
-        form.instance.user_made = self.request.user
         return super().form_valid(form)
 
 class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
