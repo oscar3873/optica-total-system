@@ -49,9 +49,101 @@
 
 </head>
 <body>
-    <div>
-        {% block main %}
-        {% endblock main %}
+
+  <!-- ===============================================-->
+  <!--    End of Main Content-->
+  <!-- ===============================================-->
+
+  <main class="main" id="top">
+
+    <div class="container-fluid" data-layout="container">
+      <!-- ===============================================-->
+      <!--    Header Content-->
+      <!-- ===============================================-->
+
+      <!-- <nav class="navbar navbar-light navbar-vertical navbar-expand-xl">
+        <script>
+          var navbarStyle = localStorage.getItem("navbarStyle");
+          if (navbarStyle && navbarStyle !== 'transparent') {
+            document.querySelector('.navbar-vertical').classList.add(`navbar-${navbarStyle}`);
+          }
+        </script>
+      </nav> -->
+
+      <!-- ===============================================-->
+      <!--    End of Header Content-->
+      <!-- ===============================================-->
+
+      <div class="content">
+        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
+
+          <a class="navbar-brand me-1 me-sm-3" href="{% url 'users_app:login' %}">
+            <div class="d-flex align-items-center">
+              <span class="font-sans-serif">
+                <img id="logoImageMovil" class="me-2 d-none" src="{% static 'core/img/logo_optica_light.png' %}" width="150"
+                  alt="logo" />
+                <img id="darkLogo" class="logo" src="{% static 'core/img/logo_optica_dark.png' %}"
+                  style="display: none;">
+                <img id="lightLogo" class="logo" src="{% static 'core/img/logo_optica_light.png' %}"
+                  style="display: none;">
+              </span>
+            </div>
+          </a>
+
+          <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+            <li class="nav-item">
+              <div class="theme-control-toggle fa-icon-wait px-2">
+                <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle" type="checkbox"
+                  data-theme-control="theme" value="dark" />
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle"
+                  data-bs-toggle="tooltip" data-bs-placement="left" title="Switch to light theme"><span
+                    class="fas fa-sun fs-0"></span></label>
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle"
+                  data-bs-toggle="tooltip" data-bs-placement="left" title="Switch to dark theme"><span
+                    class="fas fa-moon fs-0"></span></label>
+              </div>
+            </li>
+            <!-- <li class="nav-item">
+                            <a class="nav-link px-0 notification-indicator notification-indicator-warning notification-indicator-fill fa-icon-wait"
+                                href="app/e-commerce/shopping-cart.html"><span class="fas fa-shopping-cart"
+                                    data-fa-transform="shrink-7" style="font-size: 33px;"></span><span
+                                    class="notification-indicator-number">1</span></a>
+
+                        </li> -->
+          </ul>
+        </nav>
+        <div class="row flex-center min-vh-100 py-6">
+          <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+            <!-- <a class="d-flex flex-center mb-4" href="{% url 'users_app:login' %}"><img
+                        src="../../static/core/img/logo_optica_light.png" alt="logo-optica-total" width="210" /><span
+                        class="font-sans-serif fw-bolder fs-5 d-inline-block"></span></a> -->
+            <a class="navbar-brand" href="{% url 'users_app:login' %}">
+              <div class="d-flex align-items-center justify-content-center py-3">
+                <span class="font-sans-serif d-block">
+                  <img id="logoImage" class="me-2" src="http://127.0.0.1:8000/static/core/img/logo_optica_light.png"
+                    width="210" alt="logo">
+                  <img id="darkLogo" class="logo" src="/static/core/img/logo_optica_dark.png" style="display: none;">
+                  <img id="lightLogo" class="logo" src="/static/core/img/logo_optica_light.png" style="display: none;">
+                </span>
+              </div>
+            </a>
+            {% block main %}
+            {% endblock main %}
+          </div>
+        </div>
+        <footer class="footer">
+          <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">Creado y diseñado por SaltaCode <span class="d-none d-sm-inline-block">|
+                </span><br class="d-sm-none" /> 2023 &copy; <a href="https://saltacode.com">SaltaCode</a></p>
+            </div>
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">v1.0</p>
+            </div>
+          </div>
+        </footer>
+
+      </div>
     </div>
     <script>
         var darkLogoSrc = "{% static 'core/img/logo_optica_dark.png' %}";
@@ -67,7 +159,8 @@
     <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
-    <script src="{% static 'users/js/total-order.js' %}"></script>
+  <!-- <script src="{% static 'core/js/theme.js' %}"></script> -->
+  <script src="{% static 'users/js/users.js' %}"></script>
 
     {% block extra_js %}{% endblock extra_js %}
 </body>

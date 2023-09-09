@@ -111,6 +111,7 @@ class Interpupillary(BaseAbstractWithUser):
 ###############################################################
 
 class Calibration_Order(BaseAbstractWithUser):
+    client = models.ForeignKey(Customer, null=True, on_delete=models.PROTECT, verbose_name='client')
     is_done = models.BooleanField(default=False, null=True, blank=True)
     correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)

@@ -43,6 +43,13 @@ class ValidationFormMixin(forms.ModelForm):
         """
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError('El usuario ya existe')
+        
+    def validate_date(self, date):
+        """
+        Valida que la fecha ingresada no sea al futuro
+        """
+        if date > DATE_NOW.date():
+            raise forms.ValidationError('La fecha establecida no puede registrarse.')
 
 class CustomUserPassesTestMixin(LoginRequiredMixin, UserPassesTestMixin):
     """

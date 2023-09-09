@@ -103,6 +103,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         customer = form.save(commit=False)
         customer.user_made = self.request.user
+        customer.branch = self.request.user.branch
         customer.save()
         return super().form_valid(form)
     
@@ -127,6 +128,7 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         insurance.user_made = self.request.user
         insurance.save()
         return super().form_valid(form)
+    
 class HealthInsuranceUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = HealthInsurance
     form_class = HealthInsuranceForm
@@ -149,6 +151,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'clients/client_page.html'
     context_object_name = 'customers'
+    paginate_by = 8
 
 ########################### DELETE ####################################
 
