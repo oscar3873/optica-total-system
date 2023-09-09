@@ -1,7 +1,7 @@
 from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
-
+from applications.branches.models import Branch
 from .managers import ProductManager
 
 # Create your models here.
@@ -38,6 +38,7 @@ class Product(BaseAbstractWithUser):
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand')
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch')
 
     objects = ProductManager()
 

@@ -62,15 +62,15 @@
 						<p class="fs--2 mb-0">{{product.category}} </p>
 						<p class="fs--2 mb-0">{{product.brand}} </p>
             {%for feature in features%}
-              <p class="fs--2 mb-0">{{feature.value}} </p>
+              <p class="fs--2 mb-0">{{feature}} </p>
             {% endfor %}
           </div>
         </div>
       </div>
       <div class="card-body">
         <div class="d-flex pb-3 justify-content-between align-items-center">
-          <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
-          
+          <div class="lottie me-3" data-options=''>
+          </div>
         </div>
       </div>
     </div>
@@ -111,3 +111,200 @@
 <!-- ===============================================-->
 <!--    Fin Contentenedor del block main-->
 <!-- ===============================================-->
+
+
+
+
+
+{% comment %} 
+{% load static %}
+{% load humanize %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+
+  <!-- ===============================================-->
+  <!--    Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
+    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+    <p class="mb-0 flex-1">{{ message }}</p>
+    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  
+  <!-- ===============================================-->
+  <!--    Fin Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
+
+
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Titulo del formulario wizard -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+          class="fa-inverse fa-stack-1x text-primary fas fa-exchange-alt"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Movimientos</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aquí puede vizualizar todos los movimientos realizados</p>          
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================================-->
+  <!--    Card con la presentacion de la caja-->
+  <!-- ===============================================-->
+
+  {% if products %}
+  <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+    <!--Card-->
+    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_movement","cash_register","payment_method","amount", "type_operation"],"page":8,"pagination":true}'>
+      <div class="card-header">
+        <div class="row flex-between-center">
+          <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
+            <div>
+              <form>
+                <div class="input-group">
+                  <input class="form-control form-control-sm shadow-none search" type="search" placeholder="Buscar" aria-label="search" />
+                  <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+            <div class="d-none" id="table-purchases-actions">
+              <div class="d-flex">
+                <select class="form-select form-select-sm" aria-label="Bulk actions">
+                  <option selected="">Accion masiva</option>
+                  <option value="Delete">Borrar</option>
+                </select>
+                <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
+              </div>
+            </div>
+            <div id="table-purchases-replace-element">
+              <a href="{% url 'cashregister_app:movements_create_view' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo movimiento</span></a>
+              <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filtros</span></button>
+              <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-body px-0 py-0">
+        <div class="table-responsive scrollbar">
+          <!-- TABLA -->
+          <table class="table table-sm fs--1 mb-0 overflow-hidden">
+            <!-- HEAD TABLA -->
+            <thead class="bg-200 text-900">
+              <tr>
+                <th class="white-space-nowrap">
+                  <div class="form-check mb-0 d-flex align-items-center">
+                    <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox" data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
+                  </div>
+                </th>
+              {% for column in table_column %}
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
+              {% endfor %}
+                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+              </tr>
+            </thead>
+            <!-- BODY TABLA -->
+            <tbody class="list" id="table-purchase-body">
+              
+              {% for productt in products %}
+              <tr class="btn-reveal-trigger">
+                <td class="align-middle" style="width: 28px;">
+                  <div class="form-check mb-0">
+                    <input class="form-check-input" type="checkbox" id="recent-purchase-0" data-bulk-select-row="data-bulk-select-row" />
+                  </div>
+                </td>
+                <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
+                <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
+                <!-- <td class="align-middle white-space-nowrap product">Slick - Drag &amp;</td> -->
+                <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
+                </td> -->
+                <td class="align-start user_made">{{product.user_made}}</td>
+                <td class="align-start name">{{product.name}}</td>
+                <td class="align-start date_movement">{{product.category.name}}</td>
+                <td class="align-start cash_register">{{product.brand.name}}</td>
+                <td class="align-start payment_method">{{product.description}}</td>
+                <td class="align-start type_operation">{{product.price}}</td>
+                <td class="align-middle white-space-nowrap text-end">
+                  <div class="dropstart font-sans-serif position-static d-inline-block">
+                    <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span></button>
+                    <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0"><a class="dropdown-item" href="#!">Detalle</a><a class="dropdown-item" href="#!">Editar</a>
+                      <div class="dropdown-divider"></div>
+                      <button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-id="{{ product.pl }}" data-url="{% url 'products_app:product_delete' product.pk %}" data-bs-target="#delete-product-modal">Borrar</button>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="row align-items-center">
+          <div class="pagination d-none"></div>
+          <div class="col">
+            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+            </p>
+          </div>
+          <div class="col-auto d-flex">
+            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button>
+            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Modal del boton de Borrar-->
+  <div class="modal fade" id="delete-movement-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+      <div class="modal-content position-relative">
+        <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+          <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+            <h4 class="mb-1" id="modalExampleDemoLabel">Confirmacion </h4>
+          </div>
+          <div class="p-4 pb-0 text-center">
+            <p class="m-4">¿Desea eliminar este movimiento?</p> 
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Cerrar</button>
+          <a href="#" id="confirm-delete-link" class="btn btn-danger" type="button">Confirmar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+    <!--Card-->
+    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_movement","cash_register","payment_method","amount", "type_operation"],"page":8,"pagination":true}'>
+      <div class="card-header">
+      </div>
+      <div class="card-body px-0 py-0">
+      </div>
+      <div class="card-footer">
+      </div>
+    </div>
+  </div>
+  
+  
+  <!-- ===============================================-->
+  <!--   Fin Card con la presentacion de la caja-->
+  <!-- ===============================================-->
+  
+  {% endif %}
+</div>
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================--> {% endcomment %}

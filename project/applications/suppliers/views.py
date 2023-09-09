@@ -69,6 +69,7 @@ class SupplierDetailView(DetailView):
         except:
             obj=None
         return obj
+        
     def get(self, request, *args, **kwargs):
         # Obtén el objeto utilizando el método get_object()
         self.object = self.get_object()
