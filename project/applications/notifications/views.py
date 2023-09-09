@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import NotificationsForm
 from .models import Notifications
+from .utils import get_notifications_JSON
 from applications.notes.consumers import send_notifications
 # Create your views here.
 
@@ -20,7 +21,8 @@ class NotificationsCreateView(LoginRequiredMixin, CreateView):
         notification = form.save(commit=False)
         notification.user_made = self.request.user
         notification.save()
-        send_notifications(f"{notification.user_made}: Nuevo {notification.content_object._meta.verbose_name}: {notification.details}")
+        
+        send_notifications(get_notifications_JSON([notification]))
 
         return super().form_valid(form)
 
@@ -41,14 +43,4 @@ class DynamicDetail(LoginRequiredMixin, View):
 class LoadNotificationsView(View):
     def get(self, request, *args, **kwargs):
         notifications = Notifications.objects.all().order_by('-created_at')[:5]
-        notif_list = []
-        for notification in notifications:
-            notif_list.append(
-                {
-                    'details': notification.details,
-                    'user_made': str(notification.user_made.get_full_name()),
-                    'reference_obj_verbose_name': str(notification.content_object.__class__._meta.verbose_name),
-                    'created_at': notification.created_at
-                }
-            )
-        return JsonResponse({'notifications': notif_list}, safe=False)
+        return JsonResponse(get_notifications_JSON(notifications), safe=False)

@@ -717,8 +717,6 @@
                                             <div class="col-auto">
                                                 <h6 class="card-header-title mb-0">Notificaciones</h6>
                                             </div>
-                                            <div class="col-auto ps-0 ps-sm-3"><a class="card-link fw-normal"
-                                                    href="#">Marcar todo como leido</a></div>
                                         </div>
                                     </div>
                                     <div class="scrollbar-overlay" style="max-height: 19rem">
@@ -770,15 +768,19 @@
                 </nav>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notes-container">
-                    <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
-                </div>
+                <a href="/notes/list/">
+                    <div id="notes-container">
+                        <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
+                    </div>
+                </a>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notifications-app-container">
-                    <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
-                </div>
-
+                <a href="/notifications/list/">
+                    <div id="notifications-app-container">
+                        <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
+                    </div>
+                </a>
+                
                 
                 {% block main %}
                 

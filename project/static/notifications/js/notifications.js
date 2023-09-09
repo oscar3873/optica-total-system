@@ -1,5 +1,3 @@
-// notifications.js
-
 const notificationSocket = new WebSocket(`ws://${window.location.host}/ws/notifications/global/`);
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -46,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Agrega el elemento de audio al contenedor
         notificationsContainer.appendChild(audioElement);
 
+
         setTimeout(() => {
             superdiv.style.animation = 'fadeOut 1s'; // Agrega la animación de desvanecimiento
             setTimeout(() => {
@@ -84,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         notificationText.classList.add('mb-1');
 
         // Limita el texto del mensaje a 40 caracteres con "..."
-        const truncatedText = notification.details.length > 40 ?
+        const truncatedText = String(notification.details).length > 40 ?
             `${notification.details.substring(0, 40)}...` :
             notification.details;
 
@@ -103,8 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         notificationItem.appendChild(notificationContent);
 
+        const notif_href = document.createElement('a');
+        notif_href.style.textDecoration = 'none';
+        notif_href.href = '/home'; // DEBE MANDAR A LA URL QUE DEBERIA PASARSE POR EL JSON (AGREGAR AL JSON PASADO POR VIEW 'url' : notification.content_object.get_absolute_url())
 
-        notificationList.appendChild(notificationItem);
+        notif_href.appendChild(notificationItem);
+
+        notificationList.appendChild(notif_href); // Agrega todo lo anterior a la lista de notificaciones
 
         return notificationItem;
     }
@@ -114,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let lastNotificationDate = localStorage.getItem('lastNotificationDate');
         let is_readNotifications = localStorage.getItem('is_readNotifications');
 
-        console.log(lastNotificationDate, is_readNotifications);
         if (notifications) {
             const latestNotificationDate = new Date(notifications[0].created_at).getTime();
             
