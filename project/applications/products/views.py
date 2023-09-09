@@ -224,7 +224,7 @@ class ProductListView(CustomUserPassesTestMixin,ListView):
             return Product.objects.filter(deleted_at=None)
         else:
             # Filtra los productos que no han sido eliminados suavemente
-            print(f"#############################{Product.objects.filter(deleted_at=None,branch=branch)}")
+
             return Product.objects.filter(deleted_at=None,branch=branch)
 
     def get_context_data(self, **kwargs):
@@ -240,7 +240,7 @@ class BrandListView(CustomUserPassesTestMixin, ListView):
     context_object_name = 'brands'
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente
-        return Product.objects.filter(deleted_at=None)
+        return Brand.objects.filter(deleted_at=None)
 
 class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
@@ -248,7 +248,7 @@ class CategoryListView(CustomUserPassesTestMixin, ListView):
     context_object_name = 'categories'
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente
-        return Product.objects.filter(deleted_at=None)
+        return Category.objects.filter(deleted_at=None)
 
 
 #################### DETAILS #####################
