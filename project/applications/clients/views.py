@@ -147,6 +147,12 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
     template_name = 'clients/customer_detail.html'
     context_object_name = 'customer'
 
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        calibration_orders = self.object.get_related_calibration_orders();
+        context['calibration_orders'] = calibration_orders
+        return context
+
 class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'clients/client_page.html'
