@@ -86,4 +86,11 @@ urlpatterns = [
         ProductDetailView.as_view(),
         name= 'detail'
     ),
+
+    #DELETE
+    path(
+        'delete/product/<pk>/',
+        productDeleteView.as_view(),
+        name='product_delete'
+    )
 ]

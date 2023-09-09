@@ -7,9 +7,14 @@ class ProductManager(BaseManager):
         """
         Obtiene todas caractefristicas relacionadas a un producto (argumento)
         """
-        intermed = product.product_feature.all()
-        features = [item.feature for item in intermed]
+        try:
+            #Trato de obtener las caracteristicas relacionada a un producto si es que ese producto existe
+            intermed = product.product_feature.all()
+            features = [item.feature for item in intermed]
+        except:
+            features = None
         return features
+    
     
     def all(self):
         return self.filter(deleted_at=None)
