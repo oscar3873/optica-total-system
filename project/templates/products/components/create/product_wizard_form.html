@@ -30,29 +30,6 @@
     <!-- ===============================================-->
 
     <!-- ===============================================-->
-    <!--    Formulario de Categoria   -->
-    <!-- ===============================================-->
-    
-    <h4>Categoria</h4>
-    {{category_form.as_p}}
-
-    <!-- ===============================================-->
-    <!--    Fin Formulario de Categoria   -->
-    <!-- ===============================================-->
-
-    <!-- ===============================================-->
-    <!--    Formulario de Categoria   -->
-    <!-- ===============================================-->
-    
-    <h4>Marca</h4>
-    {{brand_form.as_p}}
-
-    <!-- ===============================================-->
-    <!--    Fin Formulario de Categoria   -->
-    <!-- ===============================================-->
-
-
-    <!-- ===============================================-->
     <!--    Formulario de Producto/Caracteristica   -->
     <!-- ===============================================-->
     <h4>Producto</h4>
@@ -61,11 +38,57 @@
 				<div class="card-body py-4" id="wizard-controller">
 					<div class="tab-content">
 						<div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-							<form class="mt-3" method="post">
+            <form class="mt-3" method="post">
                 {% csrf_token %}
                 <div class="mb-3">
-                  <!-- FORMULARIO DE PRODUCTO CON FEATURES -->
-                    {{form.as_p}} 
+                  
+                    <!-- ===============================================-->
+                    <!--              ETAPA 1: SUCURSAL                 -->
+                    <!-- ===============================================-->
+                    <label for="id_name" class="form-label">Nombre</label>
+                    {{ form.branch}}
+
+
+                    <!-- ===============================================-->
+                    <!--              ETAPA 2: MARCA                    -->
+                    <!-- ===============================================-->
+                    <label for="id_brand" class="form-label">Marca</label>
+                    <div class="input-group">
+                        {{ form.brand }}
+                        <button id="addBrand" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-brand-modal">+</button>
+                    </div>
+                    
+
+                    <!-- ===============================================-->
+                    <!--              ETAPA 3: CATEGORIA                -->
+                    <!-- ===============================================-->
+                    <label for="id_category" class="form-label">Categoria</label>
+                        <div class="input-group">
+                            {{ form.category }}
+                            <button id="addCategory" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-category-modal">+</button>
+                        </div>
+
+
+                    <!-- ===============================================-->
+                    <!--      ETAPA 1: PRODUCTO Y CARACTERISTICAS       -->
+                    <!-- ===============================================-->
+                    <label for="id_name" class="form-label">Nombre</label>
+                    {{ form.name}}
+                    
+                    <label for="id_barcode" class="form-label">Codigo de barra</label>
+                    {{ form.barcode}}
+
+                    <label for="id_price" class="form-label">Precio</label>
+                    {{ form.price}}
+
+                    <label for="id_description" class="form-label">Descripcion</label>
+                    {{ form.description}}
+
+                    <label for="id_stock" class="form-label">Stock</label>
+                    {{ form.stock}}
+                    
+                    <label for="id_features" class="form-label">Caracteristicas</label>
+                        {{ form.features}}
                 </div>
                 {% with named_formsets as formset %}
                     {{ formset.management_form }}
@@ -83,7 +106,7 @@
                         </tr>
                     </script>
                     <div class="table-responsive card mt-4">
-                        Add Features
+                        Add Products
                         <div id="item-variants">
                             {% for formss in formset %}
                                 {{ formss.management_form }}
@@ -114,6 +137,54 @@
 			</div>
 		</div>    
 
+    <!-- ===============================================-->
+    <!--   Fin Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+    <!-- Modal para crear Category-->
+    <div class="modal fade" id="Product-category-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Product-category-modalLabel">Crear Category</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="Product-Category-form" method="post">
+                        {% csrf_token %}
+                        {{ category_form.as_p }}
+                        <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                        <button class="btn btn-primary" type="button" id="save-category">Guardar</button>
+                        <!-- Fin del formulario de creación de Category-->
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para crear Brand-->
+    <div class="modal fade" id="Product-brand-modal" tabindex="-1" aria-labelledby="Product-brand-modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Product-brand-modalLabel">Crear Marca</h5>
+                </div>
+                <div class="modal-body">
+                    <form id="Product-Brand-form" method="post">
+                        {% csrf_token %}
+                        {{ brand_form.as_p }}
+                        <button class="btn btn-primary" type="button" id="save-brand">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+
     <!-- =================================================-->
     <!--   Fin de Formulario de Producto/Caracteristica   -->
     <!-- =================================================-->
@@ -127,6 +198,8 @@
 
 
 {% block extra_js %}
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'products/js/formset.js' %}"></script> <!-- Agregar este enlace -->
+<script src="{% static 'products/js/dinamic_create_category.js' %}"></script>
+<script src="{% static 'products/js/dinamic_create_brand.js' %}"></script>
 {% endblock extra_js %}

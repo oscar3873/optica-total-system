@@ -44,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Agrega el elemento de audio al contenedor
         notificationsContainer.appendChild(audioElement);
 
-
         setTimeout(() => {
             superdiv.style.animation = 'fadeOut 1s'; // Agrega la animación de desvanecimiento
             setTimeout(() => {

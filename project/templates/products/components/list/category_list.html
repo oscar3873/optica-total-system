@@ -95,12 +95,12 @@
 										</th>
 										<th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">name</th>
 
-										<th class="sort pe-1 align-middle white-space-nowrap text-end" data-sort="amount">cosas extra</th>
+										<th class="sort pe-1 align-middle white-space-nowrap text-end" data-sort="amount">cantidad de productos</th>
 										<th class="no-sort pe-1 align-middle data-table-row-action"></th>
 									</tr>
 								</thead>
 								<tbody class="list" id="table-purchase-body">
-									{% for categorie in categories %}
+									{% for category in categories %}
 										<tr class="btn-reveal-trigger">
 											<td class="align-middle" style="width: 28px;">
 												<div class="form-check mb-0">
@@ -108,10 +108,10 @@
 												</div>
 											</td>
 											
-											<th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">{{ categorie.name }}</a></th>
+											<th class="align-middle white-space-nowrap name"><a href="{% url 'products_app:category_detail' category.pk %}">{{ category.name }}</a></th>
 											
 											
-											<td class="align-middle text-end amount">asdqwopek</td>
+											<td class="align-middle text-end amount">{{category.product_category.count}}</td>
 										</tr>
 									{% endfor %}
 								

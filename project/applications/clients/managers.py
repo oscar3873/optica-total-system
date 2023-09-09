@@ -38,7 +38,7 @@ class LabManager(BaseManager):
     def all(self):
         return self.filter(deleted_at=None)
     
-    def create_or_update_calibration_order(self, user_made,
+    def create_lab(self, user_made,
                     form, correction_form, material_form, color_form,
                     cristal_form, tratamiento_form, pupilar_form):
         

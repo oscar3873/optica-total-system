@@ -131,7 +131,6 @@ class ProductForm(ValidationFormMixin):
         super().__init__(*args, **kwargs)
         if self.instance.pk:
             related_features = self.instance.product_feature.values_list('feature__id', flat=True)
-            self.fields['features'].queryset = Feature.objects.all()
             self.fields['features'].initial = related_features
 
     def clean_name(self):
@@ -189,7 +188,6 @@ class FeatureTypeForm(ValidationFormMixin):
 
 
 
-
 class FeatureForm_to_formset(ValidationFormMixin):
     type = forms.CharField(
         max_length=20,
@@ -214,6 +212,15 @@ class FeatureForm_to_formset(ValidationFormMixin):
     class Meta:
         model = Feature
         fields = ('type', 'value',)
+
+    def clean_type(self):
+        type = self.cleaned_data['type'].upper()
+        self.validate_length(type, 2, 'El tipo debe tener almenos 3 caracteres.')
+        return type
+    
+    def clean_value(self):
+        value = self.cleaned_data['value'].upper()
+        return value
 
 
 FeatureFormSet = forms.inlineformset_factory(
