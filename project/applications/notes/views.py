@@ -43,7 +43,7 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         
         # Comenté esta sección, me da error -> Error 111 connecting to 127.0.0.1:6379. 111.
         # Send a global message using the send_global_message function
-        #send_global_message(f"A new note has been created: {note.subject}")
+        send_global_message(f"A new note has been created: {note.subject}")
 
         return super().form_valid(form)
 
@@ -60,7 +60,9 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente
-        return Note.objects.filter(deleted_at=None)
+        #Filtra las notas dirigidas a la branch del user
+        user = self.request.user
+        return Note.objects.filter(deleted_at=None, branch=user.branch)
 
 
 ########################### DELETE ####################################
