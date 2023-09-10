@@ -66,6 +66,9 @@
                             {{ form.brand }}
                             <button id="addBrand" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-brand-modal">+</button>
                         </div>
+                    
+                    <label for="id_features" class="form-label">Caracteristicas</label>
+                        {{ form.features}}
                 </div>
                 {% with named_formsets as formset %}
                     {{ formset.management_form }}
@@ -118,12 +121,6 @@
     <!--   Fin Card con la presentacion de la caja-->
     <!-- ===============================================-->
 
-
-
-    
-    
-    
-    
     <!-- Modal para crear Category-->
     <div class="modal fade" id="Product-category-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -169,7 +166,6 @@
     </div>
 </div>
     
-
 
     <!-- ===============================================-->
     <!--    Fin Contentenedor del block main-->

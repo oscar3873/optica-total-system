@@ -2,7 +2,7 @@ from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
-from .managers import ProductManager
+from .managers import *
 
 # Create your models here.
 class Category(BaseAbstractWithUser):
@@ -22,7 +22,7 @@ class Brand(BaseAbstractWithUser):
     name = models.CharField(max_length=100, null=False, blank=False)
 
     def __str__(self) -> str:
-        return f'Marca: {self.name}'
+        return f'{self.name}'
 
 
 class Product(BaseAbstractWithUser):
@@ -57,6 +57,8 @@ class Feature_type(BaseAbstractWithUser):
     """
     name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Nombre')
 
+    objects = FeatureTypeManager()
+
     def __str__(self) -> str:
         return f'{self.name}'
 
@@ -72,8 +74,10 @@ class Feature(BaseAbstractWithUser):
     value = models.CharField(max_length=100, blank=True, null=True, verbose_name='Valor')
     type = models.ForeignKey(Feature_type, on_delete=models.PROTECT, related_name='feature', verbose_name='Tipo de caracteristica')
 
+    objects = FeatureManager()
+
     def __str__(self) -> str:
-        return f'Tipo: {self.type} - Valor: {self.value}'
+        return f'{self.type} - {self.value}'
     
     class Meta:
         verbose_name = 'Caracteristica'
