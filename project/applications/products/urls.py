@@ -90,7 +90,17 @@ urlpatterns = [
     #DELETE
     path(
         'delete/product/<pk>/',
-        productDeleteView.as_view(),
+        ProductDeleteView.as_view(),
         name='product_delete'
+    ),
+    path(
+        'delete/category/<pk>/',
+        CategoryDeleteView.as_view(),
+        name='category_delete'
+    ),
+    path(
+        'delete/brand/<pk>/',
+        BrandDeleteView.as_view(),
+        name='brand_delete'
     )
 ]

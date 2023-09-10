@@ -17,7 +17,7 @@ class CategoryCreateView(FormView):
     """
     form_class = CategoryForm
     template_name = 'products/category_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_app:category_list')
 
     def form_valid(self, form):
         category = form.save(commit=False)
@@ -41,7 +41,7 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
     """
     form_class = BrandForm
     template_name = 'products/brand_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_app:brand_list')
 
     def form_valid(self, form):
         brand = form.save(commit=False)
@@ -224,13 +224,11 @@ class ProductListView(CustomUserPassesTestMixin,ListView):
             return Product.objects.filter(deleted_at=None)
         else:
             # Filtra los productos que no han sido eliminados suavemente
-
             return Product.objects.filter(deleted_at=None,branch=branch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['table_column'] = obtener_nombres_de_campos(Product,"id","deleted_at", "created_at", "updated_at")
-        
         return context
 
 
@@ -241,6 +239,11 @@ class BrandListView(CustomUserPassesTestMixin, ListView):
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente
         return Brand.objects.filter(deleted_at=None)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Brand,"id","deleted_at", "created_at", "updated_at")
+        return context
 
 class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
@@ -250,6 +253,11 @@ class CategoryListView(CustomUserPassesTestMixin, ListView):
         # Filtra los productos que no han sido eliminados suavemente
         return Category.objects.filter(deleted_at=None)
 
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Category,"id","deleted_at", "created_at", "updated_at")
+        return context
 
 #################### DETAILS #####################
 
@@ -329,29 +337,27 @@ class ProductFormComplete(CustomUserPassesTestMixin, FormView):
 
 ########################### DELETE ####################################
 
-class CategoryDeleteView(CustomUserPassesTestMixin, FormView):
+class CategoryDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Category
-    form_class = CategoryForm
-    template_name = 'products/category_form.html'
-    success_url = reverse_lazy('core_app:home')
+    template_name = 'products/category_delete_page.html'
+    success_url = reverse_lazy('products_app:category_list')
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
-class BrandDeleteView(CustomUserPassesTestMixin, FormView):
+class BrandDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Brand
-    form_class = BrandForm
-    template_name = 'products/brand_form.html'
-    success_url = reverse_lazy('core_app:home')
+    template_name = 'products/brand_delete_page.html'
+    success_url = reverse_lazy('products_app:brand_list')
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
-class productDeleteView(CustomUserPassesTestMixin, DeleteView):
+class ProductDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Product
     template_name = 'products/product_delete_page.html'
     success_url = reverse_lazy('products_app:product_list')
@@ -361,9 +367,8 @@ class productDeleteView(CustomUserPassesTestMixin, DeleteView):
         self.object.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
-class FeatureDeleteView(CustomUserPassesTestMixin, FormView):
+class FeatureDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Feature
-    form_class = FeatureForm
     template_name = 'products/category_form.html'
     success_url = reverse_lazy('core_app:home')
     
@@ -372,9 +377,8 @@ class FeatureDeleteView(CustomUserPassesTestMixin, FormView):
         self.object.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
-class FeatureTypeDeleteView(CustomUserPassesTestMixin, FormView):
+class FeatureTypeDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Feature_type
-    form_class = FeatureTypeForm
     template_name = 'products/category_form.html'
     success_url = reverse_lazy('products_app:new_feature')
     
