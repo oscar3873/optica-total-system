@@ -118,12 +118,16 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['category_form'] = CategoryForm
+        context['brand_form'] = BrandForm
         context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
     @transaction.atomic
     def form_valid(self, form):
-        if form.is_valid():
+        category_form = CategoryForm(self.request.POST)
+        brand_form = BrandForm(self.request.POST)
+        if form.is_valid() and category_form.is_valid() and brand_form.is_valid():
             product = form.save(commit=False)
             product.user_made = self.request.user
             product.save()
@@ -155,8 +159,8 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['named_formsets'] = FeatureFormSet(prefix='variants')
-        context['brand_form']=BrandForm()
-        context['category_form']=CategoryForm()
+        context['brand_form']=BrandForm(instance=self.object.brand)
+        context['category_form']=CategoryForm(instance=self.object.category)
         return context
 
     @transaction.atomic
