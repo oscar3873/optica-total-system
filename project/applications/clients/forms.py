@@ -20,25 +20,18 @@ class CustomerForm(PersonForm):
 
 class Customer_HealthInsuranceFrom(ValidationFormMixin):
 
-    # h_insurance = forms.ModelMultipleChoiceField(
-    #     queryset=HealthInsurance.objects.all(),
-    #     label='Obra Social',
-    #     required=False,
-    #     widget=forms.CheckboxSelectMultiple(
-    #         # attrs={
-    #         # 'class' : 'form-control'
-    #     # }
-    #     )
-    # )
+    h_insurance = forms.ModelMultipleChoiceField(
+        queryset=HealthInsurance.objects.all(),
+        label='Obra Social',
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+        )
+    )
 
     class Meta:
         model = Customer_HealthInsurance
         fields = ['h_insurance',]
 
-    def clean(self):
-        cleaned_data = super().clean()
-        print('\n\n\n\n',cleaned_data)
-        return cleaned_data
 
 class HealthInsuranceForm(ValidationFormMixin):
 

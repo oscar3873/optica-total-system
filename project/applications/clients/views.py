@@ -67,41 +67,28 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     
 
 class CustomerCreateView(LoginRequiredMixin, FormView):
-    form_class = CustomerForm
+    form_class = Customer_HealthInsuranceFrom
     template_name = 'clients/customer_form.html'
     success_url = reverse_lazy('clients_app:customer_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['h_insurance_form'] = Customer_HealthInsuranceFrom
+        context['customer_form'] = CustomerForm
         return context
 
     @transaction.atomic
     def form_valid(self, form):
-        h_insurance_form = Customer_HealthInsuranceFrom(self.request.POST)
-        print('\n\n\n\n', h_insurance_form)
-        if form.is_valid():
-            customer = form.save(commit=False)
+        customer = CustomerForm(self.request.POST)
+        print('\n\n\n\n', customer)
+        if customer.is_valid():
+            customer = customer.save(commit=False)
             customer.user_made = self.request.user
             customer.branch = self.request.user.branch
             customer.save()
 
             # Obtén los valores seleccionados en h_insurances
-            selected_h_insurances = h_insurance_form
-            # Recorre los valores seleccionados
-            for selected_h_insurance in selected_h_insurances:
-                customer_health_insurance = Customer_HealthInsurance.objects.create(
-                    customer=customer,
-                    h_insurance=selected_h_insurance,
-                )
-
-            return super().form_valid(form)
-        else:
-            # El formulario de h_insurance no es válido, maneja el error aquí
-            # Puedes agregar un mensaje de error o realizar alguna otra acción
-            print('\n\n\n\n', h_insurance_form.errors)
-            return self.form_invalid(form)
-
+           
+        return super().form_valid(form)
 
 class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     form_class = HealthInsuranceForm
