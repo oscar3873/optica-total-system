@@ -4,6 +4,7 @@ from django.urls import reverse
 class UserManager(BaseUserManager):
 
     def get_employees_branch(self, branch):
+        #obtiene los empleados de una sucursal
         employees_per_branch = self.get_all_employeers().filter(branch=branch)
         return employees_per_branch
 

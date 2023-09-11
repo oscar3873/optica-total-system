@@ -62,15 +62,27 @@
 						<p class="fs--2 mb-0">{{product.category}} </p>
 						<p class="fs--2 mb-0">{{product.brand}} </p>
             {%for feature in features%}
-              <p class="fs--2 mb-0">{{feature.value}} </p>
+              <p class="fs--2 mb-0">{{feature}} </p>
             {% endfor %}
+
           </div>
+
+          
+
         </div>
       </div>
       <div class="card-body">
         <div class="d-flex pb-3 justify-content-between align-items-center">
-          <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
-          
+          <div class="lottie me-3" data-options=''>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="btn-group " role="group" aria-label="Botones">
+          <a class="btn btn-primary d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:update_product' pk=product.pk %}" >Editar</a>
+          <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:new_product' %}">Nuevo Producto</a>
+          <a class="btn btn-danger d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:product_delete' pk=product.pk %}" >Eliminar</a>
+
         </div>
       </div>
     </div>
@@ -94,7 +106,9 @@
           </div>
         </div>
       </div>
-      
+      <div class="card-footer">
+        <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:new_product' %}">Nuevo Producto</a>
+      </div>
       </div>
     </div>
   </div>

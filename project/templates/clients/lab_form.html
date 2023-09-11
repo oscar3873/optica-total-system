@@ -63,7 +63,7 @@
                 <div class="tab-content">
                     <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab1"
                         id="bootstrap-wizard-validation-tab1">
-                        <form novalidate="novalidate">
+                        <!-- <form novalidate="novalidate"> -->
                             <div class="text-center">
                                 <h4>Lejos</h4>
                             </div>
@@ -142,43 +142,42 @@
                                     </tbody>
                                 </table>
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                     <div class="tab-pane px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab2"
                         id="bootstrap-wizard-validation-tab2">
-                        <form>
+                        <!-- <form> -->
                             <div class="row">
                                 <div class="col position-relative text-center">
                                     <div class="row">
                                         <h5 class="mt-2 mb-5">Materiales</h5>
                                     </div>
-                                    {{ named_formsets.material.as_p }}
+                                    {{ named_formsets.material.material_choice }}
                                 </div>
                                 <div class="col form-check-reverse text-center">
                                     <div class="row">
                                         <h5 class="mt-2 mb-5">Color</h5>
                                     </div>
-                                    {{ named_formsets.color.as_p }}
+                                    {{ named_formsets.color.color_choice }}
                                 </div>
                                 <div class="col text-center">
                                     <div class="row">
                                         <h5 class="mt-2 mb-5">Cristales</h5>
                                     </div>
-                                    {{ named_formsets.cristal.as_p }}
+                                    {{ named_formsets.cristal.cristal_choice }}
                                 </div>
                                 <div class="col text-center">
                                     <div class="row">
                                         <h5 class="mt-2 mb-4">Tratamiento de Cristales</h5>
                                     </div>
-                                    {{ named_formsets.tratamiento.as_p }}
+                                    {{ named_formsets.tratamiento.tratamient_choice }}
                                 </div>
                             </div>
-                            
-                        </form>
+                        <!-- </form> -->
                     </div>
                     <div class="tab-pane px-sm-3 px-md-5" role="tabpanel"
                         aria-labelledby="bootstrap-wizard-validation-tab4" id="bootstrap-wizard-validation-tab3">
-                        <form class="form-validation">
+                        <!-- <form class="form-validation"> -->
                             <div class="row">
                                 <div class="col">
                                     <div class="text-center">
@@ -188,8 +187,8 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col"></th>
-                                                <th scope="col">Derecho</th>
                                                 <th scope="col">Izquierdo</th>
+                                                <th scope="col">Derecho</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -218,8 +217,8 @@
                                         <thead>
                                             <tr>
                                                 <th scope="col"></th>
-                                                <th scope="col">Derecho</th>
                                                 <th scope="col">Izquierdo</th>
+                                                <th scope="col">Derecho</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -241,7 +240,7 @@
                                     </table>
                                 </div>
                             </div>
-                        </form>
+                        <!-- </form> -->
                     </div>
                     <div class="tab-pane text-center px-sm-3 px-md-5" role="tabpanel"
                         aria-labelledby="bootstrap-wizard-validation-tab5" id="bootstrap-wizard-validation-tab4">

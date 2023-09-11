@@ -1,0 +1,26 @@
+
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
+{% block content %}
+  <h1>Confirmar eliminación</h1>
+  <p>¿Estás seguro de que deseas eliminar este cliente?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Eliminar">
+    <a href="{% url 'clients_app:customer_list' %}">Cancelar</a>
+  </form>
+{% endblock %}
+
+
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}

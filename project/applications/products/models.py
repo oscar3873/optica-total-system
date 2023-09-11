@@ -1,8 +1,8 @@
 from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
-
-from .managers import ProductManager
+from applications.branches.models import Branch
+from .managers import *
 
 # Create your models here.
 class Category(BaseAbstractWithUser):
@@ -38,6 +38,7 @@ class Product(BaseAbstractWithUser):
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand')
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch')
 
     objects = ProductManager()
 
@@ -56,6 +57,8 @@ class Feature_type(BaseAbstractWithUser):
     """
     name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Nombre')
 
+    objects = FeatureTypeManager()
+
     def __str__(self) -> str:
         return f'{self.name}'
 
@@ -71,8 +74,10 @@ class Feature(BaseAbstractWithUser):
     value = models.CharField(max_length=100, blank=True, null=True, verbose_name='Valor')
     type = models.ForeignKey(Feature_type, on_delete=models.PROTECT, related_name='feature', verbose_name='Tipo de caracteristica')
 
+    objects = FeatureManager()
+
     def __str__(self) -> str:
-        return f'Tipo: {self.type} - Valor: {self.value}'
+        return f'{self.type} - {self.value}'
     
     class Meta:
         verbose_name = 'Caracteristica'

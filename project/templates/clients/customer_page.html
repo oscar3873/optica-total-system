@@ -91,9 +91,9 @@
                                                 <span class="fas fa-ellipsis-h fs--1"></span></button>
                                             <div class="dropdown-menu dropdown-menu-end border py-2"
                                                 aria-labelledby="dropdown0">
-                                                <a class="dropdown-item" href="{% url 'clients_app:detail' pk=customer.pk %}">Detalle</a>
+                                                <a class="dropdown-item" href="{% url 'clients_app:customer_detail' customer.id %}">Detalle</a>
                                                 <a class="dropdown-item"
-                                                    href="{% url 'clients_app:update_customer' pk=customer.pk %}"">Editar</a>
+                                                    href="{% url 'clients_app:customer_update' customer.id %}">Editar</a>
                                                     <a class=" dropdown-item text-danger" href="">Eliminar</a>
                                             </div>
                                         </div>

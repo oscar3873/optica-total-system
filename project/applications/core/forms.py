@@ -49,11 +49,13 @@ class PersonForm(ValidationFormMixin):
     )
 
     birth_date = forms.DateField(
-        widget=forms.DateInput(attrs={
-            'placeholder' : 'Fecha de Nacimiento',
-            'type':'date',
-            'class': 'form-control datetimepicker'
-            }
+        widget=forms.DateInput(
+            attrs={
+                'placeholder': 'Fecha de Nacimiento',
+                'type': 'date',
+                'class': 'form-control'
+            },
+            format='%Y-%m-%d',
         )
     )
 

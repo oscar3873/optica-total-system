@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Employee
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
@@ -12,68 +12,6 @@ class UserCreateForm(PersonForm):
     Formulario para crear un usuario nuevo.
         fields: [first_name, last_name, email, password(1,2), dni, phone_number, ]
     """
-    
-    first_name = forms.CharField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Ej: Javier',
-            'class' : 'form-control',
-            'autocomplete' : 'off',
-        }),
-        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El nombre solo puede contener letras.')]
-    )
-    
-    last_name = forms.CharField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Ej: Torres',
-            'class' : 'form-control',
-            'autocomplete' : 'off',
-        }),
-        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El apellido solo puede contener letras.')]
-    )
-
-
-    dni = forms.CharField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Ej: 32432567',
-            'class' : 'form-control',
-            'autocomplete' : 'off',
-        }),
-        validators=[RegexValidator(r'^[a-zA-Z0-9]+$', 'Ingrese un DNI válido.')]
-    )
-
-
-    address = forms.CharField(
-        required=False,
-        widget=forms.TextInput(attrs={
-            'placeholder' : 'Ej: Zuviria 580',
-            'class' : 'form-control',
-            'autocomplete' : 'off',
-            })
-    )
-
-
-    phone_number = forms.IntegerField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Ej: 3875123321',
-            'class' : 'form-control',
-            'autocomplete' : 'off',
-        }),
-    )
-
-    birth_date = forms.DateField(
-        required = True,
-        widget = forms.DateInput(attrs={
-            'placeholder' : 'Fecha de Nacimiento',
-            'class' : 'form-control',
-            'type' : 'date',
-            'autocomplete' : 'off',
-        }),
-    )
-
     username = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
@@ -101,15 +39,6 @@ class UserCreateForm(PersonForm):
             'autocomplete' : "off",
             'class' : 'form-control'
             })
-    )
-
-    email = forms.EmailField(
-        required = False,
-        widget = forms.EmailInput(attrs={
-            'placeholder' : 'Ej: javier_torres28@gmail.com',
-            'class' : 'form-control',
-            'autocomplete' : 'off',
-        })
     )
 
     branch = forms.ModelChoiceField(
@@ -170,8 +99,10 @@ class LoginForm(forms.Form):
     password = forms.CharField(
         label='Contraseña',
         required=True,
-        widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña',
-                                          'class' : 'form-control'})
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Ingrese su contraseña',
+            'class' : 'form-control'
+            })
     )
 
     def clean_username(self):
@@ -238,3 +169,24 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
+    
+
+class EmployeeCreateForm(UserCreateForm):
+    employment_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date',
+            },
+            format='%Y-%m-%d'
+        )
+    )
+    class Meta:
+        model = Employee
+        fields = ['employment_date',]
+
+    def clean_employment_date(self):
+        employment_date = self.cleaned_data.get('employment_date')
+        self.validate_date(employment_date)
+        return employment_date
