@@ -476,8 +476,7 @@
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span></button>
                     <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
 											
-											{% comment %} <a class="dropdown-item" href="{% url 'products_app:detail' brand.id %}">Detalle</a> {% endcomment %}
-											<a class="dropdown-item" href="#">Detalle</a>
+											<a class="dropdown-item" href="{% url 'products_app:brand_detail' brand.id %}">Detalle</a>
 											
 											<a class="dropdown-item" href="{% url 'products_app:update_brand' brand.id %}">Editar</a>
                       
@@ -551,7 +550,7 @@
         </div>
       </div>
       <div class="card-body">
-        
+        <a class="btn btn-primary d-block w-100 mt-3" href="{% url 'products_app:new_brand' %}"> Crear nueva Marca</a>
       </div>
     </div>
   </div>

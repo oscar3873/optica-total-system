@@ -236,9 +236,8 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
             products = Product.objects.filter(branch=branch, deleted_at=None)
         except Product.DoesNotExist:
             products = None
-
         context['products'] = products
-
+        
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
         
@@ -280,7 +279,6 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
         branch = self.request.user.branch
         
         if not self.object.branch == branch: # Valida que el usuario no pueda entrar por URL (product/<pk>/)
-            context['product'] = None
             messages.error(self.request, 'Lo sentimos, no puedes ver este producto.')
         
         context['features'] = self.model.objects.get_features(self.get_object())
@@ -289,7 +287,7 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
     
 class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
     model = Category
-    template_name = 'products/components/category_detail_view.html'
+    template_name = 'products/category_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -301,7 +299,7 @@ class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
 
 class BrandDetailView(CustomUserPassesTestMixin, DetailView):
     model = Brand
-    template_name = 'products/components/brand_detail_view.html'
+    template_name = 'products/brand_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
