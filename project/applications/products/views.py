@@ -17,7 +17,7 @@ class CategoryCreateView(FormView):
     """
     form_class = CategoryForm
     template_name = 'products/category_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_app:category_list')
 
     def form_valid(self, form):
         category = form.save(commit=False)
@@ -41,7 +41,7 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
     """
     form_class = BrandForm
     template_name = 'products/brand_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_app:brand_list')
 
     def form_valid(self, form):
         brand = form.save(commit=False)
@@ -221,6 +221,13 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
+    def get_queryset(self):
+        branch = self.request.user.branch #recupero el brach del user
+        if branch == None:
+            return Product.objects.filter(deleted_at=None)
+        else:
+            # Filtra los productos que no han sido eliminados suavemente
+            return Product.objects.filter(deleted_at=None,branch=branch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -229,9 +236,8 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
             products = Product.objects.filter(branch=branch, deleted_at=None)
         except Product.DoesNotExist:
             products = None
-
         context['products'] = products
-
+        
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
         
@@ -242,13 +248,24 @@ class BrandListView(CustomUserPassesTestMixin, ListView):
     model = Brand
     template_name = 'products/brand_list_page.html'
     context_object_name = 'brands'
-
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Brand.objects.filter(deleted_at=None)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Brand,"id","deleted_at", "created_at", "updated_at")
+        return context
 
 class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
     template_name = 'products/category_list_page.html'
     context_object_name = 'categories'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs) # ESTA CONTEMPLANDO LA BRANCH EN LA QUE ESTA EL USUARIO??
+        context['table_column'] = obtener_nombres_de_campos(Category,"id","deleted_at", "created_at", "updated_at") 
+        return context
 
 #################### DETAILS #####################
 
@@ -261,7 +278,6 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
         branch = self.request.user.branch
         
         if not self.object.branch == branch: # Valida que el usuario no pueda entrar por URL (product/<pk>/)
-            context['product'] = None
             messages.error(self.request, 'Lo sentimos, no puedes ver este producto.')
         
         context['features'] = self.model.objects.get_features(self.get_object())
@@ -270,46 +286,49 @@ class ProductDetailView(CustomUserPassesTestMixin, DetailView):
     
 class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
     model = Category
-    template_name = 'products/components/category_detail_view.html'
+    template_name = 'products/category_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['products'] = Product.objects.filter(category=self.object, deleted_at=None)
+        context['products'] = Product.objects.filter(category=self.object, deleted_at=None) # FALTA LA BRANCH EN LA QUE ESTA EL USUARIO
         # AGREGAR MAS DETALLES RELACIONADOS
         return context
 
 
 class BrandDetailView(CustomUserPassesTestMixin, DetailView):
     model = Brand
-    template_name = 'products/components/brand_detail_view.html'
+    template_name = 'products/brand_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None)
+        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None) # FALTA LA BRANCH EN LA QUE ESTA EL USUARIO
         # AGREGAR MAS DETALLES RELACIONADOS
         return context
     
 
 
 ########################### DELETE ####################################
-
+ # FALTO COMPLETAR LA LOGICA PARA EL BORRADO SUEAVE DE LAS INSTANCIAS REALCIONADAS
+    # QUE PASA SI BORRO UNA FEATURE QUE YA ESTA RELACIONADA PREVIAMENTE CON ALGUN PRODUCTO ? (PROTECTED NO DEJARA QUE BORRE)
 class CategoryDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Category
-    form_class = CategoryForm
-    template_name = 'products/category_form.html'
-    success_url = reverse_lazy('core_app:home')
-
+    template_name = 'products/category_delete_page.html'
+    success_url = reverse_lazy('products_app:category_list')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
 
 class BrandDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Brand
-    form_class = BrandForm
-    template_name = 'products/brand_form.html'
-    success_url = reverse_lazy('core_app:home')
+    template_name = 'products/brand_delete_page.html'
+    success_url = reverse_lazy('products_app:brand_list')
     
 
-class productDeleteView(CustomUserPassesTestMixin, DeleteView):
+class ProductDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Product
     template_name = 'products/product_delete_page.html'
     success_url = reverse_lazy('products_app:product_list')
@@ -317,14 +336,12 @@ class productDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 class FeatureDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Feature
-    form_class = FeatureForm
     template_name = 'products/category_form.html'
     success_url = reverse_lazy('core_app:home')
     
 
 class FeatureTypeDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Feature_type
-    form_class = FeatureTypeForm
     template_name = 'products/category_form.html'
     success_url = reverse_lazy('products_app:new_feature')
     

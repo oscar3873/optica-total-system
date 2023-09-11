@@ -252,7 +252,7 @@ class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
         return super().get_success_url() # Si entre al delete desde la lista general de pedidos de lab
         
 
-class CustomerDeleteView(CustomUserPassesTestMixin, FormView):
+class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Customer
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'
