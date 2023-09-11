@@ -20,7 +20,7 @@ class HealthInsurance(BaseAbstractWithUser):
         verbose_name_plural = "Obras Socailes"
 
     def __str__(self) -> str:
-        return f'Obra Social: {self.name} - CUIT: {self.cuit}'
+        return f'{self.name} - CUIT: {self.cuit}'
 
 
 class Customer(Person, BaseAbstractWithUser):
@@ -34,13 +34,13 @@ class Customer(Person, BaseAbstractWithUser):
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
 
-    def get_related_calibration_orders(self):
+    def get_related_calibration_orders(self): # No se hace aqui, se hace en el manager (history)
         '''
         Obtengo ordenes de calibracion relacionadas
         a un cliente en particular (algunos campos)
         '''
 
-        calibration_orders = Calibration_Order.objects.filter(client=self);
+        calibration_orders = Calibration_Order.objects.filter(client=self)
         filtered_calibration_orders = calibration_orders.values('id','is_done', 'observations', 'armazon', 'diagnostic')
         return filtered_calibration_orders
 
@@ -57,7 +57,7 @@ class Customer_HealthInsurance(BaseAbstractWithUser):
     h_insurance = models.ForeignKey(HealthInsurance, on_delete=models.PROTECT, related_name='customer_insurance')
 
     def __str__(self) -> str:
-        return f'Cliente: {self.customer}\nObra Social: {self.h_insurance}'
+        return f'Cliente: {self.customer}'
 
 
 class Correction(BaseAbstractWithUser):

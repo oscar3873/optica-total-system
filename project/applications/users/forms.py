@@ -178,7 +178,9 @@ class EmployeeCreateForm(UserCreateForm):
             attrs={
                 'class': 'form-control',
                 'type': 'date',
-            })
+            },
+            format='%Y-%m-%d'
+        )
     )
     class Meta:
         model = Employee

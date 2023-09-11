@@ -32,8 +32,15 @@
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-body py-4" id="wizard-controller">
-                <div class="text-center mb-3">
-                    <p class="h1">{{ customer.first_name }}, {{ customer.last_name }} </p>
+                <div class="text-center mb-3 list-group-item">
+                    <p class="h1">{{ customer.first_name }}, {{ customer.last_name }}
+                        <a href="{% url 'clients_app:customer_update' pk=customer.pk %}">
+                            <button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Editar Cliente">
+                                <span class="text-1000 far fa-plus-square"></span>
+                            </button>
+                        </a>
+                    </p>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -76,7 +83,7 @@
                     <div class="col-md-6 ">
                         <div class="text-center mb-3">
                             <p class="h3">Obras Sociales
-                                <a href="{% url 'clients_app:update_customer' pk=customer.pk %}">
+                                <a href="{% url 'clients_app:hi_new' pk=customer.pk %}">
                                     <button class="btn p-0" type="button" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="Agregar Obra Social">
                                         <span class="text-1000 far fa-plus-square"></span>
@@ -87,7 +94,7 @@
                                 {% if customer.customer_insurance.all %}
                                 {% for insurance in customer.customer_insurance.all %}
                                 <li class="list-group-item">
-                                    <a href="DETAIL_HI">
+                                    <a href="{% url 'clients_app:hi_detail' pk=insurance.pk %}">
                                         {{ insurance.h_insurance.name }}
                                     </a>
                                 </li>
@@ -110,13 +117,13 @@
             <div class="card-body py-4" id="wizard-controller">
                 <div class="text-center mb-3">
                     <p class="h2">Tratamientos
-                        <a href="{% url 'clients_app:new_laboratory' %}">
+                        <a href="{% url 'clients_app:laboratory_new' customer.pk %}">
                             <button class="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Nuevo Laboratorio">
                                 <span class="text-1000 far fa-plus-square"></span>
                             </button>
                         </a>
-                    </p>
+                    </p>    
                 </div>
                 <div class="row">
                     <div class="col">
@@ -172,7 +179,6 @@
                                                     No Completado
                                                     {% endif %}
                                                 </p>
-                                                {{calibration_order.id}}
                                             </td>
                                             <td class="align-middle white-space-nowrap text-center">
                                                 <div class="dropstart font-sans-serif position-static d-inline-block">
@@ -185,10 +191,10 @@
                                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                                         aria-labelledby="dropdown0">
                                                         <a class="dropdown-item"
-                                                            href="{% url 'clients_app:detail' pk=customer.pk %}">Detalle</a>
+                                                            href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
                                                         <a class="dropdown-item"
-                                                            href="{% url 'clients_app:update_customer' pk=customer.pk %}"">Editar</a>
-                                                            <a class=" dropdown-item text-danger" href="">Eliminar</a>
+                                                            href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
+                                                            <a class=" dropdown-item text-danger" href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
                                                     </div>
                                                 </div>
                                             </td>

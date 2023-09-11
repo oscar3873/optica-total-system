@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+<form method="post">
+    {% csrf_token %}
+        <div class="mb-4">
+            <p class="fw-semi-bold">¿Estás seguro de que quieres <span class="text-warning">eliminar</span> el pedido de laboratorio "{{ laboratory }}" ?</p>
+        </div>
+        <div class="mb-4">
+            <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+            {% if customer %}
+            <a class="btn btn-secondary" href="{% url 'clients_app:customer_detail' customer.pk %}">Cancelar</a>
+            {% else %}
+            <a class="btn btn-secondary" href="{% url 'clients_app:lab_view' %}">Cancelar</a>
+            {% endif %}
+        </div>
+    </form>
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}
