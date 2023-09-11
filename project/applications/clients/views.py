@@ -1,12 +1,20 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.urls import reverse_lazy
-from django.views.generic import (CreateView, UpdateView, DetailView, FormView, ListView)
+from django.shortcuts import redirect
+from django.urls import reverse, reverse_lazy
+from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
 
 from applications.core.mixins import CustomUserPassesTestMixin
 
 from .models import *
 from .forms import *
+
+
+import logging
+
+# Agregar esto al principio de tu archivo de vistas para habilitar registros
+logger = logging.getLogger(__name__)
 
 ########################### CREATE ####################################
 class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
@@ -29,6 +37,11 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
         return context
     
     def form_valid(self, form):
+        try:
+            customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
+        except Customer.DoesNotExist:
+            raise ValueError('El ID del cliente con nuestro registro')
+        
         correction_form = CorrectionForm(self.request.POST)
         material_form = MaterialForm(self.request.POST)
         color_form = ColorForm(self.request.POST)
@@ -46,21 +59,59 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
             ):
 
             # Create the main form instance
-            Calibration_Order.objects.create_or_update_calibration_order(
+            Calibration_Order.objects.create_lab(
                 self.request.user, form, correction_form, material_form,
-                color_form, cristal_form, tratamiento_form, pupilar_form
+                color_form, cristal_form, tratamiento_form, pupilar_form,
+                customer
             )
 
-            return super().form_valid(form)
-        else:
-            return self.form_invalid(form)
+        if customer:
+            return redirect('clients_app:customer_detail', pk=self.kwargs.get('pk'))
+        
+        return super().form_valid(form)
+    
+
+class CustomerCreateView(LoginRequiredMixin, FormView):
+    form_class = CustomerForm
+    template_name = 'clients/customer_form.html'
+    success_url = reverse_lazy('clients_app:customer_view')
+
+    def form_valid(self, form):
+        customer = form.save(commit=False)
+        customer.user_made = self.request.user
+        customer.branch = self.request.user.branch
+        customer.save()
+        return super().form_valid(form)
+    
+
+class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
+    form_class = HealthInsuranceForm
+    template_name = 'clients/insurance_form.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def form_valid(self, form):
+        insurance = form.save(commit=False)
+        insurance.user_made = self.request.user
+        insurance.save()
+        
+        try:
+            customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
+            Customer_HealthInsurance.objects.create(h_insurance=insurance, customer=customer)
+        except Customer.DoesNotExist:
+            raise ValueError('El ID del cliente con nuestro registro')
+        
+        if customer:
+            return redirect('clients_app:customer_detail', pk=customer.pk)
+        return super().form_valid(form)
+
+
+########################### UPDATE  #########################
 
 class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
     model = Calibration_Order
     form_class = Calibration_OrderForm  # Actualizar al formulario principal si es necesario
     template_name = 'clients/lab_form.html'
     success_url = reverse_lazy('core_app:home')
-    pk_url_kwarg = 'pk'  # Asegurarse de proporcionar el nombre correcto de la URL
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,69 +126,51 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
         return context
     
     def form_valid(self, form):
-        named_formsets = self.get_context_data()['named_formsets']
+        try:
+            customer = Customer.objects.get(pk=self.kwargs.get('pk_c'))
+        except Customer.DoesNotExist:
+            raise ValueError('El ID del cliente con nuestro registro')
         
+        named_formsets = self.get_context_data()['named_formsets']
+
         if form.is_valid():
-            # Guarda la instancia principal (Calibration_Order)
             calibration_order = form.save(commit=False)
-            
-            # Guarda cada formulario asociado y obtén las instancias
             for prefix, formset in named_formsets.items():
                 instance = formset.instance
                 new_formset = formset.__class__(self.request.POST, instance=instance)
                 if new_formset.is_valid():
                     new_formset.save()
-            
-            calibration_order.save()  # Guarda la instancia principal
-            
-            return super().form_valid(form)
-        else:
-            return self.form_invalid(form)
+            calibration_order.save()
 
-    
+        if customer:
+            return redirect('clients_app:customer_detail', pk=customer.pk)
 
-class CustomerCreateView(LoginRequiredMixin, FormView):
-    form_class = CustomerForm
-    template_name = 'clients/customer_form.html'
-    success_url = reverse_lazy('clients_app:customer_list')
-    def form_valid(self, form):
-        customer = form.save(commit=False)
-        customer.user_made = self.request.user
-        customer.save()
         return super().form_valid(form)
+    
     
 class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'
-    success_url = reverse_lazy('clients_app:customer_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
-        return super().form_valid(form)
-
-
-class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
-    form_class = HealthInsuranceForm
-    template_name = 'clients/insurance_form.html'
-    success_url = reverse_lazy('core_app:home')
-
-    def form_valid(self, form):
-        insurance = form.save(commit=False)
-        insurance.user_made = self.request.user
-        insurance.save()
-        return super().form_valid(form)
+        form.instance.save()
+        return redirect('clients_app:customer_detail', pk=self.get_object().pk)
+    
+    
 class HealthInsuranceUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = HealthInsurance
     form_class = HealthInsuranceForm
     template_name = 'clients/insurance_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:insurance_view')
     
     def form_valid(self, form):
         insurance = form.save(commit=False)
         insurance.user_made = self.request.user
-        insurance.save()
         return super().form_valid(form)
+
+########################## DETAIL #################################
 
 
 class CustomerDetailView(LoginRequiredMixin, DetailView):
@@ -145,44 +178,96 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
     template_name = 'clients/customer_detail.html'
     context_object_name = 'customer'
 
+    def get_context_data(self,**kwargs):
+        customer = self.get_object()
+        context = super().get_context_data(**kwargs)
+        calibration_orders = Customer.objects.history(customer)
+        context['calibration_orders'] = calibration_orders
+        # AGREGAR MAS RELACIONES DEL CLIENTE: ejemplo: Ventas al cliente
+        return context
+    
+class CalibrationOrderDetailView(LoginRequiredMixin, DetailView):
+    model = Calibration_Order
+    template_name = 'clients/lab_detail.html'
+    context_object_name = 'laboratory_orders'
+
+
+class HealthInsuranceDetailView(LoginRequiredMixin, DetailView):
+    model = HealthInsurance
+    template_name = 'clients/hinsuranse_detail.html'
+    context_object_name = 'h_insurance'
+
+
+############################## LISTING ###############################
+
 class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
-    template_name = 'clients/client_page.html'
+    template_name = 'clients/customer_page.html'
     context_object_name = 'customers'
+    paginate_by = 8
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        branch = self.request.user.branch
+
+        context['customers'] = Customer.objects.filter(branch=branch, deleted_at=None)
+        return context
+
+
+class CalibrationOrderListView(LoginRequiredMixin, ListView):
+    model = Calibration_Order
+    template_name = 'clients/lab_page.html'
+    context_object_name = 'laboratory_orders'
+    paginate_by = 8
+
+
+class HealthInsuranceListView(LoginRequiredMixin, ListView):
+    model = HealthInsurance
+    template_name = 'clients/hinsuranse_page.html'
+    context_object_name = 'insuranses'
+    paginate_by = 8
+
 
 ########################### DELETE ####################################
 
-class CalibrationOrderDeleteView(CustomUserPassesTestMixin, FormView):
+class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Calibration_Order
-    form_class = Calibration_OrderForm
-    template_name = 'clients/lab_form.html'
-    success_url = reverse_lazy('core_app:home')
-    
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()  # Realiza la eliminación suave
-        return HttpResponseRedirect(self.get_success_url())
+    template_name = 'clients/lab_delete.html'
+    context_object_name = 'laboratory'
+    success_url = reverse_lazy('clients_app:lab_view')
 
-class CustomerDeleteView(CustomUserPassesTestMixin, FormView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            customer = Customer.objects.get(pk=self.kwargs.get('pk_c'))
+            context['customer'] = customer
+            return context
+        except Customer.DoesNotExist:
+            return context
+
+    def get_success_url(self):
+        if 'pk_c' in self.kwargs: # pk de customer pasado por url
+            customer_pk = self.kwargs.get('pk_c')
+            return reverse_lazy('clients_app:customer_detail', kwargs={'pk': customer_pk}) # en caso de tener pk de customer, entonces entre al delete por la vista de un cliente especifico
+        return super().get_success_url() # Si entre al delete desde la lista general de pedidos de lab
+        
+
+class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Customer
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:customer_list')
     
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()  # Realiza la eliminación suave
-        return HttpResponseRedirect(self.get_success_url())
 
-class HealthInsuranceDeleteView(CustomUserPassesTestMixin, FormView):
+class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = HealthInsurance
     form_class = HealthInsuranceForm
     template_name = 'clients/insurance_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('cliets_app:insurance_view')
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
-        lista  = Customer_HealthInsurance.objects.filter(customer=self.object)
+        lista  = Customer_HealthInsurance.objects.filter(h_insurance=self.object)
         for i in lista:
             i.delete()
         self.object.delete()  # Realiza la eliminación suave

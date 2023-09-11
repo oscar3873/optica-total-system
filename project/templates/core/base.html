@@ -270,14 +270,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="widgets.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'products_app:product_list' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span class="nav-link-text ps-1">Ver
                                             productos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="widgets.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'products_app:new_product' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus"></span></span><span
@@ -294,7 +294,7 @@
                                 </a>
                                 <ul class="nav collapse false" id="customization">
                                     <li class="nav-item"><a class="nav-link"
-                                            href="documentation/customization/configuration.html" aria-expanded="false">
+                                            href="{% url 'products_app:category_list' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ver
                                                     categorias</span>
                                             </div>
@@ -302,7 +302,7 @@
                                         <!-- more inner pages-->
                                     </li>
                                     <li class="nav-item"><a class="nav-link"
-                                            href="documentation/customization/styling.html" aria-expanded="false">
+                                            href="{% url 'products_app:new_category' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Añadir categoria</span>
                                             </div>
@@ -373,14 +373,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_list' %}"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:new_customer' %}" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -593,7 +593,7 @@
                                         <hr class="bg-200 dark__bg-900" />
                                         <h6 class="dropdown-header fw-medium text-uppercase px-card fs--2 pt-0 pb-2">
                                             Suggested Filter</h6><a class="dropdown-item px-card py-1 fs-0"
-                                            href="app/e-commerce/customers.html">
+                                            href="#">
                                             <div class="d-flex align-items-center"><span
                                                     class="badge fw-medium text-decoration-none me-2 badge-soft-warning">customers:</span>
                                                 <div class="flex-1 fs--1 title">All customers list</div>
@@ -712,9 +712,9 @@
 
                         </li> -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link notification-indicator notification-indicator-primary px-0 fa-icon-wait"
+                            <a class="nav-link px-0 fa-icon-wait"
                                 id="navbarDropdownNotification" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"><span class="fas fa-bell"
+                                aria-haspopup="true" aria-expanded="false" item><span class="fas fa-bell"
                                     data-fa-transform="shrink-6" style="font-size: 33px;"></span></a>
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-card dropdown-menu-notification"
                                 aria-labelledby="navbarDropdownNotification">
@@ -724,8 +724,6 @@
                                             <div class="col-auto">
                                                 <h6 class="card-header-title mb-0">Notificaciones</h6>
                                             </div>
-                                            <div class="col-auto ps-0 ps-sm-3"><a class="card-link fw-normal"
-                                                    href="#">Marcar todo como leido</a></div>
                                         </div>
                                     </div>
                                     <div class="scrollbar-overlay" style="max-height: 19rem">
@@ -752,21 +750,21 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                                    <a class="dropdown-item" href="pages/user/profile.html">
+                                    <a class="dropdown-item" href="#">
                                         <span class="fas fa-user"></span>
                                         Perfil
                                     </a>
-                                    <a class="dropdown-item" href="{% url 'users_app:update_password' %}">
+                                    <a class="dropdown-item" href="#">
                                         <span class="fas fa-user-circle"></span>
                                         Cuenta
                                     </a>
 
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="pages/user/settings.html">
+                                    <a class="dropdown-item" href="#">
                                         <span class="fas fa-cog"></span>
                                         Configuraciones
                                     </a>
-                                    <a class="dropdown-item" href="pages/authentication/card/logout.html">
+                                    <a class="dropdown-item" href="{% url 'users_app:logout' %}">
                                         <span class="fas fa-sign-out-alt"></span>
                                         Cerrar sesion
                                     </a>
@@ -777,19 +775,23 @@
                 </nav>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notes-container">
-                    <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
-                </div>
+                <a href="/notes/list/">
+                    <div id="notes-container">
+                        <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
+                    </div>
+                </a>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notifications-app-container">
-                    <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
-                </div>
-
+                <a href="/notifications/list/">
+                    <div id="notifications-app-container">
+                        <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
+                    </div>
+                </a>
                 
                 {% block main %}
                 
                 {% endblock main %}
+
                 <footer class="footer">
                     <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
                         <div class="col-12 col-sm-auto text-center">
@@ -810,6 +812,7 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
+
 
     <!-- ===============================================-->
     <!--    JavaScripts-->

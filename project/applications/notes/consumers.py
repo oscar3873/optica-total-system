@@ -19,7 +19,10 @@ def send_notifications(message):
     Funcion para Mostrar notificacion de accion en tiempo real
     """
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)("global_notification", {"type": "notification.message", "message": message})
+    notification = {}
+    notification['type'] = "notification.message"
+    notification['message'] = message['notifications'][0]
+    async_to_sync(channel_layer.group_send)("global_notification", notification)
 
 
 class NoteConsumer(AsyncWebsocketConsumer):
@@ -74,6 +77,7 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
     async def notification_message(self, event):
+        print('######\n\n\n', event, '#########\n')
         message = event["message"]
 
         # Send the message to the client

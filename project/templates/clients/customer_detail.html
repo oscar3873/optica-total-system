@@ -32,13 +32,20 @@
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-body py-4" id="wizard-controller">
-                <div class="text-center mb-3">
-                    <p class="h2">{{ customer.first_name }}, {{ customer.last_name }} </p>
+                <div class="text-center mb-3 list-group-item">
+                    <p class="h1">{{ customer.first_name }}, {{ customer.last_name }}
+                        <a href="{% url 'clients_app:customer_update' pk=customer.pk %}">
+                            <button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Editar Cliente">
+                                <span class="text-1000 far fa-plus-square"></span>
+                            </button>
+                        </a>
+                    </p>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="text-center mb-3">
-                            <h3>Información Personal</h3>
+                            <p class="h3">Informacion Personal</p>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     <span>
@@ -75,17 +82,28 @@
                     </div>
                     <div class="col-md-6 ">
                         <div class="text-center mb-3">
-                            <h3>Obra social</h3>
+                            <p class="h3">Obras Sociales
+                                <a href="{% url 'clients_app:hi_new' pk=customer.pk %}">
+                                    <button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Agregar Obra Social">
+                                        <span class="text-1000 far fa-plus-square"></span>
+                                    </button>
+                                </a>
+                            </p>
                             <ul class="list-group list-group-flush">
                                 {% if customer.customer_insurance.all %}
-                                    {% for insurance in customer.customer_insurance.all %}
-                                        <li class="list-group-item">{{ insurance.h_insurance.name }} - CUIT: {{ insurance.h_insurance.cuit }}</li>
-                                    {% endfor %}
+                                {% for insurance in customer.customer_insurance.all %}
+                                <li class="list-group-item">
+                                    <a href="{% url 'clients_app:hi_detail' pk=insurance.pk %}">
+                                        {{ insurance.h_insurance.name }}
+                                    </a>
+                                </li>
+                                {% endfor %}
                                 {% else %}
-                                    <li class="list-group-item">Sin obra social</li>
+                                <li class="list-group-item">Sin obra social</li>
                                 {% endif %}
                             </ul>
-                            
+
                         </div>
                     </div>
 
@@ -98,15 +116,108 @@
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-body py-4" id="wizard-controller">
                 <div class="text-center mb-3">
-                    <p class="h2">Tratamientos </p>
+                    <p class="h2">Tratamientos
+                        <a href="{% url 'clients_app:laboratory_new' customer.pk %}">
+                            <button class="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Nuevo Laboratorio">
+                                <span class="text-1000 far fa-plus-square"></span>
+                            </button>
+                        </a>
+                    </p>    
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% if calibration_orders %}
+                        <div class="text-center">
+                            <div class="table-responsive scrollbar">
+                                <table class="table table-sm fs--1 mb-0 overflow-hidden ">
+                                    <thead class="bg-200 text-900">
+                                        <tr
+                                            class="table-{% if calibration_order.is_done %}success{% else %}secondary{% endif %}">
+                                            <th class="white-space-nowrap">
+                                                <div class="form-check mb-0 d-flex align-items-center">
+                                                    <input class="form-check-input" id="checkbox-bulk-purchases-select"
+                                                        type="checkbox"
+                                                        data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
+                                                </div>
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">
+                                                Diagnostico
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">
+                                                Armazon
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="payment">
+                                                Observacion
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">
+                                                Estado
+                                            </th>
+                                            <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list" id="table-purchase-body">
+                                        {% for calibration_order in calibration_orders %}
+                                        <tr class="btn-reveal-trigger">
+                                            <td class="align-middle" style="width: 28px;">
+                                                <div class="form-check mb-0">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="recent-purchase-0"
+                                                        data-bulk-select-row="data-bulk-select-row" />
+                                                </div>
+                                            </td>
+                                            <th class="align-middle white-space-nowrap name">{{ calibration_order.diagnostic }}</th>
+                                            <td class="align-middle white-space-nowrap address">{{ calibration_order.armazon }}
+                                            </td>
+                                            <td class="align-middle white-space-nowrap open_hs">{{ calibration_order.observations }}
+                                            </td>
+                                            <td class="align-middle white-space-nowrap close_hs">
+                                                <p class="h6">
+                                                    {% if calibration_order.is_done %}
+                                                    Completado
+                                                    {% else %}
+                                                    No Completado
+                                                    {% endif %}
+                                                </p>
+                                            </td>
+                                            <td class="align-middle white-space-nowrap text-center">
+                                                <div class="dropstart font-sans-serif position-static d-inline-block">
+                                                    <button
+                                                        class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                                        type="button" id="dropdown0" data-bs-toggle="dropdown"
+                                                        data-boundary="window" aria-haspopup="true"
+                                                        aria-expanded="false" data-bs-reference="parent">
+                                                        <span class="fas fa-ellipsis-h fs--1"></span></button>
+                                                    <div class="dropdown-menu dropdown-menu-end border py-2"
+                                                        aria-labelledby="dropdown0">
+                                                        <a class="dropdown-item"
+                                                            href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
+                                                        <a class="dropdown-item"
+                                                            href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
+                                                            <a class=" dropdown-item text-danger" href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <p class="h4">No tiene tratamientos</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+
     </div>
+    {% endblock main %}
 
-
-</div>
-{% endblock main %}
-
-{% block extra_js %}
-{% endblock extra_js %}
+    {% block extra_js %}
+    {% endblock extra_js %}

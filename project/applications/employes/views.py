@@ -85,6 +85,7 @@ class EmployeeListView(LoginRequiredMixin,ListView):
     context_object_name = 'employees'
 
     def get_queryset(self):
+        print(User.objects.get_employees_branch(self.request.user.branch))
         return User.objects.get_all_employeers()
     
 

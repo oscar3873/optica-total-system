@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Employee
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
@@ -12,12 +12,12 @@ class UserCreateForm(PersonForm):
     Formulario para crear un usuario nuevo.
         fields: [first_name, last_name, email, password(1,2), dni, phone_number, ]
     """
-
     username = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'Usuario',
-            'class' : 'form-control'
+            'placeholder' : 'Ej: Javi28',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
         }),
         validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre de usuario solo puede contener letras, números y guiones bajos.')]
     )
@@ -38,7 +38,7 @@ class UserCreateForm(PersonForm):
             'placeholder' : 'Repetir contraseña',
             'autocomplete' : "off",
             'class' : 'form-control'
-            }),
+            })
     )
 
     branch = forms.ModelChoiceField(
@@ -91,13 +91,18 @@ class LoginForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={
             'placeholder': 'Ingrese su nombre de usuario',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
             }),
     )
     
     password = forms.CharField(
         label='Contraseña',
         required=True,
-        widget=forms.PasswordInput(attrs={'placeholder': 'Ingrese su contraseña'})
+        widget=forms.PasswordInput(attrs={
+            'placeholder': 'Ingrese su contraseña',
+            'class' : 'form-control'
+            })
     )
 
     def clean_username(self):
@@ -164,3 +169,24 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
+    
+
+class EmployeeCreateForm(UserCreateForm):
+    employment_date = forms.DateField(
+        required=False,
+        widget=forms.DateInput(
+            attrs={
+                'class': 'form-control',
+                'type': 'date',
+            },
+            format='%Y-%m-%d'
+        )
+    )
+    class Meta:
+        model = Employee
+        fields = ['employment_date',]
+
+    def clean_employment_date(self):
+        employment_date = self.cleaned_data.get('employment_date')
+        self.validate_date(employment_date)
+        return employment_date

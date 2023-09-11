@@ -11,6 +11,17 @@ class CustomerForm(PersonForm):
         fields = '__all__'
         exclude = ['user_made','deleted_at']
     
+    h_insurence = forms.ModelChoiceField(
+        queryset=HealthInsurance.objects.all(),
+        label='Obra Social',
+        empty_label='Elija una Obra Social',
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'placeholder' : 'Obra Social',
+            # 'class' : 'form-control'
+        })
+    )
+    
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
@@ -18,6 +29,31 @@ class CustomerForm(PersonForm):
 
 
 class HealthInsuranceForm(ValidationFormMixin):
+
+    name = forms.CharField( 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    phone_number = forms.CharField( 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cuit = forms.CharField( 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
     class Meta:
         model = HealthInsurance
         fields = "__all__"
@@ -36,359 +72,383 @@ class HealthInsuranceForm(ValidationFormMixin):
 
 
 class CorrectionForm(forms.ModelForm):
+
+    lej_od_esferico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    lej_od_cilindrico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    lej_od_eje = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    lej_oi_esferico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    lej_oi_cilindrico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    lej_oi_eje = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cer_od_esferico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cer_od_cilindrico = forms.CharField(
+        required=False, 
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cer_od_eje = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cer_oi_esferico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cer_oi_cilindrico = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
+    cer_oi_eje = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'
+                   }
+        )
+    )
+
     class Meta:
         model = Correction
         fields = '__all__'
         exclude = ['user_made','deleted_at']
 
-    lej_od_esferico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    lej_od_cilindrico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    lej_od_eje = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    lej_oi_esferico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    lej_oi_cilindrico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    lej_oi_eje = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    cer_od_esferico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    cer_od_cilindrico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    cer_od_eje = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    cer_oi_esferico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    cer_oi_cilindrico = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
-    cer_oi_eje = forms.CharField( 
-        label='',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
-        )
-    )
-
 class MaterialForm(forms.ModelForm):
+    MATERIAL_CHOICES = [
+        ('policarbonato', 'Policarbonato'),
+        ('organic', 'Organic'),
+        ('mineral', 'Mineral'),
+        ('m_r8', 'M_R8'),
+    ]
 
-    policarbonato = forms.BooleanField(
-        label='Policarbonato',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
+    material_choice = forms.ChoiceField(
+        choices=MATERIAL_CHOICES,
+        required=False,
+        label='Material',
+        widget=forms.RadioSelect(
+            # attrs={'class': 'form-check'}
             )
-        )
-    
-    organic = forms.BooleanField(
-        label='Organic',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    
-    mineral = forms.BooleanField(
-        label='Mineral',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    
-    m_r8 = forms.BooleanField(
-        label='M_R8',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-
+    )
 
     class Meta:
         model = Material
+        fields = '__all__'
         exclude = ['user_made', 'deleted_at']
 
-    def clean(self):  ### CONSULTAR
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Obtén la instancia del modelo Material asociada al formulario
+        material_instance = self.instance
+
+        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
+        # la que corresponde al campo booleano en True en la instancia del modelo
+        for choice_value, choice_label in self.fields['material_choice'].choices:
+            if getattr(material_instance, choice_value):
+                self.fields['material_choice'].initial = choice_value
+
+    def clean(self):
         cleaned_data = super().clean()
-        selected_fields = [field for field in self.fields if self.cleaned_data.get(field)]
-        if len(selected_fields) != 1:
-            raise forms.ValidationError("Debe seleccionar exactamente un campo.")
+        material_choice = cleaned_data.get('material_choice')
+    
+        cleaned_data[material_choice] = True
+        return cleaned_data
 
 
 class ColorForm(forms.ModelForm):
-    white = forms.BooleanField(
-        label='White',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
+    COLOR_CHOICES = [
+        ('white', 'Blanco'),
+        ('full_gray', 'Gris puro'),
+        ('gray_gradient', 'Gris gradiente'),
+        ('flat_sepia', 'Sepia plana'),
+    ]
+
+    color_choice = forms.ChoiceField(
+        choices=COLOR_CHOICES,
+        required=False,
+        label='Color',
+        widget=forms.RadioSelect(
+            # attrs={'class': 'form-check'}
             )
-        )
-    
-    full_gray = forms.BooleanField(
-        label='Full Gray',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    
-    gray_gradient = forms.BooleanField(
-        label='Gray Gradient',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    
-    flat_sepia = forms.BooleanField(
-        label='Flat Sepia',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
+    )
 
     class Meta:
         model = Color
+        fields = '__all__'
         exclude = ['user_made', 'deleted_at']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Obtén la instancia del modelo Material asociada al formulario
+        material_instance = self.instance
+
+        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
+        # la que corresponde al campo booleano en True en la instancia del modelo
+        for choice_value, choice_label in self.fields['color_choice'].choices:
+            if getattr(material_instance, choice_value):
+                self.fields['color_choice'].initial = choice_value
+
+    def clean(self):
+        cleaned_data = super().clean()
+        color_choice = cleaned_data.get('color_choice')
+
+        cleaned_data[color_choice] = True
+        return cleaned_data
 
 
 class CristalForm(forms.ModelForm):
-    monofocal = forms.BooleanField(
-        label='Monofocal',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
+    CRISTAL_CHOICES = [
+        ('monofocal', 'Monofocal'),
+        ('bifocal_fv', 'Bifocal FV'),
+        ('bifocal_k', 'Bifocal K'),
+        ('bifocal_pi', 'Bifocal PI'),
+        ('progressive', 'Progresivo'),
+    ]
+
+    cristal_choice = forms.ChoiceField(
+        choices=CRISTAL_CHOICES,
+        required=False,
+        label='Cristal',
+        widget=forms.RadioSelect(
+            # attrs={'class': 'form-check'}
             )
-        )
-    
-    bifocal_fv = forms.BooleanField(
-        label='Bifocal FV',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    bifocal_k = forms.BooleanField(
-        label='Bifocal K',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    bifocal_pi = forms.BooleanField(
-        label='Bifocal PI',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
-    progressive = forms.BooleanField(
-        label='Progressive',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-        )
+    )
 
     class Meta:
         model = Cristal
+        fields = '__all__'
         exclude = ['user_made', 'deleted_at']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Obtén la instancia del modelo Material asociada al formulario
+        material_instance = self.instance
+
+        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
+        # la que corresponde al campo booleano en True en la instancia del modelo
+        for choice_value, choice_label in self.fields['cristal_choice'].choices:
+            if getattr(material_instance, choice_value):
+                self.fields['cristal_choice'].initial = choice_value
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cristal_choice = cleaned_data.get('cristal_choice')
+
+        cleaned_data[cristal_choice] = True
+        return cleaned_data
 
 
 class TratamientForm(forms.ModelForm):
-    antireflex = forms.BooleanField(
-        label='Antireflex',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-    )
-    filtro_azul = forms.BooleanField(
-        label='Filtro Azul',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-    )
-    fotocromatico = forms.BooleanField(
-        label='Fotocromático',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-    )
-    ultravex = forms.BooleanField(
-        label='Ultravex',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-    )
-    polarizado = forms.BooleanField(
-        label='Polarizado',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-    )
-    neutrosolar = forms.BooleanField(
-        label='Neutro Solar',
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
+    TRATAMIENT_CHOICES = [
+        ('antireflex', 'Antireflex'),
+        ('filtro_azul', 'Filtro Azul'),
+        ('fotocromatico', 'Fotocromático'),
+        ('ultravex', 'Ultravex'),
+        ('polarizado', 'Polarizado'),
+        ('neutrosolar', 'Neutro Solar'),
+    ]
+
+    tratamient_choice = forms.ChoiceField(
+        choices=TRATAMIENT_CHOICES,
+        required=False,
+        label='Tratamiento',
+        widget=forms.RadioSelect(
+            # attrs={'class': 'form-check'}
             )
     )
 
     class Meta:
         model = Tratamient
+        fields = '__all__'
         exclude = ['user_made', 'deleted_at']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Obtén la instancia del modelo Material asociada al formulario
+        material_instance = self.instance
+
+        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
+        # la que corresponde al campo booleano en True en la instancia del modelo
+        for choice_value, choice_label in self.fields['tratamient_choice'].choices:
+            if getattr(material_instance, choice_value):
+                self.fields['tratamient_choice'].initial = choice_value
+
+    def clean(self):
+        cleaned_data = super().clean()
+        tratamient_choice = cleaned_data.get('tratamient_choice')
+
+        cleaned_data[tratamient_choice] = True
+        return cleaned_data
+
+
 class InterpupillaryForm(forms.ModelForm):
+    cer_od_nanopupilar = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    cer_od_pelicula = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    cer_oi_nanopupilar = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    cer_oi_pelicula = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    cer_total = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    lej_od_nanopupilar = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    lej_od_pelicula = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    lej_oi_nanopupilar = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    lej_oi_pelicula = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
+    lej_total = forms.CharField(
+        required=False,
+        label='',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control'
+            }),
+    )
+
     class Meta:
         model = Interpupillary
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
-        widgets = {
-            'lej_od_nanopupilar': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'lej_od_pelicula': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'lej_oi_nanopupilar': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'lej_oi_pelicula': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'lej_total': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'cer_od_nanopupilar': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'cer_od_pelicula': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'cer_oi_nanopupilar': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'cer_oi_pelicula': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-            'cer_total': forms.TextInput(
-                attrs={
-                    'class': 'form-control'
-                    }
-                ),
-        }
- 
+
 
 class Calibration_OrderForm(forms.ModelForm):
     class Meta:
