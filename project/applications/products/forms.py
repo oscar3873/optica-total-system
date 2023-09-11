@@ -43,16 +43,16 @@ class BrandForm(ValidationFormMixin):
 
 
 class ProductForm(ValidationFormMixin):
-    branch = forms.ModelChoiceField(
-        queryset=Branch.objects.all(),
-        label='Sucursal',
-        empty_label='Elija una sucursal',
-        required=True,
-        widget=forms.Select(attrs={
-            'placeholder' : 'Sucursal',
-            'class' : 'form-control'
-        })
-    )
+    # branch = forms.ModelChoiceField(
+    #     queryset=Branch.objects.all(),
+    #     label='Sucursal',
+    #     empty_label='Elija una sucursal',
+    #     required=True,
+    #     widget=forms.Select(attrs={
+    #         'placeholder' : 'Sucursal',
+    #         'class' : 'form-control'
+    #     })
+    # )
 
     name = forms.CharField(
         max_length=100,
@@ -129,6 +129,7 @@ class ProductForm(ValidationFormMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         if self.instance.pk:
             related_features = self.instance.product_feature.values_list('feature__id', flat=True)
             self.fields['features'].initial = related_features

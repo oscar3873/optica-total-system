@@ -340,14 +340,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:list' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver proveedores</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:new_supplier' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -418,7 +418,7 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="changelog.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'notifications_app:list' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span

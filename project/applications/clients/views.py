@@ -1,8 +1,8 @@
-from typing import Any
+from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
 
 from applications.core.mixins import CustomUserPassesTestMixin
@@ -10,11 +10,6 @@ from applications.core.mixins import CustomUserPassesTestMixin
 from .models import *
 from .forms import *
 
-
-import logging
-
-# Agregar esto al principio de tu archivo de vistas para habilitar registros
-logger = logging.getLogger(__name__)
 
 ########################### CREATE ####################################
 class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
@@ -76,13 +71,37 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     template_name = 'clients/customer_form.html'
     success_url = reverse_lazy('clients_app:customer_view')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['h_insurance_form'] = Customer_HealthInsuranceFrom
+        return context
+
+    @transaction.atomic
     def form_valid(self, form):
-        customer = form.save(commit=False)
-        customer.user_made = self.request.user
-        customer.branch = self.request.user.branch
-        customer.save()
-        return super().form_valid(form)
-    
+        h_insurance_form = Customer_HealthInsuranceFrom(self.request.POST)
+        print('\n\n\n\n', h_insurance_form)
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.user_made = self.request.user
+            customer.branch = self.request.user.branch
+            customer.save()
+
+            # Obtén los valores seleccionados en h_insurances
+            selected_h_insurances = h_insurance_form
+            # Recorre los valores seleccionados
+            for selected_h_insurance in selected_h_insurances:
+                customer_health_insurance = Customer_HealthInsurance.objects.create(
+                    customer=customer,
+                    h_insurance=selected_h_insurance,
+                )
+
+            return super().form_valid(form)
+        else:
+            # El formulario de h_insurance no es válido, maneja el error aquí
+            # Puedes agregar un mensaje de error o realizar alguna otra acción
+            print('\n\n\n\n', h_insurance_form.errors)
+            return self.form_invalid(form)
+
 
 class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     form_class = HealthInsuranceForm

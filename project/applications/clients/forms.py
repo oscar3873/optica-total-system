@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 
 from .models import *
@@ -6,27 +7,38 @@ from applications.core.mixins import ValidationFormMixin
 
 
 class CustomerForm(PersonForm):
+    
     class Meta:
         model = Customer
         fields = '__all__'
         exclude = ['user_made','deleted_at']
-    
-    h_insurence = forms.ModelChoiceField(
-        queryset=HealthInsurance.objects.all(),
-        label='Obra Social',
-        empty_label='Elija una Obra Social',
-        required=False,
-        widget=forms.CheckboxSelectMultiple(attrs={
-            'placeholder' : 'Obra Social',
-            # 'class' : 'form-control'
-        })
-    )
-    
+
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
         return birth_date
 
+class Customer_HealthInsuranceFrom(ValidationFormMixin):
+
+    # h_insurance = forms.ModelMultipleChoiceField(
+    #     queryset=HealthInsurance.objects.all(),
+    #     label='Obra Social',
+    #     required=False,
+    #     widget=forms.CheckboxSelectMultiple(
+    #         # attrs={
+    #         # 'class' : 'form-control'
+    #     # }
+    #     )
+    # )
+
+    class Meta:
+        model = Customer_HealthInsurance
+        fields = ['h_insurance',]
+
+    def clean(self):
+        cleaned_data = super().clean()
+        print('\n\n\n\n',cleaned_data)
+        return cleaned_data
 
 class HealthInsuranceForm(ValidationFormMixin):
 
@@ -56,8 +68,7 @@ class HealthInsuranceForm(ValidationFormMixin):
 
     class Meta:
         model = HealthInsurance
-        fields = "__all__"
-        exclude = ['user_made','deleted_at']
+        fields = ['name', 'phone_number', 'cuit']
 
     def clean_name(self):
         name = self.cleaned_data['name']

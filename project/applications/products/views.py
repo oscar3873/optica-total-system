@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
 from django.contrib import messages
@@ -130,6 +130,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         if form.is_valid() and category_form.is_valid() and brand_form.is_valid():
             product = form.save(commit=False)
             product.user_made = self.request.user
+            product.branch = self.request.user.branch
             product.save()
             form_in_out_features(form, product, self.request.user)
 
