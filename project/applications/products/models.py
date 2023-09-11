@@ -22,7 +22,7 @@ class Brand(BaseAbstractWithUser):
     name = models.CharField(max_length=100, null=False, blank=False)
 
     def __str__(self) -> str:
-        return f'Marca: {self.name}'
+        return f'{self.name}'
 
 
 class Product(BaseAbstractWithUser):
