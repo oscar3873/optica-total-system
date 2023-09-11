@@ -19,6 +19,12 @@ urlpatterns = [
         CalibrationOrderCreateView.as_view(), 
         name='new_laboratory'
     ),
+    path(
+        'delete/customer/<pk>/',  
+        CustomerDeleteView.as_view(), 
+        name='delete_customer'
+    ),
+    
     ####  UPDATE  ####
     path(
         'update/customer/<pk>', 

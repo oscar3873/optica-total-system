@@ -168,6 +168,9 @@ class CustomerListView(LoginRequiredMixin, ListView):
     context_object_name = 'customers'
     paginate_by = 8
 
+    def get_queryset(self):
+        branch = self.request.user.branch
+        return Customer.objects.filter(deleted_at=None,branch=branch)
 ########################### DELETE ####################################
 
 class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
@@ -177,10 +180,9 @@ class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('core_app:home')
 
 
-class CustomerDeleteView(CustomUserPassesTestMixin, FormView):
+class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Customer
-    form_class = CustomerForm
-    template_name = 'clients/customer_form.html'
+    template_name = 'clients/confirm_customer_delete.html'
     success_url = reverse_lazy('core_app:home')
     
 
