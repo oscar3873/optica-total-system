@@ -41,17 +41,17 @@
                             {% csrf_token %}
                             <div class="row justify-content-sm-center">
                                 <div class="col">
-                                    {{customer_form.errors}}
+                                    {{form.errors}}
                                     <label for="id_subject"
                                         class="col col-form-label d-flex justify-content-between align-items-center">
                                         <span>Nombre</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.first_name }}
+                                        {{ form.first_name }}
                                     </div>
-                                    {% if customer_form.first_name.errors %}
+                                    {% if form.first_name.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.first_name.errors %}
+                                        {% for error in form.first_name.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -63,11 +63,11 @@
                                         <span>Apellido</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.last_name }}
+                                        {{ form.last_name }}
                                     </div>
-                                    {% if customer_form.last_name.errors %}
+                                    {% if form.last_name.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.last_name.errors %}
+                                        {% for error in form.last_name.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -81,11 +81,11 @@
                                         <span>Telefono</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.phone_number }}
+                                        {{ form.phone_number }}
                                     </div>
-                                    {% if customer_form.phone_number.errors %}
+                                    {% if form.phone_number.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.phone_number.errors %}
+                                        {% for error in form.phone_number.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -97,11 +97,11 @@
                                         <span>Dni</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.dni}}
+                                        {{ form.dni}}
                                     </div>
-                                    {% if customer_form.dni.errors %}
+                                    {% if form.dni.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.dni.errors %}
+                                        {% for error in form.dni.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -113,11 +113,11 @@
                                         <span>Fecha de Nacimiento</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.birth_date}}
+                                        {{ form.birth_date}}
                                     </div>
-                                    {% if customer_form.birth_date.errors %}
+                                    {% if form.birth_date.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.birth_date.errors %}
+                                        {% for error in form.birth_date.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -131,11 +131,11 @@
                                         <span>Correo Electronico</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.email }}
+                                        {{ form.email }}
                                     </div>
-                                    {% if customer_form.email.errors %}
+                                    {% if form.email.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.email.errors %}
+                                        {% for error in form.email.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -147,11 +147,11 @@
                                         <span>Direccón</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ customer_form.address }}
+                                        {{ form.address }}
                                     </div>
-                                    {% if customer_form.address.errors %}
+                                    {% if form.address.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.address.errors %}
+                                        {% for error in form.address.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>
@@ -171,11 +171,11 @@
                                         </a>h_insurance
                                     </label>
                                     <div class="mb-3">
-                                        {{ form.as_p }}
+                                        {{ form.h_insurance }}
                                     </div>
-                                    {% if customer_form.h_insurence.errors %}
+                                    {% if form.h_insurence.errors %}
                                     <div class="alert alert-warning" role="alert">
-                                        {% for error in customer_form.h_insurence.errors %}
+                                        {% for error in form.h_insurence.errors %}
                                         {{ error }}
                                         {% endfor %}
                                     </div>

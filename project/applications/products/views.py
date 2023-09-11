@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
 from django.contrib import messages
@@ -155,7 +156,6 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'products/product_update_page.html'
-    success_url = reverse_lazy('core_app:home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -174,14 +174,14 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         form_in_out_features(form, product, self.request.user)
         if feature_formset.is_valid():
             form_create_features_formset(self.request.user, product, feature_formset)
-
+        self.success_url = reverse_lazy('clients_app:customer_detail', kwargs={'pk': self.get_object().pk})
         return super().form_valid(form)
 
 class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'products/category_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_ap:category_list')
     
     def form_valid(self, form):
         category = form.save(commit=False)
@@ -194,7 +194,7 @@ class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'products/brand_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_ap:brand_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -204,7 +204,7 @@ class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'products/feature_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_ap:feature_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -214,7 +214,7 @@ class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature_type
     form_class = FeatureForm
     template_name = 'products/featureType_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('core_app:homefeature_type_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -226,13 +226,14 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
-    def get_queryset(self):
-        branch = self.request.user.branch #recupero el brach del user
-        if branch == None:
-            return Product.objects.filter(deleted_at=None)
-        else:
-            # Filtra los productos que no han sido eliminados suavemente
-            return Product.objects.filter(deleted_at=None,branch=branch)
+    
+    # def get_queryset(self):
+    #     branch = self.request.user.branch #recupero el brach del user
+    #     if branch == None:
+    #         return Product.objects.filter(deleted_at=None)
+    #     else:
+    #         # Filtra los productos que no han sido eliminados suavemente
+    #         return Product.objects.filter(deleted_at=None,branch=branch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -245,7 +246,6 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
         
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
-        
         return context
 
 
@@ -253,6 +253,7 @@ class BrandListView(CustomUserPassesTestMixin, ListView):
     model = Brand
     template_name = 'products/brand_list_page.html'
     context_object_name = 'brands'
+    
     def get_queryset(self):
         # Filtra los productos que no han sido eliminados suavemente
         return Brand.objects.filter(deleted_at=None)
@@ -262,15 +263,39 @@ class BrandListView(CustomUserPassesTestMixin, ListView):
         context['table_column'] = obtener_nombres_de_campos(Brand,"id","deleted_at", "created_at", "updated_at")
         return context
 
+
 class CategoryListView(CustomUserPassesTestMixin, ListView):
     model = Category
     template_name = 'products/category_list_page.html'
     context_object_name = 'categories'
 
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Category.objects.filter(deleted_at=None)
+
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs) # ESTA CONTEMPLANDO LA BRANCH EN LA QUE ESTA EL USUARIO??
+        context = super().get_context_data(**kwargs)
         context['table_column'] = obtener_nombres_de_campos(Category,"id","deleted_at", "created_at", "updated_at") 
         return context
+
+
+class FeatureTypeListView(CustomUserPassesTestMixin, ListView):
+    model = Feature_type
+    template_name = 'products/feature_type_page.html'
+    context_object_name = 'feature_type'
+
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Feature_type.objects.filter(deleted_at=None)
+
+class FeatureListView(CustomUserPassesTestMixin, ListView):
+    model = Feature
+    template_name = 'products/feature_page.html'
+    context_object_name = 'feature'
+
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Feature.objects.filter(deleted_at=None)
 
 #################### DETAILS #####################
 
@@ -296,7 +321,7 @@ class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['products'] = Product.objects.filter(category=self.object, deleted_at=None) # FALTA LA BRANCH EN LA QUE ESTA EL USUARIO
+        context['products'] = Product.objects.filter(category=self.object, deleted_at=None, branch = self.request.user.branch)
         # AGREGAR MAS DETALLES RELACIONADOS
         return context
 
@@ -308,7 +333,7 @@ class BrandDetailView(CustomUserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None) # FALTA LA BRANCH EN LA QUE ESTA EL USUARIO
+        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None, branch = self.request.user.branch)
         # AGREGAR MAS DETALLES RELACIONADOS
         return context
     

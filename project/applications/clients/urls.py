@@ -83,6 +83,11 @@ urlpatterns = [
 
     ######### DELETE ##########
     path(
+        '<pk>/delete/',
+        CustomerDeleteView.as_view(),
+        name='customer_delete'
+    ),
+    path(
         'lab/<pk>/delete/',
         CalibrationOrderDeleteView.as_view(),
         name='laboratory_delete'

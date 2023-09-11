@@ -1,6 +1,7 @@
+from typing import Any
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
@@ -16,7 +17,7 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     model = Calibration_Order
     form_class = Calibration_OrderForm
     template_name = 'clients/lab_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:lab_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -31,6 +32,7 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
         }
         return context
     
+    @transaction.atomic
     def form_valid(self, form):
         try:
             customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
@@ -67,33 +69,30 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     
 
 class CustomerCreateView(LoginRequiredMixin, FormView):
-    form_class = Customer_HealthInsuranceFrom
+    form_class = CustomerForm
     template_name = 'clients/customer_form.html'
     success_url = reverse_lazy('clients_app:customer_view')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['customer_form'] = CustomerForm
-        return context
-
     @transaction.atomic
     def form_valid(self, form):
-        customer = CustomerForm(self.request.POST)
-        print('\n\n\n\n', customer)
-        if customer.is_valid():
-            customer = customer.save(commit=False)
+        if form.is_valid():
+            customer = form.save(commit=False)
             customer.user_made = self.request.user
             customer.branch = self.request.user.branch
             customer.save()
 
-            # Obtén los valores seleccionados en h_insurances
+            for insurance in form.cleaned_data['h_insurance']:
+                Customer_HealthInsurance.objects.create(
+                    h_insurance = insurance,
+                    customer = customer
+                )
            
         return super().form_valid(form)
 
 class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     form_class = HealthInsuranceForm
     template_name = 'clients/insurance_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:insurance_view')
 
     def form_valid(self, form):
         insurance = form.save(commit=False)
@@ -117,7 +116,7 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
     model = Calibration_Order
     form_class = Calibration_OrderForm  # Actualizar al formulario principal si es necesario
     template_name = 'clients/lab_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:lab_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -260,21 +259,25 @@ class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Customer
-    form_class = CustomerForm
-    template_name = 'clients/customer_form.html'
-    success_url = reverse_lazy('clients_app:customer_list')
+    template_name = 'clients/customer_delete.html'
+    success_url = reverse_lazy('clients_app:customer_view')
+
+    def delete(self, request, *args, **kwargs):
+        customer = self.get_object()
+        intermedia = Customer_HealthInsurance.objects.filter(customer=customer)
+        for filas in intermedia:
+            filas.delete()
+        return super().delete(request, *args, **kwargs)
     
 
 class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = HealthInsurance
-    form_class = HealthInsuranceForm
-    template_name = 'clients/insurance_form.html'
+    template_name = 'clients/insurance_delete.html'
     success_url = reverse_lazy('cliets_app:insurance_view')
     
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        lista  = Customer_HealthInsurance.objects.filter(h_insurance=self.object)
-        for i in lista:
-            i.delete()
-        self.object.delete()  # Realiza la eliminación suave
+        h_insurance = self.get_object()
+        intermedia = Customer_HealthInsurance.objects.filter(h_insurance=h_insurance)
+        for filas in intermedia:
+            filas.delete()
         return HttpResponseRedirect(self.get_success_url())

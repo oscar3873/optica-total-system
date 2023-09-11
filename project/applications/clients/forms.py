@@ -7,7 +7,13 @@ from applications.core.mixins import ValidationFormMixin
 
 
 class CustomerForm(PersonForm):
-    
+    h_insurance = forms.ModelMultipleChoiceField(
+        queryset=HealthInsurance.objects.all(),
+        label='Obra Social',
+        required=False,
+        widget=forms.CheckboxSelectMultiple(
+        )
+    )
     class Meta:
         model = Customer
         fields = '__all__'
@@ -17,20 +23,6 @@ class CustomerForm(PersonForm):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
         return birth_date
-
-class Customer_HealthInsuranceFrom(ValidationFormMixin):
-
-    h_insurance = forms.ModelMultipleChoiceField(
-        queryset=HealthInsurance.objects.all(),
-        label='Obra Social',
-        required=False,
-        widget=forms.CheckboxSelectMultiple(
-        )
-    )
-
-    class Meta:
-        model = Customer_HealthInsurance
-        fields = ['h_insurance',]
 
 
 class HealthInsuranceForm(ValidationFormMixin):
