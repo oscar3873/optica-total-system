@@ -182,7 +182,7 @@
             <!--/.bg-holder-->
             <div class="position-relative z-index-2">
                 <div>
-                    <h5 class="text-primary mb-1">No hay cajas registradoras</h5>
+                    <h5 class="text-primary mb-1">No hay clientes registrados</h5>
                 </div>
                 <div class="d-flex py-3">
                 </div>
@@ -190,8 +190,8 @@
         </div>
         <div class="card-body">
             <div class="d-flex py-3 justify-content-start">
-                <a href="{% url 'cashregister_app:cashregister_create_view' %}" class="btn btn-secondary me-2"
-                    type="submit">Abrir caja</a>
+                <a href="{% url 'clients_app:customer_new' %}" class="btn btn-secondary me-2"
+                    type="submit">Nuevo Cliente</a>
             </div>
         </div>
     </div>
