@@ -1,7 +1,6 @@
 from typing import Any
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
@@ -10,6 +9,7 @@ from applications.core.mixins import CustomUserPassesTestMixin
 
 from .models import *
 from .forms import *
+from applications.users.utils import generate_profile_img
 
 
 ########################### CREATE ####################################
@@ -86,6 +86,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
                     h_insurance = insurance,
                     customer = customer
                 )
+                
+            generate_profile_img(customer.first_name, customer.last_name)
            
         return super().form_valid(form)
 
@@ -280,4 +282,4 @@ class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
         intermedia = Customer_HealthInsurance.objects.filter(h_insurance=h_insurance)
         for filas in intermedia:
             filas.delete()
-        return HttpResponseRedirect(self.get_success_url())
+        return super().delete(request, *args, **kwargs)

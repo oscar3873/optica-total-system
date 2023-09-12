@@ -484,14 +484,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:list_employee' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver empleados</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'users_app:signup' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -744,7 +744,7 @@
                         <li class="nav-item dropdown"><a class="nav-link pe-0" id="navbarDropdownUser" href="#"
                                 role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
-                                    <img class="rounded-circle" src="assets/img/team/3-thumb.png" alt="" />
+                                    <img class="rounded-circle" src="{% static 'users/img/anya.jpg' %}" alt="" />
 
                                 </div>
                             </a>
