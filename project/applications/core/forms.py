@@ -9,34 +9,45 @@ class PersonForm(ValidationFormMixin):
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Nombre',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'autofocus' : '',
+            'type' : 'text',
+            'pattern': '^[a-zA-Z\s]+$'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El nombre solo puede contener letras.')]
+        validators=[RegexValidator(r'^[a-zA-Z\s]+$', 'El nombre solo puede contener letras y espacios.')]
+
     )
     
     last_name = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Apellido',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'type' : 'text',
+            'pattern': '^[a-zA-Z\s]+$'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El apellido solo puede contener letras.')]
+        validators=[RegexValidator(r'[a-zA-Z\s]+$', 'El apellido solo puede contener letras.')]
     )
 
     dni = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'DNI',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'type' : 'text',
+            'pattern' : '[0-9]+'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z0-9]+$', 'Ingrese un DNI válido.')]
+        validators=[RegexValidator(r'^[0-9]+$', 'Ingrese un DNI válido.')]
     )
 
     address = forms.CharField(
-        required=False,
+        required=True,
         widget=forms.TextInput(attrs={
-            'placeholder' : 'Dimicilio',
-            'class' : 'form-control'
+            'placeholder' : 'Domicilio',
+            'class' : 'form-control',
+            'type' : 'text',
+            'pattern': '^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$'
+
             })
     )
 
@@ -44,7 +55,9 @@ class PersonForm(ValidationFormMixin):
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Telefono de contacto',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'type' : 'numeric',
+            'pattern' : '[0-9]+'
         }),
     )
 
@@ -62,7 +75,9 @@ class PersonForm(ValidationFormMixin):
     email = forms.CharField(
         widget=forms.TextInput(attrs={
             'placeholder' : 'Correo electrónico',
-            'class': 'form-control'
+            'class': 'form-control',
+            'type' : 'email',
+            'pattern' : '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
             }
         )
     )

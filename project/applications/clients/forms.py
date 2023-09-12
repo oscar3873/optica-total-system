@@ -11,7 +11,9 @@ class CustomerForm(PersonForm):
         queryset=HealthInsurance.objects.all(),
         label='Obra Social',
         required=False,
-        widget=forms.CheckboxSelectMultiple(
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class' : 'form-check-input',
+            }
         )
     )
     class Meta:
