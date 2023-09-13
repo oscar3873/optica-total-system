@@ -1,7 +1,6 @@
 from django.db import models
 
-from applications.core.models import Person
-from applications.users.models import User
+from applications.core.models import Person, BaseAbstractWithUser, Objetives
 
 
 # Create your models here.
@@ -23,3 +22,16 @@ class Employee(Person):
 
     def __str__(self) -> str:
         return f'{self.get_full_name()}' """
+
+class Employee_Objetives(BaseAbstractWithUser):
+    """
+    Clase intermedia para los objetivos de los empleados.
+        is_completed: Indicador de Objetivo completado o no.
+        employee: El objetivo es compleado por un empleado, el registro es individual
+        objetive: Objetivo para empleados
+        accumulated: Cantidad acumulada del objetivo ("Porcentaje")
+    """
+    is_completed = models.BooleanField(default=False, null=True, blank=True, verbose_name='Completado')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Empleado')
+    objetive = models.ForeignKey(Objetives, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Objetivo')
+    accumulated = models.PositiveIntegerField(default= 0, null=True, blank=True, verbose_name='Acumulado')

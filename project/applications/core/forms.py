@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import RegexValidator
 
-from .models import Person
+from .models import Person, Objetives
 from .mixins import ValidationFormMixin
 
 class PersonForm(ValidationFormMixin):
@@ -115,3 +115,65 @@ class PersonForm(ValidationFormMixin):
         address = self.cleaned_data['address']
         self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
+    
+
+class ObjetiveForm(forms.ModelForm):
+
+    TIPO = [
+        ('VENTAS', 'VENTAS'),
+        ('REGISTRO', 'REGISTRO'),
+        ('CRISTALES', 'CRISTALES')
+    ]
+
+    type = forms.ChoiceField(
+        label='Elige tipo de objetivo',
+        choices=TIPO,
+        required=True,
+        widget= forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    class Meta:
+        model = Objetives
+        fields = ['to', 'type', 'description', 'start_date', 'exp_date', 'quantity']
+        widgets = {
+            'to': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ejemplo: Peso Argentino',
+                    'required':''
+                    }
+                ),
+            'description': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Descripcion del objetivo',
+                    'required':''
+                    }
+                ),
+            'start_date': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Fecha de inicio',
+                    'required':'',
+                    'type': 'date'
+                    }
+                ),
+            'exp_date': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Fecha de finalizacion',
+                    'required':'',
+                    'type': 'date'
+                    }
+                ),
+            'quantity': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Cantidad estimada',
+                    'required':'',
+                }
+            )
+            }
