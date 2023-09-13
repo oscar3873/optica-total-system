@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 
 
-from .forms import EmployeeForm, EmployeeCreateForm
+from .forms import EmployeeCreateForm
 from applications.users.models import User, Employee
 #from .core.utils import obtener_nombres_de_campos
 from .utils import obtener_nombres_de_campos

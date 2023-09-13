@@ -2,7 +2,7 @@ from django import forms
 from .models import Employee
 
 from applications.users.forms import UserCreateForm
-class EmployeeForm(UserCreateForm):
+""" class EmployeeForm(UserCreateForm):
 
     birth_date = forms.DateField(
         widget=forms.DateInput(
@@ -23,7 +23,7 @@ class EmployeeForm(UserCreateForm):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
         return birth_date
-
+ """
 class EmployeeCreateForm(UserCreateForm):
     employment_date = forms.DateField(
         required=True,

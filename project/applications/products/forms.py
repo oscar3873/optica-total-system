@@ -43,16 +43,6 @@ class BrandForm(ValidationFormMixin):
 
 
 class ProductForm(ValidationFormMixin):
-    # branch = forms.ModelChoiceField(
-    #     queryset=Branch.objects.all(),
-    #     label='Sucursal',
-    #     empty_label='Elija una sucursal',
-    #     required=True,
-    #     widget=forms.Select(attrs={
-    #         'placeholder' : 'Sucursal',
-    #         'class' : 'form-control'
-    #     })
-    # )
 
     name = forms.CharField(
         max_length=100,
@@ -60,6 +50,9 @@ class ProductForm(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Nombre del producto',
+                'type': 'text',
+                'pattern': '.{3,}',  # Mínimo 3 caracteres
                 }
         )
     )
@@ -67,6 +60,8 @@ class ProductForm(ValidationFormMixin):
         label='Codigo de barra',
         widget=forms.NumberInput(
             attrs={
+                'placeholder': 'Codigo de barra',
+                'type': 'number',
                 'class': 'form-control',
                 }
         )
@@ -75,6 +70,8 @@ class ProductForm(ValidationFormMixin):
         label='Precio',
         widget=forms.NumberInput(
             attrs={
+                'placeholder': 'Precio',
+                'type': 'number',
                 'class': 'form-control',
                 }
         )
@@ -84,6 +81,9 @@ class ProductForm(ValidationFormMixin):
         min_value=1,
         widget=forms.NumberInput(
             attrs={
+                'placeholder': 'Stock',
+                'type': 'number',
+                #'min': 1, puede tener stock cero?
                 'class': 'form-control',
                 }
         )
@@ -93,6 +93,9 @@ class ProductForm(ValidationFormMixin):
         label='Descripción',
         widget=forms.TextInput(
             attrs={
+                'placeholder': 'Descripcion del producto',
+                'type': 'text',
+                'pattern': '.{3,}',  # Mínimo 3 caracteres
                 'class': 'form-control',
                 }
         )
@@ -102,6 +105,8 @@ class ProductForm(ValidationFormMixin):
         queryset=Category.objects.all(),
         widget=forms.Select(
             attrs={
+                'placeholder': 'Categoría',
+                #'type': 'text',
                 'class': 'form-control',
                 }
         )
@@ -111,6 +116,8 @@ class ProductForm(ValidationFormMixin):
         queryset=Brand.objects.all(),
         widget=forms.Select(
             attrs={
+                'placeholder': 'Marca',
+                #'type': 'text',
                 'class': 'form-control',
                 }
         )
