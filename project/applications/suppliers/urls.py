@@ -17,11 +17,16 @@ urlpatterns = [
     path(
         'list/',
         SuppliersListView.as_view(),
-        name='list'
+        name='list_supplier'
     ),
     path(
         'detail/<pk>/',
         SupplierDetailView.as_view(),
-        name='detail'
+        name='supplier_detail'
+    ),
+    path(
+        'delete/<pk>/',
+        SupplierDeleteView.as_view(),
+        name='supplier_delete'
     ),
 ]

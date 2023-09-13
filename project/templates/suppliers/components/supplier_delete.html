@@ -1,0 +1,71 @@
+{% load static %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+
+  <!-- ===============================================-->
+  <!--    Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
+
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
+    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+    <p class="mb-0 flex-1">{{ message }}</p>
+    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+  
+  <!-- ===============================================-->
+  <!--    Fin Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
+
+
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Titulo de la seccion -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+          class="fa-inverse fa-stack-1x text-primary fas fa-exchange-alt"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Confirmar eliminacion del Proveedor</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aquí debe confirmar la elimiación del proveedor que quiere borrar</p>          
+      </div>
+    </div>
+  </div>
+
+  <!-- ===============================================-->
+  <!--    Form con la confirmacion del movimiento-->
+  <!-- ===============================================-->
+
+  <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+    <!--Card-->
+    <div class="card z-index-1 mb-3">
+        <div class="card-header"></div>
+        <div class="card-body ">
+            <form method="post">
+            {% csrf_token %}
+                <div class="mb-4">
+                    <p class="fw-semi-bold">¿Estás seguro de que quieres <span class="text-warning">eliminar</span> al Proveedor"{{ supplier.name }}" ?</p>
+                </div>
+                <div class="mb-4">
+                    <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
+                    <a class="btn btn-secondary" href="{% url 'suppliers_app:list_supplier' %}">Cancelar</a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer"></div>
+    </div>
+
+  </div>
+  
+  <!-- ===============================================-->
+  <!--   Fin Form con la confirmacion del movimiento-->
+  <!-- ===============================================-->
+
+</div>
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->
