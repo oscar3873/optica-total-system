@@ -11,7 +11,9 @@ class UserManager(BaseUserManager):
     def all(self):
         users = self.filter(deleted_at=None)
         return users
-
+    def get_employee(self,pk):
+        employee=self.get(pk=pk,role='EMPLEADO',is_staff=False,is_superuser=False)
+        return employee
     """ Esto lo agrego Joaquin """
     def get_all_employeers(self):
         employeers = self.filter(role='EMPLEADO',is_staff=False,is_superuser=False)
@@ -53,3 +55,7 @@ class UserManager(BaseUserManager):
 
     def get_absolute_url(self):
         return reverse('employees_app:profile_employee', kwargs={'pk': self.pk})
+
+class EmployeeManager(BaseUserManager):
+    def get_employees_branch(self, branch):
+        return self.filter(user__branch=branch)

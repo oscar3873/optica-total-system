@@ -125,7 +125,7 @@ class ProductForm(ValidationFormMixin):
     class Meta:
         model = Product
         #necesario para el front 
-        fields = ('name', 'barcode', 'price', 'description', 'stock', 'category', 'brand', 'branch')
+        fields = ('name', 'barcode', 'price', 'description', 'stock', 'category', 'brand')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

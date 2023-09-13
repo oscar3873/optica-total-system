@@ -6,13 +6,13 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from django.views.generic.edit import (FormView,)
 
-from .forms import UserCreateForm, LoginForm, UpdatePasswordForm, EmployeeCreateForm
+from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User, Employee
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
 # Create your views here.
-class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
+""" class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
     template_name = "users/signup.html"
     form_class = EmployeeCreateForm
     success_url = reverse_lazy('core_app:home')
@@ -25,7 +25,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
             user = User.objects.create_user(**form.cleaned_data) # Funcion que crea EMPLEADOS
             )
         return super().form_valid(form)
-    
+"""
 
 class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS
     template_name = "users/signup.html"

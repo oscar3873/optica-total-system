@@ -8,10 +8,11 @@ from applications.users.models import User
 
 #No se usa el modelo
 class Employee(Person):
-    """
-    Clase de Empleados
-        almacenamineto de datos de empleados con sus datos generales y a que surucrsal pertenece
-    """
+    pass
+"""     
+    #Clase de Empleados
+    #    almacenamineto de datos de empleados con sus datos generales y a que surucrsal pertenece
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee')
     user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='from_employee')
     address = models.CharField(max_length=120, blank=True, null=True)
@@ -21,4 +22,4 @@ class Employee(Person):
         verbose_name_plural = "Empleados"
 
     def __str__(self) -> str:
-        return f'{self.get_full_name()}'
+        return f'{self.get_full_name()}' """
