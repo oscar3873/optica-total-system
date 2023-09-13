@@ -86,10 +86,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
                     h_insurance = insurance,
                     customer = customer
                 )
-                
-            generate_profile_img(customer.first_name, customer.last_name)
-           
         return super().form_valid(form)
+
 
 class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     form_class = HealthInsuranceForm
