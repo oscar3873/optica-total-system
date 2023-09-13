@@ -28,7 +28,7 @@ class User(Person, AbstractUser):
 
     
     def __str__(self):
-        return f"{self.get_full_name()} | {self.email or 'Sin email'}"
+        return f"{self.get_full_name()}"
 
 
 class Employee(models.Model):
