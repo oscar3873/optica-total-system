@@ -30,7 +30,7 @@ class CustomerForm(PersonForm):
 class HealthInsuranceForm(ValidationFormMixin):
 
     name = forms.CharField( 
-        label='',
+        label='Nombre',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
                    }
@@ -38,7 +38,7 @@ class HealthInsuranceForm(ValidationFormMixin):
     )
 
     phone_number = forms.CharField( 
-        label='',
+        label='Telefono de contacto',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
                    }
@@ -46,7 +46,7 @@ class HealthInsuranceForm(ValidationFormMixin):
     )
 
     cuit = forms.CharField( 
-        label='',
+        label='CUIT',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
                    }
