@@ -121,6 +121,7 @@ class ProductForm(ValidationFormMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         if self.instance.pk:
             related_features = self.instance.product_feature.values_list('feature__id', flat=True)
             self.fields['features'].initial = related_features

@@ -1,7 +1,7 @@
 from django import forms
 from django.core.validators import RegexValidator
 
-from .models import Person
+from .models import Person, Objetives
 from .mixins import ValidationFormMixin
 
 class PersonForm(ValidationFormMixin):
@@ -9,34 +9,45 @@ class PersonForm(ValidationFormMixin):
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Nombre',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'autofocus' : '',
+            'type' : 'text',
+            'pattern': '^[a-zA-Z\s]+$'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El nombre solo puede contener letras.')]
+        validators=[RegexValidator(r'^[a-zA-Z\s]+$', 'El nombre solo puede contener letras y espacios.')]
+
     )
     
     last_name = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Apellido',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'type' : 'text',
+            'pattern': '^[a-zA-Z\s]+$'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z]+$', 'El apellido solo puede contener letras.')]
+        validators=[RegexValidator(r'[a-zA-Z\s]+$', 'El apellido solo puede contener letras.')]
     )
 
     dni = forms.CharField(
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'DNI',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'type' : 'text',
+            'pattern' : '[0-9]+'
         }),
-        validators=[RegexValidator(r'^[a-zA-Z0-9]+$', 'Ingrese un DNI válido.')]
+        validators=[RegexValidator(r'^[0-9]+$', 'Ingrese un DNI válido.')]
     )
 
     address = forms.CharField(
-        required=False,
+        required=True,
         widget=forms.TextInput(attrs={
-            'placeholder' : 'Dimicilio',
-            'class' : 'form-control'
+            'placeholder' : 'Domicilio',
+            'class' : 'form-control',
+            'type' : 'text',
+            'pattern': '^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$'
+
             })
     )
 
@@ -44,7 +55,9 @@ class PersonForm(ValidationFormMixin):
         required = True,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Telefono de contacto',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'type' : 'numeric',
+            'pattern' : '[0-9]+'
         }),
     )
 
@@ -62,7 +75,9 @@ class PersonForm(ValidationFormMixin):
     email = forms.CharField(
         widget=forms.TextInput(attrs={
             'placeholder' : 'Correo electrónico',
-            'class': 'form-control'
+            'class': 'form-control',
+            'type' : 'email',
+            'pattern' : '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
             }
         )
     )
@@ -74,12 +89,12 @@ class PersonForm(ValidationFormMixin):
     def clean_first_name(self):
         name = self.cleaned_data['first_name']
         self.validate_length(name, 3, "Ingrese un nombre válido.")
-        return name
+        return name.capitalize()
     
     def clean_last_name(self):
         last_name = self.cleaned_data['last_name']
         self.validate_length(last_name, 3, "Ingrese un apellido válido.")
-        return last_name
+        return last_name.capitalize()
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
@@ -100,3 +115,65 @@ class PersonForm(ValidationFormMixin):
         address = self.cleaned_data['address']
         self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
+    
+
+class ObjetiveForm(forms.ModelForm):
+
+    TIPO = [
+        ('VENTAS', 'VENTAS'),
+        ('REGISTRO', 'REGISTRO'),
+        ('CRISTALES', 'CRISTALES')
+    ]
+
+    type = forms.ChoiceField(
+        label='Elige tipo de objetivo',
+        choices=TIPO,
+        required=True,
+        widget= forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    class Meta:
+        model = Objetives
+        fields = ['to', 'type', 'description', 'start_date', 'exp_date', 'quantity']
+        widgets = {
+            'to': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ejemplo: Peso Argentino',
+                    'required':''
+                    }
+                ),
+            'description': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Descripcion del objetivo',
+                    'required':''
+                    }
+                ),
+            'start_date': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Fecha de inicio',
+                    'required':'',
+                    'type': 'date'
+                    }
+                ),
+            'exp_date': forms.DateInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Fecha de finalizacion',
+                    'required':'',
+                    'type': 'date'
+                    }
+                ),
+            'quantity': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Cantidad estimada',
+                    'required':'',
+                }
+            )
+            }

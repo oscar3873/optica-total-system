@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import (FormView, DetailView, UpdateView, View, ListView) #aqui
+from django.views.generic import (FormView, DetailView, UpdateView, DeleteView, ListView) #aqui
 
 from .forms import BranchForm
 from .models import Branch
@@ -52,7 +52,7 @@ class BranchDetailView(CustomUserPassesTestMixin, DetailView):
 
 ####################### DELETE #####################
 
-class BranchDeleteView(LoginRequiredMixin, FormView):
+class BranchDeleteView(LoginRequiredMixin, DeleteView):
     model = Branch
     form_class = BranchForm
     template_name = 'branches/branch_form.html'

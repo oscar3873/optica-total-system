@@ -1,16 +1,11 @@
 from django.db import models
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 
-from applications.core.models import BaseAbstractWithUser
+from applications.core.models import SaveGeneriModel, BaseAbstractWithUser
 from .managers import NotificationsManager
 
 # Create your models here.
-class Notifications(BaseAbstractWithUser):
+class Notifications(SaveGeneriModel, BaseAbstractWithUser):
     details = models.TextField()  # Detalles específicos de la acción
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
 
     objects = NotificationsManager()
 

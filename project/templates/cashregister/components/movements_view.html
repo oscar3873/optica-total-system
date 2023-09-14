@@ -12,8 +12,8 @@
 
   {% if messages %}
   {% for message in messages %}
-  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
+  <div class="alert {% if message.level_tag == "success" %} alert-success {% else %} alert-warning {% endif %} border-2 d-flex align-items-center" role="alert">
+    <div class="{% if message.level_tag == "success" %} bg-success {% else %} bg-warning {% endif %}  me-3 icon-item"><span class="{% if message.level_tag == "success" %} far fa-check-circle {% else %} fas fa-exclamation-circle {% endif %} text-white fs-3"></span></div>
     <p class="mb-0 flex-1">{{ message }}</p>
     <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
@@ -44,10 +44,10 @@
   {% if movements %}
   <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
     <!--Card-->
-    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_movement","cash_register","payment_method","amount", "type_operation"],"page":8,"pagination":true}'>
+    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_movement","cash_register","transaction","amount", "type_operation"],"page":8,"pagination":true}'>
       <div class="card-header">
         <div class="row flex-between-center">
-          <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
+          <div class="col-12 col-sm-6 d-md-flex align-items-center pe-0 mb-2 mb-sm-0">
             <div>
               <form>
                 <div class="input-group">
@@ -57,7 +57,7 @@
               </form>
             </div>
           </div>
-          <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+          <div class="col-12 col-sm-6 ms-auto text-center text-sm-end ps-0 mb-2 mb-sm-0">
             <div class="d-none" id="table-purchases-actions">
               <div class="d-flex">
                 <select class="form-select form-select-sm" aria-label="Bulk actions">
@@ -82,15 +82,19 @@
             <!-- HEAD TABLA -->
             <thead class="bg-200 text-900">
               <tr>
-                <th class="white-space-nowrap">
+                <th class="white-space-nowrap d-none d-sm-table-cell px-4">
                   <div class="form-check mb-0 d-flex align-items-center">
                     <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox" data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
                   </div>
                 </th>
               {% for column in table_column %}
-                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
+                {% if column.1 == "Por" or column.1 == "Fecha" %}
+                <th class="sort px-4 align-middle white-space-nowrap d-none d-sm-table-cell" data-sort="{{column.0}}">{{column.1}}</th>
+                {% else %}
+                <th class="sort px-4 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
+                {% endif %}
               {% endfor %}
-                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+                <th class="no-sort px-4 align-middle data-table-row-action"></th>
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -98,7 +102,7 @@
               
               {% for movement in movements %}
               <tr class="btn-reveal-trigger">
-                <td class="align-middle" style="width: 28px;">
+                <td class="align-middle d-none d-sm-table-cell px-4" style="width: 28px;">
                   <div class="form-check mb-0">
                     <input class="form-check-input" type="checkbox" id="recent-purchase-0" data-bulk-select-row="data-bulk-select-row" />
                   </div>
@@ -108,16 +112,20 @@
                 <!-- <td class="align-middle white-space-nowrap product">Slick - Drag &amp;</td> -->
                 <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
                 </td> -->
-                <td class="align-start user_made">{{movement.user_made}}</td>
-                <td class="align-start amount">{{movement.amount}}</td>
-                <td class="align-start date_movement">{{movement.date_movement|date:"j F Y"}}</td>
-                <td class="align-start cash_register">{{movement.cash_register}}</td>
-                <td class="align-start payment_method">{{movement.payment_method}}</td>
-                <td class="align-start type_operation">{{movement.type_operation}}</td>
+                <td class="align-start user_made d-none d-sm-table-cell px-4">{{movement.user_made}}</td>
+                <td class="align-start amount px-4">{{movement.amount}}</td>
+                <td class="align-start date_movement px-4 d-none d-sm-table-cell">{{movement.date_movement|date:"j F Y"}}</td>
+                <td class="align-start type_operation px-4">
+                  {% if movement.type_operation == 'in' %}
+                  <span class="badge rounded-pill badge-soft-success">{{movement.get_type_operation_display}}</span>
+                  {% else %}
+                  <span class="badge rounded-pill badge-soft-danger">{{movement.get_type_operation_display}}</span>
+                  {% endif %}
+                </td>
                 <td class="align-middle white-space-nowrap text-end">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0"><a class="dropdown-item" href="#!">Detalle</a><a class="dropdown-item" href="#!">Editar</a>
+                    <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0"><a class="dropdown-item" href="{% url 'cashregister_app:movements_detail_view' movement.pk %}">Detalle</a><a class="dropdown-item" href="{% url 'cashregister_app:movements_update_view' movement.id %}">Editar</a>
                       <div class="dropdown-divider"></div>
                       <button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-id="{{ movement.id }}" data-url="{% url 'cashregister_app:movements_delete_view' movement.id %}" data-bs-target="#delete-movement-modal">Borrar</button>
                     </div>
@@ -133,12 +141,12 @@
         <div class="row align-items-center">
           <div class="pagination d-none"></div>
           <div class="col">
-            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">Mostrar todo<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">Mostrar menos<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
             </p>
           </div>
           <div class="col-auto d-flex">
-            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button>
-            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button>
+            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Anterior</span></button>
+            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Siguiente</span></button>
           </div>
         </div>
       </div>
@@ -167,16 +175,30 @@
     </div>
   </div>
   {% else %}
-  <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!--Card-->
-    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_movement","cash_register","payment_method","amount", "type_operation"],"page":8,"pagination":true}'>
-      <div class="card-header">
+    <div class="card bg-transparent-50 overflow-hidden">
+      <div class="card-header position-relative">
+        <div class="bg-holder d-none d-md-block bg-card z-index-1"
+          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+        </div>
+        <!--/.bg-holder-->
+        <div class="position-relative z-index-2">
+          <div>
+            <h5 class="text-primary mb-1">No hay movimientos</h5>
+          </div>
+          <div class="d-flex py-3">
+          </div>
+        </div>
       </div>
-      <div class="card-body px-0 py-0">
-      </div>
-      <div class="card-footer">
+      <div class="card-body">
+        <div class="d-flex py-3 justify-content-start">
+          <a href="{% url 'cashregister_app:movements_create_view' %}" class="btn btn-secondary me-2" type="submit">Crear un movimiento</a>
+            <a href="{% url 'cashregister_app:cashregister_view' %}" class="btn btn-primary ms-2" type="submit">Ir a caja</a>
+          </div>
       </div>
     </div>
+  </div>
   </div>
   
   

@@ -1,27 +1,23 @@
 from typing import Any
+from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import redirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
 
 from applications.core.mixins import CustomUserPassesTestMixin
 
 from .models import *
 from .forms import *
-
-
-import logging
-
-# Agregar esto al principio de tu archivo de vistas para habilitar registros
-logger = logging.getLogger(__name__)
+from .utils import form_in_out_insurances
 
 ########################### CREATE ####################################
 class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     model = Calibration_Order
     form_class = Calibration_OrderForm
     template_name = 'clients/lab_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:lab_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -36,6 +32,7 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
         }
         return context
     
+    @transaction.atomic
     def form_valid(self, form):
         try:
             customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
@@ -76,18 +73,32 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     template_name = 'clients/customer_form.html'
     success_url = reverse_lazy('clients_app:customer_view')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['h_insurance'] = HealthInsuranceForm
+        return context
+
+    @transaction.atomic
     def form_valid(self, form):
-        customer = form.save(commit=False)
-        customer.user_made = self.request.user
-        customer.branch = self.request.user.branch
-        customer.save()
+        if form.is_valid():
+            customer = form.save(commit=False)
+            customer.user_made = self.request.user
+            customer.branch = self.request.user.branch
+            customer.save()
+
+            for insurance in form.cleaned_data['h_insurance']:
+                Customer_HealthInsurance.objects.create(
+                    h_insurance = insurance,
+                    customer = customer,
+                    user_made=self.request.user
+                )
         return super().form_valid(form)
-    
+
 
 class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     form_class = HealthInsuranceForm
     template_name = 'clients/insurance_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:insurance_view')
 
     def form_valid(self, form):
         insurance = form.save(commit=False)
@@ -96,13 +107,25 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         
         try:
             customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
-            Customer_HealthInsurance.objects.create(h_insurance=insurance, customer=customer)
-        except Customer.DoesNotExist:
-            raise ValueError('El ID del cliente con nuestro registro')
-        
-        if customer:
+            Customer_HealthInsurance.objects.create(
+                h_insurance=insurance, 
+                customer=customer,
+                user_made=self.request.user
+                )
+
             return redirect('clients_app:customer_detail', pk=customer.pk)
-        return super().form_valid(form)
+        
+        except Customer.DoesNotExist:
+            if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+                new_insurance_data = {
+                    'id': insurance.id,
+                    'name': insurance.__str__()
+                }
+                # Si es una solicitud AJAX, devuelve una respuesta JSON
+                return JsonResponse({'status': 'success', 'new_insurance': new_insurance_data})
+            else:
+                # Si no es una solicitud AJAX, llama al mÃ©todo form_valid del padre para el comportamiento predeterminado
+                return super().form_valid(form)
 
 
 ########################### UPDATE  #########################
@@ -111,7 +134,7 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
     model = Calibration_Order
     form_class = Calibration_OrderForm  # Actualizar al formulario principal si es necesario
     template_name = 'clients/lab_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('clients_app:lab_view')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -153,9 +176,18 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['h_insurance'] = HealthInsuranceForm
+        return context
+
     def form_valid(self, form):
-        form.instance.user_made = self.request.user
-        form.instance.save()
+        customer = form.instance
+        customer.user_made = self.request.user
+        customer.save()
+
+        form_in_out_insurances(form, customer, self.request.user)
+        
         return redirect('clients_app:customer_detail', pk=self.get_object().pk)
     
     
@@ -254,21 +286,25 @@ class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Customer
-    form_class = CustomerForm
-    template_name = 'clients/customer_form.html'
-    success_url = reverse_lazy('clients_app:customer_list')
+    template_name = 'clients/customer_delete.html'
+    success_url = reverse_lazy('clients_app:customer_view')
+
+    def delete(self, request, *args, **kwargs):
+        customer = self.get_object()
+        intermedia = Customer_HealthInsurance.objects.filter(customer=customer)
+        for filas in intermedia:
+            filas.delete()
+        return super().delete(request, *args, **kwargs)
     
 
 class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = HealthInsurance
-    form_class = HealthInsuranceForm
-    template_name = 'clients/insurance_form.html'
+    template_name = 'clients/insurance_delete.html'
     success_url = reverse_lazy('cliets_app:insurance_view')
     
     def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        lista  = Customer_HealthInsurance.objects.filter(h_insurance=self.object)
-        for i in lista:
-            i.delete()
-        self.object.delete()  # Realiza la eliminación suave
-        return HttpResponseRedirect(self.get_success_url())
+        h_insurance = self.get_object()
+        intermedia = Customer_HealthInsurance.objects.filter(h_insurance=h_insurance)
+        for filas in intermedia:
+            filas.delete()
+        return super().delete(request, *args, **kwargs)

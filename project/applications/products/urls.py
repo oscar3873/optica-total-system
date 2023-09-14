@@ -4,6 +4,7 @@ from .views import *
 app_name = 'products_app'
 
 urlpatterns = [
+    ########### CREATE
     path(
         'new/category/',
         CategoryCreateView.as_view(),
@@ -29,7 +30,7 @@ urlpatterns = [
         FeatureTypeCreateView.as_view(),
         name= 'new_feature_type'
     ),
-    # UPDATES
+    ############### UPDATES
 
     path(
         'update/category/<pk>/',
@@ -57,7 +58,7 @@ urlpatterns = [
         name= 'update_feature_type'
     ),
 
-    # LISTING
+    ############### LISTING
 
     path(
         'list/brand',
@@ -74,8 +75,18 @@ urlpatterns = [
         ProductListView.as_view(),
         name= 'product_list'
     ),
+    path(
+        'list/feature/',
+        FeatureListView.as_view(),
+        name= 'feature_list'
+    ),
+    path(
+        'list/feature_type/',
+        FeatureTypeListView.as_view(),
+        name= 'homefeature_type_list'
+    ),
 
-    # DETAILS
+    ############## DETAILS
 
     path(
         'detail/product/<pk>/',
@@ -95,7 +106,7 @@ urlpatterns = [
         name= 'brand_detail'
     ),
 
-    #DELETE
+    ################# DELETE
     path(
         'delete/product/<pk>/',
         ProductDeleteView.as_view(),

@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 
 from .models import *
@@ -6,22 +7,26 @@ from applications.core.mixins import ValidationFormMixin
 
 
 class CustomerForm(PersonForm):
+    h_insurance = forms.ModelMultipleChoiceField(
+        queryset=HealthInsurance.objects.all(),
+        label='Obra Social',
+        required=False,
+        widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'form-check-input',
+        })
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)
+            self.fields['h_insurance'].initial = insurances
+
     class Meta:
         model = Customer
         fields = '__all__'
         exclude = ['user_made','deleted_at']
-    
-    h_insurence = forms.ModelChoiceField(
-        queryset=HealthInsurance.objects.all(),
-        label='Obra Social',
-        empty_label='Elija una Obra Social',
-        required=False,
-        widget=forms.CheckboxSelectMultiple(attrs={
-            'placeholder' : 'Obra Social',
-            # 'class' : 'form-control'
-        })
-    )
-    
+
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
@@ -31,33 +36,42 @@ class CustomerForm(PersonForm):
 class HealthInsuranceForm(ValidationFormMixin):
 
     name = forms.CharField( 
-        label='',
+        label='Nombre',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Nombre de la Obra Social',
+                   'autofocus': '',
+                   'type' : 'text',
+                   'pattern': '^[a-zA-Z\s]+$'
                    }
         )
     )
 
     phone_number = forms.CharField( 
-        label='',
+        label='Telefono de contacto',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Telefono de contacto',
+                   'type' : 'numeric',
+                   'pattern' : '[0-9]+'
                    }
         )
     )
 
     cuit = forms.CharField( 
-        label='',
+        label='CUIT',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Clave Única de Identificación Tributaria',
+                   'type' : 'numeric',
+                   'pattern' : '[0-9]+'
                    }
         )
     )
 
     class Meta:
         model = HealthInsurance
-        fields = "__all__"
-        exclude = ['user_made','deleted_at']
+        fields = ['name', 'phone_number', 'cuit']
 
     def clean_name(self):
         name = self.cleaned_data['name']
