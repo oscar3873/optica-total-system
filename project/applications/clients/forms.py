@@ -12,10 +12,16 @@ class CustomerForm(PersonForm):
         label='Obra Social',
         required=False,
         widget=forms.CheckboxSelectMultiple(attrs={
-            'class' : 'form-check-input',
-            }
-        )
+            'class': 'form-check-input',
+        })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)
+            self.fields['h_insurance'].initial = insurances
+
     class Meta:
         model = Customer
         fields = '__all__'
