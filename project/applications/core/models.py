@@ -11,7 +11,7 @@ class Person(SoftDeletionModel, TimestampsModel):
     """
     Clase para el almacenamiento de datos basicos de personas
     """
-    first_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=50,verbose_name="nombre")
     last_name = models.CharField(max_length=50, db_index=True)
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     dni = models.CharField(max_length=20, db_index=True, null=True, blank=False)

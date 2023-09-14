@@ -35,14 +35,6 @@ class EmployeeUpdateView(CustomUserPassesTestMixin, UpdateView):
     form_class = EmployeeCreateForm
     success_url = reverse_lazy('users/employee_list_page.html')
     
-    def get_queryset(self):
-        pk = self.kwargs.get('pk')
-        try:
-            employee=Employee.objects.get_employee(pk=pk)
-        except:
-            employee=None
-        return employee
-
     def form_valid(self, form):
         form.instance.user_made = self.request.user
         return super().form_valid(form)

@@ -107,10 +107,11 @@ class PersonForm(ValidationFormMixin):
 
         return phone_number
 
-    def clean_phone_number(self):
+    """ def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         self.validate_length(phone_number, 9, "Ingrese un número de teléfono válido")
         return phone_number
+     """
     
     def clean_dni(self):
         dni = self.cleaned_data['dni']
