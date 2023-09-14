@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
 from django.contrib import messages
@@ -113,7 +113,7 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 #################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
-    template_name = 'products/components/create/product_wizard_form.html'
+    template_name = 'products/wizard_create.html'
     success_url = reverse_lazy('core_app:home')
 
     def get_context_data(self, **kwargs):
@@ -130,6 +130,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         if form.is_valid() and category_form.is_valid() and brand_form.is_valid():
             product = form.save(commit=False)
             product.user_made = self.request.user
+            product.branch = self.request.user.branch
             product.save()
             form_in_out_features(form, product, self.request.user)
 
@@ -271,6 +272,8 @@ class CategoryListView(CustomUserPassesTestMixin, ListView):
         context['table_column'] = obtener_nombres_de_campos(Category,"id","deleted_at", "created_at", "updated_at") 
         return context
 
+        
+
 #################### DETAILS #####################
 
 class ProductDetailView(CustomUserPassesTestMixin, DetailView):
@@ -301,6 +304,7 @@ class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
 
 
 class BrandDetailView(CustomUserPassesTestMixin, DetailView):
+    
     model = Brand
     template_name = 'products/brand_page.html'
 
