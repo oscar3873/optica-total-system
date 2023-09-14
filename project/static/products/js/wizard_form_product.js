@@ -63,7 +63,32 @@ document.addEventListener('DOMContentLoaded', function() {
     //     }
     // });
 
+    // Función para cerrar el modal
+    function closeModal() {
+        $('#Feature-modal').modal('hide');
+    }
 
-
-    
+    // Manejar la creación de un nuevo Tipo de Características
+    document.getElementById("save-feature").addEventListener("click", function() {
+        var formData = new FormData(document.getElementById("Feature-form"));
+        var errorMessage = document.getElementById('error_feature');
+        errorMessage.textContent= '';
+        
+        $.ajax({
+            url: `/products/new/feature_full/`,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if (data.status === 'success') {             
+                    closeModal();  // Cerrar el modal después de agregar el nuevo tipo
+                } else{
+                    errorMessage.className = "text-danger text-center";
+                    errorMessage.style.fontSize = "0.8rem";
+                    errorMessage.textContent = data.error_message;
+                }
+            }
+        });
+    });
 });

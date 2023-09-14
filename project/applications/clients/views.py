@@ -107,24 +107,19 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         
         try:
             customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
-            Customer_HealthInsurance.objects.create(
-                h_insurance=insurance, 
-                customer=customer,
-                user_made=self.request.user
-                )
+            Customer_HealthInsurance.objects.create(h_insurance=insurance, customer=customer)
 
             return redirect('clients_app:customer_detail', pk=customer.pk)
-        
         except Customer.DoesNotExist:
             if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
                 new_insurance_data = {
                     'id': insurance.id,
-                    'name': insurance.__str__()
+                    'name': insurance.name
                 }
                 # Si es una solicitud AJAX, devuelve una respuesta JSON
                 return JsonResponse({'status': 'success', 'new_insurance': new_insurance_data})
             else:
-                # Si no es una solicitud AJAX, llama al mÃ©todo form_valid del padre para el comportamiento predeterminado
+                # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
                 return super().form_valid(form)
 
 
