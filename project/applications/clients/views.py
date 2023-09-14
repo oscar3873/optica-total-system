@@ -1,6 +1,7 @@
 from typing import Any
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
@@ -102,12 +103,19 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         try:
             customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
             Customer_HealthInsurance.objects.create(h_insurance=insurance, customer=customer)
-        except Customer.DoesNotExist:
-            raise ValueError('El ID del cliente con nuestro registro')
-        
-        if customer:
+
             return redirect('clients_app:customer_detail', pk=customer.pk)
-        return super().form_valid(form)
+        except Customer.DoesNotExist:
+            if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+                new_insurance_data = {
+                    'id': insurance.id,
+                    'name': insurance.name
+                }
+                # Si es una solicitud AJAX, devuelve una respuesta JSON
+                return JsonResponse({'status': 'success', 'new_insurance': new_insurance_data})
+            else:
+                # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+                return super().form_valid(form)
 
 
 ########################### UPDATE  #########################
