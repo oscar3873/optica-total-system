@@ -50,6 +50,7 @@ class ProductForm(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder' : 'Ej: nakyma-06 c2 52'
                 }
         )
     )
@@ -58,6 +59,7 @@ class ProductForm(ValidationFormMixin):
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
+                'placeholder' : 'Ej: 7908132209861'
                 }
         )
     )
@@ -66,6 +68,7 @@ class ProductForm(ValidationFormMixin):
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
+                'placeholder' : '0.00'
                 }
         )
     )
@@ -75,6 +78,7 @@ class ProductForm(ValidationFormMixin):
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
+                'placeholder' : 'Ej: 23'
                 }
         )
     )
@@ -84,6 +88,7 @@ class ProductForm(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder' : 'Ej: marco de una sola pieza'
                 }
         )
     )
@@ -93,6 +98,7 @@ class ProductForm(ValidationFormMixin):
         widget=forms.Select(
             attrs={
                 'class': 'form-control',
+                'placeholder' : 'Seleccione una categoria o agregue una nueva'
                 }
         )
     )

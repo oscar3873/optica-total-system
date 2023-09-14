@@ -10612,6 +10612,15 @@ var weeklySalesInit = function weeklySalesInit() {
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
+
+var preventEnterKey = function preventEnterKey(){
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+      // Prevenir la acción predeterminada (por ejemplo, el envío de formularios)
+      event.preventDefault();
+  }
+});
+}
 /* -------------------------------------------------------------------------- */
 
 /*                            Theme Initialization                            */
@@ -10701,4 +10710,5 @@ docReady(linePaymentChartInit);
 docReady(chartBubble);
 docReady(chartLine);
 docReady(treeviewInit);
+docReady(preventEnterKey);
 //# sourceMappingURL=theme.js.map

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     let typesContainer = document.getElementById('types-container');
-    typesContainer.classList.add('d-flex');
+    typesContainer.classList.add('row');
     let checkboxes = document.getElementsByName("features");
     var typeSet = new Set();
     checkboxes.forEach(function(checkbox) {
@@ -11,13 +11,13 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let type of typeSet){
         //Contenedor del tipo
         let typeContainer = document.createElement('div');
-        typeContainer.classList.add('d-flex', 'flex-column', 'mx-3');
+        typeContainer.classList.add('col-6', 'col-md-2', 'pb-3');
         let typeTittle = document.createElement('h5');
         typeTittle.textContent = `${type}`;
         typeContainer.appendChild(typeTittle);
         //Contenedor de los checkbox
         let checkboxContainer = document.createElement('div');
-        checkboxContainer.classList.add('d-flex', 'flex-column', 'mx-4', 'pt-2' );
+        checkboxContainer.classList.add('col-md-12', 'mx-4', 'pt-2' );
         for (let checkbox of checkboxes) {
             let labelElement = checkbox.parentElement;
             let textLabel = labelElement.textContent.trim();
@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             labelClon.textContent = textSeparated[1];
             labelClon.appendChild(inputClon);
             if(textType == type){
+                labelClon.classList.add('d-block');
                 checkboxContainer.appendChild(labelClon);
             }
         }
@@ -36,31 +37,31 @@ document.addEventListener('DOMContentLoaded', function() {
     }
    
    
-    // Obtén una referencia al formulario por su ID o de alguna otra manera
-    var form = document.getElementById('create-product');
-    // Agrega un evento 'keydown' al formulario
-    form.addEventListener('keydown', function(event) {
-        // Verifica si la tecla presionada es 'Enter'
-        if (event.key === 'Enter') {
-            // Previene el comportamiento predeterminado del formulario (envío)
-            event.preventDefault();
-        }
-    });
+    // // Obtén una referencia al formulario por su ID o de alguna otra manera
+    // var form = document.getElementById('create-product');
+    // // Agrega un evento 'keydown' al formulario
+    // form.addEventListener('keydown', function(event) {
+    //     // Verifica si la tecla presionada es 'Enter'
+    //     if (event.key === 'Enter') {
+    //         // Previene el comportamiento predeterminado del formulario (envío)
+    //         event.preventDefault();
+    //     }
+    // });
 
 
-    var formCategory = document.getElementById('Product-category-modal');
-    formCategory.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-        }
-    });
+    // var formCategory = document.getElementById('Product-category-modal');
+    // formCategory.addEventListener('keydown', function(event) {
+    //     if (event.key === 'Enter') {
+    //         event.preventDefault();
+    //     }
+    // });
 
-    var formBrand = document.getElementById('Product-brand-modal');
-    formBrand.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-        }
-    });
+    // var formBrand = document.getElementById('Product-brand-modal');
+    // formBrand.addEventListener('keydown', function(event) {
+    //     if (event.key === 'Enter') {
+    //         event.preventDefault();
+    //     }
+    // });
 
 
 
