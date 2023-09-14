@@ -8,16 +8,6 @@
 {% block main %}
 
 <div class="container py-4">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-        <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
-        <p class="mb-0 flex-1">{{ message }}</p>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
-
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
@@ -33,36 +23,51 @@
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 mb-5">
+            <div class="card-header bg-light pt-3 pb-2">
+                <div class="d-flex mb-2">
+                    <div class="col">
+                        <p class="fs--2 mb-0"><span class="text-warning">{{user.username}}</span> esta por registr un cliente en <a class="link-600 fw-semi-bold" href="#!"><span class="text-warning">{{user.branch}}</span></a></p>
+                    </div>
+                </div>
+            </div>
             <div class="card-body" id="wizard-controller">
                 <div class="tab-content">
                     <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel"
                         aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
                         <form method="post" class="row g-3 needs-validation align-items-center" novalidate="">
                             {% csrf_token %}
-                            <div class="row justify-content-sm-center py-2">
+                            <div class="row justify-content-sm-center pb-2">
                                 <div class="col">
-                                    <label class="form-label" for="id_first_name">Nombre</label>
+                                    <label for="id_first_name" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Nombre</span>
+                                    </label>
                                     {{ form.first_name }}
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
                                 </div>
                                 <div class="col">
-                                    <label class="form-label" for="id_last_name">Apellido</label>
+                                    <label for="id_last_name" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Apellido</span>
+                                    </label>
                                     {{ form.last_name }}
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
                                 </div>
                             </div>
-                            <div class="row justify-content-sm-center py-2">
+                            <div class="row justify-content-sm-center pb-2">
                                 <div class="col">
-                                    <label class="form-label" for="id_phone_number">Telefono</label>
+                                    <label for="id_phone_number" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Telefono</span>
+                                    </label>
                                     {{ form.phone_number }}
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Ingrese solo números.</div>
                                 </div>
                                 <div class="col">
                                     <div class="col">
-                                        <label class="form-label" for="id_dni">DNI</label>
+                                        <label for="id_dni" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                            <span>DNI</span>
+                                        </label>
                                         {{ form.dni }}
                                         <div class="valid-feedback">Perfecto!</div>
                                         <div class="invalid-feedback">Ingrese solo números.</div>
@@ -70,17 +75,21 @@
                                 </div>
                                 <div class="col">
                                     <div class="col">
-                                        <label class="form-label" for="id_birth_date">Fecha De Nacimiento</label>
+                                        <label for="id_birth_date" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                            <span>Fecha de Nacimiento</span>
+                                        </label>
                                         {{ form.birth_date }}
                                         <div class="valid-feedback">Perfecto!</div>
                                         <div class="invalid-feedback">Ingrese una fecha válida</div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row justify-content-sm-center py-2">
+                            <div class="row justify-content-sm-center pb-2">
                                 <div class="col">
                                     <div class="col">
-                                        <label class="form-label" for="id_address">Direccion</label>
+                                        <label for="id_address" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                            <span>Direccion</span>
+                                        </label>
                                         {{ form.address }}
                                         <div class="valid-feedback">Perfecto!</div>
                                         <div class="invalid-feedback">Ingrese una direccion válida</div>
@@ -88,46 +97,38 @@
                                 </div>
                                 <div class="col">
                                     <div class="col">
-                                        <label class="form-label" for="id_email">Correo Electronico</label>
+                                        <label for="id_email" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                            <span>Email</span>
+                                        </label>
                                         {{ form.email }}
                                         <div class="valid-feedback">Perfecto!</div>
-                                        <div class="invalid-feedback">Ingrese un email válido. Ej: email@company.com
-                                        </div>
+                                        <div class="invalid-feedback">Ingrese un email válido.</div>
+                                        <p class="text-600 fs--2">Ej: email@company.com</p>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row justify-content-sm-center my-2">
+                            <div class="row justify-content-sm-center">
                                 <div class="col">
                                     <div class="row align-items-center">
-                                        <label for="id_h_insurance" class="form-label col-auto">
+                                        <label for="id_h_insurance" class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                             <span>Obra Social</span>
-                                            <a href="{% url 'clients_app:hi_new' %}">
-                                                <button class="btn" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Cargar una Obra Social">
-                                                    <span class="text-1000 far fa-plus-square"></span>
-                                                </button>
-                                            </a>
+                                            <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#HI-modal"
+                                                title="Cargar una Obra Social">
+                                                <span class="text-1000 far fa-plus-square"></span>
+                                            </button>
                                         </label>
                                     </div>
-                                
-                                    <div class="mb-3">
+                                    <div class="mb-2">
                                         {% for checkbox in form.h_insurance %}
                                             <div class="form-check form-check-inline">
                                                 {{ checkbox }}
                                             </div>
                                         {% endfor %}
                                     </div>
-                                    {% if form.h_insurence.errors %}
-                                    <div class="alert alert-warning" role="alert">
-                                        {% for error in form.h_insurence.errors %}
-                                        {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mt-2">
+                                <div class="mt-1">
                                     <div class="col-12">
                                         <button type="submit" class="btn btn-primary" name="submit">Añadir
                                             Cliente</button>
@@ -135,6 +136,27 @@
                                 </div>
                             </div>
                         </form>
+                        <!-- Modal -->
+                        <div class="modal fade" id="HI-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!-- Aquí puedes poner tu formulario -->
+                                    <form method="post" id="HI-form">
+                                        <div id="form-to-new-checks">
+
+                                            {% csrf_token %}
+                                            {{h_insurance.as_p}}
+                                            <button type="button" class="btn btn-primary" id="save-hi">Enviar</button>
+                                        </div>
+                                    </form>
+                                    <!-- Fin del formulario -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <!-- Agrega aquí el botón para enviar el formulario si es necesario -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -162,4 +184,69 @@
 {% endblock main %}
 
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    
+    function closeModal() {
+        $('#HI-modal').modal('hide');
+    }
+    // Manejar la creación de un nuevo Tipo de Características
+    document.getElementById("save-hi").addEventListener("click", function() {
+        var formData = new FormData(document.getElementById("HI-form"));
+
+        var checkboxes = document.querySelectorAll('[id^="id_h_insurance_"]');
+        var countchecks = checkboxes.length;
+
+        $.ajax({
+            url: `/customers/health_insurance/new/`,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+                if (data.status === 'success') {
+                    var div_checksbox = document.createElement('div');
+                    var newLabel = document.createElement('label');
+                    var newCheckbox = document.createElement("input");
+                    newCheckbox.type = "checkbox";
+                    newCheckbox.name = "h_insurance"; // Asegúrate de asignar el nombre correcto
+                    newCheckbox.value = data.new_insurance.id;
+                    newCheckbox.className = "form-check-input";
+                    newCheckbox.id = "id_h_insurance_" + countchecks; // Un ID único para cada checkbox
+                    newCheckbox.checked = true; // Define si está marcado o no
+                    
+                    newLabel.htmlFor = newCheckbox.id;
+                    newLabel.textContent = data.new_insurance.name; // Usa textContent para establecer el contenido del label
+                    div_checksbox.classList = "form-check form-check-inline";
+                    newLabel.appendChild(newCheckbox);
+                    div_checksbox.appendChild(newLabel);
+
+                    var checkboxes_form = document.getElementById('checkboxes_form');
+                    checkboxes_form.appendChild(div_checksbox);
+
+                    closeModal(); 
+
+                } else {
+                    var errorField = document.getElementById("form-to-new-checks"); // Reemplaza "id_name" con el ID de tu campo
+                    var errorMessage = document.createElement("div");
+                    errorMessage.className = "text-danger text-center";
+                    errorMessage.style.fontSize = "0.8rem";
+                    errorMessage.style.fontStyle = "italic"; // Estilo en cursiva
+                    errorMessage.textContent = "Hubo un error en la carga, porfavor verifique los datos ingresados.";
+                
+                    // Resaltar el campo en rojo
+                    errorField.style.borderColor = "red";
+                
+                    // Agregar el mensaje de error debajo del campo
+                    errorField.parentNode.appendChild(errorMessage);
+                }
+                
+            }
+        });
+    });
+});
+
+</script>
 {% endblock extra_js %}
