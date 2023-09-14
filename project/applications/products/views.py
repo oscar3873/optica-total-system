@@ -114,7 +114,7 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 #################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
-    template_name = 'products/wizard_create.html'
+    template_name = 'products/wizard_create_product.html'
     success_url = reverse_lazy('core_app:home')
 
     def get_context_data(self, **kwargs):

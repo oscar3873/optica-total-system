@@ -35,5 +35,34 @@ document.addEventListener('DOMContentLoaded', function() {
         typesContainer.appendChild(typeContainer);
     }
    
+   
+    // Obtén una referencia al formulario por su ID o de alguna otra manera
+    var form = document.getElementById('create-product');
+    // Agrega un evento 'keydown' al formulario
+    form.addEventListener('keydown', function(event) {
+        // Verifica si la tecla presionada es 'Enter'
+        if (event.key === 'Enter') {
+            // Previene el comportamiento predeterminado del formulario (envío)
+            event.preventDefault();
+        }
+    });
+
+
+    var formCategory = document.getElementById('Product-category-modal');
+    formCategory.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    });
+
+    var formBrand = document.getElementById('Product-brand-modal');
+    formBrand.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+        }
+    });
+
+
+
     
 });
