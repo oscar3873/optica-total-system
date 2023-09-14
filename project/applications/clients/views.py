@@ -10,8 +10,7 @@ from applications.core.mixins import CustomUserPassesTestMixin
 
 from .models import *
 from .forms import *
-from applications.users.utils import generate_profile_img
-
+from .utils import form_in_out_insurances
 
 ########################### CREATE ####################################
 class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
@@ -90,7 +89,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
             for insurance in form.cleaned_data['h_insurance']:
                 Customer_HealthInsurance.objects.create(
                     h_insurance = insurance,
-                    customer = customer
+                    customer = customer,
+                    user_made=self.request.user
                 )
         return super().form_valid(form)
 
@@ -176,9 +176,18 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     form_class = CustomerForm
     template_name = 'clients/customer_form.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['h_insurance'] = HealthInsuranceForm
+        return context
+
     def form_valid(self, form):
-        form.instance.user_made = self.request.user
-        form.instance.save()
+        customer = form.instance
+        customer.user_made = self.request.user
+        customer.save()
+
+        form_in_out_insurances(form, customer, self.request.user)
+        
         return redirect('clients_app:customer_detail', pk=self.get_object().pk)
     
     
