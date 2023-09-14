@@ -1,0 +1,337 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}Cargar producto{% endblock title %}
+
+{% block extra_css %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.8/lottie.min.js"></script>
+{% endblock extra_css %}
+
+
+
+{% block main %}
+
+<div class="container py-4">
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Titulo del formulario wizard -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+          class="fa-inverse fa-stack-1x text-primary fas fa-glasses"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Cargar
+            producto</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aqui puede cargar un producto</p>
+      </div>
+    </div>
+  </div>
+  <div class="card theme-wizard h-100 mb-5">
+    <div class="card-header bg-light pt-3 pb-2">
+
+      <!-- Cabecera del formulario wizard -->
+      <ul class="nav justify-content-between nav-wizard">
+        <li class="nav-item">
+          <a class="nav-link active fw-semi-bold" href="#bootstrap-wizard-validation-tab1" data-bs-toggle="tab"
+            data-wizard-step="data-wizard-step">
+            <span class="nav-item-circle-parent">
+              <span class="nav-item-circle">
+                <span class="fas fa-window-restore">
+
+                </span>
+              </span>
+            </span>
+            <span class="d-none d-md-block mt-1 fs--1">Categoria
+            </span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab2" data-bs-toggle="tab"
+            data-wizard-step="data-wizard-step">
+            <span class="nav-item-circle-parent">
+              <span class="nav-item-circle">
+                <span class="fab fa-amilia">
+
+                </span>
+              </span>
+            </span>
+            <span class="d-none d-md-block mt-1 fs--1">
+              Marca</span></a>
+        </li>
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab3"
+            data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                class="nav-item-circle"><span class="fas fa-dice-d6"></span></span></span><span
+              class="d-none d-md-block mt-1 fs--1">Producto</span></a></li>
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab4"
+          data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+              class="nav-item-circle"><span class="fas fa-list-alt"></span></span></span><span
+            class="d-none d-md-block mt-1 fs--1">Caracteristicas</span></a></li>
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab5"
+            data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                class="nav-item-circle"><span class="fas fa-thumbs-up"></span></span></span><span
+              class="d-none d-md-block mt-1 fs--1">Finalizar</span></a></li>
+      </ul>
+    </div>
+    <!-- Card body -->
+    <div class="card-body py-4" id="wizard-controller">
+
+      <form method="post" id="create-product" class="row g-3 " novalidate>
+        {% csrf_token %}
+        <div class="tab-content">
+
+          <!-- Tab 1 -->
+          <div class="tab-pane px-sm-3 px-md-5 pb-5 active" role="tabpanel"
+            aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+            <label for="{{ form.category.id_for_label }}" class="form-label">Categoría:</label>
+            <div class="input-group">
+              {{ form.category }}
+              <button id="addCategory" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-category-modal">+</button>
+            </div>     
+            
+            {% if form.category.errors %}
+            <div class="text-danger fs--2">
+              Seleccione una de las opciones o cargue una nueva categoria.
+            {% endif %}
+            </div>
+
+
+          <!-- Tab 2 -->
+          
+          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel"
+            aria-labelledby="bootstrap-wizard-validation-tab2" id="bootstrap-wizard-validation-tab2">
+            <label for="{{ form.brand.id_for_label }}" class="form-label">Marca:</label>
+              <div class="input-group">
+                {{ form.brand }}
+                <button id="addBrand" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Product-brand-modal">+</button>
+              </div>          
+            {% if form.brand.errors %}
+            <div class="text-danger fs--2">
+              Seleccione una de las opciones o cargue una nueva marca.
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Tab 3 -->
+          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab3"
+            id="bootstrap-wizard-validation-tab3">
+            <div class="tab-content">
+              <div class="tab-pane preview-tab-pane active" role="tabpanel"
+                aria-labelledby="tab-dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d"
+                id="dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d">
+                <div class="row">
+                  <div class="col">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">Nombre del producto:</label>
+                    {{form.name}}
+                    <small>El nombre del producto debe tener al menos 3 caracteres.</small>
+                    {% if form.name.errors %}
+                    <div class="text-danger fs--2">
+                      Este campo es obligatorio.
+                    </div>
+                    {% endif %}
+                  </div>
+
+                  <div class="col">
+                    <label for="{{ form.barcode.id_for_label }}" class="form-label">Código de barras:</label>
+                    {{form.barcode}}
+                    {% if form.barcode.errors %}
+                    <div class="text-danger fs--2">
+                      Este campo es obligatorio.
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <div class="row pt-3">
+                  <div class="col">
+                    <label for="{{ form.stock.id_for_label }}" class="form-label">Stock:</label>
+                    {{form.stock}}
+                    {% if form.stock.errors %}
+                    <div class="text-danger fs--2">
+                      Este campo es obligatorio.
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="col">
+                    <label for="{{ form.price.id_for_label }}" class="form-label">Precio:</label>
+                    {{form.price}}
+                    {% if form.price.errors %}
+                    <div class="text-danger fs--2">
+                      Este campo es obligatorio.
+                    </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <label for="{{ form.description.id_for_label }}" class="form-label pt-3">Descripción:</label>
+            {{form.description}}
+            {% if form.description.errors %}
+            <div class="text-danger fs--2">
+              Este campo es obligatorio.
+            </div>
+            {% endif %}
+          </div>
+
+          <!-- Tab 4 -->
+          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel"
+            aria-labelledby="bootstrap-wizard-validation-tab4" id="bootstrap-wizard-validation-tab4">
+
+            <div>
+              <div class="input-group justify-content-center">
+                <label for="id_type" class="form-label">Tipo de Características</label>
+                <button id="addType" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Feature-modal">+</button>
+              </div>
+            </div>
+
+              <div id="checkbox-features">
+              <div class="form-check">
+                
+                <div id="types-container">
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+          <!-- Ultima pestaña para enviar los datos al servidor -->
+          <div class="tab-pane text-center px-sm-3 px-md-5" role="tabpanel"
+            aria-labelledby="bootstrap-wizard-validation-tab5" id="bootstrap-wizard-validation-tab5">
+            <div class="wizard-lottie-wrapper">
+              <div class="lottie mx-auto my-3" style="width: 120px; height: 120px"
+                data-options='{"path":"{% static "cashregister/img/animated-icons/check-primary-light.json" %}"}'>
+              </div>
+            </div>
+            <h4 class="mb-1">Ha completado el proceso!</h4>
+            <p>Si hay algún dato erroneo se lo direccionará a la primera pestaña del formulario.</p><button
+              class="btn btn-warning px-5 px-sm-6" type="submit">Finalizar<span class="fas fa-chevron-right ms-2"
+                data-fa-transform="shrink-3">
+              </span></button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    {% for check in form.features %}
+    <div style="display: none;">
+      {{check}}
+    </div>
+    {% endfor %}
+    <!-- Card footer -->
+    <div class="card-footer bg-light">
+      <div class="px-sm-3 px-md-5">
+        <ul class="pager wizard list-inline mb-0">
+          <li class="previous">
+            <button class="btn btn-link ps-0" type="button">anterior</button>
+          </li>
+          <li class="next">
+            <button class="btn btn-primary px-5 px-sm-6" type="submit">siguiente</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 400px">
+      <div class="modal-content position-relative p-5">
+        <div class="d-flex align-items-center">
+          <div class="lottie me-3"
+            data-options='{"path":"{% static "cashregister/img/animated-icons/warning-light.json" %}"}'></div>
+          <div class="flex-1">
+            <button class="btn btn-link text-danger position-absolute top-0 end-0 mt-2 me-2"
+              data-bs-dismiss="modal"><span class="fas fa-times"></span></button>
+            <p class="mb-0">Ya no puede volver atras una vez que confirmo el ultimo paso</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para crear Category-->
+<div class="modal fade" id="Product-category-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="Product-category-modalLabel">Crear categoria</h5>
+          </div>
+          <div class="modal-body">
+              <form id="Product-Category-form" method="post">
+                  {% csrf_token %}
+                  <div class="pb-3">
+                    <label for="{{ category_form.name.id_for_label }}" class="form-label">Nombre:</label>
+                    {{category_form.name}}
+                  </div>
+                  
+                  <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                  <button class="btn btn-primary" type="button" id="save-category">Guardar</button>
+                  <!-- Fin del formulario de creación de Category-->
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+ <!-- Modal para crear Brand-->
+ <div class="modal fade" id="Product-brand-modal" tabindex="-1" aria-labelledby="Product-brand-modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="Product-brand-modalLabel">Crear Marca</h5>
+          </div>
+          <div class="modal-body">
+              <form id="Product-Brand-form" method="post">
+                  {% csrf_token %}
+                  <div class="pb-3">
+                    <label for="{{ brand_form.name.id_for_label }}" class="form-label">Nombre:</label>
+                    {{brand_form.name}}
+                  </div>
+                  <button class="btn btn-primary" type="button" id="save-brand">Guardar</button>
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div> 
+
+<!-- Modal para crear Tipo de Características -->
+    <div class="modal fade" id="Feature-modal" tabindex="-1" aria-labelledby="Feature-modalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="Feature-modalLabel">Crear Tipo de Características</h5>
+              </div>
+              <div class="modal-body">
+                <form id="Feature-form" method="post">
+                  {% csrf_token %}
+                  {{ feature_form.as_p }}
+                  <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                  <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
+                  <!-- Fin del formulario de creación de Tipo de Características -->
+                </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+
+{% endblock main %}
+
+
+{% block extra_js %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'products/js/formset.js' %}"></script> <!-- Agregar este enlace -->
+<script src="{% static 'products/js/wizard_form_product.js' %}"></script>
+<script src="{% static 'products/js/dinamic_create_category.js' %}"></script>
+<script src="{% static 'products/js/dinamic_create_brand.js' %}"></script>
+<script src="{% static 'products/js/create_new_featuretype.js' %}"></script>
+
+{% endblock extra_js %}

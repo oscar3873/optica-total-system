@@ -114,21 +114,20 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 #################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
-    template_name = 'products/components/create/product_wizard_form.html'
+    template_name = 'products/wizard_create_product.html'
     success_url = reverse_lazy('core_app:home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category_form'] = CategoryForm
         context['brand_form'] = BrandForm
+        context['feature_form'] = FeatureForm_to_formset
         context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
     @transaction.atomic
     def form_valid(self, form):
-        category_form = CategoryForm(self.request.POST)
-        brand_form = BrandForm(self.request.POST)
-        if form.is_valid() and category_form.is_valid() and brand_form.is_valid():
+        if form.is_valid():
             product = form.save(commit=False)
             product.user_made = self.request.user
             product.branch = self.request.user.branch
@@ -226,14 +225,6 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
-    
-    # def get_queryset(self):
-    #     branch = self.request.user.branch #recupero el brach del user
-    #     if branch == None:
-    #         return Product.objects.filter(deleted_at=None)
-    #     else:
-    #         # Filtra los productos que no han sido eliminados suavemente
-    #         return Product.objects.filter(deleted_at=None,branch=branch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -327,6 +318,7 @@ class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
 
 
 class BrandDetailView(CustomUserPassesTestMixin, DetailView):
+    
     model = Brand
     template_name = 'products/brand_page.html'
 

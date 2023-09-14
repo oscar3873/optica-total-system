@@ -43,16 +43,6 @@ class BrandForm(ValidationFormMixin):
 
 
 class ProductForm(ValidationFormMixin):
-    # branch = forms.ModelChoiceField(
-    #     queryset=Branch.objects.all(),
-    #     label='Sucursal',
-    #     empty_label='Elija una sucursal',
-    #     required=True,
-    #     widget=forms.Select(attrs={
-    #         'placeholder' : 'Sucursal',
-    #         'class' : 'form-control'
-    #     })
-    # )
 
     name = forms.CharField(
         max_length=100,
@@ -116,9 +106,11 @@ class ProductForm(ValidationFormMixin):
         )
     )
     features = forms.ModelMultipleChoiceField(
-        queryset=Feature.objects.all(),
+        queryset=Feature.objects.all().order_by('type'),
         widget=forms.CheckboxSelectMultiple(
-            # attrs={'class':'form-control'}
+            attrs={'class':'form-check-input',
+                   'type' : 'checkbox'
+                   }
         ),
         required=False,
     )

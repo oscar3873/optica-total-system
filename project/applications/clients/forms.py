@@ -12,10 +12,16 @@ class CustomerForm(PersonForm):
         label='Obra Social',
         required=False,
         widget=forms.CheckboxSelectMultiple(attrs={
-            'class' : 'form-check-input',
-            }
-        )
+            'class': 'form-check-input',
+        })
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)
+            self.fields['h_insurance'].initial = insurances
+
     class Meta:
         model = Customer
         fields = '__all__'
@@ -30,25 +36,35 @@ class CustomerForm(PersonForm):
 class HealthInsuranceForm(ValidationFormMixin):
 
     name = forms.CharField( 
-        label='',
+        label='Nombre',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Nombre de la Obra Social',
+                   'autofocus': '',
+                   'type' : 'text',
+                   'pattern': '^[a-zA-Z\s]+$'
                    }
         )
     )
 
     phone_number = forms.CharField( 
-        label='',
+        label='Telefono de contacto',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Telefono de contacto',
+                   'type' : 'numeric',
+                   'pattern' : '[0-9]+'
                    }
         )
     )
 
     cuit = forms.CharField( 
-        label='',
+        label='CUIT',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Clave Única de Identificación Tributaria',
+                   'type' : 'numeric',
+                   'pattern' : '[0-9]+'
                    }
         )
     )
