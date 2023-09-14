@@ -175,8 +175,8 @@
 
             <div>
               <div class="input-group justify-content-center">
-                <label for="id_type" class="form-label">Tipo de Características</label>
-                <button id="addType" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Feature-modal">+</button>
+                <label for="id_feature" class="form-label">Tipo de Características</label>
+                <button id="addFeature" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Feature-modal">+</button>
               </div>
             </div>
 
@@ -307,10 +307,11 @@
               </div>
               <div class="modal-body">
                 <form id="Feature-form" method="post">
+                  <div id="error_feature"></div>
                   {% csrf_token %}
                   {{ feature_form.as_p }}
                   <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                  <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
+                  <button class="btn btn-primary" type="button" id="save-feature">Guardar</button>
                   <!-- Fin del formulario de creación de Tipo de Características -->
                 </form>
               </div>
@@ -332,6 +333,5 @@
 <script src="{% static 'products/js/wizard_form_product.js' %}"></script>
 <script src="{% static 'products/js/dinamic_create_category.js' %}"></script>
 <script src="{% static 'products/js/dinamic_create_brand.js' %}"></script>
-<script src="{% static 'products/js/create_new_featuretype.js' %}"></script>
 
 {% endblock extra_js %}

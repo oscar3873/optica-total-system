@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
@@ -83,7 +83,36 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
             Product_feature.objects.create(feature=feature, product=product, user_made=self.request.user)
 
         return super().form_valid(form)
+    
 
+class FeatureFullCreateView(CustomUserPassesTestMixin, FormView):
+    """
+    Crear una característica nueva para el producto
+    Previa carga del Tipo de Característica
+    """
+    form_class = FeatureForm_to_formset
+    template_name = 'products/feature_create_page.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def form_valid(self, form):
+        
+        feature, created_f = validate_exists_feature_full(form, self.request.user)
+        
+        if not created_f:
+            return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
+        
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_feature_data = {
+                'id':  feature.id,
+                'name': feature.__str__(),
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_feature': new_feature_data})
+            
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
+        
 
 class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
     """

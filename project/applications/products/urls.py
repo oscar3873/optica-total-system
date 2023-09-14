@@ -30,6 +30,11 @@ urlpatterns = [
         FeatureTypeCreateView.as_view(),
         name= 'new_feature_type'
     ),
+    path(
+        'new/feature_full/',
+        FeatureFullCreateView.as_view(),
+        name= 'new_feature_type'
+    ),
     ############### UPDATES
 
     path(

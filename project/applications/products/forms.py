@@ -204,7 +204,7 @@ class FeatureForm_to_formset(ValidationFormMixin):
     )
     class Meta:
         model = Feature
-        fields = ('type', 'value',)
+        fields = ('value',)
 
     def clean_type(self):
         type = self.cleaned_data['type'].upper()
