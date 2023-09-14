@@ -32,7 +32,11 @@ class HealthInsuranceForm(ValidationFormMixin):
     name = forms.CharField( 
         label='Nombre',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Nombre de la Obra Social',
+                   'autofocus': '',
+                   'type' : 'text',
+                   'pattern': '^[a-zA-Z\s]+$'
                    }
         )
     )
@@ -40,7 +44,10 @@ class HealthInsuranceForm(ValidationFormMixin):
     phone_number = forms.CharField( 
         label='Telefono de contacto',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Telefono de contacto',
+                   'type' : 'numeric',
+                   'pattern' : '[0-9]+'
                    }
         )
     )
@@ -48,7 +55,10 @@ class HealthInsuranceForm(ValidationFormMixin):
     cuit = forms.CharField( 
         label='CUIT',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
+            attrs={'class': 'form-control',
+                   'placeholder' : 'Clave Única de Identificación Tributaria',
+                   'type' : 'numeric',
+                   'pattern' : '[0-9]+'
                    }
         )
     )
