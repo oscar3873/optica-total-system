@@ -15,23 +15,23 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let type of typeSet) {
         // Contenedor del tipo
         let typeContainer = document.createElement('div');
-        typeContainer.classList.add('col-6', 'col-md-2');
+        typeContainer.classList.add('col-4', 'col-md-3', 'pt-2');
 
         let typeTitle = document.createElement('h5');
         typeTitle.textContent = `${type}`;
 
         // Contenedor que alinea horizontalmente el h5 y el botón
-        let textButtonContainer = document.createElement('div');
-        textButtonContainer.classList.add('d-flex', 'align-items-center');
+        let textButtonContainer_unit = document.createElement('div');
+        textButtonContainer_unit.classList.add('d-flex', 'align-items-center');
 
         // Contenedor de los checkboxes
         let checkboxContainer_unit = document.createElement('div');
-        checkboxContainer_unit.classList.add('col-md-12', 'mx-4', 'pt-2');
+        checkboxContainer_unit.classList.add('col-md-12', 'mx-4', 'pt-1');
         checkboxContainer_unit.id = `${type}`;
 
-        textButtonContainer.appendChild(typeTitle);
+        textButtonContainer_unit.appendChild(typeTitle);
 
-        typeContainer.appendChild(textButtonContainer);
+        typeContainer.appendChild(textButtonContainer_unit);
 
         // Agregar botón "+" y manejar su evento
         let addButton = document.createElement('button');
@@ -45,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 let modal = $('#Feature-unit-modal');
                 modal.find('.modal-title').text('Añade una nueva característica para ' + type);
 
-                // Abre el modal
                 modal.modal('show');
 
                 // Obtén el campo de entrada con ID "id_type" dentro del formulario
@@ -54,10 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 inputField.attr('type', 'hidden');
                 inputField.val(type);
 
-                // Marca el modal como abierto
                 isModalOpen = true;
 
-                // Configura el evento para cerrar el modal
                 modal.on('hidden.bs.modal', function() {
                     isModalOpen = false;
                 });
@@ -65,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Agrega el botón "+" al título del Tipo de Característica
-        textButtonContainer.appendChild(addButton);
+        textButtonContainer_unit.appendChild(addButton);
 
         for (let checkbox of checkboxes) {
             let labelElement = checkbox.parentElement;
@@ -82,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        typeContainer.appendChild(textButtonContainer);
+        typeContainer.appendChild(textButtonContainer_unit);
         typeContainer.appendChild(checkboxContainer_unit);
         typesContainer.appendChild(typeContainer);
     }
@@ -116,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
                     // Encuentra el contenedor de checkboxes adecuado usando el identificador único
                     let checkboxContainer_unit = document.getElementById(type);
-                    console.log(type);
     
                     let new_check_unit = document.createElement('input');
                     let new_label_unit = document.createElement('label');
@@ -134,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     new_label_unit.appendChild(new_check_unit);
                     // Agregar el nuevo checkbox al principio del contenedor
-                    checkboxContainer_unit.append(new_label_unit);
+                    checkboxContainer_unit.appendChild(new_label_unit);
                     
                     // Cierra el modal
                     $('#Feature-unit-modal').modal('hide');
@@ -153,12 +149,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Manejar la creación de un nuevo Tipo de Características
     document.getElementById("save-feature").addEventListener("click", function() {
+        // Obtener el formulario dentro del modal personalizado
         var formData = new FormData(document.getElementById("Feature-form"));
+        
+        // Obtener los datos del formulario
         var errorMessage = document.getElementById('error_feature');
         errorMessage.textContent = '';
-
-        var cantidad = document.querySelectorAll('[id^="id_features_"]').length;
-
+        
+        var checkboxes = document.querySelectorAll('input[type="checkbox"][id^="id_features_"]');
+        var uniqueCheckboxIDs = new Set();
+        
+        checkboxes.forEach(function(checkbox) {
+            uniqueCheckboxIDs.add(checkbox.id);
+        });
+        
+        var cantidad = uniqueCheckboxIDs.size;
+        
         $.ajax({
             url: `/products/new/feature_full/`,
             method: 'POST',
@@ -167,35 +173,69 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: false,
             success: function(data) {
                 if (data.status === 'success') {
-                    let typeContainer = document.createElement('div');
-                    typeContainer.classList.add('col-6', 'col-md-2', 'pb-3');
-                    let typeTittle = document.createElement('h5');
                     var textSeparated = data.new_feature.name.trim().split(" - ");
 
-                    typeTittle.textContent = textSeparated[0];
-                    typeContainer.appendChild(typeTittle);
+                    let textButtonContainer = document.createElement('div');
+                    textButtonContainer.classList.add('d-flex', 'align-items-center');
 
+                    let addButton_new = document.createElement('button');
+                    addButton_new.textContent = '+';
+                    addButton_new.type = 'button';
+                    addButton_new.classList.add('btn', 'btn-sm', 'ml-2'); 
+                    addButton_new.addEventListener('click', function() {
+                        // Actualiza el título del modal con el tipo correspondiente
+                        let modal = $('#Feature-unit-modal');
+                        modal.find('.modal-title').text('Añade una nueva característica para ' + textSeparated[0]);
+        
+                        modal.modal('show');
+        
+                        // Obtén el campo de entrada con ID "id_type" dentro del formulario
+                        let inputField = modal.find('#Feature-unit-form #id_type');
+        
+                        inputField.attr('type', 'hidden');
+                        inputField.val(textSeparated[0]);
+        
+                        isModalOpen = true;
+        
+                        modal.on('hidden.bs.modal', function() {
+                            isModalOpen = false;
+                        });
+                    });
+
+                    let typeContainer = document.createElement('div');
+                    typeContainer.classList.add('col-4', 'col-md-3', 'pt-2');
+                    let typeTittle = document.createElement('h5');        
+                    
                     let checkboxContainer = document.createElement('div');
-                    checkboxContainer.classList.add('col-md-12', 'mx-4', 'pt-2');
-
+                    checkboxContainer.classList.add('col-md-12', 'mx-4', 'pt-1');
+                    checkboxContainer.id = `${textSeparated[0]}`;
+                    
                     let new_check = document.createElement('input');
                     let new_label = document.createElement('label');
-
+                    
                     new_check.type = 'checkbox';
+                    new_check.name = 'features';
                     new_check.id = 'id_features_' + cantidad;
                     new_check.value = data.new_feature.id;
                     new_check.classList.add('form-check-input');
                     new_check.checked = true;
-
+                    
                     new_label.classList.add('d-block');
                     new_label.setAttribute('for', new_check.id);
                     new_label.textContent = textSeparated[1];
+                    
+                    typeTittle.textContent = textSeparated[0];
+                    textButtonContainer.appendChild(typeTittle);
+                    textButtonContainer.appendChild(addButton_new);
 
                     new_label.appendChild(new_check);
+                    
                     checkboxContainer.appendChild(new_label);
+
+                    typeContainer.appendChild(textButtonContainer);
                     typeContainer.appendChild(checkboxContainer);
                     typesContainer.appendChild(typeContainer);
-
+        
                     closeModal(); // Cerrar el modal después de agregar el nuevo tipo
                 } else {
                     errorMessage.className = "text-danger text-center";
@@ -205,4 +245,5 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
 });

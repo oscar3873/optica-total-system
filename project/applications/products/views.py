@@ -132,6 +132,7 @@ class FeatureUnitCreateView(FormView):
                 'type': feature.type.name,
             }
             # Si es una solicitud AJAX, devuelve una respuesta JSON
+        print(new_feature_data)
         return JsonResponse({'status': 'success', 'new_feature_unit': new_feature_data})
 
 

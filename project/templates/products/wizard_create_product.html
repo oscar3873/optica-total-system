@@ -351,6 +351,31 @@
           </div>
       </div>
     </div>
+
+    <!-- Modal personalizado para crear una Característica con un Tipo seleccionado -->
+    <div id="customFeatureUnitModal" class="modal fade" tabindex="-1" aria-labelledby="customFeatureUnitModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="customFeatureUnitModalLabel"></h5>
+              </div>
+              <div class="modal-body">
+                  <form id="Feature-new-form" method="post">
+                      {% csrf_token %}
+                      {{ feature_form.type }}
+                      {{ feature_form.value.label }}{{ feature_form.value }}
+                      <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                      <button class="btn btn-primary" type="button" id="save-feature-unit-1">Guardar</button>
+                      <!-- Fin del formulario de creación de Tipo de Características -->
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-feature-modal">Cerrar</button>
+              </div>
+          </div>
+      </div>
+    </div>
+
 </div>
 
 {% endblock main %}
