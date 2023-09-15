@@ -23,12 +23,12 @@ class ValidationFormMixin(forms.ModelForm):
         Valida fecha de nacimiento.
             Debe tener por lo menos 3 meses de vida o no superar los 85 años.
         """
-        if birth_date and birth_date >= DATE_NOW.date() - timedelta(days=30):
-            raise forms.ValidationError('La fecha establecida no puede registrarse.')
-
-        age_limit = DATE_NOW.date() - timedelta(days=85*365)
-        if birth_date and birth_date <= age_limit:
-            raise forms.ValidationError('La fecha establecida no puede superar los 85 años.')
+        if birth_date :
+            if birth_date >= DATE_NOW.date() - timedelta(days=30):
+                raise forms.ValidationError('La fecha establecida no puede registrarse.')
+            age_limit = DATE_NOW.date() - timedelta(days=85*365)
+            if birth_date <= age_limit:
+                raise forms.ValidationError('La fecha establecida no puede superar los 85 años.')
 
     def validate_email(self, email):
         """
@@ -48,8 +48,11 @@ class ValidationFormMixin(forms.ModelForm):
         """
         Valida que la fecha ingresada no sea al futuro
         """
-        if date > DATE_NOW.date():
-            raise forms.ValidationError('La fecha establecida no puede registrarse.')
+        if date:
+            if date > DATE_NOW.date():
+                raise forms.ValidationError('La fecha establecida no puede registrarse.')
+        else:
+            raise forms.ValidationError('Este campo es nesesario.')
 
 class CustomUserPassesTestMixin(LoginRequiredMixin, UserPassesTestMixin):
     """

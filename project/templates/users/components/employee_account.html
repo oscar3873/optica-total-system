@@ -1,0 +1,91 @@
+{% load static %}
+
+<div class="container py-4">
+  <div class="card theme-wizard h-100 mb-5">
+    <div class="card-header bg-light pt-3 pb-2">
+    </div>
+    <!-- Card body -->
+    <div class="card-body py-4" id="wizard-controller">
+
+      <form method="post" id="singup-employee" class="row g-3 " novalidate>
+        {% csrf_token %}
+        <div class="tab-content">
+
+						<div class="row">
+								<div class="col">
+									<label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre:</label>
+									{{form.first_name}}
+									{% if form.first_name.errors %}
+									<div class="text-danger fs--2">
+										Este campo es obligatorio.
+									</div>
+									{% endif %}
+								</div>
+								<div class="col">
+									<label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido:</label>
+									{{form.last_name}}
+									{% if form.last_name.errors %}
+									<div class="text-danger fs--2">
+										Este campo es obligatorio.
+									</div>
+									{% endif %}
+								</div>
+						</div>
+						<div class="row pt-3">
+							<div class="col">
+								<label for="{{ form.dni.id_for_label }}" class="form-label">DNI:</label>
+								{{form.dni}}
+								{% if form.dni.errors %}
+								<div class="text-danger fs--2">
+									Este campo es obligatorio.
+								</div>
+								{% endif %}
+							</div>
+							<div class="col">
+								<label for="{{ form.phone_number.id_for_label }}" class="form-label">Celular:</label>
+								{{form.phone_number}}
+								{% if form.phone_number.errors %}
+								<div class="text-danger fs--2">
+									Este campo es obligatorio.
+								</div>
+								{% endif %}
+							</div>
+						</div>
+            <label for="{{ form.address.id_for_label }}" class="form-label pt-3">Domicilio:</label>
+            {{form.address}}
+            {% if form.address.errors %}
+            <div class="text-danger fs--2">
+              Este campo es obligatorio.
+            </div>
+            {% endif %}
+            <div class="row">
+              <div class="col">
+                <label for="{{ form.email.id_for_label }}" class="form-label ">Correo</label>
+                {{form.email}}
+                {% if form.email.errors %}
+                <div class="text-danger fs--2">
+                  Este campo es obligatorio.
+                </div>
+                {% endif %}
+              </div>
+            </div>
+						<button
+              class="btn btn-warning px-5 px-sm-6" type="submit">Finalizar<span class="fas fa-chevron-right ms-2"
+                data-fa-transform="shrink-3">
+              </span>
+						</button>
+				</div>
+      </form>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer bg-light">
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
+<!-- <form method="post" class="row g-3 needs-validation" novalidate> -->

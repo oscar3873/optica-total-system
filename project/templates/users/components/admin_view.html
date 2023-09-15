@@ -33,9 +33,9 @@
         <i class="fa-inverse fa-stack-2x text-primary far fa-user-circle"></i>
         </span>
       <div class="col">
-        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Empleado</span><span
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Administrador</span><span
             class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-        <p class="mb-0">Aqui puede vizualizar un empleado</p>
+        <p class="mb-0">Aqui puede vizualizar su perfil</p>
       </div>
     </div>
   </div>
@@ -45,7 +45,7 @@
   <!--    Card con la presentacion de la caja-->
   <!-- ===============================================-->
 
-  {% if employee %}
+  {% if admin %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!--Card-->
     <div class="card bg-transparent-50 overflow-hidden">
@@ -57,17 +57,17 @@
 
         <div class="position-relative z-index-2">
           <div>
-            <p>Fecha de alta: {{employee.employment_date}}</p>
-						{{employee.user.first_name }}
-						{{employee.user.last_name }}
-						{{employee.user.phone_number}}
-						{{employeee.user.dni}}
-						{{employee.user.birth_date}}
-						{{employee.user.address}}
-						{{employee.user.email }}
-            {{employee.user.branch.name}}
-            {{employee.user_made.first_name}}
-            {{employee.user_made.last_name}}
+            
+						{{admin.first_name }}
+						{{admin.last_name }}
+						{{admin.phone_number}}
+						{{admin.dni}}
+						{{admin.birth_date}}
+						{{admin.address}}
+						{{admin.email }}
+            {{admin.branch.name}}
+            {{admin.user_made.first_name}}
+            {{admin.user_made.last_name}}
           </div>
         </div>
       </div>
@@ -92,10 +92,10 @@
 
 				<div class="position-relative z-index-2">
 					<div>
-						<h3 class="text-primary mb-1">El empleado no existe</h3>
+						<h3 class="text-primary mb-1">El Administrador no existe</h3>
 					</div>
 					<div class="card-footer">
-            <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'employees_app:new_employee' %}">Nuevo Empleado</a>
+            <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'users_app:signup_admin' %}">Nuevo Administrador</a>
           </div>
 				</div>
 			</div>

@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
 from django.contrib import messages
 
@@ -165,8 +165,8 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 #################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
-    template_name = 'products/wizard_create_product.html'
-    success_url = reverse_lazy('core_app:home')
+    template_name = 'products/components/create/product_wizard_form.html'
+    success_url = reverse_lazy('products_app:product_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -190,7 +190,19 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
 
         if feature_formset.is_valid():
             form_create_features_formset(self.request.user, product, feature_formset)
-        return super().form_valid(form)
+        
+        source_route = self.request.GET.get('source_route', '')  # Obtén el valor del parámetro 'source_route' de la URL
+        supplier_pk = self.request.GET.get('supplier_pk', '')  # Obtén el valor del parámetro 'supplier_pk' de la URL
+
+        # Determina la URL de redirección según la ruta de origen
+        if source_route == 'supplier_create':
+            redirect_url = reverse('suppliers_app:new_supplier')
+        elif source_route == 'supplier_update':
+            redirect_url = reverse('suppliers_app:update_supplier', args=[supplier_pk])
+        else:
+            redirect_url = reverse('products_app:product_list')  # Ruta predeterminada si no se especifica la ruta de origen
+
+        return HttpResponseRedirect(redirect_url)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')

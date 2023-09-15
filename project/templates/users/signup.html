@@ -161,6 +161,18 @@
                 </div>
                 {% endif %}
               </div>
+              {% if not user.is_staff %}
+                <div class="col">
+                    <label for="{{ form.employment_date.id_for_label }}" class="form-label">Fecha de alta</label>
+                    {{form.employment_date}}
+                    <small>Ingrese una fecha </small>
+                    {% if form.employment_date.errors %}
+                    <div class="text-danger fs--2">
+                      Este campo es obligatorio.
+                    </div>
+                    {% endif %}
+                </div>
+              {% endif %}
               <div class="col">
                 <label for="{{ form.email.id_for_label }}" class="form-label ">Correo</label>
                 {{form.email}}

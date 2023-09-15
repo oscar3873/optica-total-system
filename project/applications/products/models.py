@@ -9,7 +9,7 @@ class Category(BaseAbstractWithUser):
     """
     Clase para Categorias
     """
-    name = models.CharField(max_length=100, blank=False, null=True)
+    name = models.CharField(max_length=100, blank=False, null=True,verbose_name='nombre de la Categoria')
 
     def __str__(self) -> str:
         return f'{self.name}'

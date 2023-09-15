@@ -347,7 +347,7 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:list' %}"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:list_supplier' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
@@ -750,14 +750,22 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                                    <a class="dropdown-item" href="#">
-                                        <span class="fas fa-user"></span>
-                                        Perfil
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <span class="fas fa-user-circle"></span>
-                                        Cuenta
-                                    </a>
+                                    {% if user.is_staff %}
+                                        <a class="dropdown-item" href="{% url 'users_app:profile_admin' user.id %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.id %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                    {% endif %}
+                                        <a class="dropdown-item" href="#">
+                                            <span class="fas fa-user-circle"></span>
+                                            Cuenta
+                                        </a>
+                                    
 
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">
