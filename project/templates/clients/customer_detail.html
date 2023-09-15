@@ -31,51 +31,59 @@
 
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-        <div class="card theme-wizard h-100 mb-5">
-            <div class="card-body py-4" id="wizard-controller">
-                <div class="text-center mb-3 list-group-item">
-                    <p class="h1">{{ customer.first_name }}, {{ customer.last_name }}
+        <div class="card theme-wizard h-100">
+            <div class="card-body" id="wizard-controller">
+                <div class="text-center mb-2 list-group-item">
+                    <h1 class="mb-2">{{ customer.first_name }}, {{ customer.last_name }}
                         <a href="{% url 'clients_app:customer_update' pk=customer.pk %}">
-                            <button class="btn p-0" type="button" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Editar Cliente">
+                            <button class="btn p-0" type="button" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Editar Cliente">
                                 <span class="text-1000 far fa-plus-square"></span>
                             </button>
                         </a>
-                    </p>
+                    </h1>
+                    <div class="row">
+                        <p class="text-700 fs--2">
+                            Cliente registrado por
+                            <a href="">{{user.last_name}}, {{user.first_name}}</a>
+                            <span class="">el {{ customer.created_at|date:"l j \d\e F \d\e\l Y" }}</span>
+                        </p>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="text-center mb-3">
-                            <p class="h3">Informacion Personal</p>
+                            <h3 class="mb-2">Informacion Personal</h3>
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     <span>
-                                        <p class="text-decoration-underline d-inline">DNI:</p>
-                                        <p class="user-select-all d-inline mx-2">{{ customer.dni }}</p>
+                                        <p class="d-inline fw-semi-bold mb-1">DNI:</p>
+                                        <p class="user-select-all d-inline mx-1 text-900 fw-bold fs-1">{{ customer.dni }}</p>
                                     </span>
                                 </li>
                                 <li class="list-group-item">
                                     <span>
-                                        <p class="text-decoration-underline d-inline">Fecha de Nacimiento:</p>
-                                        <p class="user-select-all d-inline mx-2">{{ customer.birth_date }}</p>
+                                        <p class="d-inline fw-semi-bold mb-1">Fecha de Nacimiento:</p>
+                                        <p class="d-inline mx-1">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
+                                        </p>
                                     </span>
                                 </li>
                                 <li class="list-group-item">
                                     <span>
-                                        <p class="text-decoration-underline d-inline">Telefono:</p>
-                                        <p class="user-select-all d-inline mx-2">{{ customer.phone_number }}</p>
+                                        <p class="d-inline fw-semi-bold mb-1">Telefono:</p>
+                                        <p class="user-select-all d-inline mx-1 text-800 fw-bold fs-0">{{ customer.phone_number }}</p>
                                     </span>
                                 </li>
                                 <li class="list-group-item">
                                     <span>
-                                        <p class="text-decoration-underline d-inline">Direccion:</p>
-                                        <p class="user-select-all d-inline mx-2">{{ customer.address }}</p>
+                                        <p class="d-inline fw-semi-bold mb-1">Direccion:</p>
+                                        <p class="d-inline mx-1">{{ customer.address }}</p>
                                     </span>
                                 </li>
                                 <li class="list-group-item">
                                     <span>
-                                        <p class="text-decoration-underline d-inline">Correo Electronico:</p>
-                                        <p class="user-select-all d-inline mx-2">{{ customer.email }}</p>
+                                        <p class="d-inline fw-semi-bold mb-1">Correo Electronico:</p>
+                                        <p class="user-select-all d-inline mx-1 text-800 fw-bold fs-0">{{ customer.email }}</p>
                                     </span>
                                 </li>
                             </ul>
@@ -83,21 +91,24 @@
                     </div>
                     <div class="col-md-6 ">
                         <div class="text-center mb-3">
-                            <p class="h3">Obras Sociales
-                                <a href="{% url 'clients_app:hi_new' pk=customer.pk %}">
+                            <h3 class="mb-2">Obras Sociales
+                                <a href="{% url 'clients_app:customer_update' customer.id %}">
                                     <button class="btn p-0" type="button" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="Agregar Obra Social">
                                         <span class="text-1000 far fa-plus-square"></span>
                                     </button>
                                 </a>
-                            </p>
+                            </h3>
                             <ul class="list-group list-group-flush">
                                 {% if customer.customer_insurance.all %}
                                 {% for insurance in customer.customer_insurance.all %}
                                 <li class="list-group-item">
-                                    <a href="{% url 'clients_app:hi_detail' pk=insurance.pk %}">
-                                        {{ insurance.h_insurance.name }}
-                                    </a>
+                                    <p class="text-900 fw-bold fs-1">
+                                        <a href="{% url 'clients_app:hi_detail' pk=insurance.pk %}"
+                                            class="text-decoration-none">
+                                            {{ insurance.h_insurance.name }}
+                                        </a>
+                                    </p>
                                 </li>
                                 {% endfor %}
                                 {% else %}
@@ -115,7 +126,7 @@
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 mb-5">
-            <div class="card-body py-4" id="wizard-controller">
+            <div class="card-body py-1" id="wizard-controller">
                 <div class="text-center mb-3">
                     <p class="h2">Tratamientos
                         <a href="{% url 'clients_app:laboratory_new' customer.pk %}">
@@ -124,13 +135,13 @@
                                 <span class="text-1000 far fa-plus-square"></span>
                             </button>
                         </a>
-                    </p>    
+                    </p>
                 </div>
                 <div class="row">
                     <div class="col">
                         {% if calibration_orders %}
                         <div class="text-center">
-                            <div class="table-responsive scrollbar">
+                            <div class="table-responsive scrollbar mb-5">
                                 <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                                     <thead class="bg-200 text-900">
                                         <tr
@@ -142,16 +153,19 @@
                                                         data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
                                                 </div>
                                             </th>
-                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="user_made">
+                                                Por
+                                            </th>
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="diagnostic">
                                                 Diagnostico
                                             </th>
-                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="armazon">
                                                 Armazon
                                             </th>
-                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="payment">
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="abervations">
                                                 Observacion
                                             </th>
-                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">
+                                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="is_done">
                                                 Estado
                                             </th>
                                             <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
@@ -167,6 +181,7 @@
                                                         data-bulk-select-row="data-bulk-select-row" />
                                                 </div>
                                             </td>
+                                            <th class="align-middle white-space-nowrap name">{{ calibration_order.user_made }}</th>
                                             <th class="align-middle white-space-nowrap name">{{ calibration_order.diagnostic }}</th>
                                             <td class="align-middle white-space-nowrap address">{{ calibration_order.armazon }}
                                             </td>
@@ -195,7 +210,8 @@
                                                             href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
                                                         <a class="dropdown-item"
                                                             href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
-                                                            <a class=" dropdown-item text-danger" href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
+                                                        <a class=" dropdown-item text-danger"
+                                                            href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
                                                     </div>
                                                 </div>
                                             </td>
