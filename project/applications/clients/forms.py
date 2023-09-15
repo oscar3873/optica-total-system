@@ -465,6 +465,50 @@ class InterpupillaryForm(forms.ModelForm):
 
 
 class Calibration_OrderForm(forms.ModelForm):
+
+    is_done = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                'class': 'form-check-input'
+                }
+            )
+    )
+
+    armazon = forms.CharField(
+        #required=False,
+        widget = forms.Textarea(
+            attrs={
+            'class' : 'form-control',
+            'placeholder' : 'Armazon',
+            'rows' : '3',
+            }
+        )
+    )
+
+    diagnostic = forms.CharField(
+        required=False,
+        widget = forms.Textarea(
+            attrs={
+            'class' : 'form-control',
+            'placeholder' : 'Diagnostico',
+            'rows' : '3',
+            'autofocus' : ''
+            }
+        )
+    )
+
+    observations = forms.CharField(
+        required=False,
+        widget = forms.Textarea(
+            attrs={
+            'class' : 'form-control',
+            'placeholder' : 'Observaciones',
+            'rows' : '3',
+            }
+        )
+    )
+
     class Meta:
         model = Calibration_Order
         fields = ['is_done','diagnostic', 'armazon', 'observations']
