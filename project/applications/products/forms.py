@@ -63,6 +63,7 @@ class ProductForm(ValidationFormMixin):
                 'placeholder': 'Codigo de barra',
                 'type': 'number',
                 'class': 'form-control',
+                'placeholder' : 'Ej: 7908132209861'
                 }
         )
     )
@@ -73,6 +74,7 @@ class ProductForm(ValidationFormMixin):
                 'placeholder': 'Precio',
                 'type': 'number',
                 'class': 'form-control',
+                'placeholder' : '0.00'
                 }
         )
     )
@@ -85,6 +87,7 @@ class ProductForm(ValidationFormMixin):
                 'type': 'number',
                 #'min': 1, puede tener stock cero?
                 'class': 'form-control',
+                'placeholder' : 'Ej: 23'
                 }
         )
     )
@@ -97,6 +100,7 @@ class ProductForm(ValidationFormMixin):
                 'type': 'text',
                 'pattern': '.{3,}',  # Mínimo 3 caracteres
                 'class': 'form-control',
+                'placeholder' : 'Ej: marco de una sola pieza'
                 }
         )
     )
@@ -108,6 +112,7 @@ class ProductForm(ValidationFormMixin):
                 'placeholder': 'Categoría',
                 #'type': 'text',
                 'class': 'form-control',
+                'placeholder' : 'Seleccione una categoria o agregue una nueva'
                 }
         )
     )
@@ -123,9 +128,11 @@ class ProductForm(ValidationFormMixin):
         )
     )
     features = forms.ModelMultipleChoiceField(
-        queryset=Feature.objects.all(),
+        queryset=Feature.objects.all().order_by('type'),
         widget=forms.CheckboxSelectMultiple(
-            # attrs={'class':'form-control'}
+            attrs={'class':'form-check-input',
+                   'type' : 'checkbox'
+                   }
         ),
         required=False,
     )
@@ -219,7 +226,7 @@ class FeatureForm_to_formset(ValidationFormMixin):
     )
     class Meta:
         model = Feature
-        fields = ('type', 'value',)
+        fields = ('value',)
 
     def clean_type(self):
         type = self.cleaned_data['type'].upper()

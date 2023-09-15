@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy,reverse
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
@@ -83,6 +83,56 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
             Product_feature.objects.create(feature=feature, product=product, user_made=self.request.user)
 
         return super().form_valid(form)
+    
+
+class FeatureFullCreateView(CustomUserPassesTestMixin, FormView):
+    """
+    Crear una característica nueva para el producto
+    Previa carga del Tipo de Característica
+    """
+    form_class = FeatureForm_to_formset
+    template_name = 'products/feature_create_page.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def form_valid(self, form):
+        
+        feature, created_f = validate_exists_feature_full(form, self.request.user)
+        
+        if not created_f:
+            return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
+        
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_feature_data = {
+                'id':  feature.id,
+                'name': feature.__str__(),
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_feature': new_feature_data})
+            
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
+        
+        
+class FeatureUnitCreateView(FormView):
+    form_class = FeatureForm_to_formset
+
+    def form_valid(self, form):
+        type = Feature_type.objects.get(name=form.cleaned_data['type'])
+
+        feature = Feature.objects.create(
+            value = form.cleaned_data['value'],
+            type = type,
+            user_made = self.request.user
+        )
+
+        new_feature_data = {
+                'id':  feature.id,
+                'name': feature.value,
+                'type': feature.type.name,
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+        return JsonResponse({'status': 'success', 'new_feature_unit': new_feature_data})
 
 
 class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
@@ -115,19 +165,20 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
     template_name = 'products/components/create/product_wizard_form.html'
+    success_url = reverse_lazy('products_app:product_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category_form'] = CategoryForm
         context['brand_form'] = BrandForm
+        context['feature_form'] = FeatureForm_to_formset
         context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
     @transaction.atomic
     def form_valid(self, form):
-        category_form = CategoryForm(self.request.POST)
-        brand_form = BrandForm(self.request.POST)
-        if form.is_valid() and category_form.is_valid() and brand_form.is_valid():
+        print(form.cleaned_data)
+        if form.is_valid():
             product = form.save(commit=False)
             product.user_made = self.request.user
             product.branch = self.request.user.branch
@@ -236,14 +287,6 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
-    
-    # def get_queryset(self):
-    #     branch = self.request.user.branch #recupero el brach del user
-    #     if branch == None:
-    #         return Product.objects.filter(deleted_at=None)
-    #     else:
-    #         # Filtra los productos que no han sido eliminados suavemente
-    #         return Product.objects.filter(deleted_at=None,branch=branch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -337,6 +380,7 @@ class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
 
 
 class BrandDetailView(CustomUserPassesTestMixin, DetailView):
+    
     model = Brand
     template_name = 'products/brand_page.html'
 

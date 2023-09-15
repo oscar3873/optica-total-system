@@ -31,12 +31,29 @@
         </div>
     </div>
 
+    <div class="row justify-content-sm-center my-2">
+        <div class="col">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Se encontraron errores:</h4>
+                <ul>
+                    {% for field_errors in form.errors.values %}
+                        {% for error in field_errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 mb-5">
             <div class="card-header bg-light pt-3 pb-2">
                 <div class="d-flex mb-2">
                     <div class="col">
-                        <p class="fs--2 mb-0"><span class="text-warning">{{user.username}}</span> esta por registrar una Obra Social</p>
+                        <p class="fs--2 mb-0"><span class="text-warning">{{user.username}}</span> esta por registrar una <span class="text-warning">Obra Social</span></p>
                     </div>
                 </div>
             </div>
@@ -57,7 +74,7 @@
                                 </div>
                             </div>
                             <div class="row justify-content-sm-center pb-2">
-                                <div class="col">
+                                <div class="col-12 col-sm">
                                     <label for="id_cuit" class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                         <span>CUIT</span>
                                     </label>
@@ -65,7 +82,7 @@
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Ingrese solo números.</div>
                                 </div>
-                                <div class="col">
+                                <div class="col-12 col-sm">
                                     <label for="id_phone_number" class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                         <span>Telefono</span>
                                     </label>
@@ -85,23 +102,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row justify-content-sm-center my-2">
-    <div class="col">
-        {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">Se encontraron errores:</h4>
-            <ul>
-                {% for field_errors in form.errors.values %}
-                    {% for error in field_errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
     </div>
 </div>
 
