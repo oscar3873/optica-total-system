@@ -34,14 +34,14 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
     context_object_name = 'admin'
 
     def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')  # Obtén el valor del parámetro 'pk' de la URL
+        pk = self.request.user.pk  # Obtén la pk del usuario
         try:
-            employee = Employee.objects.get(pk=pk)
+            admin = User.objects.get(pk=pk)
             #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
         except Employee.DoesNotExist:
             #si no encuentro lo pongo en None para manejar las vistas en los templates
-            employee = None
-        return employee
+            admin = None
+        return admin
 
 
 class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS

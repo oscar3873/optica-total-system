@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import (EmployeeProfileView,EmployeeListView,EmployeeCreateView,EmployeeDeleteView,AccountView)
+from .views import (
+    EmployeeProfileView,
+    EmployeeListView,
+    EmployeeCreateView,
+    EmployeeDeleteView,
+    AccountView,
+    EmployeeUpdateView
+    )
 
 app_name = 'employees_app'
 
@@ -9,11 +16,11 @@ urlpatterns = [
         EmployeeCreateView.as_view(),
         name='new_employee'
     ),
-    #path(
-    #    'update/<pk>/',
-    #    EmployeeUpdateView.as_view(),
-    #    name='update_employee'
-    #),
+    path(
+        'update/<pk>/',
+        EmployeeUpdateView.as_view(),
+        name='update_employee'
+    ),
     path(
         'profile/<pk>/', 
         EmployeeProfileView.as_view(),

@@ -32,6 +32,28 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
             )
         return super().form_valid(form)
 
+class EmployeeUpdateView(UpdateView):
+    model = Employee
+    template_name = 'users/employee_update_page.html'
+    form_class = EmployeeUpdateForm
+    def form_valid(self, form):
+        user_form = UserUpdateForm(self.request.POST, instance=self.object.user)
+        if user_form.is_valid():
+            user = user_form.save()
+            form.save()
+            return redirect('employees_app:list_employee')
+        else:
+            return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
+
+    def get_form_kwargs(self):
+        # Obtener la instancia de Employee que se va a editar
+        employee_instance = get_object_or_404(Employee, pk=self.kwargs['pk'])
+        
+        # Pasar la instancia al formulario como kwarg
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = employee_instance
+        return kwargs
+
 
 # Probando cuenta, no me deja hacer un update de los datod de empleado
 
@@ -73,14 +95,17 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
     template_name = 'users/profile.html'
     context_object_name = 'employee'
 
-    def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')  
+    def get_object(self, queryset=None): 
         """ Obtén el valor del parámetro 'pk' de la URL, este 
         parametro, puede ser la pk de un user, comprobar que esta pk esta relacionada 
         con alguna pk de la tabla users_employee"""
+        pk = self.request.user.pk
         try:
-            employee = Employee.objects.get(pk=pk)
-            #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
+            if not self.request.user.is_staff:
+                employee = Employee.objects.get(user_id=pk)
+            else:
+                employee = None
+            #busco en la tabla user de la base de datos un usuario con user_id=pk
         except Employee.DoesNotExist:
             #si no encuentro lo pongo en None para manejar las vistas en los templates
             employee = None
