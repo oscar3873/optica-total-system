@@ -34,15 +34,6 @@ class Customer(Person, BaseAbstractWithUser):
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
 
-    def get_related_calibration_orders(self): # No se hace aqui, se hace en el manager (history)
-        '''
-        Obtengo ordenes de calibracion relacionadas
-        a un cliente en particular (algunos campos)
-        '''
-
-        calibration_orders = Calibration_Order.objects.filter(client=self)
-        filtered_calibration_orders = calibration_orders.values('id','is_done', 'observations', 'armazon', 'diagnostic')
-        return filtered_calibration_orders
 
     def __str__(self) -> str:
         return f'{self.last_name}, {self.first_name}'
