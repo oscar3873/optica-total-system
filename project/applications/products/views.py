@@ -113,6 +113,27 @@ class FeatureFullCreateView(CustomUserPassesTestMixin, FormView):
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
         
+        
+class FeatureUnitCreateView(FormView):
+    form_class = FeatureForm_to_formset
+
+    def form_valid(self, form):
+        type = Feature_type.objects.get(name=form.cleaned_data['type'])
+
+        feature = Feature.objects.create(
+            value = form.cleaned_data['value'],
+            type = type,
+            user_made = self.request.user
+        )
+
+        new_feature_data = {
+                'id':  feature.id,
+                'name': feature.value,
+                'type': feature.type.name,
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+        return JsonResponse({'status': 'success', 'new_feature_unit': new_feature_data})
+
 
 class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
     """
@@ -156,6 +177,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
     
     @transaction.atomic
     def form_valid(self, form):
+        print(form.cleaned_data)
         if form.is_valid():
             product = form.save(commit=False)
             product.user_made = self.request.user
@@ -167,8 +189,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
 
         if feature_formset.is_valid():
             form_create_features_formset(self.request.user, product, feature_formset)
-    
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
