@@ -165,7 +165,7 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 #################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ProductForm
-    template_name = 'products/components/create/product_wizard_form.html'
+    template_name = 'products/wizard_create_product.html'
     success_url = reverse_lazy('products_app:product_list')
 
     def get_context_data(self, **kwargs):
@@ -217,7 +217,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
     """
     model = Product
     form_class = ProductForm
-    template_name = 'products/product_update_page.html'
+    template_name = 'products/wizard_create_product.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -236,7 +236,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         form_in_out_features(form, product, self.request.user)
         if feature_formset.is_valid():
             form_create_features_formset(self.request.user, product, feature_formset)
-        self.success_url = reverse_lazy('clients_app:customer_detail', kwargs={'pk': self.get_object().pk})
+        self.success_url = reverse_lazy('products_app:product_detail', kwargs={'pk': self.get_object().pk})
         return super().form_valid(form)
 
 class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
