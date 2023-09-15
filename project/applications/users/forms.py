@@ -82,7 +82,50 @@ class UserCreateForm(PersonForm):
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
     
+class UserUpdateForm(PersonForm):
+    username = forms.CharField(
+        required = True,
+        widget = forms.TextInput(attrs={
+            'placeholder' : 'Ej: Javi28',
+            'class' : 'form-control',
+            'autocomplete' : 'off',
+        }),
+        validators=[RegexValidator(r'^[a-zA-Z0-9_]+$', 'El nombre de usuario solo puede contener letras, números y guiones bajos.')]
+    )
+    branch = forms.ModelChoiceField(
+        queryset=Branch.objects.all(),
+        label='Sucursal',
+        empty_label='Elija una sucursal',
+        required=True,
+        widget=forms.Select(attrs={
+            'placeholder' : 'Sucursal',
+            'class' : 'form-control'
+        })
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        if self.instance.pk:
+            # Rellenar los campos de User y Person con los datos existentes
+            self.fields['email'].initial = self.instance.user.email
+            self.fields['first_name'].initial = self.instance.user.first_name
+            self.fields['last_name'].initial = self.instance.user.last_name
+            self.fields['birth_date'].initial = self.instance.user.birth_date
+            self.fields['dni'].initial = self.instance.user.dni
+            self.fields['phone_number'].initial = self.instance.user.phone_number
+            self.fields['address'].initial = self.instance.user.address
+
+    class Meta:
+        model = User
+        fields = ('email','first_name', 'last_name', 'birth_date', 'dni', 'phone_number', 'address')
     
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        username = username.lower()
+        self.validate_username(username)
+        return username
+
 class LoginForm(forms.Form):
     """Formulario para iniciar sesión."""
     

@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import EmployeeProfileView,EmployeeListView,EmployeeCreateView,EmployeeUpdateView,EmployeeDeleteView
+from .views import (
+    EmployeeProfileView,
+    EmployeeListView,
+    EmployeeCreateView,
+    EmployeeDeleteView,
+    AccountView,
+    EmployeeUpdateView
+    )
 
 app_name = 'employees_app'
 
@@ -28,5 +35,11 @@ urlpatterns = [
         'delete/<pk>/',
         EmployeeDeleteView.as_view(),
         name='employee_delete'
-    )
+    ),
+    path(
+        'account/<int:pk>/', 
+        AccountView.as_view(), 
+        name='account'
+    ),
+    
 ]

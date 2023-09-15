@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 
 from django.views.generic import View
 from django.views.generic.edit import (FormView,)
+from django.views.generic import (DetailView,)
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm
 from .models import User, Employee
@@ -26,6 +27,22 @@ from applications.core.mixins import CustomUserPassesTestMixin
             )
         return super().form_valid(form)
 """
+
+class AdminProfileView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'users/profile_admin.html'
+    context_object_name = 'admin'
+
+    def get_object(self, queryset=None):
+        pk = self.request.user.pk  # Obtén la pk del usuario
+        try:
+            admin = User.objects.get(pk=pk)
+            #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
+        except Employee.DoesNotExist:
+            #si no encuentro lo pongo en None para manejar las vistas en los templates
+            admin = None
+        return admin
+
 
 class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS
     template_name = "users/signup.html"

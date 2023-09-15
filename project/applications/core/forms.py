@@ -1,5 +1,6 @@
+import re
 from django import forms
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator,EmailValidator
 
 from .models import Person, Objetives
 from .mixins import ValidationFormMixin
@@ -35,7 +36,6 @@ class PersonForm(ValidationFormMixin):
             'placeholder' : 'DNI',
             'class' : 'form-control',
             'type' : 'text',
-            'pattern' : '[0-9]+'
         }),
         validators=[RegexValidator(r'^[0-9]+$', 'Ingrese un DNI válido.')]
     )
@@ -81,7 +81,9 @@ class PersonForm(ValidationFormMixin):
             }
         )
     )
-
+    def __init__(self, *args, **kwargs):
+        self.edit_person = kwargs.pop('edit_person', None)  # Recuperar la persona a editar (si se proporciona)
+        super().__init__(*args, **kwargs)
     class Meta:
         model = Person
         fields = '__all__'
@@ -98,12 +100,31 @@ class PersonForm(ValidationFormMixin):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
-        self.validate_length(phone_number, 9, "Ingrese un número de teléfono válido")
+
+        # Expresión regular para validar números de teléfono de varios países.
+        phone_number_pattern = re.compile(r'^(?:\+?[0-9]{1,3})?[0-9]{6,}$')
+
+        if not phone_number_pattern.match(str(phone_number)):
+            raise forms.ValidationError("Ingrese un número de teléfono válido.")
+
         return phone_number
 
+    """ def clean_phone_number(self):
+        phone_number = self.cleaned_data['phone_number']
+        self.validate_length(phone_number, 9, "Ingrese un número de teléfono válido")
+        return phone_number
+     """
+    
     def clean_dni(self):
         dni = self.cleaned_data['dni']
-        self.validate_length(dni, 7, "Ingrese un número de DNI válido.")
+        print(dni)
+        # Expresión regular para validar DNI: 7 dígitos seguidos de una letra o una letra seguida de 7 dígitos.
+        #dni_pattern = re.compile(r'^\d{7}[A-Z]$|^[A-Z]\d{7}$')
+        """ # Expresión regular para validar DNI: permite que los dígitos y las letras aparezcan en cualquier orden.
+        dni_pattern = re.compile(r'^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8}$')"""
+        """ if not dni_pattern.match(dni):
+            raise forms.ValidationError("Ingrese un DNI válido (7 dígitos seguidos de una letra o viceversa).") """
+
         return dni
 
     def clean_birth_date(self):
@@ -116,6 +137,18 @@ class PersonForm(ValidationFormMixin):
         self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
     
+    def clean_email(self):
+        email = self.cleaned_data['email']
+
+        # Utiliza el validador de Django para validar la dirección de correo electrónico.
+        email_validator = EmailValidator()
+
+        try:
+            email_validator(email)
+        except forms.ValidationError:
+            raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
+
+        return email
 
 class ObjetiveForm(forms.ModelForm):
 

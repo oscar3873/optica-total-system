@@ -46,6 +46,13 @@
 										{{form.products}}
 									</div>
 									<button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
+									{% comment %}
+										son variables que paso por url al ProducCreateView para poder realizar 
+										logica de redireccion
+										source_route=supplier_create 
+										supplier_pk=-1 
+									{% endcomment %}
+									<a href="{% url 'products_app:new_product' %}?source_route=supplier_create&supplier_pk={{supplier.pk}}" class="btn btn-success d-block w-100 mt-3" type="submit" name="submit">Crear un nuevo producto</a>
 							</form>
 						</div>
 					</div>
