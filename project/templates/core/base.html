@@ -750,14 +750,15 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                                    <a class="dropdown-item" href="#">
-                                        <span class="fas fa-user"></span>
-                                        Perfil
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                        <span class="fas fa-user-circle"></span>
-                                        Cuenta
-                                    </a>
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.pk %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <span class="fas fa-user-circle"></span>
+                                            Cuenta
+                                        </a>
+                                    
 
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">
