@@ -87,11 +87,23 @@
                                 </div>
                             </div>
                             <div class="row justify-content-sm-center">
+                                <label for="id_brand" class="form-label">Marca</label>
+                                <div class="input-group">
+                                    {{ form.label }}
+                                    <button id="addBrand" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        data-bs-target="#note-label-modal">+</button>
+                                </div>
+                            </div>
+
+                            <div class="row justify-content-sm-center">
                                 <div class="col-md-10 my-2">
                                     <label for="id_subject"
                                         class="col col-form-label d-flex justify-content-between align-items-center">
                                         <span>Tipo de Nota</span>
                                     </label>
+                                    <label for="exampleColorInput" class="form-label">Color picker</label>
+                                    <input type="color" class="form-control form-control-color" id="exampleColorInput"
+                                        value="#563d7c" title="Choose your color">
                                     <div class="mb-3">
                                         {{ form.label }}
                                     </div>
@@ -130,6 +142,29 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="note-label-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="Product-category-modalLabel">Crear Category</h5>
+            </div>
+            <div class="modal-body">
+                <form id="Product-Category-form" method="post">
+                    {% csrf_token %}
+                    {{ label_form.as_p }}
+                    <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                    <button class="btn btn-primary" type="button" id="save-category">Guardar</button>
+                    <!-- Fin del formulario de creación de Category-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
             </div>
         </div>
     </div>
