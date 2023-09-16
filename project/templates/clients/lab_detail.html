@@ -24,7 +24,8 @@
             <h5 class="mb-0 text-primary position-relative"><span
                     class="bg-200 dark__bg-1100 pe-3">Laboratorio</span><span
                     class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-            <p class="mb-0">Aqui se puede visualizar el detalle completo de un laboratorio</p>
+            <p class="mb-0">Laboratorio de <a class="link-600 fw-semi-bold" href="{% url 'clients_app:customer_detail' laboratory_orders.client.id %}"><span
+                class="text-warning">{{laboratory_orders.client}}</span></a></p>
         </div>
     </div>
 
@@ -459,6 +460,48 @@
             </div>
         </div>
     </div>
+
+    <div class="card mb-3">
+        <div class="row row-justify-content">
+            <div class="col mb-3">
+                <div class="container d-flex justify-content-center text-center">
+                    <h1>Diagnostico</h1>
+                </div>
+                <div class="container justify-content-center">
+                    <textarea id="diagnostic" name="diagnostic" class="form-control" rows="3"
+                        readonly>{{ laboratory_orders.diagnostic }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="row row-justify-content">
+            <div class="col mb-3">
+                <div class="container d-flex justify-content-center text-center">
+                    <h1>Armazon</h1>
+                </div>
+                <div class="container justify-content-center">
+                    <textarea id="diagnostic" name="diagnostic" class="form-control" rows="3"
+                        readonly>{{ laboratory_orders.armazon }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="row row-justify-content">
+            <div class="col mb-3">
+                <div class="container d-flex justify-content-center text-center">
+                    <h1>Observaciones</h1>
+                </div>
+                <div class="container justify-content-center">
+                    <textarea id="diagnostic" name="diagnostic" class="form-control" rows="3"
+                        readonly>{{ laboratory_orders.observations }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'clients_app:customer_detail' laboratory_orders.client.id %}" class="btn btn-primary">Volver al Cliente</a>
+
 
 
 </div>

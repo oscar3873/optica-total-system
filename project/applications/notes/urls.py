@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import NoteCreateView,NoteListView
+from .views import NoteCreateView,NoteListView, LabelCreateView
 app_name = 'note_app'
 
 
@@ -15,5 +15,11 @@ urlpatterns = [
         'list/note',
         NoteListView.as_view(),
         name='note_list'
+    ),
+
+    path(
+        'new/label',
+        LabelCreateView.as_view(),
+        name='new_label'
     ),
 ]
