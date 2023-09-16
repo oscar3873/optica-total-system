@@ -9,7 +9,7 @@ class CustomerManager(BaseManager):
         return self.filter(deleted_at=None)
 
     def history(self, customer):
-        history = customer.calibration_order_set.all().order_by('-created_at').values('id','is_done', 'observations', 'armazon', 'diagnostic')
+        history = customer.calibration_order_set.all().order_by('-created_at').select_related('user_made')
         return history
 
     def all_insurance(self, customer):

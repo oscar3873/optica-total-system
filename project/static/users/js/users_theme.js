@@ -311,7 +311,7 @@ var detectorInit = function detectorInit() {
   var _window = window,
       is = _window.is;
   var html = document.querySelector('html');
-  is.opera() && addClass(html, 'opera');
+  is.chrome() && addClass(html, 'chrome');
   is.mobile() && addClass(html, 'mobile');
   is.firefox() && addClass(html, 'firefox');
   is.safari() && addClass(html, 'safari');
@@ -320,8 +320,8 @@ var detectorInit = function detectorInit() {
   is.ipad() && addClass(html, 'ipad');
   is.ie() && addClass(html, 'ie');
   is.edge() && addClass(html, 'edge');
-  is.chrome() && addClass(html, 'chrome');
   is.mac() && addClass(html, 'osx');
+  is.opera() && addClass(html, 'opera');
   is.windows() && addClass(html, 'windows');
   navigator.userAgent.match('CriOS') && addClass(html, 'chrome');
 };

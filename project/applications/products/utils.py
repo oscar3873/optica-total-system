@@ -102,13 +102,19 @@ def validate_exists_feature_full(form, user):
         feature_type.user_made = user
         feature_type.save()
 
-    value = form.cleaned_data['value']
-    feature, created_f = Feature.objects.get_or_create(
-        type = feature_type,
-        value = value,
-    )
-    if created_f:
-        feature.user_made = user
-        feature.save()
+        value = form.cleaned_data['value']
+        feature, created_f = Feature.objects.get_or_create(
+            type = feature_type,
+            value = value,
+        )
+        if created_f:
+            feature.user_made = user
+            feature.save()
 
-    return feature, created_f
+        return feature, True, True
+
+    # RETORNO: 
+    #   None (innecesario mandarlo en caso de este return)
+    #   created_ft (existencia feature_type)
+    #   None (innecesario mandarlo en caso de este return)
+    return None, created_ft, None 

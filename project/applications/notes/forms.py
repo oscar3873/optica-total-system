@@ -2,6 +2,10 @@ from .models import Note, Branch, Label
 from django import forms
 from applications.core.mixins import ValidationFormMixin
 
+class LabelCreateForm(ValidationFormMixin):
+    class Meta:
+        model = Label
+        fields = '__all__'
 
 class NoteCreateForm(ValidationFormMixin):
     """
