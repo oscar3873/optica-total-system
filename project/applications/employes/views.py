@@ -12,9 +12,10 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 
-from .forms import EmployeeCreateForm,EmployeeUpdateForm
+from .forms import EmployeeCreateForm,EmployeeUpdateForm,EmployeeUpdateForm
 from applications.users.models import User, Employee
 from applications.users.forms import UserUpdateForm
+
 #from .core.utils import obtener_nombres_de_campos
 from .utils import obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
@@ -58,29 +59,57 @@ class EmployeeUpdateView(UpdateView):
 # Probando cuenta, no me deja hacer un update de los datod de empleado
 
 class AccountView(UpdateView):
-    model = Employee
     template_name = 'users/employee_account_page.html'
-    form_class = EmployeeUpdateForm
+    form_class = UserUpdateForm
+    model = User
+    success_url = reverse_lazy('employees_app:list_employee')
+    """
+    def get_object(self,queryset=None):
+        pk = self.kwargs.get('pk')
+        print("###############\n\n\n\n\n")
+        print(pk)
+    
     def form_valid(self, form):
-        user_form = UserUpdateForm(self.request.POST, instance=self.object.user)
-        print("#############################\n\n\n\n\n\n")
-        print(f"user_form = {user_form}")
-        print("#############################\n\n\n\n\n\n")
-        if user_form.is_valid():
-            user = user_form.save()
+        self.user.first_name = form.cleaned_data['first_name']
+    
+        if form.is_valid():
             form.save()
             return redirect('employees_app:list_employee')
         else:
             return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
 
-    def get_form_kwargs(self):
+    
+    def get_object(self, queryset=None):
+        #Obtén el valor del parámetro 'pk' de la URL, este 
+        #parametro, puede ser la pk de un user, comprobar que esta pk esta relacionada 
+        #con alguna pk de la tabla users_employee
+        pk = self.request.user.pk
+        try:
+            #Me aseguro de que el usuario que esta realizando la accion sea un empleado
+            if not self.request.user.is_staff:
+                employee = Employee.objects.get(user_id=pk)
+            else:
+                employee = None
+            #busco en la tabla user de la base de datos un usuario con user_id=pk
+        except Employee.DoesNotExist:
+            #si no encuentro lo pongo en None para manejar las vistas en los templates
+            employee = None
+        return employee
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pk = self.request.user.pk
+        context["pk"] = pk
+        return context
+    
+    def get_form_kwargs(self): 
         # Obtener la instancia de Employee que se va a editar
         employee_instance = get_object_or_404(Employee, pk=self.kwargs['pk'])
         
         # Pasar la instancia al formulario como kwarg
         kwargs = super().get_form_kwargs()
         kwargs['instance'] = employee_instance
-        return kwargs
+        return kwargs """
 
 
 """ print("#############################\n\n\n\n\n\n")

@@ -755,17 +755,21 @@
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.id %}">
+                                            <span class="fas fa-user-circle"></span>
+                                            Cuenta
+                                        </a>
                                     {% else %}
                                         <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                    {% endif %}
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.id %}">
+                                            
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>
-                                    
+                                    {% endif %}
 
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">

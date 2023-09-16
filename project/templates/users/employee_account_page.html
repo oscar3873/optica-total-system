@@ -10,8 +10,7 @@
 {% endblock main %}
 
 {% block extra_js %}
-{% comment %} Probando script para boton, editar y cancelar de account {% endcomment %}
-{% comment %} <script>
+<script>
 	const editButton = document.getElementById('edit-button');
 	const editForm = document.getElementById('edit-form');
 	const cancelButton = document.getElementById('cancel-button');
@@ -25,5 +24,5 @@
 		editButton.style.display = 'block';
 		editForm.style.display = 'none';
 	});
-</script> {% endcomment %}
+</script>
 {% endblock extra_js %}

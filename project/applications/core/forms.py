@@ -117,7 +117,6 @@ class PersonForm(ValidationFormMixin):
     
     def clean_dni(self):
         dni = self.cleaned_data['dni']
-        print(dni)
         # Expresión regular para validar DNI: 7 dígitos seguidos de una letra o una letra seguida de 7 dígitos.
         #dni_pattern = re.compile(r'^\d{7}[A-Z]$|^[A-Z]\d{7}$')
         """ # Expresión regular para validar DNI: permite que los dígitos y las letras aparezcan en cualquier orden.
