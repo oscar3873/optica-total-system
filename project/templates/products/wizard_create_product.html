@@ -317,8 +317,8 @@
               <div class="modal-body">
                 <form id="Feature-form" method="post">   
                   {% csrf_token %}
-                  <p>{{ feature_form.type.label }}{{ feature_form.type }}</p>
-                  <p>{{ feature_form.value.label }}{{ feature_form.value }}</p>
+                  <p>{{ feature_form.type.label }} {{ feature_form.type }}</p>
+                  <p>{{ feature_form.value.label }} {{ feature_form.value }}</p>
                   <div id="error_feature" class="text-danger fs--2 pb-3"></div>
                   <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
                   <button class="btn btn-primary" type="button" id="save-feature">Guardar</button>
