@@ -1,23 +1,18 @@
-from typing import Any, Optional
-from django.db import models
 from django.http import HttpResponseRedirect
-from django.shortcuts import render,redirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DetailView, UpdateView, FormView,ListView,DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
 
-
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 
 from .forms import EmployeeCreateForm,EmployeeUpdateForm
+from applications.core.mixins import CustomUserPassesTestMixin
+from applications.branches.models import Branch
 from applications.users.models import User, Employee
 from applications.users.forms import UserUpdateForm
 #from .core.utils import obtener_nombres_de_campos
 from .utils import obtener_nombres_de_campos
-from applications.core.mixins import CustomUserPassesTestMixin
 # Create your views here.
 class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
     template_name = "users/signup.html"
@@ -119,10 +114,16 @@ class EmployeeListView(LoginRequiredMixin,ListView):
     context_object_name = 'employees'
 
     def get_queryset(self):
-        branch=self.request.user.branch
-        if branch==None:
-            return Employee.objects.all()
-        return Employee.objects.get_employees_branch(branch)
+        branch = self.request.user.branch
+        branch_actualy = self.request.session.get('branch_actualy')
+
+        if  self.request.user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
+            return Employee.objects.filter(branch=branch_actualy, deleted_at=None)
+        
+        # En otros casos, filtra por la sucursal del usuario
+        return Employee.objects.filter(branch=branch, deleted_at=None)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

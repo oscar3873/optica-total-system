@@ -13,21 +13,6 @@ from applications.core.mixins import CustomUserPassesTestMixin
 
 
 # Create your views here.
-""" class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
-    template_name = "users/signup.html"
-    form_class = EmployeeCreateForm
-    success_url = reverse_lazy('core_app:home')
-    
-    def form_valid(self, form):
-        form.cleaned_data.pop('password2')
-        Employee.objects.create(
-            user_made = self.request.user,
-            employment_date = form.cleaned_data.pop('employment_date'),
-            user = User.objects.create_user(**form.cleaned_data) # Funcion que crea EMPLEADOS
-            )
-        return super().form_valid(form)
-"""
-
 class AdminProfileView(LoginRequiredMixin, DetailView):
     model = User
     template_name = 'users/profile_admin.html'

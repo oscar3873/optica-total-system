@@ -297,14 +297,20 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        branch = self.request.user.branch
+        branch_actualy = self.request.session.get('branch_actualy')
+
+        if  self.request.user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
+            return Product.objects.filter(branch=branch_actualy, deleted_at=None)
+        
+        # En otros casos, filtra por la sucursal del usuario
+        return Product.objects.filter(branch=branch, deleted_at=None)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        branch = self.request.user.branch
-        try:
-            products = Product.objects.filter(branch=branch, deleted_at=None)
-        except Product.DoesNotExist:
-            products = None
-        context['products'] = products
         
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)

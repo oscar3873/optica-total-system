@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import (FormView, DetailView, UpdateView, DeleteView, ListView) #aqui
+from django.views.generic import (FormView, DetailView, UpdateView, DeleteView, ListView, View) #aqui
 
 from .forms import BranchForm
 from .models import Branch
@@ -71,3 +72,20 @@ class BranchListView(CustomUserPassesTestMixin, ListView):
     template_name = 'branches/branch_list.html'
     context_object_name = 'branches'
     paginate_by = 8
+
+
+class BranchChangeView(View):
+    template_name = 'cambiar_sucursal.html'  # Nombre del template HTML
+
+    def get(self, request):
+        # Recupera todas las sucursales disponibles para el administrador
+        branches = Branch.objects.all()
+
+        return render(request, self.template_name, {'branches': branches})
+    
+    def post(self, request):
+        sucursal_id = request.POST.get('branch_id')
+        if sucursal_id:
+            request.session['branch_actualy'] = int(sucursal_id)
+        # Redirige de vuelta a la página desde la que se hizo el cambio
+        return redirect(request.META.get('HTTP_REFERER', 'core_app:home'))
