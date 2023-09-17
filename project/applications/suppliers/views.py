@@ -55,7 +55,6 @@ class SuppliersListView(CustomUserPassesTestMixin, ListView):
     model = Supplier
     template_name = 'suppliers/supplier_list_page.html'
     context_object_name = 'suppliers'
-
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -5,6 +5,7 @@ from django.db import transaction
 from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
+from applications.branches.models import Branch
 from .consumers import send_global_message
 from .models import Note
 from .forms import NoteCreateForm, LabelCreateForm
@@ -91,10 +92,16 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     paginate_by = 6
     
     def get_queryset(self):
-        # Filtra los productos que no han sido eliminados suavemente
-        #Filtra las notas dirigidas a la branch del user
-        user = self.request.user
-        return Note.objects.filter(deleted_at=None, branch=user.branch)
+        branch = self.request.user.branch
+        branch_actualy = self.request.session.get('branch_actualy')
+
+        if  self.request.user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
+            return Note.objects.filter(branch=branch_actualy, deleted_at=None)
+        
+        # En otros casos, filtra por la sucursal del usuario
+        return Note.objects.filter(branch=branch, deleted_at=None)
 
 
 ########################### DELETE ####################################

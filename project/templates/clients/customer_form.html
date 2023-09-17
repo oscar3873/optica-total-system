@@ -164,18 +164,68 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <!-- Aquí puedes poner tu formulario -->
-                                    <form method="post" id="HI-form">
-                                        <div id="form-to-new-checks">
-                                            {% csrf_token %}
-                                            {{h_insurance.as_p}}
-                                            <button type="button" class="btn btn-primary" id="save-hi">Enviar</button>
+                                    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+                                        <div class="card theme-wizard h-100 mb-5">
+                                            <div class="card-header bg-light pt-3 pb-2">
+                                                <div class="d-flex mb-2">
+                                                    <div class="col">
+                                                        <p class="fs--2 mb-0"><span class="text-warning">{{user.username}}</span> esta por registrar una <span class="text-warning">Obra Social</span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body" id="wizard-controller">
+                                                <div class="tab-content">
+                                                    <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel"
+                                                        aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                                                        <form method="post" id="HI-form" class="row g-3 needs-validation align-items-center" novalidate="">
+                                                            {% csrf_token %}
+                                                            <div class="row justify-content-sm-center pb-2">
+                                                                <div class="col">
+                                                                    <label for="id_name" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                                                        <span>Nombre</span>
+                                                                    </label>
+                                                                    {{ h_insurance.name }}
+                                                                    <div class="valid-feedback">Perfecto!</div>
+                                                                    <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row justify-content-sm-center pb-2">
+                                                                <div class="col-12 col-sm">
+                                                                    <label for="id_cuit" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                                                        <span>CUIT</span>
+                                                                    </label>
+                                                                    {{ h_insurance.cuit }}
+                                                                    <div class="valid-feedback">Perfecto!</div>
+                                                                    <div class="invalid-feedback">Ingrese solo números.</div>
+                                                                </div>
+                                                                <div class="col-12 col-sm">
+                                                                    <label for="id_phone_number" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                                                        <span>Telefono</span>
+                                                                    </label>
+                                                                    {{ h_insurance.phone_number }}
+                                                                    <div class="valid-feedback">Perfecto!</div>
+                                                                    <div class="invalid-feedback">Ingrese solo números.</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer row">
+                                                                <div class="mt-3">
+                                                                    <div class="col-12">
+                                                                        <button type="button" class="btn btn-primary" id="save-hi">Añadir Obra Social</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                        <div class="modal-footer">
+                                                            <div class="mt-3">
+                                                                <div class="col-12">
+                                                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancelar</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </form>
-                                    <!-- Fin del formulario -->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cerrar</button>
-                                        <!-- Agrega aquí el botón para enviar el formulario si es necesario -->
                                     </div>
                                 </div>
                             </div>
@@ -184,23 +234,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row justify-content-sm-center my-2">
-    <div class="col">
-        {% if form.errors %}
-        <div class="alert alert-danger" role="alert">
-            <h4 class="alert-heading">Se encontraron errores:</h4>
-            <ul>
-                {% for field_errors in form.errors.values %}
-                {% for error in field_errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-                {% endfor %}
-            </ul>
-        </div>
-        {% endif %}
     </div>
 </div>
 
