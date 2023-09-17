@@ -22,13 +22,13 @@
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
                     style="color: #000000;"></i></span>
             <div class="col">
-                <h5 class="mb-0 text-primary position-relative"><span
-                        class="bg-200 dark__bg-1100 pe-3">Obras Sociales</span><span
+                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Obras
+                        Sociales</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
             </div>
         </div>
     </div>
-    {% if customers %}
+    {% if h_insurances %}
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <div class="card z-index-1 mb-3" id="recentPurchaseTable"
             data-list='{"valueNames":["user_made","first_name","last_name","dni","address","phone_number","email"],"page":8,"pagination":true}'">
@@ -62,9 +62,9 @@
                         </div>
                     </div>
                     <div id="table-purchases-replace-element">
-                        <a href="{% url 'clients_app:customer_new' %}" class="btn btn-falcon-default btn-sm"
+                        <a href="{% url 'clients_app:hi_new' %}" class="btn btn-falcon-default btn-sm"
                             type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
-                                class="d-none d-sm-inline-block ms-1">Nuevo Cliente</span></a>
+                                class="d-none d-sm-inline-block ms-1">Nueva Obra Social</span></a>
                         <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
                                 data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Filtros</span></button>
@@ -95,7 +95,7 @@
                             </th>
                             <th class="sort pe-1 align-middle white-space-nowrap" data-sort="dni">Telefono
                             </th>
-                            
+
                             <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
                         </tr>
                     </thead>
@@ -121,11 +121,11 @@
                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                         aria-labelledby="dropdown0">
                                         <a class="dropdown-item"
-                                            href="{% url 'clients_app:customer_detail' customer.id %}">Detalle</a>
+                                            href="{% url 'clients_app:hi_detail' pk=h_insurance.pk %}">Detalle</a>
                                         <a class="dropdown-item"
-                                            href="{% url 'clients_app:customer_update' customer.id %}">Editar</a>
+                                            href="{% url 'clients_app:insurance_update' pk=h_insurance.pk %}">Editar</a> <!--  url 'clients_app:insurance_update' pk=h_insurance.pk -->
                                         <a class=" dropdown-item text-danger"
-                                            href="{% url 'clients_app:customer_delete' customer.id %}">Eliminar</a>
+                                            href="{% url 'clients_app:hi_delete' pk=h_insurance.pk %}">Eliminar</a>
                                     </div>
                                 </div>
                             </td>
@@ -176,8 +176,8 @@
         </div>
         <div class="card-body">
             <div class="d-flex py-3 justify-content-start">
-                <a href="{% url 'clients_app:hi_new' %}" class="btn btn-secondary me-2"
-                    type="submit">Nuevo Obra Social</a>
+                <a href="{% url 'clients_app:hi_new' %}" class="btn btn-secondary me-2" type="submit">Nuevo Obra
+                    Social</a>
             </div>
         </div>
     </div>

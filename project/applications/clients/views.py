@@ -257,7 +257,7 @@ class CalibrationOrderListView(LoginRequiredMixin, ListView):
 class HealthInsuranceListView(LoginRequiredMixin, ListView):
     model = HealthInsurance
     template_name = 'clients/hinsuranse_page.html'
-    context_object_name = 'insuranses'
+    context_object_name = 'h_insurances'
     paginate_by = 8
 
 
@@ -300,8 +300,8 @@ class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = HealthInsurance
-    template_name = 'clients/insurance_delete.html'
-    success_url = reverse_lazy('cliets_app:insurance_view')
+    template_name = 'clients/hinsurance_delete.html'
+    success_url = reverse_lazy('clients_app:insurance_view')
     
     def delete(self, request, *args, **kwargs):
         h_insurance = self.get_object()
