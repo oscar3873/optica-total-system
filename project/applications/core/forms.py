@@ -37,7 +37,13 @@ class PersonForm(ValidationFormMixin):
             'class' : 'form-control',
             'type' : 'text',
         }),
-        validators=[RegexValidator(r'^[0-9]+$', 'Ingrese un DNI válido.')]
+        validators=[
+            RegexValidator(
+                r'^(?:[FMfm]?\d{1,8}|\d{1,8})$',
+                'Ingrese un DNI válido (hasta 8 dígitos numéricos o precedidos por "F" o "M").',
+                'invalid_dni'
+            )
+        ]
     )
 
     address = forms.CharField(
@@ -48,7 +54,28 @@ class PersonForm(ValidationFormMixin):
             'type' : 'text',
             'pattern': '^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$'
 
-            })
+            }),
+            validators=[
+            RegexValidator(
+                r'^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$',
+                'No deje espacios en blanco al final',
+                'invalid_address'
+            )
+        ]
+    )
+    PHONE_CODE_CHOICES = (
+        ('+54', '+54'),
+        ('+56', '+56'),
+        ('+591', '+591'),
+        # Agrega más opciones según tus necesidades
+    )
+
+    phone_code = forms.ChoiceField(
+        choices=PHONE_CODE_CHOICES,
+        required=False,  # Puede ser opcional
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+        })
     )
 
     phone_number = forms.IntegerField(
@@ -86,7 +113,7 @@ class PersonForm(ValidationFormMixin):
         super().__init__(*args, **kwargs)
     class Meta:
         model = Person
-        fields = '__all__'
+        fields = ["first_name","last_name","dni","address","email","phone_code","phone_number","birth_date"]
 
     def clean_first_name(self):
         name = self.cleaned_data['first_name']

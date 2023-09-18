@@ -10,7 +10,7 @@ from .forms import EmployeeCreateForm,EmployeeUpdateForm
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
 from applications.users.models import User, Employee
-from applications.users.forms import UserUpdateForm
+from applications.users.forms import UserUpdateForm,UpdatePasswordForm
 
 #from .core.utils import obtener_nombres_de_campos
 from .utils import obtener_nombres_de_campos
@@ -55,56 +55,10 @@ class EmployeeUpdateView(UpdateView):
 
 class AccountView(UpdateView):
     template_name = 'users/employee_account_page.html'
-    form_class = UserUpdateForm
     model = User
-    success_url = reverse_lazy('employees_app:list_employee')
-    """
-    def get_object(self,queryset=None):
-        pk = self.kwargs.get('pk')
-        print("###############\n\n\n\n\n")
-        print(pk)
+    form_class = UserUpdateForm
+    form2_class = UpdatePasswordForm
     
-    def form_valid(self, form):
-        self.user.first_name = form.cleaned_data['first_name']
-    
-        if form.is_valid():
-            form.save()
-            return redirect('employees_app:list_employee')
-        else:
-            return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
-
-    
-    def get_object(self, queryset=None):
-        #Obtén el valor del parámetro 'pk' de la URL, este 
-        #parametro, puede ser la pk de un user, comprobar que esta pk esta relacionada 
-        #con alguna pk de la tabla users_employee
-        pk = self.request.user.pk
-        try:
-            #Me aseguro de que el usuario que esta realizando la accion sea un empleado
-            if not self.request.user.is_staff:
-                employee = Employee.objects.get(user_id=pk)
-            else:
-                employee = None
-            #busco en la tabla user de la base de datos un usuario con user_id=pk
-        except Employee.DoesNotExist:
-            #si no encuentro lo pongo en None para manejar las vistas en los templates
-            employee = None
-        return employee
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        pk = self.request.user.pk
-        context["pk"] = pk
-        return context
-    
-    def get_form_kwargs(self): 
-        # Obtener la instancia de Employee que se va a editar
-        employee_instance = get_object_or_404(Employee, pk=self.kwargs['pk'])
-        
-        # Pasar la instancia al formulario como kwarg
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = employee_instance
-        return kwargs """
 
 
 """ print("#############################\n\n\n\n\n\n")
@@ -149,17 +103,17 @@ class EmployeeListView(LoginRequiredMixin,ListView):
         if  self.request.user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
-            return Employee.objects.filter(branch=branch_actualy, deleted_at=None)
+            return Employee.objects.get_employees_branch(branch_actualy)
         
         # En otros casos, filtra por la sucursal del usuario
-        return Employee.objects.filter(branch=branch, deleted_at=None)
+        return Employee.objects.get_employees_branch(branch)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         branch = self.request.user.branch
         
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
-        exclude_fields_user = ["role","first_name","last_name","phone_number","dni","birth_date","address","id", "deleted_at", "created_at", "updated_at","date_joined","is_active","is_staff","password","last_login","username","is_superuser"]
+        exclude_fields_user = ["role","first_name","last_name","phone_number","phone_code","dni","birth_date","address","id", "deleted_at", "created_at", "updated_at","date_joined","is_active","is_staff","password","last_login","username","is_superuser"]
         context['table_column'] = obtener_nombres_de_campos(Employee, *exclude_fields)
         context['table_column_user'] = obtener_nombres_de_campos(User, *exclude_fields_user)
         context['is_staff'] =self.request.user.is_staff

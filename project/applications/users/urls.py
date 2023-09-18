@@ -1,7 +1,7 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
-from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView
+from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView, AccountView
 
 app_name = 'users_app'
 
@@ -72,5 +72,10 @@ urlpatterns = [
                     # AVISO DE CAMBIO EXITOSO (CON BOTON VOLVER A LOGIN) 
         ),
         name='password_reset_complete'
+    ),
+    path(
+        'account/<int:pk>/', 
+        AccountView.as_view(), 
+        name='account'
     ),
 ]

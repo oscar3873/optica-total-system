@@ -1,0 +1,28 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'users/components/user_account.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script>
+	const editButton = document.getElementById('edit-button');
+	const editForm = document.getElementById('edit-form');
+	const cancelButton = document.getElementById('cancel-button');
+
+	editButton.addEventListener('click', () => {
+		editButton.style.display = 'none';
+		editForm.style.display = 'block';
+	});
+
+	cancelButton.addEventListener('click', () => {
+		editButton.style.display = 'block';
+		editForm.style.display = 'none';
+	});
+</script>
+{% endblock extra_js %}

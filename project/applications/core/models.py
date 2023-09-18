@@ -13,6 +13,7 @@ class Person(SoftDeletionModel, TimestampsModel):
     """
     first_name = models.CharField(max_length=50, verbose_name="Nombre")
     last_name = models.CharField(max_length=50, db_index=True)
+    phone_code = models.CharField(max_length=10, blank=True, null=True)
     phone_number = models.PositiveBigIntegerField(null=True, blank=True)
     dni = models.CharField(max_length=20, db_index=True, null=True, blank=False)
     birth_date = models.DateField(null=True, blank=True)

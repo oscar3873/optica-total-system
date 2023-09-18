@@ -70,7 +70,8 @@ class UserCreateForm(PersonForm):
     
     def clean_password2(self):
         password2 = self.cleaned_data.get('password')
-        password2 = password2.lower()
+        if password2: #por si viene None puse este if
+            password2 = password2.lower()
         return password2
 
     def clean(self):

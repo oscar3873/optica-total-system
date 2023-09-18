@@ -3,6 +3,8 @@ from django import forms
 from .models import *
 
 from applications.core.mixins import ValidationFormMixin
+from django.core.validators import RegexValidator
+from decimal import Decimal
 
 class CategoryForm(ValidationFormMixin):
     name = forms.CharField(
@@ -60,6 +62,7 @@ class ProductForm(ValidationFormMixin):
     )
     barcode = forms.IntegerField(
         label='Codigo de barra',
+        min_value=0,
         widget=forms.NumberInput(
             attrs={
                 'placeholder': 'Codigo de barra',
@@ -67,14 +70,24 @@ class ProductForm(ValidationFormMixin):
                 'class': 'form-control',
                 'placeholder' : 'Ej: 7908132209861'
                 }
-        )
+        ),
+        error_messages={
+            'min_value': 'El stock no puede ser negativo.',
+        },
+        validators=[
+            RegexValidator(
+                regex=r'^\d+$',  # Expresión regular para validar solo dígitos
+                message='Ingrese solo dígitos (números).'
+            )
+        ]
     )
-    price = forms.IntegerField(
+    price = forms.DecimalField(
         label='Precio',
+        max_digits=10,
+        decimal_places=2,
         widget=forms.NumberInput(
             attrs={
-                'placeholder': 'Precio',
-                'type': 'number',
+                'placeholder': 'Ej: 123.32',
                 'class': 'form-control',
                 'placeholder' : '0.00'
                 }
@@ -82,7 +95,7 @@ class ProductForm(ValidationFormMixin):
     )
     stock = forms.IntegerField(
         label='Stock',
-        min_value=1,
+        min_value=0,
         widget=forms.NumberInput(
             attrs={
                 'placeholder': 'Stock',
@@ -91,7 +104,10 @@ class ProductForm(ValidationFormMixin):
                 'class': 'form-control',
                 'placeholder' : 'Ej: 23'
                 }
-        )
+        ),
+        error_messages={
+            'min_value': 'El stock no puede ser negativo.',
+        }
     )
     description = forms.CharField(
         max_length=100,
@@ -149,6 +165,12 @@ class ProductForm(ValidationFormMixin):
         if self.instance.pk:
             related_features = self.instance.product_feature.values_list('feature__id', flat=True)
             self.fields['features'].initial = related_features
+    
+    def clean_price(self):
+        price = self.cleaned_data.get('price')
+        if price is not None and price < Decimal('0.00'):
+            raise forms.ValidationError('El precio no puede ser un número negativo.')
+        return price
 
     def clean_name(self):
         name = self.cleaned_data['name']
