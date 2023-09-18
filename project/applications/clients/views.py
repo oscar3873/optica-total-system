@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
 
 from applications.core.mixins import CustomUserPassesTestMixin
+from applications.branches.models import Branch
 
 from .models import *
 from .forms import *
@@ -233,12 +234,17 @@ class CustomerListView(LoginRequiredMixin, ListView):
     context_object_name = 'customers'
     paginate_by = 8
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self):
         branch = self.request.user.branch
+        branch_actualy = self.request.session.get('branch_actualy')
 
-        context['customers'] = Customer.objects.filter(branch=branch, deleted_at=None)
-        return context
+        if  self.request.user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
+            return Customer.objects.filter(branch=branch_actualy, deleted_at=None)
+        
+        # En otros casos, filtra por la sucursal del usuario
+        return Customer.objects.filter(branch=branch, deleted_at=None)
 
 
 class CalibrationOrderListView(LoginRequiredMixin, ListView):
@@ -251,7 +257,7 @@ class CalibrationOrderListView(LoginRequiredMixin, ListView):
 class HealthInsuranceListView(LoginRequiredMixin, ListView):
     model = HealthInsurance
     template_name = 'clients/hinsuranse_page.html'
-    context_object_name = 'insuranses'
+    context_object_name = 'h_insurances'
     paginate_by = 8
 
 
@@ -294,8 +300,8 @@ class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = HealthInsurance
-    template_name = 'clients/insurance_delete.html'
-    success_url = reverse_lazy('cliets_app:insurance_view')
+    template_name = 'clients/hinsurance_delete.html'
+    success_url = reverse_lazy('clients_app:insurance_view')
     
     def delete(self, request, *args, **kwargs):
         h_insurance = self.get_object()

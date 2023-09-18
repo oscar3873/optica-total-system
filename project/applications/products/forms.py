@@ -5,10 +5,12 @@ from .models import *
 from applications.core.mixins import ValidationFormMixin
 
 class CategoryForm(ValidationFormMixin):
-    name = forms.CharField(max_length=100,
+    name = forms.CharField(
+        max_length=100,
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Lentes de sol'
                 }
         )
     )
@@ -107,10 +109,10 @@ class ProductForm(ValidationFormMixin):
     category = forms.ModelChoiceField(
         label='Categoría',
         queryset=Category.objects.all(),
+        empty_label='Elija una categoria...',
         widget=forms.Select(
             attrs={
                 'placeholder': 'Categoría',
-                #'type': 'text',
                 'class': 'form-control',
                 'placeholder' : 'Seleccione una categoria o agregue una nueva'
                 }
@@ -119,10 +121,10 @@ class ProductForm(ValidationFormMixin):
     brand = forms.ModelChoiceField(
         label='Marca',
         queryset=Brand.objects.all(),
+        empty_label='Elija una marca...',
         widget=forms.Select(
             attrs={
                 'placeholder': 'Marca',
-                #'type': 'text',
                 'class': 'form-control',
                 }
         )

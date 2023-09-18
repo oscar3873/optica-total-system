@@ -96,11 +96,15 @@ class FeatureFullCreateView(CustomUserPassesTestMixin, FormView):
 
     def form_valid(self, form):
         
-        feature, created_f = validate_exists_feature_full(form, self.request.user)
-        
-        if not created_f:
+        feature, created_ft, created_f = validate_exists_feature_full(form, self.request.user)
+        type = form.cleaned_data['type']
+
+        if not created_f: # Pregunta si ya existe la caracteristica (incluido el tipo)
             return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
         
+        elif not created_ft: # Pregunta si ya existe el tipo solo
+            return JsonResponse({'status': 'error', 'error_message': f'Por favor cree la nueva característica desde la columna "{type}".'})
+
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
             new_feature_data = {
                 'id':  feature.id,
@@ -118,21 +122,25 @@ class FeatureUnitCreateView(FormView):
     form_class = FeatureForm_to_formset
 
     def form_valid(self, form):
+        if len(form.cleaned_data['value']) < 1:
+            return JsonResponse({'status': 'error', 'error_message': 'Debe ingresar por lo menos 1 caracter.'})
+
         type = Feature_type.objects.get(name=form.cleaned_data['type'])
 
-        feature = Feature.objects.create(
+        feature, created = Feature.objects.get_or_create(
             value = form.cleaned_data['value'],
             type = type,
             user_made = self.request.user
         )
-
+        if not created: 
+            return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
+        
         new_feature_data = {
                 'id':  feature.id,
                 'name': feature.value,
                 'type': feature.type.name,
             }
             # Si es una solicitud AJAX, devuelve una respuesta JSON
-        print(new_feature_data)
         return JsonResponse({'status': 'success', 'new_feature_unit': new_feature_data})
 
 
@@ -289,14 +297,20 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        branch = self.request.user.branch
+        branch_actualy = self.request.session.get('branch_actualy')
+
+        if  self.request.user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
+            return Product.objects.filter(branch=branch_actualy, deleted_at=None)
+        
+        # En otros casos, filtra por la sucursal del usuario
+        return Product.objects.filter(branch=branch, deleted_at=None)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        branch = self.request.user.branch
-        try:
-            products = Product.objects.filter(branch=branch, deleted_at=None)
-        except Product.DoesNotExist:
-            products = None
-        context['products'] = products
         
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)

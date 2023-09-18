@@ -46,6 +46,11 @@ urlpatterns = [
         HealthInsuranceUpdateView.as_view(), 
         name='insurance_update'
     ),
+    path(
+        'health_insurance/<pk>/update/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
+        HealthInsuranceUpdateView.as_view(), 
+        name='insurance_update'
+    ),
 
     #### LIST ####
     path(
@@ -96,5 +101,11 @@ urlpatterns = [
         '<pk_c>/lab/<pk>/delete/',
         CalibrationOrderDeleteView.as_view(),
         name='laboratory_delete'
+    ),
+
+    path(
+        'insurance/<pk>/delete/',
+        HealthInsuranceDeleteView.as_view(),
+        name='hi_delete'
     )
 ]

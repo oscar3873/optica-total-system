@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BranchCreateView,BranchListView,BranchUpdateView
+from .views import BranchCreateView, BranchListView, BranchUpdateView, BranchChangeView
 
 app_name = 'branches_app'
 
@@ -25,4 +25,10 @@ urlpatterns = [
         BranchListView.as_view(),
         name='branch_list'
     ),
+
+    path(
+        'cambiar_sucursal/', 
+        BranchChangeView.as_view(),
+        name='branch_change'
+        ),
 ]

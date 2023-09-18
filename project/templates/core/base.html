@@ -692,6 +692,36 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
+                                    {% csrf_token %}
+                                    <!-- SUCURSAL DEL USUARIO -->
+                                    {{ branch_user.name }}
+                                    
+                                    <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
+                                    <label for="branch_id">Selecciona una sucursal:</label>
+                                    <select name="branch_id" id="branch_id">
+                                        {% for branch in branches %}
+                                        <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
+                                            {{ branch.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" style="display: none;"></button>
+                                </form>
+                            </li>
+                        {% endif %}
+                        <script>
+                            // Escucha el evento 'change' del select
+                            document.getElementById('branch_id').addEventListener('change', function () {
+                                // Envía el formulario automáticamente cuando se selecciona una sucursal
+                                document.getElementById('branch-change-form').submit();
+                            });
+                        </script>
+
+
                         <li class="nav-item">
                             <div class="theme-control-toggle fa-icon-wait px-2">
                                 <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle"

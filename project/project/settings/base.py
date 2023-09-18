@@ -93,6 +93,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # BRANCH context_processors: para que este siempre presente el "switch" para cambiar sucursal (ADMIN)
+                'applications.branches.context_processors.branches',
             ],
         },
     },

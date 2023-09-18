@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+  <div class="container">
+    <h2>Eliminar Obra Social</h2>
+    <p>¿Estás seguro de que deseas eliminar esta Obra Social?</p>
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-danger" value="Eliminar">
+      <a href="{% url 'clients_app:insurance_view' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}

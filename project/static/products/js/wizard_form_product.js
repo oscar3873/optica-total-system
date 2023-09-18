@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
 
         let typeTitle = document.createElement('h5');
+        typeTitle.classList.add('mb-0');
         typeTitle.textContent = `${type}`;
 
         // Contenedor que alinea horizontalmente el h5 y el botón
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         addButton.setAttribute('title','Agregar uno nuevo');
         addButton.textContent = '+';
         addButton.type = 'button';
-        addButton.classList.add('btn', 'btn-sm', 'ms-4');
+        addButton.classList.add('btn', 'btn-sm', 'ms-1', 'px-1');
 
         addButton.addEventListener('click', function() {
             if (!isModalOpen) {
@@ -216,8 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
     
                         let typeContainer = document.createElement('div');
-                        typeContainer.classList.add('col-4', 'col-md-3', 'pt-2');
-                        let typeTittle = document.createElement('h5');        
+                        typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
+                        let typeTittle = document.createElement('h5');  
+                        typeTittle.classList.add('mb-0');
                         
                         let checkboxContainer = document.createElement('div');
                         checkboxContainer.classList.add('col-md-12', 'mx-4', 'pt-1');
@@ -257,12 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             });
-        
           }
-
-
-        
-        
     });
     
 });
