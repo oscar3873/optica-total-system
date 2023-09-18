@@ -2,12 +2,12 @@ from audioop import reverse
 from typing import Any
 from django.db import models, transaction
 from django.forms.models import BaseModelForm
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (CreateView, DetailView, UpdateView, FormView,ListView,DeleteView)
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
 from .forms import EmployeeCreateForm,EmployeeUpdateForm
@@ -34,6 +34,10 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
             user = User.objects.create_user(**form.cleaned_data) # Funcion que crea EMPLEADOS
             )
         return super().form_valid(form)
+    
+    def form_invalid(self, form: Any) -> HttpResponse:
+        messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
+        return super().form_invalid(form)
 
 
 class EmployeeUpdateView(UpdateView):
