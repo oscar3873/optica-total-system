@@ -6,7 +6,6 @@ from django.core.validators import RegexValidator
 from applications.core.mixins import ValidationFormMixin
 from applications.core.forms import PersonForm
 from applications.branches.models import Branch
-from django.contrib import messages
 
 class UserCreateForm(PersonForm):
     """

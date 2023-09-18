@@ -247,6 +247,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         self.success_url = reverse_lazy('products_app:product_detail', kwargs={'pk': self.get_object().pk})
         return super().form_valid(form)
 
+
 class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
@@ -259,6 +260,7 @@ class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
         category.save()
                 
         return super().form_valid(form)
+
 
 class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
