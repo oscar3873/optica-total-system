@@ -11,6 +11,9 @@
 {% block main %}
 
 <div class="container py-4">
+
+  {% include 'core/components/messages.html' %}
+
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!-- Titulo del formulario wizard -->
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
@@ -91,9 +94,9 @@
             {% if form.category.errors %}
             <div class="text-danger fs--2">
               Seleccione una de las opciones o cargue una nueva categoria.
-            {% endif %}
             </div>
-          
+            {% endif %}
+          </div>  
 
           <!-- Tab 2 -->
           
@@ -218,20 +221,20 @@
       </form>
     </div>
 
+    <div id="feature_checks" style="display: none;">
     {% for check in form.features %}
-    <div style="display: none;">
       {{check}}
-    </div>
     {% endfor %}
+    </div>
     <!-- Card footer -->
     <div class="card-footer bg-light">
       <div class="px-sm-3 px-md-5">
         <ul class="pager wizard list-inline mb-0">
           <li class="previous">
-            <button class="btn btn-link ps-0" type="button">anterior</button>
+            <button class="btn btn-link ps-0" type="button">Anterior</button>
           </li>
           <li class="next">
-            <button class="btn btn-primary px-5 px-sm-6" type="submit">siguiente</button>
+            <button id="btn-next" class="btn btn-primary px-5 px-sm-6" type="submit">Siguiente</button>
           </li>
         </ul>
       </div>

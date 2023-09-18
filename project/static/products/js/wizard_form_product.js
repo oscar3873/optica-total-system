@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', function() {
         typeContainer.appendChild(checkboxContainer_unit);
         typesContainer.appendChild(typeContainer);
     }
+    const featuresContainer = document.getElementById('feature_checks');
+    featuresContainer.remove();
 
     $('#save-feature-unit').on('click', function() {
         var checkboxes = document.querySelectorAll('input[type="checkbox"][id^="id_features_"]');
@@ -150,8 +152,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Manejar la creación de un nuevo Tipo de Características
     document.getElementById("save-feature").addEventListener("click", function() {
-        console.log('Entra');
-
         var typeInput = document.getElementById("id_type");
         var valueInput = document.getElementById("id_value");
         var typeValue = typeInput.value.trim();
