@@ -10,15 +10,7 @@
   <!--    Errores de Sistema (Backend)-->
   <!-- ===============================================-->
 
-  {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
-    <p class="mb-0 flex-1">{{ message }}</p>
-    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  {% endfor %}
-  {% endif %}
+  {% include 'core/components/messages.html' %}
   
   <!-- ===============================================-->
   <!--    Fin Errores de Sistema (Backend)-->
@@ -47,7 +39,7 @@
   {% if products %}
   <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
     <!--Card-->
-    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_product","cash_register","payment_method","amount", "type_operation"],"page":8,"pagination":true}'>
+    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made", "barcode","date_product","cash_register","payment_method","amount", "type_operation"],"page":8,"pagination":true}'>
       <div class="card-header">
         <div class="row flex-between-center">
           <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
@@ -114,7 +106,7 @@
                 <td class="align-start user_made">{{product.user_made}}</td>
                 <td class="align-start name">{{product.name}}</td>
                 <td class="align-start barcode">{{product.barcode}}</td>
-                <td class="align-start price">{{product.price}}</td>
+                <td class="align-start sale_price">{{product.sale_price}}</td>
                 <td class="align-start description">{{product.description}}</td>
                 <td class="align-start stock">{{product.stock}}</td>
                 <td class="align-start category_name">{{product.category.name}}</td>

@@ -9,18 +9,7 @@
     <!--    Errores de Sistema (Backend)-->
     <!-- ===============================================-->
 
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert {% if message.level_tag == " success" %} alert-success {% else %} alert-warning {% endif %}
-        border-2 d-flex align-items-center" role="alert">
-        <div class="{% if message.level_tag == " success" %} bg-success {% else %} bg-warning {% endif %} me-3
-            icon-item"><span class="{% if message.level_tag == " success" %} far fa-check-circle {% else %} fas
-                fa-exclamation-circle {% endif %} text-white fs-3"></span></div>
-        <p class="mb-0 flex-1">{{ message }}</p>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
+    {% include 'core/components/messages.html' %}
 
     <!-- ===============================================-->
     <!--    Fin Errores de Sistema (Backend)-->

@@ -43,7 +43,7 @@ LOCAL_APPS = (
     "applications.products",
     "applications.suppliers",
     "applications.dashboard",
-    # "applications.sales",
+    "applications.sales",
     "applications.cashregister",
     "applications.notifications",
 )

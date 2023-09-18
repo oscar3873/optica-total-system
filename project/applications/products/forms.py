@@ -23,6 +23,12 @@ class CategoryForm(ValidationFormMixin):
     
     def clean_name(self):
         name = self.cleaned_data['name']
+        name_formated = name.capitalize()
+        try:
+            Category.objects.get(name=name_formated)
+            raise forms.ValidationError("Ya existe una categoria con ese nombre.")
+        except Category.DoesNotExist:
+            pass
         self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
         return name
 
@@ -42,7 +48,13 @@ class BrandForm(ValidationFormMixin):
     
     def clean_name(self):
         name = self.cleaned_data['name']
-        self.validate_length(name, 3, 'El nombre de la marca debe tener al menos 3 caracteres.')
+        name_formated = name.capitalize()
+        try:
+            Brand.objects.get(name=name_formated)
+            raise forms.ValidationError("Ya existe una marca con ese nombre.")
+        except Brand.DoesNotExist:
+            pass
+        self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
         return name
 
 
@@ -81,8 +93,32 @@ class ProductForm(ValidationFormMixin):
             )
         ]
     )
-    price = forms.DecimalField(
-        label='Precio',
+    suggested_price = forms.DecimalField(
+        label='Precio sugerido',
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'Ej: 123.32',
+                'class': 'form-control',
+                'placeholder' : '0.00'
+                }
+        )
+    )
+    cost_price = forms.DecimalField(
+        label='Precio de costo',
+        max_digits=10,
+        decimal_places=2,
+        widget=forms.NumberInput(
+            attrs={
+                'placeholder': 'Ej: 123.32',
+                'class': 'form-control',
+                'placeholder' : '0.00'
+                }
+        )
+    )
+    sale_price = forms.DecimalField(
+        label='Precio de venta',
         max_digits=10,
         decimal_places=2,
         widget=forms.NumberInput(
@@ -157,7 +193,7 @@ class ProductForm(ValidationFormMixin):
     class Meta:
         model = Product
         #necesario para el front 
-        fields = ('name', 'barcode', 'price', 'description', 'stock', 'category', 'brand')
+        fields = ('name', 'barcode', 'cost_price', 'suggested_price', 'sale_price', 'description', 'stock', 'category', 'brand')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -166,8 +202,20 @@ class ProductForm(ValidationFormMixin):
             related_features = self.instance.product_feature.values_list('feature__id', flat=True)
             self.fields['features'].initial = related_features
     
-    def clean_price(self):
-        price = self.cleaned_data.get('price')
+    def clean_suggested_price(self):
+        price = self.cleaned_data.get('suggested_price')
+        if price is not None and price < Decimal('0.00'):
+            raise forms.ValidationError('El precio no puede ser un número negativo.')
+        return price
+    
+    def clean_sale_price(self):
+        price = self.cleaned_data.get('sale_price')
+        if price is not None and price < Decimal('0.00'):
+            raise forms.ValidationError('El precio no puede ser un número negativo.')
+        return price
+    
+    def clean_cost_price(self):
+        price = self.cleaned_data.get('cost_price')
         if price is not None and price < Decimal('0.00'):
             raise forms.ValidationError('El precio no puede ser un número negativo.')
         return price
@@ -206,6 +254,16 @@ class FeatureForm(ValidationFormMixin):
         model = Feature
         fields = ('value','type')
 
+    def clean_value(self):
+        value = self.cleaned_data['value']
+        value_formated = value.upper()
+        try:
+            Feature.objects.get(value=value_formated)
+            raise forms.ValidationError("Ya existe una categoria con ese nombre.")
+        except Feature.DoesNotExist:
+            pass
+        self.validate_length(value, 3, 'La categoria debe tener al menos 3 caracteres.')
+        return value
 
 
 class FeatureTypeForm(ValidationFormMixin):

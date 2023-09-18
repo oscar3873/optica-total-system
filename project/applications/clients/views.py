@@ -1,4 +1,3 @@
-from typing import Any
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse

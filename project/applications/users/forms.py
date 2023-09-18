@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Employee
+from .models import User
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
@@ -58,21 +58,26 @@ class UserCreateForm(PersonForm):
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        username = username.lower()
+        username = username
         self.validate_username(username)
         return username
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        password = password.lower()
         self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password
     
     def clean_password2(self):
         password2 = self.cleaned_data.get('password')
-        if password2: #por si viene None puse este if
-            password2 = password2.lower()
         return password2
+
+    def clean_email(self):
+        email = super().clean_email()
+        try:
+            User.objects.get(email=email)
+            raise forms.ValidationError("El correo ingresado ya está en uso.")
+        except User.DoesNotExist:
+            return email
 
     def clean(self):
         cleaned_data = super().clean()
@@ -87,7 +92,6 @@ class UserUpdateForm(PersonForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['birth_date'].required=False
     
     class Meta:

@@ -129,7 +129,7 @@
                   <div class="col-12, col-md-6">
                     <label for="{{ form.name.id_for_label }}" class="form-label">Nombre del producto:</label>
                     {{form.name}}
-                    <small>El nombre del producto debe tener al menos 3 caracteres.</small>
+                    <small>El nombre del producto debe tener <span class="text-warning">al menos 3 caracteres.</span></small>
                     {% if form.name.errors %}
                     <div class="text-danger fs--2">
                       {{form.name.errors}}
@@ -140,7 +140,7 @@
                   <div class="col-12, col-md-6">
                     <label for="{{ form.barcode.id_for_label }}" class="form-label">Código de barras:</label>
                     {{form.barcode}}
-                    <small>Solo se permiten numeros positivos.</small>
+                    <small>Solo se permiten <span class="text-warning">numeros positivos.</span></small>
                     {% if form.barcode.errors %}
                       <div class="text-danger fs--2">
                         {{form.barcode.errors}}
@@ -150,23 +150,43 @@
                 </div>
 
                 <div class="row pt-3">
-                  <div class="col-12, col-md-6">
+                  <div class="col-12, col-md-3">
                     <label for="{{ form.stock.id_for_label }}" class="form-label">Stock:</label>
                     {{form.stock}}
-                    <small>Solo se permiten numeros positivos o cero.</small>
+                    <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
                     {% if form.stock.errors %}
                       <div class="text-danger fs--2">
                         {{form.stock.errors}}
                       </div>
                     {% endif %}
                   </div>
-                  <div class="col-12, col-md-6">
-                    <label for="{{ form.price.id_for_label }}" class="form-label">Precio:</label>
-                    {{form.price}}
-                    <small>Solo se permiten numeros positivos o cero.</small>
-                    {% if form.price.errors %}
+                  <div class="col-12, col-md-3">
+                    <label for="{{ form.cost_price.id_for_label }}" class="form-label">Precio de compra:</label>
+                    {{form.cost_price}}
+                    <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
+                    {% if form.cost_price.errors %}
                       <div class="text-danger fs--2">
-                        {{form.price.errors}}
+                        {{form.cost_price.errors}}
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="col-12, col-md-3">
+                    <label for="{{ form.suggested_price.id_for_label }}" class="form-label">Precio sugerido:</label>
+                    {{form.suggested_price}}
+                    <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
+                    {% if form.suggested_price.errors %}
+                      <div class="text-danger fs--2">
+                        {{form.suggested_price.errors}}
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="col-12, col-md-3">
+                    <label for="{{ form.sale_price.id_for_label }}" class="form-label">Precio de venta:</label>
+                    {{form.sale_price}}
+                    <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
+                    {% if form.sale_price.errors %}
+                      <div class="text-danger fs--2">
+                        {{form.sale_price.errors}}
                       </div>
                     {% endif %}
                   </div>
@@ -392,7 +412,7 @@
 {% block extra_js %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{% static 'products/js/formset.js' %}"></script> <!-- Agregar este enlace -->
+<!-- <script src="{% static 'products/js/formset.js' %}"></script> Agregar este enlace -->
 <script src="{% static 'products/js/wizard_form_product.js' %}"></script>
 <script src="{% static 'products/js/dinamic_create_category.js' %}"></script>
 <script src="{% static 'products/js/dinamic_create_brand.js' %}"></script>

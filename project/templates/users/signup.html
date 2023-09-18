@@ -9,6 +9,9 @@
 
 
 <div class="container py-4">
+  {% if form.errors %}
+  {% include 'core/components/messages.html' %}
+  {% endif %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!-- Titulo del formulario wizard -->
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
@@ -90,154 +93,158 @@
                   <div class="col">
                     <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre:</label>
                     {{form.first_name}}
-                    <small>Debe escribir almenos 3 caracteres.</small>
+                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
                     {% if form.first_name.errors %}
-                      {% for error in form.first_name.errors  %}
-                        <div class="text-danger fs--2">
-                          {{error}}
-                        </div>
-                      {% endfor %}
+                    {% for error in form.first_name.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
                     {% endif %}
 
                   </div>
                   <div class="col">
                     <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido:</label>
                     {{form.last_name}}
-                    <small>Debe escribir almenos 3 caracteres.</small>
+                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
                     {% if form.last_name.errors %}
-                      {% for error in form.last_name.errors  %}
-                        <div class="text-danger fs--2">
-                          {{error}}
-                        </div>
-                      {% endfor %}
+                    {% for error in form.last_name.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
                     {% endif %}
                   </div>
                 </div>
                 <div class="row pt-3">
-                  <div class="col">
+                  <div class="col-12 col-sm-3">
                     <label for="{{ form.dni.id_for_label }}" class="form-label">DNI:</label>
                     {{form.dni}}
                     {% if form.dni.errors %}
-                    
-                      {% for error in form.dni.errors  %}
-                        <div class="text-danger fs--2">
-                          {{error}}
-                        </div>
-                      {% endfor %}
-                      
+
+                    {% for error in form.dni.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
+
                     {% endif %}
                   </div>
-                  <div class="col">
+                  <div class="col-6 col-sm-2">
                     <label for="{{ form.phone_code.id_for_label }}" class="form-label">Código del pais:</label>
                     {{ form.phone_code }}
                     {% if form.phone_code.errors %}
-                      <div class="text-danger fs--2">
-                        {{ form.phone_code.errors.0 }}
-                      </div>
+                    <div class="text-danger fs--2">
+                      {{ form.phone_code.errors.0 }}
+                    </div>
                     {% endif %}
                   </div>
-                  <div class="col">
+                  <div class="col-12 col-sm-4">
                     <label for="{{ form.phone_number.id_for_label }}" class="form-label">Celular:</label>
                     {{form.phone_number}}
-                    <small>Ingrese el número sin espacios ni guiones</small>
+                    <small>Ingrese el número <span class="text-warning">sin espacios ni guiones.</span></small>
                     {% if form.phone_number.errors %}
-                      {% for error in form.phone_number.errors  %}
-                          <div class="text-danger fs--2">
-                            {{error}}
-                          </div>
-                      {% endfor %}
+                    {% for error in form.phone_number.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
                     {% endif %}
                   </div>
-                  <div class="col">
+                  <div class="col-12 col-sm-3">
                     <label for="{{ form.birth_date.id_for_label }}" class="form-label">Fecha de nacimiento:</label>
                     {{form.birth_date}}
                     {% if form.birth_date.errors %}
-                      {% for error in form.birth_date.errors  %}
-                            <div class="text-danger fs--2">
-                              {{error}}
-                            </div>
-                      {% endfor %}
+                    {% for error in form.birth_date.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
                     {% endif %}
                   </div>
                 </div>
               </div>
             </div>
-
-            <label for="{{ form.address.id_for_label }}" class="form-label pt-3">Domicilio:</label>
-            {{form.address}}
-            {% if form.address.errors %}
-              {% for error in form.address.errors  %}
+            <div class="row">
+              {% if not admin %}
+              <div class="col-12 col-sm-3 pt-3">
+                <label for="{{ form.employment_date.id_for_label }}" class="form-label">Fecha de alta</label>
+                {{form.employment_date}}
+                <small>Fecha de <span class="text-warning">alta como empleado.</span></small>
+                {% if form.employment_date.errors %}
+                {% for error in form.employment_date.errors %}
                 <div class="text-danger fs--2">
                   {{error}}
                 </div>
-              {% endfor %}
-            {% endif %}
+                {% endfor %}
+                {% endif %}
+              </div>
+              {% endif %}
+
+              <div class="col-12 col-sm-9 pt-3">
+                <label for="{{ form.address.id_for_label }}" class="form-label">Domicilio:</label>
+                {{form.address}}
+                {% if form.address.errors %}
+                {% for error in form.address.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+            </div>
           </div>
           <!-- Tab 3 -->
           <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab3"
             id="bootstrap-wizard-validation-tab3">
             <div class="row">
-              <div class="col">
+              <div class="col-12 col-sm-6">
                 <label for="{{ form.username.id_for_label }}" class="form-label">Usuario</label>
                 {{form.username}}
-                <small>El nombre de usuario no puede contener mayúsculas.</small>
+                <small>El nombre de usuario <span class="text-warning">no puede contener mayúsculas.</span></small>
                 {% if form.username.errors %}
-                  {% for error in form.username.errors  %}
-                    <div class="text-danger fs--2">
-                      {{error}}
-                    </div>
-                  {% endfor %}
+                {% for error in form.username.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
                 {% endif %}
               </div>
-              {% if not admin %}
-                <div class="col">
-                    <label for="{{ form.employment_date.id_for_label }}" class="form-label">Fecha de alta</label>
-                    {{form.employment_date}}
-                    <small>Ingrese una fecha </small>
-                    {% if form.employment_date.errors %}
-                      {% for error in form.employment_date.errors  %}
-                        <div class="text-danger fs--2">
-                          {{error}}
-                        </div>
-                      {% endfor %}
-                    {% endif %}
-                </div>
-              {% endif %}
-              <div class="col">
+              <div class="col-12 col-sm-6">
                 <label for="{{ form.email.id_for_label }}" class="form-label ">Correo</label>
                 {{form.email}}
                 {% if form.email.errors %}
-                  {% for error in form.email.errors  %}
-                    <div class="text-danger fs--2">
-                      {{error}}
-                    </div>
-                  {% endfor %}
+                {% for error in form.email.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
                 {% endif %}
               </div>
             </div>
-            
+
 
             <div class="row">
-              <div class="col">
+              <div class="col-12 col-sm-6">
                 <label for="{{ form.password.id_for_label }}" class="form-label pt-3">Contraseña</label>
                 {{form.password}}
                 {% if form.password.errors %}
-                  {% for error in form.password.errors  %}
-                    <div class="text-danger fs--2">
-                      {{error}}
-                    </div>
-                  {% endfor %}
+                {% for error in form.password.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
                 {% endif %}
               </div>
-              <div class="col">
+              <div class="col-12 col-sm-6">
                 <label for="{{ form.password2.id_for_label }}" class="form-label pt-3">Repetir contraseña</label>
                 {{form.password2}}
                 {% if form.password2.errors %}
-                  {% for error in form.password2.errors  %}
-                    <div class="text-danger fs--2">
-                      {{error}}
-                    </div>
-                  {% endfor %}
+                {% for error in form.password2.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
                 {% endif %}
               </div>
             </div>
@@ -269,10 +276,10 @@
       <div class="px-sm-3 px-md-5">
         <ul class="pager wizard list-inline mb-0">
           <li class="previous">
-            <button class="btn btn-link ps-0" type="button">anterior</button>
+            <button class="btn btn-link ps-0" type="button">Anterior</button>
           </li>
           <li class="next">
-            <button class="btn btn-primary px-5 px-sm-6" type="submit">siguiente</button>
+            <button class="btn btn-primary px-5 px-sm-6" type="submit">Siguiente</button>
           </li>
         </ul>
       </div>

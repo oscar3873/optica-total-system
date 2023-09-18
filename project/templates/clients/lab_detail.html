@@ -8,15 +8,7 @@
 {% block main %}
 
 <div class="container py-4">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-        <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
-        <p class="mb-0 flex-1">{{ message }}</p>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
+    {% include 'core/components/messages.html' %}
 
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
                 class="fa-inverse fa-stack-1x text-primary fas fa-flask"></i></span>
