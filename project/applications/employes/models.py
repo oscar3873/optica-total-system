@@ -37,6 +37,6 @@ class Employee_Objetives(BaseAbstractWithUser):
         accumulated: Cantidad acumulada del objetivo ("Porcentaje")
     """
     is_completed = models.BooleanField(default=False, null=True, blank=True, verbose_name='Completado')
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Empleado')
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Empleado', related_name='employee_objetives')
     objetive = models.ForeignKey(Objetives, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Objetivo')
     accumulated = models.PositiveIntegerField(default= 0, null=True, blank=True, verbose_name='Acumulado')
