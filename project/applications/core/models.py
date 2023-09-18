@@ -57,6 +57,7 @@ class SaveGeneriModel(SoftDeletionModel, TimestampsModel):
 class Objetives(SoftDeletionModel, TimestampsModel):
     """
     Clase para los objetivos que tendran las Scursales y los empleados.
+        title: Asunto del objetivo
         description: Detalles del objetivo a completar
         start_date/exp_date: Fecha de validez (desde el 1 al ultimo dia del mes)
         quantity: Objetivo al que se quiere llegar (cantidad de ventas o monetario)
@@ -67,7 +68,7 @@ class Objetives(SoftDeletionModel, TimestampsModel):
     ]
 
     to = models.CharField(max_length=9, choices=PARA, default="EMPLEADOS", null=True, blank=True)
-    type = models.CharField(max_length=25, null=True, blank=True)
+    title = models.CharField(max_length=25, null=True, blank=True)
     description = models.CharField(max_length=150, null=True, blank=True, verbose_name='Detalle de Objetivo')
     start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
     exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
