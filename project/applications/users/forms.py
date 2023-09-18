@@ -1,5 +1,5 @@
 from django import forms
-from .models import User, Employee
+from .models import User
 from django.contrib.auth import authenticate
 from django.core.validators import RegexValidator
 
@@ -74,6 +74,14 @@ class UserCreateForm(PersonForm):
             password2 = password2.lower()
         return password2
 
+    def clean_email(self):
+        try:
+            email = super().clean_email()
+            User.objects.get(email=email)
+        except User.DoesNotExist:
+            pass
+        return email
+
     def clean(self):
         cleaned_data = super().clean()
         password = cleaned_data.get('password')
@@ -87,7 +95,6 @@ class UserUpdateForm(PersonForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields['birth_date'].required=False
     
     class Meta:
@@ -181,27 +188,3 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
-    
-class EmployeeUpdateForm(PersonForm):
-    class Meta:
-        model = Employee
-        fields = ('email','first_name', 'last_name','dni', 'phone_number', 'address')
-class EmployeeCreateForm(UserCreateForm):
-    employment_date = forms.DateField(
-        required=False,
-        widget=forms.DateInput(
-            attrs={
-                'class': 'form-control',
-                'type': 'date',
-            },
-            format='%Y-%m-%d'
-        )
-    )
-    class Meta:
-        model = Employee
-        fields = ['employment_date',]
-
-    def clean_employment_date(self):
-        employment_date = self.cleaned_data.get('employment_date')
-        self.validate_date(employment_date)
-        return employment_date

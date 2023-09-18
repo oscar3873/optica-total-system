@@ -8,7 +8,7 @@ from django.views.generic.edit import (FormView,)
 from django.views.generic import (DetailView,UpdateView)
 
 from .forms import UserCreateForm, LoginForm, UpdatePasswordForm,UserUpdateForm
-from .models import User, Employee
+from .models import User
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
@@ -19,7 +19,8 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
     context_object_name = 'admin'
 
     def get_object(self, queryset=None):
-        pk = self.request.user.pk  # Obtén la pk del usuario
+        # pk = self.request.user.pk  # Obtén la pk del usuario
+        pk = self.kwargs.get('pk') # PK traido de la URL
         try:
             admin = User.objects.get(pk=pk)
             #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
@@ -48,6 +49,7 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
         form.cleaned_data.pop('phone_code')
         User.objects.create_admin(**form.cleaned_data) # Funcion que crea ADMINIS
         return super().form_valid(form)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         #Le paso este contexto al template, para no poner el input
@@ -109,9 +111,3 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         
         logout(self.request)
         return super().form_valid(form)
-    
-    
-class AccountView(UpdateView):
-    template_name = 'users/employee_account_page.html'
-    form_class = UserUpdateForm
-    model = User

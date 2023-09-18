@@ -1,7 +1,7 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
-from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView, AccountView
+from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView
 
 app_name = 'users_app'
 
@@ -11,11 +11,6 @@ urlpatterns = [
         AdminCreateView.as_view(),
         name = 'signup_admin'
     ),
-    #path(
-    #    'signup/employee/',
-    #    EmployeeCreateView.as_view(),
-    #    name = 'signup'
-    #),
     path(
         'login/',
         LoginView.as_view(),
@@ -72,10 +67,5 @@ urlpatterns = [
                     # AVISO DE CAMBIO EXITOSO (CON BOTON VOLVER A LOGIN) 
         ),
         name='password_reset_complete'
-    ),
-    path(
-        'account/<int:pk>/', 
-        AccountView.as_view(), 
-        name='account'
     ),
 ]

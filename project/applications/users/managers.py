@@ -55,7 +55,3 @@ class UserManager(BaseUserManager):
 
     def get_absolute_url(self):
         return reverse('employees_app:profile_employee', kwargs={'pk': self.pk})
-
-class EmployeeManager(BaseUserManager):
-    def get_employees_branch(self, branch):
-        return self.filter(user__branch=branch)

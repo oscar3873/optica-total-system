@@ -1,27 +1,32 @@
 from django.db import models
 
-from applications.core.models import Person, BaseAbstractWithUser, Objetives
-
+from .managers import EmployeeManager
+from applications.core.models import BaseAbstractWithUser, Objetives
+from applications.users.models import User
 
 # Create your models here.
 
 #No se usa el modelo
-class Employee(Person):
-    pass
-"""     
-    #Clase de Empleados
-    #    almacenamineto de datos de empleados con sus datos generales y a que surucrsal pertenece
-    
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee')
-    user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='from_employee')
-    address = models.CharField(max_length=120, blank=True, null=True)
+class Employee(models.Model):
+    """No se puede hacer uso del softDelete"""
+    """
+    Clase de Empleados.
+        -user: con todos los datos basicos de persona y a la sucursal que pertenece.
+        -user_made: usuario responsable de dar el alta la cuenta.
+        -employment_date: fecha del alta de relacion de dependencia.
+    """
+    objects = EmployeeManager()
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee')
+    user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employees')
+    employment_date = models.DateField(verbose_name='Fecha de contratación', null=True, blank=True)
 
     class Meta:
         verbose_name = "Empleado"
         verbose_name_plural = "Empleados"
 
     def __str__(self) -> str:
-        return f'{self.get_full_name()}' """
+        return f'{self.user.get_full_name()}'
+
 
 class Employee_Objetives(BaseAbstractWithUser):
     """
