@@ -1,8 +1,9 @@
 from django.http import HttpResponseRedirect
+
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (FormView, DetailView, UpdateView, DeleteView, ListView, View) #aqui
-
+from django.contrib import messages
 from .forms import BranchForm
 from .models import Branch
 
@@ -25,6 +26,10 @@ class BranchCreateView(CustomUserPassesTestMixin, FormView):
         branch.user_made = self.request.user
         branch.save()
         return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
+        return super().form_invalid(form)
 
 
 ####################### UPDATES #####################
