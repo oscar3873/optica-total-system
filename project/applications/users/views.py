@@ -112,6 +112,31 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
     
     
 class AccountView(UpdateView):
-    template_name = 'users/employee_account_page.html'
-    form_class = UserUpdateForm
+    template_name = 'users/user_account_page.html'
     model = User
+    form_class = UserUpdateForm
+    form2_class = UpdatePasswordForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form2'] = self.get_form(self.form2_class)  # Agregamos el segundo formulario al contexto
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form2 = self.get_form(self.form2_class)
+
+        if 'form2' in request.POST:
+            # Si se envió el formulario de cambio de contraseña
+            if form2.is_valid():
+                # Procesa el formulario de cambio de contraseña
+                self.object.set_password(form2.cleaned_data['password'])
+                self.object.save()
+                return redirect("users_app:login")
+            else:
+                # El formulario de cambio de contraseña no es válido
+                context = self.get_context_data(form2=form2)
+                return self.render_to_response(context)
+        else:
+            # Si no se envió el formulario de cambio de contraseña,
+            # procesa el formulario de actualización de datos de usuario
+            return super().post(request, *args, **kwargs)

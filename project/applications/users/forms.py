@@ -92,7 +92,7 @@ class UserUpdateForm(PersonForm):
     
     class Meta:
         model = User
-        fields = ('email','first_name', 'last_name','dni', 'phone_number', 'address')
+        fields = ('email','first_name', 'last_name','dni', 'phone_code','phone_number', 'address')
 
 
 class LoginForm(forms.Form):
@@ -150,14 +150,16 @@ class UpdatePasswordForm(ValidationFormMixin):
     password = forms.CharField(
         required=True, 
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Nueva contraseña'
+            'placeholder': 'Nueva contraseña',
+            'class' : 'form-control'
             })
     )
     
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repita nueva contraseña'
+            'placeholder': 'Repita nueva contraseña',
+            'class' : 'form-control'
             })
     )
 
@@ -181,6 +183,10 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
+    
+    class Meta:
+        model = User
+        fields = ("passwordCurrent","password","password2")
     
 class EmployeeUpdateForm(PersonForm):
     class Meta:
