@@ -6,6 +6,7 @@ from django.core.validators import RegexValidator
 from applications.core.mixins import ValidationFormMixin
 from applications.core.forms import PersonForm
 from applications.branches.models import Branch
+from django.contrib import messages
 
 class UserCreateForm(PersonForm):
     """
@@ -72,12 +73,12 @@ class UserCreateForm(PersonForm):
         return password2
 
     def clean_email(self):
+        email = super().clean_email()
         try:
-            email = super().clean_email()
             User.objects.get(email=email)
+            raise forms.ValidationError("El correo ingresado ya está en uso.")
         except User.DoesNotExist:
-            pass
-        return email
+            return email
 
     def clean(self):
         cleaned_data = super().clean()
