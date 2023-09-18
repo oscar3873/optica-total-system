@@ -10,6 +10,7 @@ class EmployeeUpdateForm(PersonForm):
     class Meta:
         model = Employee
         fields = ('email','first_name', 'last_name','dni', 'phone_number', 'address')
+
 class EmployeeCreateForm(UserCreateForm):
     employment_date = forms.DateField(
         required=False,
@@ -29,6 +30,7 @@ class EmployeeCreateForm(UserCreateForm):
         employment_date = self.cleaned_data.get('employment_date')
         self.validate_date(employment_date)
         return employment_date
+    
 class EmployeeCreateForm(UserCreateForm):
     employment_date = forms.DateField(
         required=True,
@@ -44,11 +46,11 @@ class EmployeeCreateForm(UserCreateForm):
         model = Employee
         fields = ['employment_date',]
 
-
     def clean_employment_date(self):
         employment_date = self.cleaned_data.get('employment_date')
         self.validate_date(employment_date)
         return employment_date
+
 
 class EmployeeUpdateForm(UserUpdateForm):
     # Campos de Person

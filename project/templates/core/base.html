@@ -701,8 +701,7 @@
                                     {{ branch_user.name }}
                                     
                                     <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
-                                    <label for="branch_id">Selecciona una sucursal:</label>
-                                    <select name="branch_id" id="branch_id">
+                                    <select name="branch_id" id="branch_id" class="form-select">
                                         {% for branch in branches %}
                                         <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
                                             {{ branch.name }}
