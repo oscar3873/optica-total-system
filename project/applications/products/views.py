@@ -12,7 +12,7 @@ from .models import *
 from .utils import *
 # Create your views here.
 
-class CategoryCreateView(FormView):
+class CategoryCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una catogoria nueva para el producto
     """
