@@ -1,0 +1,290 @@
+{% load static %} {% load humanize %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+    <!-- ===============================================-->
+    <!--    Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+    {% include 'core/components/messages.html' %}
+
+    <!-- ===============================================-->
+    <!--    Fin Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Titulo del formulario wizard -->
+        <div class="d-flex mb-4">
+        <span class="fa-stack me-2 ms-n1"
+            ><i class="fas fa-circle fa-stack-2x text-300"></i
+            ><i class="fa-inverse fa-stack-1x text-primary fas fa-eye"></i
+        ></span>
+        <div class="col">
+            <h5 class="mb-0 text-primary position-relative">
+            <span class="bg-200 dark__bg-1100 pe-3">Detalle de Caja</span
+            ><span
+                class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"
+            ></span>
+            </h5>
+            <p class="mb-0">
+            Aquí puede vizualizar el detalle completo de la caja y su arqueo correspondiente
+            </p>
+        </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    Card con la presentacion del Caja-->
+    <!-- ===============================================-->
+    <div class="card mb-3">
+        <div class="card-header">
+        <div class="row">
+            <div class="col">
+                <h5 class="mb-2">Caja</h5>
+            </div>
+            <div class="col-auto ">
+                {% if not cashregister.is_close %}
+                <span class="badge badge-soft-success rounded-pill mb-2">Abierta</span>
+                {% else %}
+                <span class="badge badge-soft-danger rounded-pill mb-2">Cerrada</span>
+                {% endif %}
+                <h6 class="text-uppercase text-center text-600 d-inline">#{{cashregister.pk}}<span class="fas fa-cash-register ms-2"></span></h6>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <a class="btn btn-primary btn-sm" href="{% url 'cashregister_app:cashregister_create_view' %}">
+                    <span class="fas fa-plus fs--2 me-1"></span>
+                    Abrir Caja
+                </a>
+                <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="fas fa-ellipsis-h"></span>
+                </button>
+                <div class="dropdown-menu"><a class="dropdown-item" href="">Editar</a>
+                    <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="">Borrar</a>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <p class="text-700 fs--2">
+                Abierta por 
+                <a href="">{{cashregister.user_made.first_name.title}}</a>
+                <span class="">el {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</span>
+            </p>
+        </div>
+        <div class="row mt-2">
+            <div class="col-lg col-xxl-5">
+            <div class="row">
+                <div class="col-5 col-sm-4">
+                {% if object.type_operation == 'in' %}
+                <p class="badge rounded-pill badge-soft-success fs-0 fw-semi-bold m-0">{{object.get_type_operation_display}}</p>
+                {% else %}
+                <p class="badge rounded-pill badge-soft-danger fs-0 fw-semi-bold m-0">{{object.get_type_operation_display}}</p>
+                {% endif %}
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+        <div class="card-body border-top">
+        <div class="row">
+            <div class="col-lg col-xxl-5">
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-1">Balance final</p>
+                    </div>
+                    <div class="col mt-4 text-800 fw-bold">{{cashregister.final_balance}} {{cashregister.currency.code}}</div>
+                </div>
+                <div class="row my-0">
+                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">monto final</span> con el que se cerro la caja</p>
+                </div>
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-1">Balance inicial</p>
+                    </div>
+                    <div class="col mt-4 text-800 fw-bold">{{cashregister.initial_balance}} {{cashregister.currency.code}}</div>
+                </div>
+                <div class="row my-0">
+                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">monto inicial</span> con el que se abrio la caja</p>
+                </div>
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-1">Conteo</p>
+                    </div>
+                    <div class="col mt-4 text-800 fw-bold">
+                        {% if cashregister.is_close %}
+                        {{cashregister.counted_balance}} {{cashregister.currency.code}}
+                        {% else %}
+                        <p class="fs--1 fw-lighter fst-italic">La caja esta abierta</p>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el monto que contó en su <span class="text-warning">caja real</span></p>
+                </div>
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-1">Diferencia</p>
+                    </div>
+                    <div class="col mt-4 text-800 fw-bold">
+                        {% if cashregister.is_close %}
+                        {{cashregister.difference}} {{cashregister.currency.code}}
+                        {% else %}
+                        <p class="fs--1 fw-lighter fst-italic">La caja esta abierta</p>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el monto es la <span class="text-warning">diferencia</span> entre la caja del sistema y la caja fisica</p>
+                </div>
+            </div>
+            <div class="col-lg col-xxl-6 mt-4 mt-lg-0 offset-xxl-1">
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-1">Observaciones</p>
+                    </div>
+                    <div class="col mt-4">
+                    <p class="fst-italic text-400 mb-1">{{cashregister.description}}</p>
+                    </div>
+                </div>
+                <div class="row my-0">
+                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Esto es alguna observacion <span class="text-warning">importante</span> como <span class="text-warning">recordatorio</span> cuando cerro la caja</p>
+                </div>
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-0">Transacción</p>
+                    </div>
+                    <div class="col mt-4">
+                    <p class="fst-italic text-400 mb-0">(Completar cuando se integre)</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 mt-4 col-sm-4">
+                    <p class="fw-normal fw-semi-bold mb-1">Metodo de pago</p>
+                    </div>
+                    <div class="col mt-4">
+                    <p class="mb-1">(Integrar cuando este funcionando)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="card-footer border-top py-2 d-flex flex-between-center">
+        <p class="fs--2 text-700">Realizado el <span class="text-1000">{{cashregister.date_open|date}}</span></p>
+        <p class="fs--2 text-700">Hora <span class="text-1000">{{cashregister.created_at|time}}</span></p>
+        </div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="mb-0">Movimientos</h5>
+        </div>
+        <div class="card-body border-top p-0">
+            {% for movement in movements %}
+                <div class="row g-0 align-items-center border-bottom py-2 px-3">
+                    <div class="col-md-auto pe-3">
+                        {%if movement.type_operation == 'in' %}
+                            <span class="badge badge-soft-success rounded-pill">{{movement.get_type_operation_display}}</span>
+                        {% else %}
+                            <span class="badge badge-soft-danger rounded-pill">{{movement.get_type_operation_display}}</span>
+                        {% endif %}
+                        <a class="btn btn-link d-md-none" href="{% url 'cashregister_app:movements_detail_view' movement.pk %}">ver detalle</a>
+                    </div>
+                    <div class="col-md mt-1 mt-md-0">
+                        <span class="mb-0 text-900 fs-1">$ </span>
+                        <span class="mb-0 text-900 fw-bold">{{movement.amount}}</span>
+                    </div>
+                    <div class="col-md-auto">
+                        <p class="mb-0 text-700 fs--2">
+                            {{movement.date_movement|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}
+                            <a class="btn btn-link d-none d-md-inline" href="{% url 'cashregister_app:movements_detail_view' movement.pk %}">ver detalle</a>
+                        </p>
+                        
+                    </div>
+                </div>
+            {% empty %}
+                <div class="row g-0 align-items-center border-bottom py-2 px-3">
+                    <p class="mb-0">Esta caja no registro movimientos</p>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="card-footer bg-light p-0"><a class="btn btn-link d-block w-100" href="{% url 'cashregister_app:movements_view' %}">Ver todos los movimientos<span class="fas fa-chevron-right fs--2 ms-1"></span></a></div>
+    </div>
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="mb-0">Arqueo de caja</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive fs--1">
+                <table class="table table-striped border-bottom">
+                    <thead class="bg-200 text-900">
+                        <tr>
+                            <th class="border-0">Products</th>
+                            <th class="border-0 text-center">Quantity</th>
+                            <th class="border-0 text-end">Rate</th>
+                            <th class="border-0 text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-200">
+                            <td class="align-middle">
+                                <h6 class="mb-0 text-nowrap">Platinum web hosting package9</h6>
+                                <p class="mb-0">Down 35mb, Up 100mb</p>
+                            </td>
+                            <td class="align-middle text-center">2</td>
+                            <td class="align-middle text-end">$65.00</td>
+                            <td class="align-middle text-end">$130.00</td>
+                        </tr>
+                        <tr class="border-200">
+                            <td class="align-middle">
+                                <h6 class="mb-0 text-nowrap">2 Page website design</h6>
+                                <p class="mb-0">Includes basic wireframes and responsive templates</p>
+                            </td>
+                            <td class="align-middle text-center">1</td>
+                            <td class="align-middle text-end">$2,100.00</td>
+                            <td class="align-middle text-end">$2,100.00</td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle">
+                                <h6 class="mb-0 text-nowrap">Mobile App Development</h6>
+                                <p class="mb-0">Includes responsive navigation</p>
+                            </td>
+                            <td class="align-middle text-center">8</td>
+                            <td class="align-middle text-end">$5,00.00</td>
+                            <td class="align-middle text-end">$4,000.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row g-0 justify-content-end">
+                <div class="col-auto">
+                    <table class="table table-sm table-borderless fs--1 text-end">
+                        <tr>
+                            <th class="text-900">Subtotal:</th>
+                            <td class="fw-semi-bold">$6,230.00 </td>
+                        </tr>
+                        <tr>
+                            <th class="text-900">Tax 5%:</th>
+                            <td class="fw-semi-bold">$311.50</td>
+                        </tr>
+                        <tr class="border-top">
+                            <th class="text-900">Total:</th>
+                            <td class="fw-semi-bold">$6541.50</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--   Fin Card con la presentacion del Caja-->
+    <!-- ===============================================-->
+</div>
+
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->

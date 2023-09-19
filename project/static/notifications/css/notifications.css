@@ -1,23 +1,20 @@
-.notifications-container {
+/* Estilos para el contenedor de notificaciones */
+.notifications-app-container {
     position: fixed;
-    bottom: 20px;
-    left: 20px; /* Mantén "left" para la esquina inferior izquierda */
-    z-index: 10000; /* Valor alto para colocar la notificación encima de todo */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #fff;
+    padding: 10px;
+    z-index: 9999; /* Asegura que esté por encima de todo */
 }
 
-.notification {
+.notifications-app {
+    /* Estilos para las notificaciones individuales */
     background-color: #232e3c;
-    border: 1px solid #b9a11e;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
     padding: 10px;
     max-width: 300px;
     margin-bottom: 10px;
-    pointer-events: auto; /* Habilita la interacción con la notificación */
-    animation: fadeOut 5s; /* Cambiar a 5 segundos */
-}
-
-@keyframes fadeOut {
-    0% { opacity: 1; }
-    70% { opacity: 1; } /* Mantiene la opacidad durante 3 segundos (70% de 5 segundos) */
-    100% { opacity: 0; display: none; }
+    pointer-events: auto;
 }

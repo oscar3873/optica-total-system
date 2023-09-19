@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Currency, CashRegister, PaymentMethod, Payment, Transaction, Movement, TransactionType, TypeMethodePayment, CashRegisterDetail
+from .models import Currency, CashRegister, PaymentMethod, Payment, Transaction, Movement, TransactionType, PaymentType, CashRegisterDetail
 
 @admin.register(Currency)
 class CurrencyAdmin(admin.ModelAdmin):
@@ -35,8 +35,8 @@ class TransactionTypeAdmin(admin.ModelAdmin):
 class MovementAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(TypeMethodePayment)
-class TypeMethodePayment(admin.ModelAdmin):
+@admin.register(PaymentType)
+class PaymentType(admin.ModelAdmin):
     pass
 
 

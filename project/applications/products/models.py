@@ -1,15 +1,15 @@
 from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
-
-from .managers import ProductManager, ProductFeatureManager
+from applications.branches.models import Branch
+from .managers import *
 
 # Create your models here.
 class Category(BaseAbstractWithUser):
     """
     Clase para Categorias
     """
-    name = models.CharField(max_length=100, blank=False, null=True)
+    name = models.CharField(max_length=100, blank=False, null=True,verbose_name='nombre de la Categoria')
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -22,7 +22,7 @@ class Brand(BaseAbstractWithUser):
     name = models.CharField(max_length=100, null=False, blank=False)
 
     def __str__(self) -> str:
-        return f'Marca: {self.name}'
+        return f'{self.name}'
 
 
 class Product(BaseAbstractWithUser):
@@ -33,11 +33,14 @@ class Product(BaseAbstractWithUser):
     """
     name = models.CharField(max_length=50, blank=False, null=False)
     barcode = models.PositiveBigIntegerField(verbose_name='Codigo de barra', null=True)
-    price = models.PositiveIntegerField()
+    cost_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de costo")
+    suggested_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio sugerido")
+    sale_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de venta")
     description = models.CharField(max_length=250)
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category')
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand')
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch')
 
     objects = ProductManager()
 
@@ -45,7 +48,6 @@ class Product(BaseAbstractWithUser):
         return (f'{self.name} - '+
                 f'{self.brand} - '+
                 f'{self.category} - '+
-                f'Precio: {self.price} - '+ 
                 f'Stock: {self.stock}'
                 ) 
 
@@ -55,6 +57,8 @@ class Feature_type(BaseAbstractWithUser):
     Clase del tipo de Carateristicas de una categoria para el producto 
     """
     name = models.CharField(max_length=50, blank=True, null=True, verbose_name='Nombre')
+
+    objects = FeatureTypeManager()
 
     def __str__(self) -> str:
         return f'{self.name}'
@@ -71,8 +75,10 @@ class Feature(BaseAbstractWithUser):
     value = models.CharField(max_length=100, blank=True, null=True, verbose_name='Valor')
     type = models.ForeignKey(Feature_type, on_delete=models.PROTECT, related_name='feature', verbose_name='Tipo de caracteristica')
 
+    objects = FeatureManager()
+
     def __str__(self) -> str:
-        return f'Tipo: {self.type} - Valor: {self.value}'
+        return f'{self.type} - {self.value}'
     
     class Meta:
         verbose_name = 'Caracteristica'
@@ -84,8 +90,6 @@ class Product_feature(BaseAbstractWithUser):
     """
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Producto')
     feature = models.ForeignKey(Feature, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Caracteristica')
-
-    objects = ProductFeatureManager()
 
     def __str__(self) -> str:
         return f'Producto: {self.product} | Caracteristica: {self.feature}'

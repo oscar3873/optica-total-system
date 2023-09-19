@@ -1,0 +1,321 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
+<div class="container py-4">
+    {% include 'core/components/messages.html' %}
+
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+                class="fa-inverse fa-stack-1x text-primary fas fa-eye"></i></span>
+        <div class="col">
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Clientes</span><span
+                    class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+            <p class="mb-0">Aqui se puede visualizar el detalle completo de un cliente</p>
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="row">
+                <div class="col">
+                    <h3 class="mb-2">{{ customer.last_name }}, {{ customer.first_name }}</h3>
+                </div>
+            </div>
+            <div class="row">
+                <p class="text-700 fs--2">
+                    Cliente registrado por
+                    <a href="">{{user.last_name}}, {{user.first_name}}</a>
+                    <span class="">el {{ customer.created_at|date:"l j \d\e F \d\e\l Y" }}</span>
+                </p>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <a class="btn btn-primary btn-sm" href="{% url 'clients_app:customer_new' %}">
+                        <span class="fas fa-plus fs--2 me-1"></span>
+                        Nuevo Cliente
+                    </a>
+                    <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fas fa-ellipsis-h"></span>
+                    </button>
+                    <div class="dropdown-menu"><a class="dropdown-item"
+                            href="{% url 'clients_app:customer_update' pk=customer.pk %}">Editar</a>
+                        <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="">Borrar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body border-top">
+            <div class="row">
+                <div class="col-lg col-xxl-5">
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">DNI:</p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">{{customer.dni}} </div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600"><span class="text-warning">Documento Nacional de
+                                Identidad</span> con el que se registro el cliente.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento</p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span class="text-warning">fecha de
+                                nacimiento</span> con la que se registro el cliente.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">Telefono</p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">{{ customer.phone_number }}</div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">telefono de
+                                contacto</span> que registro el cliente.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento</p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span class="text-warning">fecha de
+                                nacimiento</span> con la que se registro el cliente.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">Direccion</p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">{{ customer.address }}</div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span
+                                class="text-warning">direccion</span> con la que se registro el cliente.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">Correo Electronico</p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">{{ customer.email }}</div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es el <span class="text-warning">correo
+                                electronico</span> de contacto con el que se registro el cliente.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mt-4 col-sm-4">
+                            <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
+                                <a href="{% url 'clients_app:customer_update' customer.id %}">
+                                    <button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Agregar Obra Social">
+                                        <span class="text-1000 far fa-plus-square"></span>
+                                    </button>
+                                </a>
+                            </p>
+                        </div>
+                        <div class="col mt-4 text-800 fw-bold">
+                            {% if customer.customer_insurance.all %}
+                            {% for insurance in customer.customer_insurance.all %}
+                            <p class="text-900 fw-bold fs-1 d-inline">
+                                <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}" class="text-decoration-none">
+                                    {{ insurance.h_insurance.name }}
+                                </a>
+                            </p>
+                            {% endfor %}
+                            {% else %}
+                            <p class="fs--1 fw-lighter fst-italic">No hay obras sociales registradas</p>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <div class="row my-0">
+                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Obras sociales del cliente.<span
+                                class="text-warning"> Puede tener mas de una.</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+            <div class="card border-top z-index-1 mb-3" id="recentPurchaseTable"
+                data-list='{"valueNames":["user_made","diagnostic","armazon","observations","email","is_done"],"page":8,"pagination":true}'">
+                    <div class=" card-header">
+                        <div class="row flex-between-center">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="mb-2">Tratamientos</h5>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p class="text-700 fs--2">
+                                    Del cliente {{ customer.last_name }}, {{ customer.first_name }}
+                                </p>
+                            </div>
+                            <div class="col-6 col-sm-auto d-flex align-items-center pe-0 ">
+                                <div>
+                                    <form>
+                                        <div class="input-group">
+                                            <input class="form-control form-control-sm shadow-none search" type="search"
+                                                placeholder="Buscar" aria-label="search" />
+                                            <div class="input-group-text bg-transparent"><span
+                                                    class="fa fa-search fs--1 text-600"></span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+                                <div class="d-none" id="table-purchases-actions">
+                                    <div class="d-flex">
+                                        <select class="form-select form-select-sm" aria-label="Bulk actions">
+                                            <option selected="">Accion masiva</option>
+                                            <option value="Delete">Borrar</option>
+                                        </select>
+                                        <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
+                                    </div>
+                                </div>
+                                <div id="table-purchases-replace-element">
+                                    <a href="{% url 'clients_app:laboratory_new' customer.pk %}" class="btn btn-falcon-default btn-sm"
+                                        type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
+                                            class="d-none d-sm-inline-block ms-1">Nuevo Laboratorio</span></a>
+                                    <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
+                                            data-fa-transform="shrink-3 down-2"></span><span
+                                            class="d-none d-sm-inline-block ms-1">Filtros</span></button>
+                                    <button class="btn btn-falcon-default btn-sm" type="button"><span
+                                            class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
+                                            class="d-none d-sm-inline-block ms-1">Exportar</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                <div class="border-top">
+                    <div class="row">
+                        <div class="col">
+                            <div class="text-center">
+                                {% if calibration_orders %}
+                                <div class="table-responsive scrollbar">
+                                    <table class="table table-sm fs--1 mb-0 overflow-hidden ">
+                                        <thead class="bg-200 text-900">
+                                            <tr class="table-{% if calibration_order.is_done %}success{% else %}secondary{% endif %}">
+                                                <th class="white-space-nowrap">
+                                                    <div class="form-check mb-0 d-flex align-items-center">
+                                                        <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox"
+                                                            data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
+                                                    </div>
+                                                </th>
+                                                <th class="align-start px-4" data-sort="user_made">
+                                                    Por
+                                                </th>
+                                                <th class="align-start amount px-4 " data-sort="diagnostic">
+                                                    Diagnostico
+                                                </th>
+                                                <th class="align-start amount px-4 " data-sort="armazon">
+                                                    Armazon
+                                                </th>
+                                                <th class="align-start amount px-4 " data-sort="abervations">
+                                                    Observacion
+                                                </th>
+                                                <th class="align-start amount px-4 " data-sort="is_done">
+                                                    Estado
+                                                </th>
+                                                <th class="align-start type_operation px-4"> Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list" id="table-purchase-body">
+                                            {% for calibration_order in calibration_orders %}
+                                            <tr class="btn-reveal-trigger">
+                                                <td class="align-middle" style="width: 28px;">
+                                                    <div class="form-check mb-0">
+                                                        <input class="form-check-input" type="checkbox" id="recent-purchase-0"
+                                                            data-bulk-select-row="data-bulk-select-row" />
+                                                    </div>
+                                                </td>
+                                                <th class="align-middle white-space-nowrap name">{{ calibration_order.user_made }}</th>
+                                                <th class="align-middle white-space-nowrap name">{{ calibration_order.diagnostic }}</th>
+                                                <td class="align-middle white-space-nowrap address">{{ calibration_order.armazon }}</td>
+                                                <td class="align-middle white-space-nowrap open_hs">{{ calibration_order.observations }}
+                                                </td>
+                                                <td class="align-middle white-space-nowrap close_hs">
+                                                    <p class="h6">
+                                                        {% if calibration_order.is_done %}
+                                                        Completado
+                                                        {% else %}
+                                                        No Completado
+                                                        {% endif %}
+                                                    </p>
+                                                </td>
+                                                <td class="align-middle white-space-nowrap text-center">
+                                                    <div class="dropstart font-sans-serif position-static d-inline-block">
+                                                        <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                                            type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window"
+                                                            aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                            <span class="fas fa-ellipsis-h fs--1"></span></button>
+                                                        <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
+                                                            <a class="dropdown-item"
+                                                                href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
+                                                            <a class="dropdown-item"
+                                                                href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
+                                                            <a class=" dropdown-item text-danger"
+                                                                href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                {% else %}
+                                <div class="text-center py-5">
+                                    <p class="h4">No tiene tratamientos</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row align-items-center">
+                        <div class="pagination d-none"></div>
+                        <div class="col">
+                            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2"
+                                    data-list-info="data-list-info">
+                                </span><span class="d-none d-sm-inline-block me-2">&mdash; </span><a class="fw-semi-bold"
+                                    href="#!" data-list-view="*">Mostrar todo<span class="fas fa-angle-right ms-1"
+                                        data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!"
+                                    data-list-view="less">Mostrar menos<span class="fas fa-angle-right ms-1"
+                                        data-fa-transform="down-1"></span></a>
+                            </p>
+                        </div>
+                        <div class="col-auto d-flex">
+                            <button class="btn btn-sm btn-primary" type="button"
+                                data-list-pagination="prev"><span>Anterior</span></button>
+                            <button class="btn btn-sm btn-primary px-4 ms-2" type="button"
+                                data-list-pagination="next"><span>Siguiente</span></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}

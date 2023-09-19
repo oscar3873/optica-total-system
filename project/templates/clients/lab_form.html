@@ -1,14 +1,300 @@
-<form enctype="multipart/form-data" method="post">
-    {% csrf_token %}
+{% extends 'core/base.html' %}
 
-    {{ named_formsets.correction.as_p }}
-    {{ named_formsets.material.as_p }}
-    {{ named_formsets.color.as_p }}
-    {{ named_formsets.cristal.as_p }}
-    {{ named_formsets.tratamiento.as_p }}
-    {{ named_formsets.pupilar.as_p }}
-    {{ named_formsets.form.as_p }}
+{% block extra_css %}
+{% load static %}
 
-    {{ form.as_p }}
-    <button type="submit">Enviar</button>
-</form>
+{% endblock extra_css %}
+
+{% block main %}
+
+<div class="container py-4">
+    {% include 'core/components/messages.html' %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
+                    style="color: #000000;"></i></span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span
+                        class="bg-200 dark__bg-1100 pe-3">Laboratorio</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Nuevo laboratorio para NOMBRE DE CLIENTE</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card theme-wizard h-100 mb-5">
+        <div class="card-header bg-light pt-3 pb-2">
+            <ul class="nav justify-content-between nav-wizard">
+                <li class="nav-item"><a class="nav-link active fw-semi-bold" href="#bootstrap-wizard-validation-tab1"
+                        data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
+                            class="nav-item-circle-parent"><span class="nav-item-circle"><span
+                                    class="fas fa-money-bill-wave"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Correción</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab2"
+                        data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
+                            class="nav-item-circle-parent"><span class="nav-item-circle"><span
+                                    class="fas fa-credit-card"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Caracteristicas</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab3"
+                        data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
+                            class="nav-item-circle-parent"><span class="nav-item-circle"><span
+                                    class="fas fa-university"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Pupilar</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab4"
+                        data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
+                            class="nav-item-circle-parent"><span class="nav-item-circle"><span
+                                    class="fas fa-check-double"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Diagnostico</span></a></li>
+                <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab5"
+                        data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
+                            class="nav-item-circle-parent"><span class="nav-item-circle"><span
+                                    class="fas fa-check-double"></span></span></span><span
+                            class="d-none d-md-block mt-1 fs--1">Confirmacion</span></a></li>
+            </ul>
+        </div>
+        <!-- Card body -->
+        <div class="card-body py-4" id="wizard-controller">
+            <form method="post" novalidate="novalidate">
+                {% csrf_token %}
+                <div class="tab-content">
+                    <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab1"
+                        id="bootstrap-wizard-validation-tab1">
+                        <!-- <form novalidate="novalidate"> -->
+                        <div class="text-center">
+                            <h4>Lejos</h4>
+                        </div>
+                        <div class="table-responsive scrollbar">
+                            <table class="table table-bordered overflow-hidden table-fixed" id="table_from_correction">
+                                <colgroup>
+                                    <col class="col-3"/>
+                                    <col class="col-3"/>
+                                    <col class="col-3"/>
+                                    <col class="col-3"/>
+                                </colgroup>
+                                <thead>
+                                    <tr class="btn-reveal-trigger">
+                                        <th scope="col"></th>
+                                        <th class="text-center" scope="col">Cilindrico</th>
+                                        <th class="text-center" scope="col">Esferico</th>
+                                        <th class="text-center" scope="col">Eje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="btn-reveal-trigger">
+                                        <td>
+                                            <p><strong>Derecho</strong></p>
+                                        </td>
+                                        <td>{{ named_formsets.correction.lej_od_esferico }}</td>
+                                        <td>{{ named_formsets.correction.lej_od_cilindrico }}</td>
+                                        <td>{{ named_formsets.correction.lej_od_eje }}</td>
+                                    </tr>
+                                    <tr class="btn-reveal-trigger">
+                                        <td>
+                                            <p><strong>Izquierdo</strong></p>
+                                        </td>
+                                        <td>{{ named_formsets.correction.lej_oi_esferico }}</td>
+                                        <td>{{ named_formsets.correction.lej_oi_cilindrico }}</td>
+                                        <td>{{ named_formsets.correction.lej_oi_eje }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center">
+                            <h4>Cerca</h4>
+                        </div>
+                        <div class="table-responsive scrollbar">
+                            <table class="table table-bordered overflow-hidden" id="table_from_correction">
+                                <colgroup>
+                                    <col class="col-3"/>
+                                    <col class="col-3"/>
+                                    <col class="col-3"/>
+                                    <col class="col-3"/>
+                                </colgroup>
+                                <thead>
+                                    <tr class="btn-reveal-trigger">
+                                        <th scope="col"></th>
+                                        <th class="text-center" scope="col">Cilindrico</th>
+                                        <th class="text-center" scope="col">Esferico</th>
+                                        <th class="text-center" scope="col">Eje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="btn-reveal-trigger">
+                                        <td>
+                                            <p><strong>Derecho</strong></p>
+                                        </td>
+                                        <td>{{ named_formsets.correction.cer_od_esferico }}</td>
+                                        <td>{{ named_formsets.correction.cer_od_cilindrico }}</td>
+                                        <td>{{ named_formsets.correction.cer_od_eje }}</td>
+                                    </tr>
+                                    <tr class="btn-reveal-trigger">
+                                        <td>
+                                            <p><strong>Izquierdo</strong></p>
+                                        </td>
+                                        <td>{{ named_formsets.correction.cer_oi_esferico }}</td>
+                                        <td>{{ named_formsets.correction.cer_oi_cilindrico }}</td>
+                                        <td>{{ named_formsets.correction.cer_oi_eje }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- </form> -->
+                    </div>
+                    <div class="tab-pane px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-tab2"
+                        id="bootstrap-wizard-validation-tab2">
+                        <!-- <form> -->
+                        <div class="row">
+                            <div class="col position-relative text-center">
+                                <div class="row">
+                                    <h5 class="mt-2 mb-5">Materiales</h5>
+                                </div>
+                                {{ named_formsets.material.material_choice }}
+                            </div>
+                            <div class="col form-check-reverse text-center">
+                                <div class="row">
+                                    <h5 class="mt-2 mb-5">Color</h5>
+                                </div>
+                                {{ named_formsets.color.color_choice }}
+                            </div>
+                            <div class="col text-center">
+                                <div class="row">
+                                    <h5 class="mt-2 mb-5">Cristales</h5>
+                                </div>
+                                {{ named_formsets.cristal.cristal_choice }}
+                            </div>
+                            <div class="col text-center">
+                                <div class="row">
+                                    <h5 class="mt-2 mb-4">Tratamiento de Cristales</h5>
+                                </div>
+                                {{ named_formsets.tratamiento.tratamient_choice }}
+                            </div>
+                        </div>
+                        <!-- </form> -->
+                    </div>
+                    <div class="tab-pane px-sm-3 px-md-5" role="tabpanel"
+                        aria-labelledby="bootstrap-wizard-validation-tab4" id="bootstrap-wizard-validation-tab3">
+                        <!-- <form class="form-validation"> -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="text-center">
+                                    <h4>Lejos</h4>
+                                </div>
+                                <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Izquierdo</th>
+                                            <th scope="col">Derecho</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row">
+                                                <p><strong>Nanopupilar</strong></p>
+                                            </td>
+                                            <td>{{ named_formsets.pupilar.lej_oi_nanopupilar }}</td>
+                                            <td>{{ named_formsets.pupilar.lej_od_nanopupilar }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">
+                                                <p><strong>Pelicula</strong></p>
+                                            </td>
+                                            <td>{{ named_formsets.pupilar.lej_oi_pelicula }}</td>
+                                            <td>{{ named_formsets.pupilar.lej_od_pelicula }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">
+                                                <p><strong>Total</strong>
+                                            </td>
+                                            <td colspan="2">{{ named_formsets.pupilar.lej_total }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <div class="text-center">
+                                    <h4>Cerca</h4>
+                                </div>
+                                <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">Izquierdo</th>
+                                            <th scope="col">Derecho</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row">
+                                                <p><strong>Nanopupilar</strong></p>
+                                            </td>
+                                            <td>{{ named_formsets.pupilar.cer_oi_nanopupilar }}</td>
+                                            <td>{{ named_formsets.pupilar.cer_od_nanopupilar }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">
+                                                <p><strong>Pelicula</strong></p>
+                                            </td>
+                                            <td>{{ named_formsets.pupilar.cer_oi_pelicula }}</td>
+                                            <td>{{ named_formsets.pupilar.cer_od_pelicula }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row">
+                                                <p><strong>Total</strong></p>
+                                            </td>
+                                            <td colspan="2">{{ named_formsets.pupilar.cer_total }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- </form> -->
+                    </div>
+                    <div class="tab-pane px-sm-3 px-md-5" role="tabpanel"
+                        aria-labelledby="bootstrap-wizard-validation-tab4" id="bootstrap-wizard-validation-tab4">
+                        <div class="row justify-content-sm-center pb-2">
+                                <div class="container mb-2">
+                                    <label for="id_diagnostic" class="form-label">Diagnostico</label>
+                                    {{form.diagnostic}}
+                                </div>
+                                <div class="container mb-2">
+                                    <label for="id_armazon" class="form-label">Armazon</label>
+                                    {{form.armazon}}
+                                </div>
+                                <div class="container">
+                                    <label for="id_observation" class="form-label">Observaciones</label>
+                                    {{form.observations}}
+                                </div>
+                        </div>  
+                        
+                        </div>
+                    <div class="tab-pane text-center px-sm-3 px-md-5" role="tabpanel"
+                        aria-labelledby="bootstrap-wizard-validation-tab5" id="bootstrap-wizard-validation-tab5">
+                        <h4 class="mb-1">Ha completado el proceso de carga de laboratorio!</h4>
+                        <p>Ya puede confirmar el tramite</p><button class="btn btn-warning px-5 px-sm-6"
+                            type="submit">Confirmar<span class="fas fa-chevron-right ms-2" data-fa-transform="shrink-3">
+                            </span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer bg-light">
+            <div class="px-sm-3 px-md-5">
+                <ul class="pager wizard list-inline mb-0">
+                    <li class="previous">
+                        <button class="btn btn-link ps-0" type="button">Anterior</button>
+                    </li>
+                    <li class="next">
+                        <button class="btn btn-primary px-5 px-sm-6" type="button">Siguiente</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}

@@ -1,27 +1,19 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
-from .views import LoginView, LogoutView, UserCreateView, UpdatePasswordView, AdminCreateView
+from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView
 
 app_name = 'users_app'
 
 urlpatterns = [
     path(
-        'signup/admin',
+        'signup/admin/',
         AdminCreateView.as_view(),
         name = 'signup_admin'
     ),
     path(
-        'signup/',
-        UserCreateView.as_view(),
-        name = 'signup'
-    ),
-    path(
         'login/',
-        LoginView.as_view(
-            template_name = "users/login.html",
-            success_url = reverse_lazy('core_app:home')
-        ),
+        LoginView.as_view(),
         name = 'login'
     ),
     path(
@@ -33,6 +25,11 @@ urlpatterns = [
         'update_password/',
         UpdatePasswordView.as_view(),
         name = 'update_password'
+    ),
+    path(
+        'profile/<pk>/', 
+        AdminProfileView.as_view(),
+        name='profile_admin'
     ),
 
     # DJANGO RESET PASSWORD -> PARA CAMBIO DE PASSWORD OLVIDADA

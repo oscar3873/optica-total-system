@@ -1,14 +1,18 @@
-from django.shortcuts import render
+from typing import Any
+from django.shortcuts import redirect, render
 from django.views.generic import *
-from applications.cashregister.forms import CashRegisterForm
+from applications.cashregister.forms import CashRegisterForm, MovementForm
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.utils import timezone
+from django.http import JsonResponse
 
-#Importaciones temporales
+#Importaciones de la app
 from applications.branches.models import Branch
-from applications.cashregister.models import Currency
-from applications.cashregister.models import CashRegister, CashRegisterDetail, TypeMethodePayment
-from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailForm, CashRegisterDetailFormSet
+from applications.cashregister.models import CashRegister, CashRegisterDetail, PaymentType, Movement, Transaction, TransactionType
+from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailFormSet
+from applications.cashregister.utils import obtener_nombres_de_campos
+from django.views.generic import DetailView
 
 
 # Create your views here.
@@ -19,37 +23,30 @@ class CashRegisterCreateView(FormView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['cashregister'] = CashRegister.objects.all()
+        try:
+            cashregister = CashRegister.objects.filter(branch=self.request.user.branch, is_close=False)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+        context['cashregister'] = cashregister
         return context
     
     def form_valid(self, form):
-        print("----------------Success form creation cashregister----------------")
-        print(form.data)
-        
-        #Esto hay que cambiarlo la sucursal la debe sacar de self.request.user.branch
         branch = self.request.user.branch
-        
-        # Verifica si ya hay una caja registradora activa para la sucursal actual
-        if CashRegister.objects.filter(branch=branch, is_close=False).exists():
-            return super().form_invalid(form)
-        
         initial_balance = form.cleaned_data['initial_balance']
+        final_balance = initial_balance
         user_made = self.request.user
-        currency = Currency.objects.get(code='ARS')  # o cualquier otra lógica para obtener la moneda
+        currency = form.cleaned_data['currency']
 
         try:
-            cash_register = CashRegister.objects.create_cash_register(initial_balance, branch, user_made, currency)
+            CashRegister.objects.create_cash_register(initial_balance, branch, user_made, currency, final_balance)
         except Exception as e:
-            # manejar error
-            print(e)
+            messages.error(self.request, 'Existe al intentar abrir una caja. Consulte al administrador del sistema por este mensaje')
             return super().form_invalid(form)
 
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print("----------------Error form creation cashregister----------------")
-        print(form.data)
-        messages.error(self.request, 'Existe un error en el formulario o Ya existe una caja abierta. Consulte al administrador del sistema por este mensaje')
+        messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
         return super().form_invalid(form)
 
 class CashRegisterView(TemplateView):
@@ -67,48 +64,132 @@ class CashRegisterView(TemplateView):
             cashregister = None
         context['cashregister'] = cashregister
         return context
+
+
+class CashRegisterListView(ListView):
+    template_name = 'cashregister/cashregister_list_page.html'
+    model = CashRegister
     
-    def post(self, request, *args, **kwargs):
-        print("----------------Success post close cashregister----------------")
-        print(request.POST)
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
+        branch = self.request.user.branch
+        try:
+            cashregisters = CashRegister.objects.filter(branch=branch, deleted_at=None)
+        except CashRegister.DoesNotExist:
+            cashregisters = None
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
+        context['cashregisters'] = cashregisters
+        context['table_column'] = obtener_nombres_de_campos(CashRegister,
+            "id",
+            "date_close", 
+            "counted_balance", 
+            "difference",
+            "branch", 
+            "deleted_at", 
+            "created_at", 
+            "updated_at", 
+            "currency",
+            )
         
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-            branch = request.user.branch
-            try:
-                cash_register = CashRegister.objects.get(branch=branch, is_close=False)
-            except CashRegister.DoesNotExist:
-                messages.error(request, 'No hay una caja registradora activa para esta sucursal')
-                return self.render_to_response(self.get_context_data(form=form))
-            cash_register.close_cash_register(form.cleaned_data['final_balance'])
-            return super().form_valid(form)
-        else:
-            return super().form_invalid(form)
+        return context
+
+
+class CashRegisterDetailView(DetailView):
+    template_name = 'cashregister/cashregister_detail_page.html'
+    model = CashRegister
+    
+    def get_context_data(self, **kwargs: Any):
+        context = super().get_context_data(**kwargs)
+        
+        cashregister = self.get_object()
+        movements = Movement.objects.filter(cash_register=cashregister, deleted_at=None)
+        
+        context['cashregister'] = cashregister
+        context['movements'] = movements
+        context['table_column_movement'] = obtener_nombres_de_campos(Movement, 
+            "description", 
+            "currency", 
+            "transaction",
+            "id", 
+            "deleted_at", 
+            "created_at", 
+            "updated_at", 
+            "withdrawal_reason",
+            "transaction",
+            "cash_register",
+        )
+        
+        return context
+
+
+class CashRegisterUpdateView(DetailView):
+    template_name = 'cashregister/cashregister_update_page.html'
+    model = CashRegister
+
+
+class CashRegisterDeleteView(DeleteView):
+    template_name = 'cashregister/cashregister_delete_page.html'
+    model = CashRegister
+    success_url = reverse_lazy('cashregister_app:cashregister_list_view')
 
 
 class CashRegisterClosedView(View):
     template_name = 'cashregister/cashregister_closed_page.html'
     
+    #pasar contexto de cashregiter
     def get(self, request, *args, **kwargs):
-        initial_data = [{'type_method': method} for method in TypeMethodePayment.objects.all()]
-        formset = CashRegisterDetailFormSet(initial=initial_data)
+        try:
+            branch = self.request.user.branch
+            cashregister = CashRegister.objects.get(is_close=False, branch= branch)
+        except CashRegister.DoesNotExist:
+            messages.error(request, 'No hay una caja registradora activa para esta sucursal')
+            return redirect('cashregister_app:cashregister_create_view')
         
-        return render(request, self.template_name, {'formset': formset})
+        initial_data = [
+            {
+                'type_method': method,
+                'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister)
+            }
+            for method in PaymentType.objects.all()]
+        #Hay que buscar una alternativa a esta linea de codigo
+        #Porque todo deja de funcionar si se saca initial=initial_data
+        formset = CashRegisterDetailFormSet(initial=initial_data)
+        context = {'cashregister': cashregister, 'formset': formset}
+        
+        return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
+        try:
+            branch = self.request.user.branch
+            cashregister = CashRegister.objects.get(is_close=False, branch= branch)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+            messages.error(request, 'No hay una caja registradora activa para esta sucursal')
+
         formset = CashRegisterDetailFormSet(request.POST)
-        
+        final_data = [
+            {
+                'type_method': method,
+                'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister)
+            }
+            for method in PaymentType.objects.all()]
         #Falta implementar la logica completa para el arqueo y el cierre en los managers.py
         
         if formset.is_valid():
-            print("----------------Success formset create cashregister----------------")
-            cashregister = CashRegister.objects.get(is_close=False)
-            for form in formset:
+            branch = self.request.user.branch
+            cashregister = CashRegister.objects.get(is_close=False, branch=branch)
+            final_data
+            
+            for form, data in zip(formset, final_data):
                 if form.is_valid():
                     instance = form.save(commit=False)
                     instance.user_made = request.user
                     instance.cash_register = cashregister
+                    instance.type_method = data['type_method']
+                    instance.registered_amount = abs(data['registered_amount'])
+                    instance.counted_amount = abs(instance.counted_amount)
+                    instance.difference = instance.counted_amount - instance.registered_amount
                     instance.save()
             # IMPORTANTE CON ESTO SE CIERRA LA CAJA
             cashregister.is_close = True
@@ -117,13 +198,181 @@ class CashRegisterClosedView(View):
         else:
             print("----------------Error formset create cashregister----------------")
             messages.error(request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
-        return render(request, self.template_name, {'formset': formset})
+            return render(request, self.template_name, {'formset': formset})
+        return redirect('cashregister_app:cashregister_create_view')
 
 
 class MovementsView(TemplateView):
     template_name = 'cashregister/movements_page.html'
-
-
-class MovementsClosedView(TemplateView):
-    template_name = 'cashregister/cashregister_closed_page.html'
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
+        branch = self.request.user.branch
+        try:
+            cashregisters = CashRegister.objects.filter(branch=branch, deleted_at=None)
+        except CashRegister.DoesNotExist:
+            cashregisters = None
+        #Tener en cuenta que cuando se hace una consulta por filtro anula lo de deleted_at y hay que especificarlo de nuevo
+        movements = Movement.objects.filter(cash_register__in=cashregisters, deleted_at=None)
+        
+        context['movements'] = movements
+        context['table_column'] = obtener_nombres_de_campos(Movement, 
+            "description", 
+            "currency", 
+            "transaction",
+            "id", 
+            "deleted_at", 
+            "created_at", 
+            "updated_at", 
+            "withdrawal_reason",
+            "transaction",
+            "cash_register",
+            "payment_method"
+            )
+        
+        return context
+
+
+class MovementsCreateView(FormView):
+    template_name = 'cashregister/movements_create_page.html'
+    model = Movement
+    form_class = MovementForm
+    success_url = reverse_lazy('cashregister_app:movements_view')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            branch = self.request.user.branch
+            cashregister = CashRegister.objects.get(branch=branch, is_close=False)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
+        
+        context['cashregister'] = cashregister
+        
+        return context
+    
+    def form_valid(self, form):
+        branch = self.request.user.branch
+        cash_register = CashRegister.objects.get(branch=branch, is_close=False)
+
+        try:
+            Movement.objects.update_balance(cash_register, form.instance.amount, form.instance.type_operation)
+            form.instance.amount = abs(form.instance.amount)
+            form.instance.date_movement = timezone.now()
+            form.instance.cash_register = cash_register
+            form.instance.currency = cash_register.currency
+            form.instance.user_made = self.request.user
+            form.save()
+            
+        except ValueError as e:
+            messages.error(self.request, 'Ha ocurrido un error. No hay fondos suficientes para realizar la operacion')
+            return redirect('cashregister_app:movements_create_view')
+
+        messages.success(self.request, 'El movimiento fue creado con éxito')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print("----------------Error form creation movements----------------")
+        print(form.data)
+        
+        messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
+        
+        return super().form_invalid(form)
+
+
+class MovementsDeleteView(DeleteView):
+    template_name = 'cashregister/movements_delete_page.html'
+    model = Movement
+    success_url = reverse_lazy('cashregister_app:movements_view')
+    
+    def delete(self, request, *args, **kwargs):
+        print("----------------Success delete movements----------------")
+        print(request.POST)
+        
+        messages.success(self.request, 'El movimiento fue eliminado con éxito')
+        
+        return super().delete(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_title'] = "Eliminar movimiento"
+        context['form_description'] = "¿Está seguro que desea eliminar este movimiento?"
+        return context
+    
+    def post(self, request, *args, **kwargs):
+        print("----------------Success post delete movements----------------")
+        print(request.POST)
+        
+        messages.success(self.request, 'El movimiento fue eliminado con éxito')
+        
+        return super().post(request, *args, **kwargs)
+    
+
+class MovementsUpdateView(UpdateView):
+    template_name = 'cashregister/movements_create_page.html'
+    model = Movement
+    form_class = MovementForm
+    success_url = reverse_lazy('cashregister_app:movements_view')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            branch = self.request.user.branch
+            cashregister = CashRegister.objects.get(branch=branch, is_close=False)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
+        context['cashregister'] = cashregister
+        return context
+    
+    def form_valid(self, form):
+        cashregister = form.instance.cash_register # recuperamos la caja de la instancia del movimiento a actualizar
+        movement = self.get_object() # este es el movimiento actual antes de ser modificado
+        form.instance.amount = abs(form.instance.amount)
+        
+        if cashregister.is_close:
+            messages.error(self.request, 'No se puede actualizar un movimiento en una caja cerrada')
+            return redirect('cashregister_app:movements_view')
+        
+        try:
+            #Luego esto se puede refactorizar porque al pasarle el movimiento ya tengo acceso a la caja de la instancia del movimiento a actualizar
+            Movement.objects.update_balance_reverse(cashregister, form.instance.amount, form.instance.type_operation, movement)
+            messages.success(self.request, 'El movimiento fue actualizado con éxito')
+        except ValueError as e:
+            messages.success(self.request, 'Se pudo realizar la reverza del movimento')
+            messages.error(self.request, 'Ha ocurrido un error. No hay fondos suficientes para realizar la operacion')
+            
+            #recordando que tengo en mi managers  except ValueError as e:
+            # Si ocurre un error, significa que estoy tratando de retirar un monto que no tengo, por lo que debo eliminar el movimiento
+            # current_movement.delete()
+            # e.args.__add__(("Movement deleted",))
+            # raise e
+            
+            print("----------------Argumentos en el ValueError----------------", e.args)
+            
+            return redirect('cashregister_app:movements_create_view')
+        
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        print("----------------Error form update movements----------------")
+        print(form.data)
+        
+        messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
+        
+        return super().form_invalid(form)
+
+
+class MovementsDetailView(DetailView):
+    template_name = 'cashregister/movements_detail_page.html'
+    model = Movement
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #por ahora no se hizo nada ...
+        return context
+
+
+#------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#

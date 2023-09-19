@@ -1,0 +1,178 @@
+{% load static %}
+{% load humanize %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+
+    <!-- ===============================================-->
+    <!--    Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.level_tag == "success" %} alert-success {% else %} alert-warning {% endif %} border-2 d-flex align-items-center" role="alert">
+            <div class="{% if message.level_tag == "success" %} bg-success {% else %} bg-warning {% endif %}  me-3 icon-item"><span class="{% if message.level_tag == "success" %} far fa-check-circle {% else %} fas fa-exclamation-circle {% endif %} text-white fs-3"></span></div>
+            <p class="mb-0 flex-1">{{ message }}</p>
+            <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- ===============================================-->
+    <!--    Fin Errores de Sistema (Backend)--> 
+    <!-- ===============================================-->
+
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Titulo de la pestaña -->
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-store"></i></span>
+        <div class="col">
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Punto de Venta {{request.user.branch.name}}</span><span
+                class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+            <p class="mb-0">Aquí puede realizar sus ventas diarias</p>
+        </div>
+        </div>
+    </div>
+
+
+    <!-- ===============================================-->
+    <!--    Card con la presentacion del punto de venta-->
+    <!-- ===============================================-->
+
+    <div class="row g-3">
+        <div class="col-xl-4 order-1">
+            <div class="card mb-2 p-4">
+                <div class="col-md-5 col-xl-12 text-center text-md-start text-xl-center text-xxl-start">
+                    <div class="fs-4 fw-semi-bold d-flex justify-content-between">
+                        Total:
+                        <span class="text-success text-start">$</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-light btn-reveal-trigger d-flex">
+                <h5 class="mb-0">Detalle de compra</h5>
+                </div>
+                
+                <div class="card-body">
+                    <div class="product-sale-item product-container">
+                        <table class="table table-borderless fs--1 mb-0">
+                            <tbody id="selected-products-list">
+                                <!-- Lista de productos seleccionados -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between bg-light py-2">
+                    <div class="fw-semi-bold">Subtotal</div>
+                    <div class="fw-bold" id="subtotal">$ 0.00</div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light py-3">
+                    <div class="fw-semi-bold">Descuento</div>
+                    <div class="fw-bold" id="discount">$ 0.00</div>
+                </div>
+                <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
+                    <div class="fw-semi-bold">Total a pagar</div>
+                    <div class="fw-bold" id="total">$ 0.00</div>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <a href="" class="btn btn-primary p-2">
+                    <span class="fs-2">
+                        ir a pagar
+                    </span>
+                </a>
+            </div>
+        </div>
+        <div class="col-xl-8">
+            <div class="card mb-3">
+                <div class="card-header bg-light">
+                <div class="row flex-between-center">
+                    <div class="col-8">
+                        <form>
+                            <div class="input-group">
+                                <input class="form-control form-control-lg shadow-none search" type="search" placeholder="buscar" aria-label="search" id="search-product" />
+                                <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-4">
+                        <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Limpiar</span></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <p class="fs--2 text-700">Ingrese el<span class="text-warning">codigo de barra</span> o el <span class="text-warning">nombre</span> del <span class="text-warning">producto</span></p>
+                </div>
+                </div>
+                <!--Cabecera de los resultados-->
+                <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
+                    <div class="col-12 mb-3 mb-md-0">
+                        <div class="row m-0">
+                            <div class="col-9 col-md-8 py-2 px-4">Nombre</div>
+                            <div class="col-3 col-md-4">
+                                <div class="row">
+                                    <div class="col-md-8 py-2 d-none d-md-block text-center">Cantidad</div>
+                                    <div class="col-12 col-md-4 pe-4 py-2">Precio</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="product-container" class="product-container m-3">
+                    <!-- Producto -->
+                    <div class="product-item">
+                        <div class="form-check mb-0 custom-radio radio-select">
+                            <input class="form-check-input" id="{{product.id}}" type="checkbox"/>
+                            <label class="form-check-label mb-0 fw-bold d-block" for="{{product.id}}">
+                                {{product.category}} - {{product.brand}}
+                                <span class="radio-select-content">
+                                    <div class="row gx-card mx-0 bg-200 fs--1 fw-semi-bold">
+                                        <div class="col-8 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <!-- <a href="#">
+                                                    <img class="img-fluid rounded-1 me-3 d-none d-md-block" src="" alt="" width="60">
+                                                </a> -->
+                                                <div class="flex-1">
+                                                    <h5 class="fs-0"><a class="text-900" href="#">{{product.name}}</a></h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 py-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-0">
+                                                    <div>
+                                                        <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
+                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus" data-product-id="{{ product.id }}">-</button>
+                                                            <input class="form-control text-center px-2 input-spin-none" type="number" min="1" disabled value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px" id="cantidad-{{ product.id }}">
+                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus" data-product-id="{{ product.id }}">+</button>
+                                                        </div>                                                                
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 text-end ps-0 order-0 mb-2 mb-md-0 text-600" id="price-{{product.id}}">${{product.sale_price}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--   Fin Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+</div>
+
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->

@@ -2,9 +2,101 @@
 
 {% block extra_css %}
 {% load static %}
-{% endblock extra_css  %}
+{% endblock extra_css %}
 
 {% block main %}
+
+
+
+<div class="container py-4">
+  {% include 'core/components/messages.html' %}
+
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+      class="fa-inverse fa-stack-1x text-primary fas fa-sticky-note"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Notas</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aqui se visualizan las notas</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="card theme-wizard h-100 mb-5">
+      <div class="card-header bg-light pt-3 pb-2">
+        <div class="col">
+            <p class="fs--2 mb-0">Notas de sucursal <span class="text-warning">{{ user.branch }}</span>
+            </p>
+        </div>
+    </div>
+      <div class="card-body py-4" id="wizard-controller">
+        {% if notes %}
+        <div class="row row-ligth">
+          {% for note in notes %}
+          <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+            <div class="card bg-gradient h-100 mb-3" style="background-color:{{ note.label.color}} ">
+              <div class="container mx-2 mt-2">
+                <div class="d-flex btn-reveal-trigger">
+                  <div class="flex-1 position-relative ps-3">
+                    <h6 class="fs-1 mb-0">{{ note.subject }}</h6>
+                    <p id="descripcion" class="text-1000 mb-0">{{ note.description }}</p>
+                    <div class="border-dashed-bottom my-3"></div>
+                    <div>
+                      <a href=""><button
+                              class="btn p-0" type="button" data-bs-toggle="tooltip"
+                              data-bs-placement="top" title="Ver"><span
+                                  class="text-500 far fa-eye"></span></button></a>
+                      <a href="{% url 'note_app:update_note' pk=note.pk %}"><button
+                              class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
+                              data-bs-placement="top" title="Editar"><span
+                                  class="text-500 fas fa-edit"></span></button></a>
+                     <a href="{% url 'note_app:delete_note' pk=note.pk %}"><button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
+                          data-bs-placement="top" title="Eliminar"><span
+                              class="text-500 fas fa-trash-alt"></span></button></a>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <!--Nav de paginacion-->
+        <nav aria-label="Notes page navigation">
+          <ul class="pagination justify-content-center">
+            <!-- Enlace a la página anterior -->
+            <li class="page-item{% if not page_obj.has_previous %} disabled{% endif %}">
+              <a class="page-link"
+                href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}" tabindex=""
+                aria-disabled="true">Anterior</a>
+            </li>
+
+            <!-- Números de página -->
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item{% if num == page_obj.number %} active{% endif %}">
+              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            <!-- Enlace a la página siguiente -->
+            <li class="page-item{% if not page_obj.has_next %} disabled{% endif %}">
+              <a class="page-link"
+                href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}">Siguiente</a>
+            </li>
+          </ul>
+        </nav>
+        {% else %}
+        <div class="text-center py-5">
+          <h3>No hay notas disponibles</h3>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
 
 {% endblock main %}
 

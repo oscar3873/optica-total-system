@@ -101,5 +101,5 @@ class OrderDetaill(SoftDeletionModel, TimestampsModel):
         return (f'Orden de venta: {self.sell}\n' +
                 f'Producto: {self.product}\n' +
                 f'Cantidad: {self.quantity}\n' +
-                f'Total: $ {self.product.price * self.quantity}'
+                f'Total: $ {self.product.sale_price * self.quantity}'
                 )

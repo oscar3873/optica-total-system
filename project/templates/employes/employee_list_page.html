@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'employes/components/employee_list.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="{% static 'users/js/modals_handle_employee.js' %}"></script>
+{% endblock extra_js %}

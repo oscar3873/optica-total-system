@@ -1,13 +1,15 @@
 from django.db import transaction
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.views.generic import FormView, UpdateView, DetailView, ListView
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.db.models import Q
+from django.urls import reverse_lazy,reverse
+from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
+from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin # Para Autenticar usuario administrador
 
 from .forms import *
 from .models import *
+from .utils import *
 # Create your views here.
 
 class CategoryCreateView(CustomUserPassesTestMixin, FormView):
@@ -16,14 +18,23 @@ class CategoryCreateView(CustomUserPassesTestMixin, FormView):
     """
     form_class = CategoryForm
     template_name = 'products/category_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_app:category_list')
 
     def form_valid(self, form):
         category = form.save(commit=False)
         category.user_made = self.request.user
         category.save()
-        return super().form_valid(form)
 
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_category_data = {
+                'id': category.id,
+                'name': category.name
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_category': new_category_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
 
 class BrandCreateView(CustomUserPassesTestMixin, FormView):
     """
@@ -31,13 +42,23 @@ class BrandCreateView(CustomUserPassesTestMixin, FormView):
     """
     form_class = BrandForm
     template_name = 'products/brand_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_app:brand_list')
 
     def form_valid(self, form):
         brand = form.save(commit=False)
         brand.user_made = self.request.user
         brand.save()
-        return super().form_valid(form)
+
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_brand_data = {
+                'id': brand.id,
+                'name': brand.name
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_brand': new_brand_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
 
 class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     """
@@ -48,23 +69,10 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     template_name = 'products/feature_create_page.html'
     success_url = reverse_lazy('core_app:home')
 
-    def post(self, request, *args, **kwargs):
-        # Manejar la creación de tipos de características dinámicamente
-        feature_type_form = FeatureTypeForm(request.POST)
-        if feature_type_form.is_valid():
-            feature_type = feature_type_form.save(commit=False)
-            feature_type.user_made = self.request.user
-            feature_type.save()
-
-            # Actualizar el selector 'type' en tiempo real
-            new_option = f'<option value="{feature_type.id}">{feature_type.name}</option>'
-            response_data = {'status': 'success', 'new_option': new_option}
-
-            return JsonResponse(response_data)
-
-        # Si el formulario no es válido, devolver los errores
-        errors = feature_type_form.errors
-        return JsonResponse({'status': 'error', 'errors': errors})
+    def get_context_data(self, **kwargs) :
+        context =  super().get_context_data(**kwargs)
+        context['type_form'] = FeatureTypeForm()
+        return context
 
     def form_valid(self, form):
         feature = form.save(commit=False)
@@ -75,6 +83,65 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
             Product_feature.objects.create(feature=feature, product=product, user_made=self.request.user)
 
         return super().form_valid(form)
+    
+
+class FeatureFullCreateView(CustomUserPassesTestMixin, FormView):
+    """
+    Crear una característica nueva para el producto
+    Previa carga del Tipo de Característica
+    """
+    form_class = FeatureForm_to_formset
+    template_name = 'products/feature_create_page.html'
+    success_url = reverse_lazy('core_app:home')
+
+    def form_valid(self, form):
+        
+        feature, created_ft, created_f = validate_exists_feature_full(form, self.request.user)
+        type = form.cleaned_data['type']
+
+        if not created_f: # Pregunta si ya existe la caracteristica (incluido el tipo)
+            return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
+        
+        elif not created_ft: # Pregunta si ya existe el tipo solo
+            return JsonResponse({'status': 'error', 'error_message': f'Por favor cree la nueva característica desde la columna "{type}".'})
+
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_feature_data = {
+                'id':  feature.id,
+                'name': feature.__str__(),
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_feature': new_feature_data})
+            
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
+        
+        
+class FeatureUnitCreateView(FormView):
+    form_class = FeatureForm_to_formset
+
+    def form_valid(self, form):
+        if len(form.cleaned_data['value']) < 1:
+            return JsonResponse({'status': 'error', 'error_message': 'Debe ingresar por lo menos 1 caracter.'})
+
+        type = Feature_type.objects.get(name=form.cleaned_data['type'])
+
+        feature, created = Feature.objects.get_or_create(
+            value = form.cleaned_data['value'],
+            type = type,
+            user_made = self.request.user
+        )
+        if not created: 
+            return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
+        
+        new_feature_data = {
+                'id':  feature.id,
+                'name': feature.value,
+                'type': feature.type.name,
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+        return JsonResponse({'status': 'success', 'new_feature_unit': new_feature_data})
 
 
 class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
@@ -90,78 +157,117 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
         feature_type = form.save(commit=False)
         feature_type.user_made = self.request.user
         feature_type.save()
-        return super().form_valid(form)
+                
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_type_data = {
+                'id': feature_type.id,
+                'name': feature_type.name
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_type': new_type_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
 
 
+#################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
-    """
-    Crear o actualizar un producto
-    """
     form_class = ProductForm
-    template_name = 'products/product_create_page.html'
-    success_url = reverse_lazy('core_app:home')
-    create_mode = True  # Indica si estamos en modo de creación o actualización
-
-    def dispatch(self, request, *args, **kwargs):
-        # Verificar si estamos en modo de actualización
-        if 'pk' in self.kwargs:
-            self.create_mode = False
-            self.object = Product.objects.get(pk=self.kwargs['pk'])
-        return super().dispatch(request, *args, **kwargs)
+    template_name = 'products/wizard_create_product.html'
+    success_url = reverse_lazy('products_app:product_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if not self.create_mode:
-            context['form'] = ProductForm(instance = self.object)
-        context['named_formsets'] = self.get_named_formsets()
+        context['category_form'] = CategoryForm
+        context['brand_form'] = BrandForm
+        context['feature_form'] = FeatureForm_to_formset
+        # context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
+    
+    @transaction.atomic
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        if form.is_valid():
+            product = form.save(commit=False)
+            product.user_made = self.request.user
+            product.branch = self.request.user.branch
+            product.save()
+            form_in_out_features(form, product, self.request.user)
 
-    def get_named_formsets(self):
-        """
-        Funcion para obtener el formulario formset para GET y POST
-        """
-        if self.request.method == "GET":
-            return FeatureFormSet(prefix='variants')
+        feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
+
+        if feature_formset.is_valid():
+            form_create_features_formset(self.request.user, product, feature_formset)
+        
+        source_route = self.request.GET.get('source_route', '')  # Obtén el valor del parámetro 'source_route' de la URL
+        supplier_pk = self.request.GET.get('supplier_pk', '')  # Obtén el valor del parámetro 'supplier_pk' de la URL
+
+        # Determina la URL de redirección según la ruta de origen
+        if source_route == 'supplier_create':
+            redirect_url = reverse('suppliers_app:new_supplier')
+        elif source_route == 'supplier_update':
+            redirect_url = reverse('suppliers_app:update_supplier', args=[supplier_pk])
         else:
-            return FeatureFormSet(self.request.POST, prefix='variants')
+            redirect_url = reverse('products_app:product_list')  # Ruta predeterminada si no se especifica la ruta de origen
+
+        return HttpResponseRedirect(redirect_url)
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
+        return super().form_invalid(form)
+    
+    
+####################### UPDATES #####################
+
+class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
+    """
+    Crear o actualizar un producto
+    """
+    model = Product
+    form_class = ProductForm
+    template_name = 'products/wizard_create_product.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context['named_formsets'] = FeatureFormSet(prefix='variants')
+        context['category_form'] = CategoryForm(instance=self.object.category)
+        context['brand_form'] = BrandForm(instance=self.object.brand)
+        context['feature_form'] = FeatureForm_to_formset
+        return context
 
     @transaction.atomic
     def form_valid(self, form):
-        if not self.create_mode:
-            # Actualiza los campos del objeto con los datos del formulario POST
-            form.instance.pk = self.object.pk  # Mantén la clave primaria
-            form.instance.user_made = self.request.user  # Actualiza el usuario
-            product = form.save()  # Guarda los cambios en el objeto existente
-        else:
-            # Si es un nuevo producto, simplemente guarda el formulario
-            product = form.save(commit=False)
-            product.user_made = self.request.user
-            product.save()
+        # Si es un nuevo producto, simplemente guarda el formulario
+        product = form.instance
+        product.user_made = self.request.user
 
-        feature_formset = self.get_named_formsets()
+        feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
+        form_in_out_features(form, product, self.request.user)
         if feature_formset.is_valid():
-            Product_feature.objects.form_in_out_features(form, product, self.request.user)
-            Product_feature.objects.form_create_features_formset(product, feature_formset)
-
+            form_create_features_formset(self.request.user, product, feature_formset)
+        self.success_url = reverse_lazy('products_app:product_detail', kwargs={'pk': self.get_object().pk})
         return super().form_valid(form)
-    
-####################### UPDATES #####################
+
 
 class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'products/category_update_page.html'
-    success_url = reverse_lazy('core_app:home')
-
+    success_url = reverse_lazy('products_ap:category_list')
+    
     def form_valid(self, form):
-        form.instance.user_made = self.request.user
+        category = form.save(commit=False)
+        category.user_made = self.request.user
+        category.save()
+                
         return super().form_valid(form)
+
 
 class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'products/brand_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_ap:brand_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -171,7 +277,7 @@ class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'products/feature_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('products_ap:feature_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -181,7 +287,7 @@ class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature_type
     form_class = FeatureForm
     template_name = 'products/featureType_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('core_app:homefeature_type_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -194,11 +300,39 @@ class ProductListView(CustomUserPassesTestMixin, ListView):
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
 
+    def get_queryset(self):
+        branch = self.request.user.branch
+        branch_actualy = self.request.session.get('branch_actualy')
+
+        if  self.request.user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
+            return Product.objects.filter(branch=branch_actualy, deleted_at=None)
+        
+        # En otros casos, filtra por la sucursal del usuario
+        return Product.objects.filter(branch=branch, deleted_at=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
+        context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
+        return context
+
 
 class BrandListView(CustomUserPassesTestMixin, ListView):
     model = Brand
     template_name = 'products/brand_list_page.html'
     context_object_name = 'brands'
+    
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Brand.objects.filter(deleted_at=None)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Brand,"id","deleted_at", "created_at", "updated_at")
+        return context
 
 
 class CategoryListView(CustomUserPassesTestMixin, ListView):
@@ -206,41 +340,144 @@ class CategoryListView(CustomUserPassesTestMixin, ListView):
     template_name = 'products/category_list_page.html'
     context_object_name = 'categories'
 
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Category.objects.filter(deleted_at=None)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Category,"id","deleted_at", "created_at", "updated_at") 
+        return context
+
+
+class FeatureTypeListView(CustomUserPassesTestMixin, ListView):
+    model = Feature_type
+    template_name = 'products/feature_type_page.html'
+    context_object_name = 'feature_type'
+
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Feature_type.objects.filter(deleted_at=None)
+
+class FeatureListView(CustomUserPassesTestMixin, ListView):
+    model = Feature
+    template_name = 'products/feature_page.html'
+    context_object_name = 'feature'
+
+    def get_queryset(self):
+        # Filtra los productos que no han sido eliminados suavemente
+        return Feature.objects.filter(deleted_at=None)
 
 #################### DETAILS #####################
 
 class ProductDetailView(CustomUserPassesTestMixin, DetailView):
     model = Product
     template_name = 'products/product_page.html'
-    context_object_name = 'product'
+            
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        branch = self.request.user.branch
+        
+        if not self.object.branch == branch: # Valida que el usuario no pueda entrar por URL (product/<pk>/)
+            messages.error(self.request, 'Lo sentimos, no puedes ver este producto.')
+        
+        context['features'] = self.model.objects.get_features(self.get_object())
+        return context
+    
+    
+class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
+    model = Category
+    template_name = 'products/category_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['features'] = self.model.objects.get_features(self.get_object())
+
+        context['products'] = Product.objects.filter(category=self.object, deleted_at=None, branch = self.request.user.branch)
+        # AGREGAR MAS DETALLES RELACIONADOS
         return context
 
 
+class BrandDetailView(CustomUserPassesTestMixin, DetailView):
+    
+    model = Brand
+    template_name = 'products/brand_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None, branch = self.request.user.branch)
+        # AGREGAR MAS DETALLES RELACIONADOS
+        return context
+    
 
 
-def crear_feature_type(request):
-    if request.method == 'POST':
-        form = FeatureTypeForm(request.POST)
-        if form.is_valid():
-            feature_type = form.save(commit=False)
-            feature_type.user_made = request.user
-            feature_type.save()
-            print('###########\nEN CREATE\n\n ')
-            return HttpResponse('<script>window.close();</script>')
+########################### DELETE ####################################
+ # FALTO COMPLETAR LA LOGICA PARA EL BORRADO SUEAVE DE LAS INSTANCIAS REALCIONADAS
+    # QUE PASA SI BORRO UNA FEATURE QUE YA ESTA RELACIONADA PREVIAMENTE CON ALGUN PRODUCTO ? (PROTECTED NO DEJARA QUE BORRE)
+class CategoryDeleteView(CustomUserPassesTestMixin, DeleteView):
+    model = Category
+    template_name = 'products/category_delete_page.html'
+    success_url = reverse_lazy('products_app:category_list')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
 
-    form = FeatureTypeForm()
-    return render(request, 'products/featureType_create_form.html', {'form': form})
+class BrandDeleteView(CustomUserPassesTestMixin, DeleteView):
+    model = Brand
+    template_name = 'products/brand_delete_page.html'
+    success_url = reverse_lazy('products_app:brand_list')
+    
+
+class ProductDeleteView(CustomUserPassesTestMixin, DeleteView):
+    model = Product
+    template_name = 'products/product_delete_page.html'
+    success_url = reverse_lazy('products_app:product_list')
 
 
-def obtener_ultimo_feature_type(request):
-    print('###########\nGET\n\n')
-    ultimo_feature_type = Feature_type.objects.latest('id')
-    data = {
-        'type_id': ultimo_feature_type.pk,
-        'type_nombre': ultimo_feature_type.name,
-    }
-    return JsonResponse(data)
+class FeatureDeleteView(CustomUserPassesTestMixin, DeleteView):
+    model = Feature
+    template_name = 'products/category_form.html'
+    success_url = reverse_lazy('core_app:home')
+    
+
+class FeatureTypeDeleteView(CustomUserPassesTestMixin, DeleteView):
+    model = Feature_type
+    template_name = 'products/category_form.html'
+    success_url = reverse_lazy('products_app:new_feature')
+    
+
+
+###################### SEARCH #########################
+class ProductSearchView(ListView):
+    model = Product
+    template_name = 'products/product_search.html'  # Reemplaza 'product_search.html' con la ruta a tu plantilla HTML de búsqueda de productos
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        branch = self.request.user.branch
+
+        query = self.request.GET.get('q')
+        if query:
+            # Convertir la consulta a minúsculas
+            query = query.lower()
+
+            # Realizar una búsqueda insensible a mayúsculas/minúsculas y que contenga la palabra
+            queryset = Product.objects.filter(
+                Q(name__icontains=query) |
+                Q(name__icontains=query.capitalize()) |
+                Q(name__icontains=query.upper()) |
+                Q(name__icontains=query.lower()) |
+                Q(name__icontains=query.title())
+            , branch=branch)
+        else:
+            queryset = Product.objects.all()
+
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        data = [{'id': product.pk, 'name': product.name, 'description': product.description, 'price': product.sale_price, 'category': product.category.name, 'brand': product.brand.name } for product in queryset]
+
+        return JsonResponse({'products': data})

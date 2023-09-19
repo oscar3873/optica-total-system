@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.8/lottie.min.js"></script>
+<link rel="stylesheet" href="{% static 'sales/css/pos_products_select.css' %}">
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'sales/components/point_of_sale_view.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="{% static 'sales/js/pos_products_select.js' %}"></script>
+{% endblock extra_js %}

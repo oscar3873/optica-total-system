@@ -1,6 +1,173 @@
-<form method="post">
-    {% csrf_token %}
+{% extends 'core/base.html' %}
 
-    {{form.as_p}}
-    <button type="submit">Crear Nota</button>
-</form>
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
+<div class="container py-4">
+    {% include 'core/components/messages.html' %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Titulo del formulario wizard -->
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-sticky-note"></i></span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span
+                        class="bg-200 dark__bg-1100 pe-3">Notas</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Nueva Nota</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center my-2">
+        <div class="col">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Se encontraron errores:</h4>
+                <ul>
+                    {% for field_errors in form.errors.values %}
+                    {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="card theme-wizard h-100 p-0">
+            <div class="card-header bg-light pt-3 pb-2">
+                <div class="col">
+                    <p class="fs--2 mb-0"><span class="text-warning">{{user.last_name}}, {{user.first_name}}</span> esta por
+                        registrar un añadir una nota
+                    </p>
+                </div>
+            </div>
+            <div class="card-body pb-3" id="wizard-controller">
+                <div class="tab-content">
+                    <div class="tab-pane active px-sm-3 px-md-3" role="tabpanel"
+                        aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                        <form method="POST" class="row needs-validation align-items-center" novalidate="">
+                            {% csrf_token %}
+                            <div class="row justify-content-sm-center pb-2">
+                                <div class="col-12 col-sm">
+                                    <label for="id_first_name"
+                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Asunto</span>
+                                    </label>
+                                    {{ form.subject }}
+                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="invalid-feedback">Este campo no puede estar vacio.</div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-md-10">
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Su Sucursal</span>
+                                    </label>
+                                    <div class="mb-3">
+                                        <h6 class="fs-1">{{ user.branch }}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-10 my-2">
+                                    <label for="id_subject"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Sucursales</span>
+                                    </label>
+                                    <div class="mb-3">
+                                        {{ form.branch }}
+                                    </div>
+                                    {% if form.branch.errors %}
+                                    <div class="alert alert-warning" role="alert">
+                                        {% for error in form.branch.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+
+                            <div class="row justify-content-sm-center">
+                                <div class="col-12 col-sm">
+                                    <label for="id_first_name"
+                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Tipo de Nota</span>
+                                    </label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group d-flex">
+                                                {{ form.label }}
+                                                <button id="addLabel" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#note-label-modal">+</button>
+                                            </div>
+                                        </div>
+                                        <input type="color" class=" form-control-color" id="color-input-disabled" value=""
+                                                title="Choose your color" disabled>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-12 col-sm py-3">
+                                    <label for="id_first_name"
+                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Descripcion</span>
+                                    </label>
+                                    {{ form.description }}
+                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="invalid-feedback">La nota debe tener contenido.</div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary" name="submit">Registrar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="note-label-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="create-modalLabel">Crear Label</h5>
+            </div>
+            <div class="modal-body">
+                <form id="id_label_form" method="post">
+                    {% csrf_token %}
+                    {{ label_form.as_p }}
+                    <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                    <button class="btn btn-primary" type="button" id="save-label">Guardar</button>
+                    <!-- Fin del formulario de creación de Category-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'notes/js/create_label.js' %}"></script>
+{% endblock extra_js %}

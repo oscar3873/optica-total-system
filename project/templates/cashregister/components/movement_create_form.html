@@ -1,0 +1,159 @@
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+
+    <!-- ===============================================-->
+    <!--    Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+    {% include 'core/components/messages.html' %}
+
+    <!-- ===============================================-->
+    <!--    Fin Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!--Titulo -->
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-lock-open"></i></span>
+            <div class="col">
+              <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Crear movimiento manualmente</span><span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+              <p class="mb-0">Aqui puede realizar movimientos en general para ingresos y egresos manuales</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    Card con el formulario-->
+    <!-- ===============================================-->
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        {% if cashregister %}
+        <!--Card-->
+        <div class="card theme-wizard h-100 mb-5">
+          <!--Card Header-->
+          <div class="card-header bg-light pt-3 pb-2">
+              <div class="d-flex mb-4">
+                  <div class="col">
+                      <p class="fs--2 mb-0">Solo puede efectuar movimientos en efectivo</p>
+                  </div>
+              </div>
+          </div>
+          <!--Card Body-->
+          <div class="card-body py-4">
+              <div class="tab-content">
+                  <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                      <form method="post" class="row g-3 needs-validation" novalidate="">
+                          {% csrf_token %}
+                          <div class="col-md-6">
+                            <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                <span class="fa-stack me-2 ms-n1">
+                                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                  <i class="fa-inverse fa-stack-1x dark__text-white fas fa-dollar-sign"></i>
+                                </span>
+                                <span>Monto</span>
+                            </label>
+                              {{form.amount}}
+                              <p class="fs--2 mb-0 pt-1 text-secondary">Monto del ingreso o egreso</p>
+                            <div class="valid-feedback">Perfecto!</div>
+                            <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
+                          </div>
+                          <div class="col-md-6">
+                            <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                <span class="fa-stack me-2 ms-n1">
+                                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                  <i class="fa-inverse fa-stack-1x dark__text-white fas fas fa-exchange-alt"></i>
+                                </span>
+                                <span>Tipo de operacion</span>
+                            </label>
+                              {{form.type_operation}}
+                              <p class="fs--2 mb-0 pt-1 text-secondary">(Ingreso - Egreso)</p>
+                            <div class="valid-feedback">Perfecto!</div>
+                            <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
+                          </div>
+                          <div class="col-md-7">
+                            <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                <span class="fa-stack me-2 ms-n1">
+                                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                  <i class="fa-inverse fa-stack-1x dark__text-white fas fas fa-align-left"></i>
+                                </span>
+                                <span>Descripcion</span>
+                            </label>
+                              {{form.description}}
+                              <p class="fs--2 mb-0 pt-1 text-secondary">Motivo o razon del egreso o ingreso</p>
+                            <div class="valid-feedback">Perfecto!</div>
+                            <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
+                          </div>
+                          <div class="col-md-5">
+                            <label for="id_amount" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                <span class="fa-stack me-2 ms-n1">
+                                  <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                  <i class="fa-inverse fa-stack-1x dark__text-white fas fas fa-align-left"></i>
+                                </span>
+                                <span>Tipo de movimiento</span>
+                            </label>
+                              {{form.payment_method}}
+                              <p class="fs--2 mb-0 pt-1 text-secondary">Seleccione como quiere que se registre el movimiento si en efectivo, transferencia, tarjeta debito, etc...</p>
+                            <div class="valid-feedback">Perfecto!</div>
+                            <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
+                          </div>
+                          <div class="col-12">
+                              <button class="btn btn-warning" type="submit">Confirmar movimiento</button>
+                          </div>
+              
+                          {% if form.initial_balance.errors %}
+                          <div class="col-12">
+                              <div class="invalid-feedback">{{ form.initial_balance.errors }}</div>
+                          </div>
+                          {% endif %}
+                      </form>
+                  </div>
+              </div>
+          </div>
+          <!--Card Footer-->
+          <div class="card-footer bg-light">
+              <div class="px-sm-3 px-md-5">
+              </div>
+          </div>
+      </div>
+        {% else %}
+
+        <!--Card-->
+        <div class="card theme-wizard h-100 mb-5">
+          <!--Card Header-->
+          <div class="card-header bg-light pt-3 pb-2">
+              <div class="d-flex mb-4">
+                  <div class="col">
+                      <p class="fs--2 mb-0"></p>
+                  </div>
+              </div>
+          </div>
+          <!--Card Body-->
+          <div class="card-body py-4">
+              <div class="tab-content">
+                  <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                    <p>Necesita abrir una caja registradora primero para realizar un movimiento</p>
+                  </div>
+              </div>
+          </div>
+          <!--Card Footer-->
+          <div class="card-footer bg-light">
+              <div class="px-sm-3 px-md-5">
+              </div>
+          </div>
+      </div>
+
+        {% endif %}
+    </div>
+
+    <!-- ===============================================-->
+    <!--   Fin Card con el formulario-->
+    <!-- ===============================================-->
+
+</div>
+
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->

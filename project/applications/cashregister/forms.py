@@ -1,7 +1,37 @@
 from django import forms
 from django.forms import formset_factory
-from applications.cashregister.models import CashRegister, CashRegisterDetail
+from applications.cashregister.models import CashRegister, CashRegisterDetail, Movement, Currency
 
+
+
+class CurrencyForm(forms.ModelForm):
+    
+    class Meta:
+        model = Currency
+        fields = ['name', 'symbol', 'code']
+        widgets = {
+            'name': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ejemplo: Peso Argentino',
+                    'required':''
+                    }
+                ),
+            'symbol': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ejemplo: $',
+                    'required':''
+                    }
+                ),
+            'code': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ejemplo: ARS',
+                    'required':''
+                    }
+                ),
+            }
 
 
 class CashRegisterForm(forms.ModelForm):
@@ -14,13 +44,23 @@ class CashRegisterForm(forms.ModelForm):
                 'class': 'form-control',
                 'placeholder': '0.00',
                 'autofocus':''
-                }
-            )
+            }
         )
+    )
+    
+    currency = forms.ModelChoiceField(
+        queryset=Currency.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Seleccione una opción'
+            }
+        )
+    )
     
     class Meta:
         model = CashRegister
-        fields = ['initial_balance']
+        fields = ['initial_balance', 'currency']
         
 
 class CloseCashRegisterForm(forms.Form):
@@ -41,20 +81,51 @@ class CloseCashRegisterForm(forms.Form):
         model = CashRegister
         fields = ['final_balance']
 
+
 class CashRegisterDetailForm(forms.ModelForm):
     
     class Meta:
         model = CashRegisterDetail
-        fields = ['type_method', 'registered_amount', 'counted_amount', 'difference']
+        fields = ['counted_amount']
         widgets = {
-            'type_method': forms.Select(
+            'counted_amount': forms.NumberInput(
                 attrs={
-                    'class': 'form-control border-0 bg-transparent', 
-                }),
-            'registered_amount': forms.NumberInput(attrs={'class': 'form-control'}),
-            'counted_amount': forms.NumberInput(attrs={'class': 'form-control'}),
-            'difference': forms.NumberInput(attrs={'class': 'form-control'}),
+                    'class': 'form-control',
+                    'placeholder': '0.00',
+                    'value': '0.00'
+                })
         }
+        
 
+class MovementForm(forms.ModelForm):
+    
+    class Meta:
+        model = Movement
+        fields = ['amount', 'type_operation', 'description', 'payment_method']
+        widgets = {
+            'amount': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': '0.00'
+                }),
+            'type_operation': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Seleccione una opción'
+                }),
+            'description': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': '5',
+                    'placeholder': 'Se retiro para compra de ...'
+                }),
+            'payment_method': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Seleccione una opción'
+                })
+        }
+        
+        
 
 CashRegisterDetailFormSet = formset_factory(CashRegisterDetailForm, extra=0)

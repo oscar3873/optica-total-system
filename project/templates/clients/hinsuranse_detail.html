@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
+<div class="container">
+    <h1 class="mt-5">Detalle de Obra Social</h1>
+    <hr>
+
+    <dl class="row">
+        <dt class="col-sm-3">Nombre:</dt>
+        <dd class="col-sm-9">{{ h_insurance.name }}</dd>
+
+        <dt class="col-sm-3">Teléfono:</dt>
+        <dd class="col-sm-9">{{ h_insurance.phone_number }}</dd>
+
+        <dt class="col-sm-3">CUIT:</dt>
+        <dd class="col-sm-9">{{ h_insurance.cuit }}</dd>
+    </dl>
+
+    <a class="btn btn-primary" href="{% url 'clients_app:insurance_view' %}">Volver a la lista de Obras Sociales</a>
+</div>
+
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}
