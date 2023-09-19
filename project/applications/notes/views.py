@@ -1,13 +1,13 @@
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
-from django.views.generic import FormView, ListView
+from django.views.generic import FormView, ListView, UpdateView, DeleteView
 from django.db import transaction
 from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
 from .consumers import send_global_message
-from .models import Note
+from .models import Note, Label
 from .forms import NoteCreateForm, LabelCreateForm
 
 class NoteCreateView(CustomUserPassesTestMixin, FormView):
@@ -61,6 +61,21 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         send_global_message(f"A new note has been created: {note.subject}")
 
         return super().form_valid(form)
+    
+class NoteUpdateView(CustomUserPassesTestMixin, UpdateView):
+    model = Note
+    form_class = NoteCreateForm
+    template_name = 'notes/note_form.html'
+    success_url = reverse_lazy('note_app:note_list')
+
+    def get_form_kwargs(self): ##revisar
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Pasa el usuario actual al formulario
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.user_made = self.request.user
+        return super().form_valid(form)
 
 
 class LabelCreateView(CustomUserPassesTestMixin, FormView):
@@ -72,16 +87,15 @@ class LabelCreateView(CustomUserPassesTestMixin, FormView):
     def form_valid(self,form):
         label = form.save(commit=False)
         label.user_made = self.request.user
-        label.save()
-
-        if self.request.META.get('HTTP_X_REQUESTED_WITH' == 'XMLHttpRequest'):
+        label.save();
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
             new_label_data = {
                 'id' : label.id,
                 'label' : label.label,
-                'color' : label.color,
+                'color' : label.color
             }
-            return JsonResponse({'status': 'success', 'new_label' : new_label_data })
-
+                # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_type': new_label_data})
 
 ################## LIST ######################
 
@@ -106,11 +120,11 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
 
 ########################### DELETE ####################################
 
-class NoteDeleteView(CustomUserPassesTestMixin, FormView):
+class NoteDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Note
-    form_class = NoteCreateForm
-    template_name = 'notes/note_form.html'
+    template_name = 'notes/note_delete.html'
     success_url = reverse_lazy('core_app:home')
+    
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

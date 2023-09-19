@@ -48,7 +48,6 @@ class Product(BaseAbstractWithUser):
         return (f'{self.name} - '+
                 f'{self.brand} - '+
                 f'{self.category} - '+
-                f'Precio: {self.price} - '+ 
                 f'Stock: {self.stock}'
                 ) 
 
