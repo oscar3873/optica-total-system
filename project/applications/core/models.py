@@ -72,4 +72,4 @@ class Objetives(SoftDeletionModel, TimestampsModel):
     description = models.CharField(max_length=150, null=True, blank=True, verbose_name='Detalle de Objetivo')
     start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
     exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
-    quantity = models.PositiveBigIntegerField(null=True, blank=True, verbose_name='Objetivo')
+    quantity = models.PositiveIntegerField(null=True, blank=True, verbose_name='Objetivo')

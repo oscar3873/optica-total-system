@@ -12,7 +12,7 @@ from .models import *
 from .utils import *
 # Create your views here.
 
-class CategoryCreateView(FormView):
+class CategoryCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una catogoria nueva para el producto
     """
@@ -181,7 +181,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         context['category_form'] = CategoryForm
         context['brand_form'] = BrandForm
         context['feature_form'] = FeatureForm_to_formset
-        context['named_formsets'] = FeatureFormSet(prefix='variants')
+        # context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
     @transaction.atomic
@@ -229,9 +229,10 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['named_formsets'] = FeatureFormSet(prefix='variants')
-        context['brand_form']=BrandForm(instance=self.object.brand)
-        context['category_form']=CategoryForm(instance=self.object.category)
+        # context['named_formsets'] = FeatureFormSet(prefix='variants')
+        context['category_form'] = CategoryForm(instance=self.object.category)
+        context['brand_form'] = BrandForm(instance=self.object.brand)
+        context['feature_form'] = FeatureForm_to_formset
         return context
 
     @transaction.atomic

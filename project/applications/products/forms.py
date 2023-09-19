@@ -23,6 +23,12 @@ class CategoryForm(ValidationFormMixin):
     
     def clean_name(self):
         name = self.cleaned_data['name']
+        name_formated = name.capitalize()
+        try:
+            Category.objects.get(name=name_formated)
+            raise forms.ValidationError("Ya existe una categoria con ese nombre.")
+        except Category.DoesNotExist:
+            pass
         self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
         return name
 
@@ -42,7 +48,13 @@ class BrandForm(ValidationFormMixin):
     
     def clean_name(self):
         name = self.cleaned_data['name']
-        self.validate_length(name, 3, 'El nombre de la marca debe tener al menos 3 caracteres.')
+        name_formated = name.capitalize()
+        try:
+            Brand.objects.get(name=name_formated)
+            raise forms.ValidationError("Ya existe una marca con ese nombre.")
+        except Brand.DoesNotExist:
+            pass
+        self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
         return name
 
 
@@ -242,6 +254,16 @@ class FeatureForm(ValidationFormMixin):
         model = Feature
         fields = ('value','type')
 
+    def clean_value(self):
+        value = self.cleaned_data['value']
+        value_formated = value.upper()
+        try:
+            Feature.objects.get(value=value_formated)
+            raise forms.ValidationError("Ya existe una categoria con ese nombre.")
+        except Feature.DoesNotExist:
+            pass
+        self.validate_length(value, 3, 'La categoria debe tener al menos 3 caracteres.')
+        return value
 
 
 class FeatureTypeForm(ValidationFormMixin):
