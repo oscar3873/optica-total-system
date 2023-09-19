@@ -28,7 +28,6 @@
   </div>
   <div class="card theme-wizard h-100 mb-5">
     <div class="card-header bg-light pt-3 pb-2">
-
       <!-- Cabecera del formulario wizard -->
       <ul class="nav justify-content-between nav-wizard">
         <li class="nav-item">
@@ -73,7 +72,6 @@
     </div>
     <!-- Card body -->
     <div class="card-body py-4" id="wizard-controller">
-
       <form method="post" id="create-product" class="row g-3 " novalidate>
         {% csrf_token %}
         <div class="tab-content">
@@ -280,7 +278,6 @@
       </div>
     </div>
   </div>
-</div>
 
 <!-- Modal para crear Category-->
 <div class="modal fade" id="Product-category-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
@@ -334,77 +331,76 @@
 </div> 
 
 <!-- Modal para crear Tipo de Características -->
-    <div class="modal fade" id="Feature-modal" tabindex="-1" aria-labelledby="Feature-modalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="Feature-modalLabel">Crear Tipo de Características</h5>
-              </div>
-              <div class="modal-body">
-                <form id="Feature-form" method="post">   
-                  {% csrf_token %}
-                  <p>{{ feature_form.type.label }} {{ feature_form.type }}</p>
-                  <p>{{ feature_form.value.label }} {{ feature_form.value }}</p>
-                  <div id="error_feature" class="text-danger fs--2 pb-3"></div>
-                  <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                  <button class="btn btn-primary" type="button" id="save-feature">Guardar</button>
-                  <!-- Fin del formulario de creación de Tipo de Características -->
-                </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-              </div>
+<div class="modal fade" id="Feature-modal" tabindex="-1" aria-labelledby="Feature-modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="Feature-modalLabel">Crear Tipo de Características</h5>
+          </div>
+          <div class="modal-body">
+            <form id="Feature-form" method="post">   
+              {% csrf_token %}
+              <p>{{ feature_form.type.label }} {{ feature_form.type }}</p>
+              <p>{{ feature_form.value.label }} {{ feature_form.value }}</p>
+              <div id="error_feature" class="text-danger fs--2 pb-3"></div>
+              <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+              <button class="btn btn-primary" type="button" id="save-feature">Guardar</button>
+              <!-- Fin del formulario de creación de Tipo de Características -->
+            </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
           </div>
       </div>
-    </div>
+  </div>
+</div>
 
-    <!-- Modal para crear Caracteristica con un Tipo seleccionado -->
-    <div id="Feature-unit-modal" class="modal fade" tabindex="-1" aria-labelledby="Feature-unit-modalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="Feature-unit-modalLabel"></h5>
-              </div>
-              <div class="modal-body">
-                <form id="Feature-unit-form" method="post">
+<!-- Modal para crear Caracteristica con un Tipo seleccionado -->
+<div id="Feature-unit-modal" class="modal fade" tabindex="-1" aria-labelledby="Feature-unit-modalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="Feature-unit-modalLabel"></h5>
+          </div>
+          <div class="modal-body">
+            <form id="Feature-unit-form" method="post">
+              {% csrf_token %}
+              {{ feature_form.type }}
+              {{ feature_form.value.label }}{{ feature_form.value }}
+              <button class="btn btn-primary mt-4" type="button" id="save-feature-unit">Guardar</button>
+            </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Modal personalizado para crear una Característica con un Tipo seleccionado -->
+<div id="customFeatureUnitModal" class="modal fade" tabindex="-1" aria-labelledby="customFeatureUnitModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="customFeatureUnitModalLabel"></h5>
+          </div>
+          <div class="modal-body">
+              <form id="Feature-new-form" method="post">
                   {% csrf_token %}
                   {{ feature_form.type }}
                   {{ feature_form.value.label }}{{ feature_form.value }}
-                  <button class="btn btn-primary mt-4" type="button" id="save-feature-unit">Guardar</button>
-                </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-              </div>
+                  <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                  <button class="btn btn-primary" type="button" id="save-feature-unit-1">Guardar</button>
+                  <!-- Fin del formulario de creación de Tipo de Características -->
+              </form>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-feature-modal">Cerrar</button>
           </div>
       </div>
-    </div>
-
-    <!-- Modal personalizado para crear una Característica con un Tipo seleccionado -->
-    <div id="customFeatureUnitModal" class="modal fade" tabindex="-1" aria-labelledby="customFeatureUnitModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="customFeatureUnitModalLabel"></h5>
-              </div>
-              <div class="modal-body">
-                  <form id="Feature-new-form" method="post">
-                      {% csrf_token %}
-                      {{ feature_form.type }}
-                      {{ feature_form.value.label }}{{ feature_form.value }}
-                      <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                      <button class="btn btn-primary" type="button" id="save-feature-unit-1">Guardar</button>
-                      <!-- Fin del formulario de creación de Tipo de Características -->
-                  </form>
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-feature-modal">Cerrar</button>
-              </div>
-          </div>
-      </div>
-    </div>
-
+  </div>
 </div>
+
 
 {% endblock main %}
 
