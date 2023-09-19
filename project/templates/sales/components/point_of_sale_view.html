@@ -95,7 +95,7 @@
                     <div class="col-8">
                         <form>
                             <div class="input-group">
-                                <input class="form-control form-control-lg shadow-none search" type="search" placeholder="buscar" aria-label="search" />
+                                <input class="form-control form-control-lg shadow-none search" type="search" placeholder="buscar" aria-label="search" id="search-product" />
                                 <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                             </div>
                         </form>
@@ -124,48 +124,44 @@
                 </div>
 
                 <div id="product-container" class="product-container m-3">
-                    {% for product in products %}
-                        {% if product %}
-                            <!-- Producto -->
-                            <div class="product-item">
-                                <div class="form-check mb-0 custom-radio radio-select">
-                                    <input class="form-check-input" id="{{product.id}}" type="checkbox"/>
-                                    <label class="form-check-label mb-0 fw-bold d-block" for="{{product.id}}">
-                                        {{product.category}} - {{product.brand}}
-                                        <span class="radio-select-content">
-                                            <div class="row gx-card mx-0 bg-200 fs--1 fw-semi-bold">
-                                                <div class="col-8 py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <!-- <a href="#">
-                                                            <img class="img-fluid rounded-1 me-3 d-none d-md-block" src="" alt="" width="60">
-                                                        </a> -->
-                                                        <div class="flex-1">
-                                                            <h5 class="fs-0"><a class="text-900" href="{% url 'products_app:product_detail' product.id %}">{{product.name}}</a></h5>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-4 py-3">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-0">
-                                                            <div>
-                                                                <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
-                                                                    <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus" data-product-id="{{ product.id }}">-</button>
-                                                                    <input class="form-control text-center px-2 input-spin-none" type="number" min="1" disabled value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px" id="cantidad-{{ product.id }}">
-                                                                    <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus" data-product-id="{{ product.id }}">+</button>
-                                                                </div>                                                                
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-4 text-end ps-0 order-0 mb-2 mb-md-0 text-600">${{product.sale_price}}</div>
-                                                    </div>
+                    <!-- Producto -->
+                    <div class="product-item">
+                        <div class="form-check mb-0 custom-radio radio-select">
+                            <input class="form-check-input" id="{{product.id}}" type="checkbox"/>
+                            <label class="form-check-label mb-0 fw-bold d-block" for="{{product.id}}">
+                                {{product.category}} - {{product.brand}}
+                                <span class="radio-select-content">
+                                    <div class="row gx-card mx-0 bg-200 fs--1 fw-semi-bold">
+                                        <div class="col-8 py-3">
+                                            <div class="d-flex align-items-center">
+                                                <!-- <a href="#">
+                                                    <img class="img-fluid rounded-1 me-3 d-none d-md-block" src="" alt="" width="60">
+                                                </a> -->
+                                                <div class="flex-1">
+                                                    <h5 class="fs-0"><a class="text-900" href="#">{{product.name}}</a></h5>
                                                 </div>
                                             </div>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                            <hr>
-                        {% endif %}
-                    {% endfor %}
+                                        </div>
+                                        <div class="col-4 py-3">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-0">
+                                                    <div>
+                                                        <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
+                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus" data-product-id="{{ product.id }}">-</button>
+                                                            <input class="form-control text-center px-2 input-spin-none" type="number" min="1" disabled value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px" id="cantidad-{{ product.id }}">
+                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus" data-product-id="{{ product.id }}">+</button>
+                                                        </div>                                                                
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 text-end ps-0 order-0 mb-2 mb-md-0 text-600" id="price-{{product.id}}">${{product.sale_price}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <hr>
                 </div>
             </div>
         </div>
