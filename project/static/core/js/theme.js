@@ -4398,6 +4398,7 @@ var wizardInit = function wizardInit() {
   var tabProgressBar = document.querySelector('.theme-wizard .progress');
   wizards.forEach(function (wizard) {
     var tabToggleButtonEl = wizard.querySelectorAll('[data-wizard-step]');
+    var form = wizard.querySelector('[novalidate]');
     // se sacaron acceso a algunos inputs por defecto para que funcione el formulario
     //por cualquier cambio revizar el codigo fuente de falcon
     var nextButton = wizard.querySelector('.next button');
