@@ -2,10 +2,26 @@ from .models import Note, Branch, Label
 from django import forms
 from applications.core.mixins import ValidationFormMixin
 
+class ColorPickerWidget(forms.TextInput):
+    input_type = 'color'
+
 class LabelCreateForm(ValidationFormMixin):
+    
+    label = forms.CharField(
+        widget=forms.TextInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
+    color = forms.CharField(
+        widget=ColorPickerWidget(
+            attrs={'class': 'form-control form-control-color'}
+        )
+    )
+
     class Meta:
         model = Label
-        fields = '__all__'
+        fields = ['label','color']
 
 class NoteCreateForm(ValidationFormMixin):
     """
@@ -45,7 +61,6 @@ class NoteCreateForm(ValidationFormMixin):
     branch = forms.ModelMultipleChoiceField(
         queryset=Branch.objects.none(),
         label='Sucursales',
-        required=True,
         widget=forms.CheckboxSelectMultiple(
             attrs={
                 'class': 'checkbox-list'
