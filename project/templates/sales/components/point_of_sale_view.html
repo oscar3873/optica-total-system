@@ -43,51 +43,41 @@
     <!-- ===============================================-->
 
     <div class="row g-3">
-        <div class="col-xl-4 order-xl-1">
+        <div class="col-xl-4 order-1">
             <div class="card mb-2 p-4">
                 <div class="col-md-5 col-xl-12 text-center text-md-start text-xl-center text-xxl-start">
-                    <div class="border-dashed-bottom d-block d-md-none d-xl-block d-xxl-none my-4"></div>
-                    <div class="fs-5 fw-semi-bold d-flex justify-content-between">
+                    <div class="fs-4 fw-semi-bold d-flex justify-content-between">
                         Total:
-                        <span class="text-success text-start">$3320</span>
+                        <span class="text-success text-start">$</span>
                     </div>
                 </div>
             </div>
             <div class="card">
-                <div class="card-header bg-light btn-reveal-trigger d-flex flex-between-center">
-                <h5 class="mb-0">Detalle de compra</h5><a class="btn btn-link btn-sm btn-reveal text-600" href="../../app/e-commerce/shopping-cart.html"><span class="fas fa-pencil-alt"></span></a>
+                <div class="card-header bg-light btn-reveal-trigger d-flex">
+                <h5 class="mb-0">Detalle de compra</h5>
                 </div>
+                
                 <div class="card-body">
-                <table class="table table-borderless fs--1 mb-0">
-                    <tr class="border-bottom">
-                    <th class="ps-0 pt-0">
-                        Lentes de sol ray-ban
-                        <div class="text-400 fw-normal fs--2">Z0V20008N: Detalle</div>
-                        <div class="fs--2 fs-md--1"><a class="text-danger" href="#!">Quitar</a></div>
-                    </th>
-                    <th class="pe-0 text-end pt-0">$1345</th>
-                    </tr>
-                    <tr class="border-bottom">
-                    <th class="ps-0">
-                        Lentes de sol ray-ban
-                        <div class="text-400 fw-normal fs--2">Z0V20008N:Detalle</div>
-                        <div class="fs--2 fs-md--1"><a class="text-danger" href="#!">Quitar</a></div>
-                    </th>
-                    <th class="pe-0 text-end">$2010</th>
-                    </tr>
-                    <tr class="border-bottom">
-                    <th class="ps-0">Subtotal</th>
-                    <th class="pe-0 text-end">$3355</th>
-                    </tr>
-                    <tr class="border-bottom">
-                    <th class="ps-0">Descuentos: <span class="text-success">Nombre del descuento</span></th>
-                    <th class="pe-0 text-end">-$55</th>
-                    </tr>
-                </table>
+                    <div class="product-sale-item product-container">
+                        <table class="table table-borderless fs--1 mb-0">
+                            <tbody id="selected-products-list">
+                                <!-- Lista de productos seleccionados -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="card-footer d-flex justify-content-between bg-light">
-                <div class="fw-semi-bold">Total a pagar</div>
-                <div class="fw-bold">$3320</div>
+
+                <div class="card-footer d-flex justify-content-between bg-light py-2">
+                    <div class="fw-semi-bold">Subtotal</div>
+                    <div class="fw-bold" id="subtotal">$ 0.00</div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light py-3">
+                    <div class="fw-semi-bold">Descuento</div>
+                    <div class="fw-bold" id="discount">$ 0.00</div>
+                </div>
+                <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
+                    <div class="fw-semi-bold">Total a pagar</div>
+                    <div class="fw-bold" id="total">$ 0.00</div>
                 </div>
             </div>
             <div class="card mt-2">
@@ -132,113 +122,50 @@
                         </div>
                     </div>
                 </div>
-                <!-- Producto -->
-                <div class="row m-2">
-                    <div class="col-12 mb-3 mb-md-0">
-                        <div class="form-check mb-0 custom-radio radio-select">
-                            <input class="form-check-input" id="address-1" type="checkbox" name="clientName" checked="checked" />
-                            <label class="form-check-label mb-0 fw-bold d-block" for="address-1">
-                                Lentes de sol ray-ban
-                                <span class="radio-select-content">
-                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                        <div class="col-8 py-3">
-                                            <div class="d-flex align-items-center"><a href="../../app/e-commerce/product/product-details.html"><img class="img-fluid rounded-1 me-3 d-none d-md-block" src="../../assets/img/products/1.jpg" alt="" width="60"></a>
-                                                <div class="flex-1">
-                                                    <h5 class="fs-0"><a class="text-900" href="../../app/e-commerce/product/product-details.html">RAY-BAN AVIATOR 3025L L0205</a></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 py-3">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-1 order-md-0">
-                                                    <div>
-                                                        <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
-                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus">-</button>
-                                                            <input class="form-control text-center px-2 input-spin-none" type="number" min="1" value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px">
-                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus">+</button>
+
+                <div id="product-container" class="product-container m-3">
+                    {% for product in products %}
+                        {% if product %}
+                            <!-- Producto -->
+                            <div class="product-item">
+                                <div class="form-check mb-0 custom-radio radio-select">
+                                    <input class="form-check-input" id="{{product.id}}" type="checkbox"/>
+                                    <label class="form-check-label mb-0 fw-bold d-block" for="{{product.id}}">
+                                        {{product.category}} - {{product.brand}}
+                                        <span class="radio-select-content">
+                                            <div class="row gx-card mx-0 bg-200 fs--1 fw-semi-bold">
+                                                <div class="col-8 py-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <!-- <a href="#">
+                                                            <img class="img-fluid rounded-1 me-3 d-none d-md-block" src="" alt="" width="60">
+                                                        </a> -->
+                                                        <div class="flex-1">
+                                                            <h5 class="fs-0"><a class="text-900" href="{% url 'products_app:product_detail' product.id %}">{{product.name}}</a></h5>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 text-end ps-0 order-0 order-md-1 mb-2 mb-md-0 text-600">$1292</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <!-- Producto -->
-                <div class="row m-2">
-                    <div class="col-12 mb-3 mb-md-0">
-                        <div class="form-check mb-0 custom-radio radio-select">
-                            <input class="form-check-input" id="address-2" type="checkbox" name="clientName" checked="checked" />
-                            <label class="form-check-label mb-0 fw-bold d-block" for="address-2">
-                                Lentes de sol ray-ban
-                                <span class="radio-select-content">
-                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                        <div class="col-8 py-3">
-                                            <div class="d-flex align-items-center"><a href="../../app/e-commerce/product/product-details.html"><img class="img-fluid rounded-1 me-3 d-none d-md-block" src="../../assets/img/products/1.jpg" alt="" width="60"></a>
-                                                <div class="flex-1">
-                                                    <h5 class="fs-0"><a class="text-900" href="../../app/e-commerce/product/product-details.html">RAY-BAN AVIATOR 3025L L0205</a></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 py-3">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-1 order-md-0">
-                                                    <div>
-                                                        <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
-                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus">-</button>
-                                                            <input class="form-control text-center px-2 input-spin-none" type="number" min="1" value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px">
-                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus">+</button>
+                                                <div class="col-4 py-3">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-0">
+                                                            <div>
+                                                                <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
+                                                                    <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus" data-product-id="{{ product.id }}">-</button>
+                                                                    <input class="form-control text-center px-2 input-spin-none" type="number" min="1" disabled value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px" id="cantidad-{{ product.id }}">
+                                                                    <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus" data-product-id="{{ product.id }}">+</button>
+                                                                </div>                                                                
+                                                            </div>
                                                         </div>
+                                                        <div class="col-md-4 text-end ps-0 order-0 mb-2 mb-md-0 text-600">${{product.sale_price}}</div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 text-end ps-0 order-0 order-md-1 mb-2 mb-md-0 text-600">$1292</div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <!-- Producto -->
-                <div class="row m-2">
-                    <div class="col-12 mb-3 mb-md-0">
-                        <div class="form-check mb-0 custom-radio radio-select">
-                            <input class="form-check-input" id="address-3" type="checkbox" name="clientName" checked="checked" />
-                            <label class="form-check-label mb-0 fw-bold d-block" for="address-3">
-                                Lentes de sol ray-ban
-                                <span class="radio-select-content">
-                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                        <div class="col-8 py-3">
-                                            <div class="d-flex align-items-center"><a href="../../app/e-commerce/product/product-details.html"><img class="img-fluid rounded-1 me-3 d-none d-md-block" src="../../assets/img/products/1.jpg" alt="" width="60"></a>
-                                                <div class="flex-1">
-                                                    <h5 class="fs-0"><a class="text-900" href="../../app/e-commerce/product/product-details.html">RAY-BAN AVIATOR 3025L L0205</a></h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-4 py-3">
-                                            <div class="row align-items-center">
-                                                <div class="col-md-8 d-flex justify-content-end justify-content-md-center order-1 order-md-0">
-                                                    <div>
-                                                        <div class="input-group input-group-sm flex-nowrap" data-quantity="data-quantity">
-                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="minus">-</button>
-                                                            <input class="form-control text-center px-2 input-spin-none" type="number" min="1" value="1" aria-label="Amount (to the nearest dollar)" style="width: 50px">
-                                                            <button class="btn btn-sm btn-outline-secondary border-300 px-2" data-type="plus">+</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4 text-end ps-0 order-0 order-md-1 mb-2 mb-md-0 text-600">$1292</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>
