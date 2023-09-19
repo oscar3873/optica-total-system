@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect
+from django.db.models import Q
 from django.urls import reverse_lazy,reverse
 from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
 from django.contrib import messages
@@ -447,3 +447,37 @@ class FeatureTypeDeleteView(CustomUserPassesTestMixin, DeleteView):
     template_name = 'products/category_form.html'
     success_url = reverse_lazy('products_app:new_feature')
     
+
+
+###################### SEARCH #########################
+class ProductSearchView(ListView):
+    model = Product
+    template_name = 'products/product_search.html'  # Reemplaza 'product_search.html' con la ruta a tu plantilla HTML de búsqueda de productos
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        branch = self.request.user.branch
+
+        query = self.request.GET.get('q')
+        if query:
+            # Convertir la consulta a minúsculas
+            query = query.lower()
+
+            # Realizar una búsqueda insensible a mayúsculas/minúsculas y que contenga la palabra
+            queryset = Product.objects.filter(
+                Q(name__icontains=query) |
+                Q(name__icontains=query.capitalize()) |
+                Q(name__icontains=query.upper()) |
+                Q(name__icontains=query.lower()) |
+                Q(name__icontains=query.title())
+            , branch=branch)
+        else:
+            queryset = Product.objects.all()
+
+        return queryset
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        data = [{'id': product.pk, 'name': product.name, 'description': product.description, 'price': product.sale_price, 'category': product.category.name, 'brand': product.brand.name } for product in queryset]
+
+        return JsonResponse({'products': data})

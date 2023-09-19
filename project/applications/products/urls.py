@@ -130,5 +130,12 @@ urlpatterns = [
         'delete/brand/<pk>/',
         BrandDeleteView.as_view(),
         name='brand_delete'
-    )
+    ),
+
+    ################ SEARCH
+    path(
+        'search/',
+        ProductSearchView.as_view(),
+        name='product_search'
+    ),
 ]
