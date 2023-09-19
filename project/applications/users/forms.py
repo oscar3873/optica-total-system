@@ -54,7 +54,7 @@ class UserCreateForm(PersonForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number', 'address', 'branch')
+        fields = ('email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_code','phone_number', 'address', 'branch')
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -192,7 +192,7 @@ class UpdatePasswordForm(ValidationFormMixin):
         model = User
         fields = ("passwordCurrent","password","password2")
     
-class EmployeeUpdateForm(PersonForm):
+""" class EmployeeUpdateForm(PersonForm):
     class Meta:
         model = Employee
         fields = ('email','first_name', 'last_name','dni', 'phone_number', 'address')
@@ -214,4 +214,4 @@ class EmployeeCreateForm(UserCreateForm):
     def clean_employment_date(self):
         employment_date = self.cleaned_data.get('employment_date')
         self.validate_date(employment_date)
-        return employment_date
+        return employment_date """

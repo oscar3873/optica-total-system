@@ -19,8 +19,7 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
     context_object_name = 'admin'
 
     def get_object(self, queryset=None):
-        # pk = self.request.user.pk  # Obtén la pk del usuario
-        pk = self.kwargs.get('pk') # PK traido de la URL
+        pk = self.request.user.pk  # Obtén la pk del usuario
         try:
             admin = User.objects.get(pk=pk)
             #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
@@ -36,20 +35,18 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
     success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
-        # Extraer los valores del código telefónico y el número de teléfono
+        """  # Extraer los valores del código telefónico y el número de teléfono
         phone_code = form.cleaned_data.pop('phone_code', None)
         phone_number = form.cleaned_data.pop('phone_number', None)
 
         # Combinar el código telefónico y el número de teléfono si ambos existen
         if phone_code and phone_number:
             full_phone_number = f"{phone_code}{phone_number}"
-            form.cleaned_data['phone_number'] = full_phone_number
+            form.cleaned_data['phone_number'] = full_phone_number """
 
         form.cleaned_data.pop('password2')
-        form.cleaned_data.pop('phone_code')
         User.objects.create_admin(**form.cleaned_data) # Funcion que crea ADMINIS
         return super().form_valid(form)
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         #Le paso este contexto al template, para no poner el input
