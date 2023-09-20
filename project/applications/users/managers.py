@@ -1,13 +1,23 @@
-from django.db import models
-#
 from django.contrib.auth.models import BaseUserManager
 from django.urls import reverse
 
-
 class UserManager(BaseUserManager):
+
+    def get_employees_branch(self, branch):
+        #obtiene los empleados de una sucursal
+        employees_per_branch = self.get_all_employeers().filter(branch=branch)
+        return employees_per_branch
+
     def all(self):
-        users_active = self.model.filter(is_active=True)
-        return users_active
+        users = self.filter(deleted_at=None)
+        return users
+    def get_employee(self,pk):
+        employee=self.get(pk=pk,role='EMPLEADO',is_staff=False,is_superuser=False)
+        return employee
+    """ Esto lo agrego Joaquin """
+    def get_all_employeers(self):
+        employeers = self.filter(role='EMPLEADO',is_staff=False,is_superuser=False)
+        return employeers
 
     def _create_user(self, first_name, last_name, username, email, password, is_staff, is_superuser, role, branch=None, **extra_fields):
         user = self.model(

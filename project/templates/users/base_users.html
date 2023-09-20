@@ -1,76 +1,139 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <!-- ===============================================-->
+  <!--    Document Title-->
+  <!-- ===============================================-->
 
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
+  <title>{% block title %}Optica total{% endblock %}</title>
 
-    <title>{% block title %}User{% endblock %}</title>
+  <!-- ===============================================-->
+  <!--    Favicons-->
+  <!-- ===============================================-->
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
+  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
+  <link rel="manifest" href="assets/img/favicons/manifest.json">
+  <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
+  <meta name="theme-color" content="#ffffff">
+  <script src="{% static 'core/js/config.js' %}"></script>
+  <script src="{% static 'vendors/overlayscrollbars/OverlayScrollbars.min.js' %}"></script>
 
-     <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
-        rel="stylesheet">
-    <link href="{% static 'vendors/overlayscrollbars/OverlayScrollbars.min.css' %}" rel="stylesheet">
-    <link href="{% static 'core/css/theme-rtl.min.css' %}" rel="stylesheet" id="style-rtl">
-    <link href="{% static 'core/css/theme.min.css' %}" rel="stylesheet" id="style-default">
-    <link href="{% static 'core/css/user-rtl.min.css' %}" rel="stylesheet" id="user-style-rtl">
-    <link href="{% static 'core/css/user.min.css' %}" rel="stylesheet" id="user-style-default">
-    <!-- Bloque para hojas de estilo adicionales -->
-    {% block extra_css %}{% endblock extra_css %}
+  <!-- ===============================================-->
+  <!--    Stylesheets-->
+  <!-- ===============================================-->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
+    rel="stylesheet">
+  <link href="{% static 'vendors/overlayscrollbars/OverlayScrollbars.min.css' %}" rel="stylesheet">
+  <link href="{% static 'core/css/theme-rtl.min.css' %}" rel="stylesheet" id="style-rtl">
+  <link href="{% static 'core/css/theme.min.css' %}" rel="stylesheet" id="style-default">
+  <link href="{% static 'core/css/user-rtl.min.css' %}" rel="stylesheet" id="user-style-rtl">
+  <link href="{% static 'core/css/user.min.css' %}" rel="stylesheet" id="user-style-default">
+  <!-- Bloque para hojas de estilo adicionales -->
+  {% block extra_css %}{% endblock extra_css %}
 
-     <!--Averiguar para que es-->
-     <script>
-      var isRTL = JSON.parse(localStorage.getItem('isRTL'));
-      if (isRTL) {
-        var linkDefault = document.getElementById('style-default');
-        var userLinkDefault = document.getElementById('user-style-default');
-        linkDefault.setAttribute('disabled', true);
-        userLinkDefault.setAttribute('disabled', true);
-        document.querySelector('html').setAttribute('dir', 'rtl');
-      } else {
-        var linkRTL = document.getElementById('style-rtl');
-        var userLinkRTL = document.getElementById('user-style-rtl');
-        linkRTL.setAttribute('disabled', true);
-        userLinkRTL.setAttribute('disabled', true);
-      }
-    </script>
-    <!--Fin-->
-
-
+  <!--Averiguar para que es-->
+  <script>
+    var isRTL = JSON.parse(localStorage.getItem('isRTL'));
+    if (isRTL) {
+      var linkDefault = document.getElementById('style-default');
+      var userLinkDefault = document.getElementById('user-style-default');
+      linkDefault.setAttribute('disabled', true);
+      userLinkDefault.setAttribute('disabled', true);
+      document.querySelector('html').setAttribute('dir', 'rtl');
+    } else {
+      var linkRTL = document.getElementById('style-rtl');
+      var userLinkRTL = document.getElementById('user-style-rtl');
+      linkRTL.setAttribute('disabled', true);
+      userLinkRTL.setAttribute('disabled', true);
+    }
+  </script>
+  <!--Fin-->
 </head>
+
 <body>
-    <div>
-        {% block main %}
-        {% endblock main %}
+
+  <!-- ===============================================-->
+  <!--    End of Main Content-->
+  <!-- ===============================================-->
+  <main class="main" id="top">
+
+    <div class="container-fluid" data-layout="container">
+      <div class="content">
+        <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand">
+          
+          <!-- Switch Theme -->
+          <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+            <li class="nav-item">
+              <div class="theme-control-toggle fa-icon-wait px-2">
+                <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle" type="checkbox"
+                  data-theme-control="theme" value="dark" />
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-light" for="themeControlToggle"
+                  data-bs-toggle="tooltip" data-bs-placement="left" title="Cambiar a modo claro"><span
+                    class="fas fa-sun fs-0"></span></label>
+                <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark" for="themeControlToggle"
+                  data-bs-toggle="tooltip" data-bs-placement="left" title="Cambiar a modo oscuro"><span
+                    class="fas fa-moon fs-0"></span></label>
+              </div>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="row flex-center min-vh-100">
+          <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+            <a class="navbar-brand" href="{% url 'users_app:login' %}">
+              <div class="d-flex align-items-center justify-content-center py-3">
+                <span class="font-sans-serif d-block">
+                  <img id="logoImage" class="me-2" src="http://127.0.0.1:8000/static/core/img/logo_optica_light.png"
+                    width="210" alt="logo">
+                  <img id="darkLogo" class="logo" src="/static/core/img/logo_optica_dark.png" style="display: none;">
+                  <img id="lightLogo" class="logo" src="/static/core/img/logo_optica_light.png" style="display: none;">
+                </span>
+              </div>
+            </a>
+            {% block main %}
+            {% endblock main %}
+          </div>
+        </div>
+        
+
+        <footer class="footer">
+          <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">Creado y diseñado por SaltaCode <span class="d-none d-sm-inline-block">|
+                </span><br class="d-sm-none" /> 2023 &copy; <a href="https://saltacode.com">SaltaCode</a></p>
+            </div>
+            <div class="col-12 col-sm-auto text-center">
+              <p class="mb-0 text-600">v1.0</p>
+            </div>
+          </div>
+        </footer>
+
+      </div>
     </div>
-    <script>
-        var darkLogoSrc = "{% static 'core/img/logo_optica_dark.png' %}";
-        var lightLogoSrc = "{% static 'core/img/logo_optica_light.png' %}";
-    </script>
-    <script src="{% static 'vendors/popper/popper.min.js' %}"></script>
-    <script src="{% static 'vendors/bootstrap/bootstrap.min.js' %}"></script>
-    <script src="{% static 'vendors/anchorjs/anchor.min.js' %}"></script>
-    <script src="{% static 'vendors/is/is.min.js' %}"></script>
-    <script src="{% static 'vendors/echarts/echarts.min.js' %}"></script>
-    <script src="{% static 'vendors/fontawesome/all.min.js' %}"></script>
-    <script src="{% static 'vendors/lodash/lodash.min.js' %}"></script>
-    <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-    <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
-    <script src="{% static 'users/js/total-order.js' %}"></script>
 
-    {% block extra_js %}{% endblock extra_js %}
+  </main>
+
+  <script>
+    var darkLogoSrc = "{% static 'core/img/logo_optica_dark.png' %}";
+    var lightLogoSrc = "{% static 'core/img/logo_optica_light.png' %}";
+  </script>
+  <script src="{% static 'vendors/anchorjs/anchor.min.js' %}"></script>
+  <script src="{% static 'vendors/fontawesome/all.min.js' %}"></script>
+  <script src="{% static 'users/js/users_theme.js' %}"></script>
+
+
+
+  {% block extra_js %}{% endblock extra_js %}
 </body>
+
 </html>
-
-

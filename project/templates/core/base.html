@@ -146,7 +146,7 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_create' %}" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_create_view' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock-open"></span></span><span
@@ -157,7 +157,14 @@
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cash-register"></span></span><span
-                                            class="nav-link-text ps-1">Ver cajas abiertas</span>
+                                            class="nav-link-text ps-1">Ver caja activa</span>
+                                    </div>
+                                </a>
+                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_list_view' %}" role="button"
+                                    aria-expanded="false">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-eye"></span></span><span
+                                            class="nav-link-text ps-1">Lista de cajas</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:movements_view' %}" role="button"
@@ -186,6 +193,13 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
+                                    <!-- parent pages--><a class="nav-link" href="{% url 'sales_app:point_of_sale_view' %}" role="button"
+                                    aria-expanded="false">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-store"></span></span><span
+                                            class="nav-link-text ps-1">Punto de venta</span>
+                                    </div>
+                                </a>
                                 <!-- parent pages--><a class="nav-link" href="pages/starter.html" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -263,14 +277,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="widgets.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'products_app:product_list' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span class="nav-link-text ps-1">Ver
                                             productos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="widgets.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'products_app:new_product' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus"></span></span><span
@@ -287,7 +301,7 @@
                                 </a>
                                 <ul class="nav collapse false" id="customization">
                                     <li class="nav-item"><a class="nav-link"
-                                            href="documentation/customization/configuration.html" aria-expanded="false">
+                                            href="{% url 'products_app:category_list' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ver
                                                     categorias</span>
                                             </div>
@@ -295,7 +309,7 @@
                                         <!-- more inner pages-->
                                     </li>
                                     <li class="nav-item"><a class="nav-link"
-                                            href="documentation/customization/styling.html" aria-expanded="false">
+                                            href="{% url 'products_app:new_category' %}" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Añadir categoria</span>
                                             </div>
@@ -340,14 +354,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:list_supplier' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver proveedores</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:new_supplier' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -366,14 +380,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_list' %}"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:new_customer' %}" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -418,7 +432,7 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="changelog.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'notifications_app:list' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
@@ -477,14 +491,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:list_employee' %}"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver empleados</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:new_employee' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
@@ -586,7 +600,7 @@
                                         <hr class="bg-200 dark__bg-900" />
                                         <h6 class="dropdown-header fw-medium text-uppercase px-card fs--2 pt-0 pb-2">
                                             Suggested Filter</h6><a class="dropdown-item px-card py-1 fs-0"
-                                            href="app/e-commerce/customers.html">
+                                            href="#">
                                             <div class="d-flex align-items-center"><span
                                                     class="badge fw-medium text-decoration-none me-2 badge-soft-warning">customers:</span>
                                                 <div class="flex-1 fs--1 title">All customers list</div>
@@ -685,16 +699,44 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
+                                    {% csrf_token %}
+                                    <!-- SUCURSAL DEL USUARIO -->
+                                    {{ branch_user.name }}
+                                    
+                                    <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
+                                    <select name="branch_id" id="branch_id" class="form-select fs--1">
+                                        {% for branch in branches %}
+                                        <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
+                                            {{ branch.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" style="display: none;"></button>
+                                </form>
+                            </li>
+                        {% endif %}
+                        <script>
+                            // Escucha el evento 'change' del select
+                            document.getElementById('branch_id').addEventListener('change', function () {
+                                // Envía el formulario automáticamente cuando se selecciona una sucursal
+                                document.getElementById('branch-change-form').submit();
+                            });
+                        </script>
+
+
                         <li class="nav-item">
                             <div class="theme-control-toggle fa-icon-wait px-2">
                                 <input class="form-check-input ms-0 theme-control-toggle-input" id="themeControlToggle"
                                     type="checkbox" data-theme-control="theme" value="dark" />
                                 <label class="mb-0 theme-control-toggle-label theme-control-toggle-light"
                                     for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left"
-                                    title="Switch to light theme"><span class="fas fa-sun fs-0"></span></label>
+                                    title="Cambiar a modo claro"><span class="fas fa-sun fs-0"></span></label>
                                 <label class="mb-0 theme-control-toggle-label theme-control-toggle-dark"
                                     for="themeControlToggle" data-bs-toggle="tooltip" data-bs-placement="left"
-                                    title="Switch to dark theme"><span class="fas fa-moon fs-0"></span></label>
+                                    title="Cambiar a modo oscuro"><span class="fas fa-moon fs-0"></span></label>
                             </div>
                         </li>
                         <!-- <li class="nav-item">
@@ -705,9 +747,9 @@
 
                         </li> -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link notification-indicator notification-indicator-primary px-0 fa-icon-wait"
+                            <a class="nav-link px-0 fa-icon-wait"
                                 id="navbarDropdownNotification" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false"><span class="fas fa-bell"
+                                aria-haspopup="true" aria-expanded="false" item><span class="fas fa-bell"
                                     data-fa-transform="shrink-6" style="font-size: 33px;"></span></a>
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-card dropdown-menu-notification"
                                 aria-labelledby="navbarDropdownNotification">
@@ -717,8 +759,6 @@
                                             <div class="col-auto">
                                                 <h6 class="card-header-title mb-0">Notificaciones</h6>
                                             </div>
-                                            <div class="col-auto ps-0 ps-sm-3"><a class="card-link fw-normal"
-                                                    href="#">Marcar todo como leido</a></div>
                                         </div>
                                     </div>
                                     <div class="scrollbar-overlay" style="max-height: 19rem">
@@ -739,27 +779,40 @@
                         <li class="nav-item dropdown"><a class="nav-link pe-0" id="navbarDropdownUser" href="#"
                                 role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
-                                    <img class="rounded-circle" src="assets/img/team/3-thumb.png" alt="" />
+                                    <img class="rounded-circle" src="{% static 'users/img/anya.jpg' %}" alt="" />
 
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
-                                    <a class="dropdown-item" href="pages/user/profile.html">
-                                        <span class="fas fa-user"></span>
-                                        Perfil
-                                    </a>
-                                    <a class="dropdown-item" href="{% url 'users_app:update_password' %}">
-                                        <span class="fas fa-user-circle"></span>
-                                        Cuenta
-                                    </a>
+                                    
+                                    {% if user.is_staff %}
+                                        <a class="dropdown-item" href="{% url 'users_app:profile_admin' user.id %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            <span class="fas fa-user-circle"></span>
+                                            Cuenta
+                                        </a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.pk %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.id %}">
+                                            
+                                            <span class="fas fa-user-circle"></span>
+                                            Cuenta
+                                        </a>
+                                    {% endif %}
 
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="pages/user/settings.html">
+                                    <a class="dropdown-item" href="#">
                                         <span class="fas fa-cog"></span>
                                         Configuraciones
                                     </a>
-                                    <a class="dropdown-item" href="pages/authentication/card/logout.html">
+                                    <a class="dropdown-item" href="{% url 'users_app:logout' %}">
                                         <span class="fas fa-sign-out-alt"></span>
                                         Cerrar sesion
                                     </a>
@@ -770,19 +823,23 @@
                 </nav>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notes-container">
-                    <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
-                </div>
+                <a href="/notes/list/">
+                    <div id="notes-container">
+                        <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
+                    </div>
+                </a>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <div id="notifications-app-container">
-                    <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
-                </div>
-
+                <a href="/notifications/list/">
+                    <div id="notifications-app-container">
+                        <source id="notifications-source" src="{% static 'notifications/audio/audio.ogg' %}" type="audio/ogg">
+                    </div>
+                </a>
                 
                 {% block main %}
                 
                 {% endblock main %}
+
                 <footer class="footer">
                     <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
                         <div class="col-12 col-sm-auto text-center">
@@ -803,6 +860,7 @@
     <!-- ===============================================-->
     <!--    End of Main Content-->
     <!-- ===============================================-->
+
 
     <!-- ===============================================-->
     <!--    JavaScripts-->

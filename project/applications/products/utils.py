@@ -1,5 +1,45 @@
 from .models import Feature, Feature_type, Product_feature
 
+"""Poner la funcion en core
+"""
+
+
+def obtener_nombres_de_campos(modelo, *campos_a_ignorar):
+    """
+    Obtiene los nombres (verbose name) de los campos de un modelo de Django, excluyendo los campos especificados.
+
+    Parámetros:
+    modelo (django.db.models.Model): El modelo del cual se quieren obtener los nombres (verbose name) de los campos.
+    *campos_a_ignorar (str): Una lista variable de argumentos con los nombres de los campos a ignorar.
+
+    Devuelve:
+    list: Una lista de cadenas de texto con los nombres (verbose name) de los campos del modelo, excluyendo los campos especificados.
+
+    Ejemplo:
+    
+    from miapp.models import CashRegister
+    nombres_de_campos = obtener_nombres_de_campos(CashRegister, 'user_made', 'deleted_at')
+    print(nombres_de_campos)
+    """
+    campos_a_ignorar = list(campos_a_ignorar)
+    
+    # Obtén una lista de los nombres de todos los campos del modelo
+    nombres_de_campos = [(field.name, field.verbose_name) for field in modelo._meta.fields if field.name not in campos_a_ignorar]
+    
+    # Filtra los campos que están en la lista de campos a ignorar
+    nombres_de_campos_filtrados = [campo[1] for campo in nombres_de_campos]
+    
+    return nombres_de_campos
+
+# Uso de la función
+# from miapp.models import CashRegister
+# nombres_de_campos = obtener_nombres_de_campos(CashRegister, 'user_made', 'deleted_at')
+# print(nombres_de_campos)
+
+
+
+
+
 def form_in_out_features(form, product, user):
         """
         PARA FORMULARIOS:
@@ -51,3 +91,30 @@ def form_create_features_formset(user, product, feature_formset):
             if created:
                 intermedia.user_made = user
                 intermedia.save()
+
+
+def validate_exists_feature_full(form, user):
+    type = form.cleaned_data['type']
+    feature_type, created_ft = Feature_type.objects.get_or_create(
+        name = type,
+        )
+    if created_ft:
+        feature_type.user_made = user
+        feature_type.save()
+
+        value = form.cleaned_data['value']
+        feature, created_f = Feature.objects.get_or_create(
+            type = feature_type,
+            value = value,
+        )
+        if created_f:
+            feature.user_made = user
+            feature.save()
+
+        return feature, True, True
+
+    # RETORNO: 
+    #   None (innecesario mandarlo en caso de este return)
+    #   created_ft (existencia feature_type)
+    #   None (innecesario mandarlo en caso de este return)
+    return None, created_ft, None 

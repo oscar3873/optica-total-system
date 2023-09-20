@@ -20,7 +20,7 @@ class HealthInsurance(BaseAbstractWithUser):
         verbose_name_plural = "Obras Socailes"
 
     def __str__(self) -> str:
-        return f'Obra Social: {self.name} - CUIT: {self.cuit}'
+        return f'{self.name} - CUIT: {self.cuit}'
 
 
 class Customer(Person, BaseAbstractWithUser):
@@ -33,6 +33,7 @@ class Customer(Person, BaseAbstractWithUser):
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
+
 
     def __str__(self) -> str:
         return f'{self.last_name}, {self.first_name}'
@@ -47,7 +48,7 @@ class Customer_HealthInsurance(BaseAbstractWithUser):
     h_insurance = models.ForeignKey(HealthInsurance, on_delete=models.PROTECT, related_name='customer_insurance')
 
     def __str__(self) -> str:
-        return f'Cliente: {self.customer}\nObra Social: {self.h_insurance}'
+        return f'Cliente: {self.customer}'
 
 
 class Correction(BaseAbstractWithUser):
@@ -111,6 +112,7 @@ class Interpupillary(BaseAbstractWithUser):
 ###############################################################
 
 class Calibration_Order(BaseAbstractWithUser):
+    client = models.ForeignKey(Customer, null=True, on_delete=models.PROTECT, verbose_name='client')
     is_done = models.BooleanField(default=False, null=True, blank=True)
     correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)

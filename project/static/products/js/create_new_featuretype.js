@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var featureTypeModal = document.getElementById("Feature-type-modal");
 
     // Función para abrir el modal
     function openModal() {

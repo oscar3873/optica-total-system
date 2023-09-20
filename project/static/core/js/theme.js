@@ -324,7 +324,7 @@ var detectorInit = function detectorInit() {
   var _window = window,
       is = _window.is;
   var html = document.querySelector('html');
-  is.opera() && addClass(html, 'opera');
+  is.chrome() && addClass(html, 'chrome');
   is.mobile() && addClass(html, 'mobile');
   is.firefox() && addClass(html, 'firefox');
   is.safari() && addClass(html, 'safari');
@@ -333,8 +333,8 @@ var detectorInit = function detectorInit() {
   is.ipad() && addClass(html, 'ipad');
   is.ie() && addClass(html, 'ie');
   is.edge() && addClass(html, 'edge');
-  is.chrome() && addClass(html, 'chrome');
   is.mac() && addClass(html, 'osx');
+  is.opera() && addClass(html, 'opera');
   is.windows() && addClass(html, 'windows');
   navigator.userAgent.match('CriOS') && addClass(html, 'chrome');
 };
@@ -10612,6 +10612,15 @@ var weeklySalesInit = function weeklySalesInit() {
     echartSetOption(chart, userOptions, getDefaultOptions);
   }
 };
+
+var preventEnterKey = function preventEnterKey(){
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+      // Prevenir la acción predeterminada (por ejemplo, el envío de formularios)
+      event.preventDefault();
+  }
+});
+}
 /* -------------------------------------------------------------------------- */
 
 /*                            Theme Initialization                            */
@@ -10701,4 +10710,5 @@ docReady(linePaymentChartInit);
 docReady(chartBubble);
 docReady(chartLine);
 docReady(treeviewInit);
+docReady(preventEnterKey);
 //# sourceMappingURL=theme.js.map

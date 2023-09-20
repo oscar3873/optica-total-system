@@ -1,21 +1,15 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
-from .forms import LoginForm
-from .views import LoginView, LogoutView, UserCreateView, UpdatePasswordView, AdminCreateView
+from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView
 
 app_name = 'users_app'
 
 urlpatterns = [
     path(
-        'signup/admin',
+        'signup/admin/',
         AdminCreateView.as_view(),
         name = 'signup_admin'
-    ),
-    path(
-        'signup/',
-        UserCreateView.as_view(),
-        name = 'signup'
     ),
     path(
         'login/',
@@ -31,6 +25,11 @@ urlpatterns = [
         'update_password/',
         UpdatePasswordView.as_view(),
         name = 'update_password'
+    ),
+    path(
+        'profile/<pk>/', 
+        AdminProfileView.as_view(),
+        name='profile_admin'
     ),
 
     # DJANGO RESET PASSWORD -> PARA CAMBIO DE PASSWORD OLVIDADA

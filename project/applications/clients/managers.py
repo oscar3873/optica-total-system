@@ -8,20 +8,12 @@ class CustomerManager(BaseManager):
     def all(self):
         return self.filter(deleted_at=None)
 
-    def update_phone_number(self, customer, phone_number):
-        customer.phone_number = phone_number
-        customer.save()
-        
-    def update_address(self, customer, address):
-        customer.address = address
-        customer.save()
-
     def history(self, customer):
-        history = customer.medicalhistory.order_by('created_at')
+        history = customer.calibration_order_set.all().order_by('-created_at').select_related('user_made')
         return history
 
     def all_insurance(self, customer):
-        health_insurances = customer.customer_insurance.all().order_by('h_insurance')
+        health_insurances = customer.customer_insurance.order_by('h_insurance')
         return health_insurances
     
     def all_buy(self, customer):
@@ -38,9 +30,10 @@ class LabManager(BaseManager):
     def all(self):
         return self.filter(deleted_at=None)
     
-    def create_or_update_calibration_order(self, user_made,
+    def create_lab(self, user_made,
                     form, correction_form, material_form, color_form,
-                    cristal_form, tratamiento_form, pupilar_form):
+                    cristal_form, tratamiento_form, pupilar_form,
+                    customer):
         
         correction = correction_form.save(commit=False)
         correction.user_made = user_made
@@ -67,6 +60,7 @@ class LabManager(BaseManager):
         pupilar.save()
 
         calibration_order = self.model(
+            client = customer,
             is_done = form.cleaned_data['is_done'],
             correction = correction,
             material = material,

@@ -43,7 +43,7 @@ LOCAL_APPS = (
     "applications.products",
     "applications.suppliers",
     "applications.dashboard",
-    # "applications.sales",
+    "applications.sales",
     "applications.cashregister",
     "applications.notifications",
 )
@@ -93,6 +93,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                # BRANCH context_processors: para que este siempre presente el "switch" para cambiar sucursal (ADMIN)
+                'applications.branches.context_processors.branches',
             ],
         },
     },
@@ -124,7 +126,7 @@ AUTH_USER_MODEL = "users.User"
 
 LANGUAGE_CODE = "es"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "America/Argentina/Buenos_Aires"
 
 USE_I18N = True
 

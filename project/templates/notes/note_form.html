@@ -8,20 +8,12 @@
 {% block main %}
 
 <div class="container py-4">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-        <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
-        <p class="mb-0 flex-1">{{ message }}</p>
-        <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
+    {% include 'core/components/messages.html' %}
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
-        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
-                    style="color: #000000;"></i></span>
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-sticky-note"></i></span>
             <div class="col">
                 <h5 class="mb-0 text-primary position-relative"><span
                         class="bg-200 dark__bg-1100 pe-3">Notas</span><span
@@ -31,55 +23,65 @@
         </div>
     </div>
 
+    <div class="row justify-content-sm-center my-2">
+        <div class="col">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Se encontraron errores:</h4>
+                <ul>
+                    {% for field_errors in form.errors.values %}
+                    {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-        <div class="card theme-wizard h-100 mb-5">
-            <div class="card-body py-4" id="wizard-controller">
+        <div class="card theme-wizard h-100 p-0">
+            <div class="card-header bg-light pt-3 pb-2">
+                <div class="col">
+                    <p class="fs--2 mb-0"><span class="text-warning">{{user.last_name}}, {{user.first_name}}</span> esta por
+                        registrar un añadir una nota
+                    </p>
+                </div>
+            </div>
+            <div class="card-body pb-3" id="wizard-controller">
                 <div class="tab-content">
-                    <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel"
+                    <div class="tab-pane active px-sm-3 px-md-3" role="tabpanel"
                         aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-                        <form method="POST" class="mt-3" novalidate="">
+                        <form method="POST" class="row needs-validation align-items-center" novalidate="">
                             {% csrf_token %}
+                            <div class="row justify-content-sm-center pb-2">
+                                <div class="col-12 col-sm">
+                                    <label for="id_first_name"
+                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Asunto</span>
+                                    </label>
+                                    {{ form.subject }}
+                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="invalid-feedback">Este campo no puede estar vacio.</div>
+                                </div>
+                            </div>
                             <div class="row justify-content-sm-center">
                                 <div class="col-md-10">
                                     <label for="id_subject"
                                         class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Asunto</span>
+                                        <span>Su Sucursal</span>
                                     </label>
                                     <div class="mb-3">
-                                        {{ form.subject }}
+                                        <h6 class="fs-1">{{ user.branch }}</h6>
                                     </div>
-                                    {% if form.subject.errors %}
-                                    <div class="alert alert-warning" role="alert">
-                                        {% for error in form.subject.errors %}
-                                        {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="row justify-content-sm-center">
-                                <div class="col-md-10 my-2">
-                                    <label for="id_subject"
-                                        class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Descripción</span>
-                                    </label>
-                                    <div class="mb-3">
-                                        {{ form.description }}
-                                    </div>
-                                    {% if form.description.errors %}
-                                    <div class="alert alert-warning" role="alert">
-                                        {% for error in form.description.errors %}
-                                        {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row justify-content-md-center">
                                 <div class="col-md-10 my-2">
                                     <label for="id_subject"
                                         class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Sucursal</span>
+                                        <span>Sucursales</span>
                                     </label>
                                     <div class="mb-3">
                                         {{ form.branch }}
@@ -91,6 +93,40 @@
                                         {% endfor %}
                                     </div>
                                     {% endif %}
+                                </div>
+                            </div>
+                            
+
+                            <div class="row justify-content-sm-center">
+                                <div class="col-12 col-sm">
+                                    <label for="id_first_name"
+                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Tipo de Nota</span>
+                                    </label>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="input-group d-flex">
+                                                {{ form.label }}
+                                                <button id="addLabel" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                    data-bs-target="#note-label-modal">+</button>
+                                            </div>
+                                        </div>
+                                        <input type="color" class=" form-control-color" id="color-input-disabled" value=""
+                                                title="Choose your color" disabled>
+                                    </div>
+                                    
+                                    
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center">
+                                <div class="col-12 col-sm py-3">
+                                    <label for="id_first_name"
+                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span>Descripcion</span>
+                                    </label>
+                                    {{ form.description }}
+                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="invalid-feedback">La nota debe tener contenido.</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -106,7 +142,32 @@
     </div>
 </div>
 
+
+<div class="modal fade" id="note-label-modal" tabindex="-1" aria-labelledby="Product-category-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="create-modalLabel">Crear Label</h5>
+            </div>
+            <div class="modal-body">
+                <form id="id_label_form" method="post">
+                    {% csrf_token %}
+                    {{ label_form.as_p }}
+                    <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                    <button class="btn btn-primary" type="button" id="save-label">Guardar</button>
+                    <!-- Fin del formulario de creación de Category-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock main %}
 
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'notes/js/create_label.js' %}"></script>
 {% endblock extra_js %}

@@ -7,14 +7,34 @@ app_name = 'cashregister_app'
 
 urlpatterns = [
     path(
-        'create/',
-        CashRegisterCreateView.as_view(),
-        name = 'cashregister_create'
-    ),
-    path(
         '',
         CashRegisterView.as_view(),
         name = 'cashregister_view'
+    ),
+    path(
+        'list/',
+        CashRegisterListView.as_view(),
+        name = 'cashregister_list_view'
+    ),
+    path(
+        'detail/<pk>',
+        CashRegisterDetailView.as_view(),
+        name = 'cashregister_detail_view'
+    ),
+    path(
+        'update/<pk>',
+        CashRegisterUpdateView.as_view(),
+        name = 'cashregister_update_view'
+    ),
+    path(
+        'delete/<pk>',
+        CashRegisterDeleteView.as_view(),
+        name = 'cashregister_delete_view'
+    ),
+    path(
+        'create/',
+        CashRegisterCreateView.as_view(),
+        name = 'cashregister_create_view'
     ),
     path(
         'close/',
@@ -27,18 +47,23 @@ urlpatterns = [
         name = 'movements_view'
     ),
     path(
+        'movements/detail/<pk>',
+        MovementsDetailView.as_view(),
+        name = 'movements_detail_view'
+    ),
+    path(
         'movements/create',
         MovementsCreateView.as_view(),
         name = 'movements_create_view'
     ),
     path(
+        'movements/update/<pk>',
+        MovementsUpdateView.as_view(),
+        name = 'movements_update_view'
+    ),
+    path(
         'movements/delete/<pk>',
         MovementsDeleteView.as_view(),
         name = 'movements_delete_view'
-    ),
-    path(
-        'closed',
-        MovementsClosedView.as_view(),
-        name = 'cashregister_closed'
-    ),
+    )
 ]

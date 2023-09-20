@@ -4,11 +4,8 @@ from .views import *
 app_name = 'products_app'
 
 urlpatterns = [
+    ########### CREATE
     path(
-        'new/product/wizard/',
-        ProductFormComplete.as_view(),
-        name='new_product_w'
-    ),path(
         'new/category/',
         CategoryCreateView.as_view(),
         name='new_category'
@@ -33,7 +30,16 @@ urlpatterns = [
         FeatureTypeCreateView.as_view(),
         name= 'new_feature_type'
     ),
-    # UPDATES
+    path(
+        'new/feature_full/',
+        FeatureFullCreateView.as_view(),
+        name= 'new_feature_type'
+    ),
+    path(
+        'new/feature_unit/',
+        FeatureUnitCreateView.as_view(),
+    ),
+    ############### UPDATES
 
     path(
         'update/category/<pk>/',
@@ -61,7 +67,7 @@ urlpatterns = [
         name= 'update_feature_type'
     ),
 
-    # LISTING
+    ############### LISTING
 
     path(
         'list/brand',
@@ -78,12 +84,58 @@ urlpatterns = [
         ProductListView.as_view(),
         name= 'product_list'
     ),
+    path(
+        'list/feature/',
+        FeatureListView.as_view(),
+        name= 'feature_list'
+    ),
+    path(
+        'list/feature_type/',
+        FeatureTypeListView.as_view(),
+        name= 'homefeature_type_list'
+    ),
 
-    # DETAILS
+    ############## DETAILS
 
     path(
         'detail/product/<pk>/',
         ProductDetailView.as_view(),
-        name= 'detail'
+        name= 'product_detail'
+    ),
+
+    path(
+        'detail/category/<pk>/',
+        CategoryDetailView.as_view(),
+        name= 'category_detail'
+    ),
+
+    path(
+        'detail/brand/<pk>/',
+        BrandDetailView.as_view(),
+        name= 'brand_detail'
+    ),
+
+    ################# DELETE
+    path(
+        'delete/product/<pk>/',
+        ProductDeleteView.as_view(),
+        name='product_delete'
+    ),
+    path(
+        'delete/category/<pk>/',
+        CategoryDeleteView.as_view(),
+        name='category_delete'
+    ),
+    path(
+        'delete/brand/<pk>/',
+        BrandDeleteView.as_view(),
+        name='brand_delete'
+    ),
+
+    ################ SEARCH
+    path(
+        'search/',
+        ProductSearchView.as_view(),
+        name='product_search'
     ),
 ]

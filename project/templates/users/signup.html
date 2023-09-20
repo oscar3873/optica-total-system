@@ -1,69 +1,283 @@
-{% extends 'users/base_users.html' %}
+{% extends 'core/base.html' %}
+{% load static %}
 {% block title %}Crear cuenta{% endblock title %}
 
+{% block extra_css %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.8/lottie.min.js"></script>
+{% endblock extra_css %}
 {% block main %}
-<main class="main" id="top">
-  <div class="container" data-layout="container">
-    <div class="row flex-center min-vh-100 py-6">
-      <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4"><a class="d-flex flex-center mb-4"
-        href="{% url 'users_app:login' %}"><img src="../../static/core/img/logo_optica_light.png" alt="logo-optica-total"
-            width="430" /><span class="font-sans-serif fw-bolder fs-5 d-inline-block"></span></a>
-        <div class="card">
-          <div class="card-body p-4 p-sm-5">
-            <div class="row flex-between-center mb-2">
-              <div class="col-auto">
-                <h5>Registrar</h5>
+
+
+<div class="container py-4">
+  {% include 'core/components/messages.html' %}
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Titulo del formulario wizard -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+          class="fa-inverse fa-stack-1x text-primary fas fa-user"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Registrar
+            empleado</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aqui puede crear una cuenta para un empleado</p>
+      </div>
+    </div>
+  </div>
+  <div class="card theme-wizard h-100 mb-5">
+    <div class="card-header bg-light pt-3 pb-2">
+
+      <!-- Cabecera del formulario wizard -->
+      <ul class="nav justify-content-between nav-wizard">
+        <li class="nav-item">
+          <a class="nav-link fw-semi-bold active" href="#bootstrap-wizard-validation-tab1" data-bs-toggle="tab"
+            data-wizard-step="data-wizard-step">
+            <span class="nav-item-circle-parent">
+              <span class="nav-item-circle">
+                <span class="fas fa-user">
+
+                </span>
+              </span>
+            </span>
+            <span class="d-none d-md-block mt-1 fs--1">
+              Datos Personales</span></a>
+        </li>
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab2"
+            data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                class="nav-item-circle"><span class="fas fa-lock"></span></span></span><span
+              class="d-none d-md-block mt-1 fs--1">Cuenta</span></a></li>
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab3"
+            data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
+                class="nav-item-circle"><span class="fas fa-thumbs-up"></span></span></span><span
+              class="d-none d-md-block mt-1 fs--1">Finalizar</span></a></li>
+      </ul>
+    </div>
+    <!-- Card body -->
+    <div class="card-body py-4" id="wizard-controller">
+
+      <form method="post" id="singup-employee" class="row g-3 " novalidate>
+        {% csrf_token %}
+        <div class="tab-content">
+    
+          <!-- Tab 1 -->
+          <div class="tab-pane px-sm-3 px-md-5 pb-5 active" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1"
+            id="bootstrap-wizard-validation-tab1">
+            <div class="tab-content">
+              <div class="tab-pane preview-tab-pane active" role="tabpanel"
+                aria-labelledby="tab-dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d"
+                id="dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d">
+                <div class="row">
+                  <div class="col">
+                    <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre:</label>
+                    {{form.first_name}}
+                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                    {% if form.first_name.errors %}
+                    {% for error in form.first_name.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                  </div>
+                  <div class="col">
+                    <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido:</label>
+                    {{form.last_name}}
+                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                    {% if form.last_name.errors %}
+                    {% for error in form.last_name.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="row pt-3">
+                  <div class="col-12 col-sm-3">
+                    <label for="{{ form.dni.id_for_label }}" class="form-label">DNI:</label>
+                    {{form.dni}}
+                    {% if form.dni.errors %}
+
+                    {% for error in form.dni.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
+
+                    {% endif %}
+                  </div>
+                  <div class="col-6 col-sm-2">
+                    <label for="{{ form.phone_code.id_for_label }}" class="form-label">Código del pais:</label>
+                    {{ form.phone_code }}
+                    {% if form.phone_code.errors %}
+                    <div class="text-danger fs--2">
+                      {{ form.phone_code.errors.0 }}
+                    </div>
+                    {% endif %}
+                  </div>
+                  <div class="col-12 col-sm-4">
+                    <label for="{{ form.phone_number.id_for_label }}" class="form-label">Celular:</label>
+                    {{form.phone_number}}
+                    <small>Ingrese el número <span class="text-warning">sin espacios ni guiones.</span></small>
+                    {% if form.phone_number.errors %}
+                    {% for error in form.phone_number.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                  <div class="col-12 col-sm-3">
+                    <label for="{{ form.birth_date.id_for_label }}" class="form-label">Fecha de nacimiento:</label>
+                    {{form.birth_date}}
+                    {% if form.birth_date.errors %}
+                    {% for error in form.birth_date.errors %}
+                    <div class="text-danger fs--2">
+                      {{error}}
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
               </div>
-              <div class="col-auto fs--1 text-600"><span class="mb-0 undefined">¿Ya tienes cuenta?</span> <span><a
-                    href="{% url 'users_app:login' %}">Ingresar</a></span></div>
             </div>
-            <form method="post" class="row g-3 needs-validation" novalidate>
-              {% csrf_token %}
-              {{form.errors}}
-              <div class="mb-3">
-                {{form.branch}}
+            <div class="row">
+              {% if not admin %}
+              <div class="col-12 col-sm-3 pt-3">
+                <label for="{{ form.employment_date.id_for_label }}" class="form-label">Fecha de alta</label>
+                {{form.employment_date}}
+                <small>Fecha de <span class="text-warning">alta como empleado.</span></small>
+                {% if form.employment_date.errors %}
+                {% for error in form.employment_date.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
               </div>
-              <div class="mb-3">
-                {{form.first_name}}
-              </div>
-              <div class="mb-3">
-                {{form.last_name}}
-              </div>
-              <div class="mb-3">
-                {{form.dni}}
-              </div>
-              <div class="mb-3">
-                {{form.phone_number}}
-              </div>
-              <div class="mb-3">
+              {% endif %}
+
+              <div class="col-12 col-sm-9 pt-3">
+                <label for="{{ form.address.id_for_label }}" class="form-label">Domicilio:</label>
                 {{form.address}}
-              </div>
-              <div class="mb-3">
-                {{form.birth_date}}
-              </div>
-              <div class="mb-3">
-                {{form.username}}
-              </div>
-              <div class="mb-3">
-                {{form.email}}
-              </div>
-              <div class="row gx-2">
-                <div class="mb-3 col-sm-6">
-                  {{form.password}}
+                {% if form.address.errors %}
+                {% for error in form.address.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
                 </div>
-                <div class="mb-3 col-sm-6">
-                  {{form.password2}}
-                </div>
+                {% endfor %}
+                {% endif %}
               </div>
-              <div class="mb-3">
-                <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrarse</button>
-              </div>
-            </form>
+            </div>
           </div>
+          <!-- Tab 2 -->
+          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab2"
+            id="bootstrap-wizard-validation-tab2">
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <label for="{{ form.username.id_for_label }}" class="form-label">Usuario</label>
+                {{form.username}}
+                <small>El nombre de usuario <span class="text-warning">no puede contener mayúsculas.</span></small>
+                {% if form.username.errors %}
+                {% for error in form.username.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="{{ form.email.id_for_label }}" class="form-label ">Correo</label>
+                {{form.email}}
+                {% if form.email.errors %}
+                {% for error in form.email.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <label for="{{ form.password.id_for_label }}" class="form-label pt-3">Contraseña</label>
+                {{form.password}}
+                {% if form.password.errors %}
+                {% for error in form.password.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="{{ form.password2.id_for_label }}" class="form-label pt-3">Repetir contraseña</label>
+                {{form.password2}}
+                {% if form.password2.errors %}
+                {% for error in form.password2.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+
+
+          </div>
+
+          <!-- Ultima pestaña para enviar los datos al servidor -->
+          <div class="tab-pane text-center px-sm-3 px-md-5" role="tabpanel"
+            aria-labelledby="bootstrap-wizard-validation-tab3" id="bootstrap-wizard-validation-tab3">
+            <div class="wizard-lottie-wrapper">
+              <div class="lottie mx-auto my-3" style="width: 120px; height: 120px"
+                data-options='{"path":"{% static "cashregister/img/animated-icons/check-primary-light.json" %}"}'>
+              </div>
+            </div>
+            <h4 class="mb-1">Ha completado el proceso registro!</h4>
+            <p>Si hay algún dato erroneo se lo direccionará a la primera pestaña del formulario.</p><button
+              class="btn btn-warning px-5 px-sm-6" type="submit">Finalizar<span class="fas fa-chevron-right ms-2"
+                data-fa-transform="shrink-3">
+              </span></button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <!-- Card footer -->
+    <div class="card-footer bg-light">
+      <div class="px-sm-3 px-md-5">
+        <ul class="pager wizard list-inline mb-0">
+          <li class="previous">
+            <button class="btn btn-link ps-0" type="button">Anterior</button>
+          </li>
+          <li class="next">
+            <button class="btn btn-primary px-5 px-sm-6" type="submit">Siguiente</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 400px">
+    <div class="modal-content position-relative p-5">
+      <div class="d-flex align-items-center">
+        <div class="lottie me-3"
+          data-options='{"path":"{% static "cashregister/img/animated-icons/warning-light.json" %}"}'></div>
+        <div class="flex-1">
+          <button class="btn btn-link text-danger position-absolute top-0 end-0 mt-2 me-2"
+            data-bs-dismiss="modal"><span class="fas fa-times"></span></button>
+          <p class="mb-0">Ya no puede volver atras una vez que confirmo el ultimo paso</p>
         </div>
       </div>
     </div>
   </div>
-</main>
+</div>
+
+
+
+
 
 {% endblock main %}

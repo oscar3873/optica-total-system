@@ -10,18 +10,10 @@
   <!--    Errores de Sistema (Backend)-->
   <!-- ===============================================-->
 
-  {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-warning border-2 d-flex align-items-center" role="alert">
-    <div class="bg-warning me-3 icon-item"><span class="fas fa-exclamation-circle text-white fs-3"></span></div>
-    <p class="mb-0 flex-1">{{ message }}</p>
-    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
-  {% endfor %}
-  {% endif %}
+  {% include 'core/components/messages.html' %}
 
   <!-- ===============================================-->
-  <!--    Fin Errores de Sistema (Backend)-->
+  <!--    Fin Errores de Sistema (Backend)--> 
   <!-- ===============================================-->
 
 
@@ -30,7 +22,7 @@
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
           class="fa-inverse fa-stack-1x text-primary fas fa-cash-register"></i></span>
       <div class="col">
-        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Caja del día</span><span
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Caja activa</span><span
             class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
         <p class="mb-0">Aquí puede vizualizar la caja que tiene abierta actualmente</p>
       </div>
@@ -44,76 +36,39 @@
 
   {% if cashregister %}
   <div class="row g-3">
-    <div class="col-lg-3 col-xl-12 col-xxl-3 h-100">
+    <div class="col-lg-8 col-xl-12 col-xxl-8 h-100">
       <!--Card-->
       <div class="card bg-transparent-50 overflow-hidden">
         <div class="card-header">
           <div class="position-relative z-index-2">
             <div>
-              <p class="fs--2 mb-0">Abierta por <a class="link-600 fw-semi-bold"
-                  href="#!">{{cashregister.user_made.username}}</a></p>
+              <p class="fs--2 mb-0">
+                Abierta por 
+                <a class="link-600 fw-semi-bold"
+                  href="#!">{{cashregister.user_made.username}} </a>
+              </p>
             </div>
           </div>
+          <p class="mb-0"><a href="{% url 'cashregister_app:cashregister_detail_view' cashregister.pk %}">Mi caja del dia</a></p>
         </div>
         <div class="card-body">
           <div class="d-flex pb-3 justify-content-between align-items-center">
             <div class="pe-3">
-              <p class="text-600 fs--1 fw-medium">Balance inicial </p>
-              <h4 class="text-800 mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
+              <p class="text-700 fs--0 fw-medium">Balance inicial </p>
+              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
             </div>
             <div class="ps-3">
-              <p class="text-600 fs--1">Balance Actual </p>
-              <h4 class="text-800 mb-0">$21,349.29 </h4>
+              <p class="text-700 fs--0">Balance Actual </p>
+              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.final_balance|floatformat:2|intcomma}} </h4>
             </div>
           </div>
           <div class="d-flex pb-3 justify-content-between align-items-center">
             <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
             <div class="ps-3 text-center">
-              <a href="{% url 'cashregister_app:cashregister_close_view' %}" class="btn btn-primary"
+              <a href="{% url 'cashregister_app:movements_view' %}" class="btn btn-primary mb-2"
+              type="button">Movimientos</a>
+              <a href="{% url 'cashregister_app:cashregister_close_view' %}" class="btn btn-warning mb-2"
                 type="button">Cierre</a>
-            </div>
-          </div>
-        </div>
-        <div class="card-footer">
-          <div class="pe-3">
-            <p class="text-600 fs--1 fw-medium">El {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-8 col-xl-12 col-xxl-8 h-100">
-      <!--Card-->
-      <div class="card bg-transparent-50 overflow-hidden">
-        <div class="card-header position-relative">
-          <div class="bg-holder d-none d-md-block bg-card z-index-1"
-            style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-          </div>
-          <!--/.bg-holder-->
-  
-          <div class="position-relative z-index-2">
-            <div>
-              <p class="fs--2 mb-0">Realizar movimientos manualmente</p>
-            </div>
-            <div class="d-flex pt-3">
-              <div class="pe-3">
-                <p class="text-600 fs--1 fw-medium">Balance inicial </p>
-                <h4 class="text-800 mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
-              </div>
-              <div class="ps-3">
-                <p class="text-600 fs--1">Balance Actual </p>
-                <h4 class="text-800 mb-0">$21,349.29 </h4>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body">
-          <div class="d-flex pb-3 justify-content-between align-items-center">
-            <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/movements_animation.json" %}"}'></div>
-            <div class="ps-3">
-              <a href="{% url 'cashregister_app:cashregister_close_view' %}" class="btn btn-primary"
-                type="button">Ingreso</a>
-              <a href="{% url 'cashregister_app:cashregister_close_view' %}" class="btn btn-warning"
-                type="button">Egreso</a>
             </div>
           </div>
         </div>
@@ -126,32 +81,32 @@
     </div>
   </div>
   {% else %}
-  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!--Card-->
-    <div class="card bg-transparent-50 overflow-hidden">
-      <div class="card-header position-relative">
-        <div class="bg-holder d-none d-md-block bg-card z-index-1"
-          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-        </div>
-        <!--/.bg-holder-->
-
-        <div class="position-relative z-index-2">
-          <div>
-            <h3 class="text-primary mb-1">No hay una caja abierta</h3>
+  <div class="row g-3">
+    <div class="col-lg-8 col-xl-12 col-xxl-8 h-100">
+      <!--Card-->
+      <div class="card bg-transparent-50 overflow-hidden">
+        <div class="card-header position-relative">
+          <div class="bg-holder d-none d-md-block bg-card z-index-1"
+            style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
           </div>
-          <div class="d-flex py-3">
+          <!--/.bg-holder-->
+          <div class="position-relative z-index-2">
+            <div>
+              <h5 class="text-primary mb-1">No hay una caja abierta</h5>
+            </div>
+            <div class="d-flex py-3">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="card-body">
-        <div class="d-flex py-3 justify-content-between">
-          <a href="{% url 'cashregister_app:cashregister_create' %}" class="btn btn-primary" type="submit">Abrir
-            caja</a>
+        <div class="card-body">
+          <div class="d-flex py-3 justify-content-between">
+            <a href="{% url 'cashregister_app:cashregister_create_view' %}" class="btn btn-primary" type="submit">Abrir
+              caja</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 {% endif %}
 
 

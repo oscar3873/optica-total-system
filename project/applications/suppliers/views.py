@@ -1,17 +1,19 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView)
+from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView,DeleteView)
 from django.shortcuts import render
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
 from .models import Supplier, Product_Supplier
-
+#from .core.utils import obtener_nombres_de_campos
+from applications.employes.utils import obtener_nombres_de_campos
 
 # Create your views here.
 class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
     template_name = 'suppliers/supplier_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('suppliers_app:list_supplier')
 
     def form_valid(self, form):
         supplier = form.save(commit=False)
@@ -27,7 +29,7 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
     template_name = 'suppliers/supplier_update_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('suppliers_app:list_supplier')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -53,6 +55,12 @@ class SuppliersListView(CustomUserPassesTestMixin, ListView):
     model = Supplier
     template_name = 'suppliers/supplier_list_page.html'
     context_object_name = 'suppliers'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
+        context['table_column'] = obtener_nombres_de_campos(Supplier, *exclude_fields)
+        return context
 
 
 class SupplierDetailView(DetailView):
@@ -68,6 +76,7 @@ class SupplierDetailView(DetailView):
         except:
             obj=None
         return obj
+        
     def get(self, request, *args, **kwargs):
         # Obtén el objeto utilizando el método get_object()
         self.object = self.get_object()
@@ -84,3 +93,12 @@ class SupplierDetailView(DetailView):
         context['all_products_suppliers'] = Supplier.objects.get_all_products(self.object)
         return context
 
+class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
+    model = Supplier
+    template_name = 'suppliers/supplier_delete_page.html'
+    success_url = reverse_lazy('suppliers_app:list_supplier')
+    
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()  # Realiza la eliminación suave
+        return HttpResponseRedirect(self.get_success_url())
