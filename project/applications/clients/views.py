@@ -81,16 +81,24 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     @transaction.atomic
     def form_valid(self, form):
         if form.is_valid():
+            user = self.request.user
+
             customer = form.save(commit=False)
             customer.user_made = self.request.user
-            customer.branch = self.request.user.branch
+
+            if user.is_staff:
+                branch_actualy = self.request.session.get('branch_actualy')
+                branch_actualy = Branch.objects.get(id=branch_actualy)
+                customer.branch = branch_actualy
+            else:
+                customer.branch = self.request.user.branch
             customer.save()
 
             for insurance in form.cleaned_data['h_insurance']:
                 Customer_HealthInsurance.objects.create(
                     h_insurance = insurance,
                     customer = customer,
-                    user_made=self.request.user
+                    user_made=user
                 )
         return super().form_valid(form)
 
@@ -237,7 +245,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
         branch = self.request.user.branch
         branch_actualy = self.request.session.get('branch_actualy')
 
-        if  self.request.user.is_staff and branch_actualy:
+        if  self.request.user.is_staff:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
             return Customer.objects.filter(branch=branch_actualy, deleted_at=None)
