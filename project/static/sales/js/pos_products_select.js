@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectproductsContainer = document.getElementById('selected-products-list'); 
     const subtotalElement = document.getElementById('subtotal');
 
+    const totalElement = document.getElementById('total');
+    const discountElement = document.getElementById('discount');
+    const TotalSuccess = document.getElementById('total-success');
+
     // Guardar productos seleccionados
     const selectedProducts = [];
 
@@ -155,13 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (selectedProductToRemove) {
                     selectedProductToRemove.remove();
                 }
-
-                // Eliminar el producto de la lista de productos seleccionados
-                const selectedIndex = selectedProducts.findIndex(selectedProduct => selectedProduct.id === product.id);
-
-                if (selectedIndex !== -1) {
-                    selectedProducts.splice(selectedIndex, 1);
-                }
             }
 
             CalculateSubtotal();
@@ -293,7 +290,6 @@ document.addEventListener('DOMContentLoaded', function() {
         CalculateSubtotal();
     }
     
-
     function handleQuantityButtonClick(event) {
         const button = event.target;
         const type = button.getAttribute('data-type');
@@ -344,11 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
       }
 
-    function updateTotal(){
-        const totalElement = document.getElementById('total');
-        const discountElement = document.getElementById('discount');
-        const TotalSuccess = document.getElementById('total-success');
-        
+    function updateTotal(){        
         var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
         var discount = parseFloat(discountElement.textContent.replace('$', '')).toFixed(2);
         var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);

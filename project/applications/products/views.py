@@ -463,13 +463,14 @@ class ProductSearchView(ListView):
             # Convertir la consulta a minúsculas
             query = query.lower()
 
-            # Realizar una búsqueda insensible a mayúsculas/minúsculas y que contenga la palabra
+            # Realizar una búsqueda insensible a mayúsculas/minúsculas y que contenga la palabra en los campos 'name' y 'barcode'
             queryset = Product.objects.filter(
                 Q(name__icontains=query) |
                 Q(name__icontains=query.capitalize()) |
                 Q(name__icontains=query.upper()) |
                 Q(name__icontains=query.lower()) |
-                Q(name__icontains=query.title())
+                Q(name__icontains=query.title()) |
+                Q(barcode__icontains=query)
             , branch=branch)
         else:
             queryset = Product.objects.all()
