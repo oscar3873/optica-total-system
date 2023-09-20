@@ -478,6 +478,12 @@ class ProductSearchView(ListView):
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        data = [{'id': product.pk, 'name': product.name, 'description': product.description, 'price': product.sale_price, 'category': product.category.name, 'brand': product.brand.name } for product in queryset]
+        data = [{'id': product.pk, 
+                'name': product.name, 
+                'description': product.description, 
+                'price': product.sale_price, 
+                'category': product.category.name, 
+                'brand': product.brand.name,
+                'barcode': product.barcode } for product in queryset]
 
         return JsonResponse({'products': data})
