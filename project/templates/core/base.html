@@ -699,7 +699,6 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
-
                         {% if user.is_staff %}
                             <li class="nav-item">
                                 <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
@@ -708,7 +707,7 @@
                                     {{ branch_user.name }}
                                     
                                     <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
-                                    <select name="branch_id" id="branch_id" class="form-select">
+                                    <select name="branch_id" id="branch_id" class="form-select fs--1">
                                         {% for branch in branches %}
                                         <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
                                             {{ branch.name }}
