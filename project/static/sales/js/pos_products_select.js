@@ -4,6 +4,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectproductsContainer = document.getElementById('selected-products-list'); 
     const subtotalElement = document.getElementById('subtotal');
 
+    const totalElement = document.getElementById('total');
+    const discountElement = document.getElementById('discount');
+    const TotalSuccess = document.getElementById('total-success');
+
     // Guardar productos seleccionados
     const selectedProducts = [];
 
@@ -21,47 +25,50 @@ document.addEventListener('DOMContentLoaded', function() {
     
         if (query === '') {
             // Si la búsqueda está vacía, simplemente muestra los productos seleccionados
+            findsProductsContainer.innerHTML = 'Aqui veras los productos de la busqueda.';
             renderSelectedProducts();
         } else {
             // Realiza la solicitud AJAX y obtiene los datos de los productos
             fetch(`/products/search/?q=${query}`)
                 .then(response => response.json())
                 .then(data => {
-                    // Limpia los resultados anteriores
-                    findsProductsContainer.innerHTML = '';
-    
-                    // Para cada producto en los resultados
-                    data.products.forEach(product => {
-                        // Crea un elemento HTML para el producto utilizando la función createProductElement
-                        const productElement = createProductElement(product);
-    
-                        // Verifica si el producto estaba seleccionado previamente
-                        const isSelected = selectedProducts.some(selectedProduct => {
-                            const selectedProductId = selectedProduct.dataset.productId;
+                    if (data.products.length === 0) {
+                        findsProductsContainer.innerHTML = 'No se ha encontrado coincidencias.';
+                    } else {
+                        // Limpia los resultados anteriores
+                        findsProductsContainer.innerHTML = '';
+        
+                        // Para cada producto en los resultados
+                        data.products.forEach(product => {
+                            // Crea un elemento HTML para el producto utilizando la función createProductElement
+                            const productElement = createProductElement(product);
+        
+                            // Verifica si el producto estaba seleccionado previamente
+                            selectedProducts.some(selectedProduct => {
+                                const selectedProductId = selectedProduct.dataset.productId;
+                            
+                                if (parseInt(selectedProductId) === product.id) {
+                                    // Si estaba seleccionado previamente, marca el checkbox como seleccionado
+                                    const checkbox = productElement.querySelector('input[type="checkbox"]');
+                                    const quantity = productElement.querySelector(`[id^="cantidad-${product.id}"]`);
+                                    const quantitySaved = document.getElementById(`cantidad-${product.id}`);
+                            
+                                    checkbox.checked = true;
+                                    quantity.value = quantitySaved.value;
+                                }
+                            });
+        
+                            // Agrega el elemento al contenedor de resultados
+                            findsProductsContainer.appendChild(productElement);
+                        });
+                        
 
-                            return parseInt(selectedProductId) === product.id;
-                        });                        
-                        if (isSelected) {
-                            // Si estaba seleccionado previamente, marca el checkbox como seleccionado
-                            const checkbox = productElement.querySelector('input[type="checkbox"]');
-                            const quantitySearch = productElement.querySelector(`#cantidad-${product.id}`);
-
-                            const quantity = document.getElementById(`quantity-${product.id}`);
-                            var quantityParse = parseInt(quantity.textContent.match(/\d+/)[0]);
-
-                            checkbox.checked = true;
-                            quantitySearch.value = quantityParse;
-                        }
-    
-                        // Agrega el elemento al contenedor de resultados
-                        findsProductsContainer.appendChild(productElement);
-                    });
-    
-                    // Agregar el evento click a todos los botones de cantidad
-                    const quantityButtons = document.querySelectorAll('[data-type="plus"], [data-type="minus"]');
-                    quantityButtons.forEach(button => {
-                        button.addEventListener('click', handleQuantityButtonClick);
-                    });
+                        // Agregar el evento click a todos los botones de cantidad
+                        // const quantityButtons = document.querySelectorAll('[data-type="plus"], [data-type="minus"]');
+                        // quantityButtons.forEach(button => {
+                        //     button.addEventListener('click', handleQuantityButtonClick);
+                        // });
+                    }
                 })
                 .catch(error => console.error(error));
         }
@@ -69,11 +76,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function renderSelectedProducts() {
-        // Limpia los resultados anteriores en el contenedor de búsqueda
-        findsProductsContainer.innerHTML = '';
         // Renderiza todos los productos seleccionados
         selectedProducts.forEach(productElement => {
             // Marca el checkbox como seleccionado
+            productElement.setAttribute('hidden', 'true');
             const checkbox = productElement.querySelector('input[type="checkbox"]');
             checkbox.checked = true;
 
@@ -85,14 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function createSelectedProductElement(product, quantity) {
         const rowProduct = document.createElement('tr');
         rowProduct.classList.add('border-bottom');
-
+    
         const headerrow = document.createElement('th');
-        headerrow.classList.add('text-700', 'ps-0', 'pt-0');
-
+        headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
+    
         const divdetail = document.createElement('div');
         divdetail.classList.add('text-600', 'fw-normal', 'fs--2');
-        divdetail.textContent = 'COD: '+ product.barcode;
-
+        divdetail.textContent = 'COD: ' + product.barcode;
+    
         const buttonRemove = document.createElement('a');
         buttonRemove.classList.add('text-danger');
         buttonRemove.href = '#';
@@ -100,37 +106,71 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonRemove.addEventListener('click', function () {
             removeProduct(rowProduct); // Llama a la función removeProduct pasando la fila del producto
             CalculateSubtotal();
-          });
-
+        });
+    
         const pricerow = document.createElement('th');
-        pricerow.classList.add('pe-0', 'text-end', 'pt-0');
+        pricerow.classList.add('fs-1', 'px-0', 'text-end', 'pt-0');
         var pricewithno = product.price.replace(/\$/g, "");
         pricerow.textContent = `$ ${parseFloat(pricewithno).toFixed(2)}`;
-
+    
         headerrow.textContent = `${product.name}`;
+    
+        const quantityRowcontainer = document.createElement('div');
+        quantityRowcontainer.classList.add('my-3', 'col-8', 'col-sm-6', 'col-md-4', 'col-xl-8');
+    
+        const quantityRow = document.createElement('div');
+        quantityRow.classList.add('input-group', 'input-group-sm', 'flex-nowrap');
+    
+        // Crear botones de cantidad
+        const minusButton = document.createElement('button');
+        minusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); // Aumenta el valor de px-3 para hacer los botones más grandes
+        minusButton.setAttribute('data-type', 'minus');
+        minusButton.setAttribute('data-prod-id', product.id);
+        minusButton.textContent = '-';
+        minusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
+    
+        const quantityInput = document.createElement('input');
+        quantityInput.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none', 'input-fixed-size'); // Clases agregadas para fijar el tamaño
+        quantityInput.type = 'number';
+        quantityInput.min = '1';
+        quantityInput.disabled = true;
+        quantityInput.value = quantity;
+        // quantityInput.setAttribute('aria-label', 'Amount (to the nearest dollar)');
+        quantityInput.id = `cantidad-${product.id}`;
+    
+        const plusButton = document.createElement('button');
+        plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); // Aumenta el valor de px-3 para hacer los botones más grandes
+        plusButton.setAttribute('data-type', 'plus');
+        plusButton.setAttribute('data-prod-id', product.id);
+        plusButton.textContent = '+';
+        plusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
+    
+        quantityRow.appendChild(minusButton);
+        quantityRow.appendChild(quantityInput);
+        quantityRow.appendChild(plusButton);
+    
+        quantityRowcontainer.appendChild(quantityRow);
+    
         headerrow.appendChild(divdetail);
+        headerrow.appendChild(quantityRowcontainer);
         headerrow.appendChild(buttonRemove);
-        
-        const quantityrow = document.createElement('th');
-        quantityrow.classList.add('pe-0', 'text-end', 'pt-0');
-        quantityrow.id = `quantity-${product.id}`;
-        quantityrow.textContent = `(x${quantity})`;
-
+    
         rowProduct.appendChild(headerrow);
-        rowProduct.appendChild(quantityrow);
         rowProduct.appendChild(pricerow);
-
+    
         rowProduct.dataset.productId = product.id;
-
+    
         return rowProduct;
     }
+    
+    
 
     function createProductElement(product) {
         const productDiv = document.createElement('div');
         productDiv.classList.add('product-item');
     
         const formCheckDiv = document.createElement('div');
-        formCheckDiv.classList.add('form-check', 'mb-0', 'custom-radio', 'radio-select');
+        formCheckDiv.classList.add('form-check', 'mb-0', 'custom-radio', 'radio-select', 'ps-0');
     
         // Checkboxes de los productos encontrados
         const inputElement = document.createElement('input');
@@ -151,17 +191,23 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // Si el checkbox se desmarca, elimina el producto de la lista de seleccionados si existe
                 const selectedProductToRemove = document.querySelector(`[data-product-id="${product.id}"]`);
-
                 if (selectedProductToRemove) {
                     selectedProductToRemove.remove();
                 }
 
-                // Eliminar el producto de la lista de productos seleccionados
-                const selectedIndex = selectedProducts.findIndex(selectedProduct => selectedProduct.id === product.id);
-
-                if (selectedIndex !== -1) {
-                    selectedProducts.splice(selectedIndex, 1);
+                const indexToRemove = selectedProducts.findIndex(product => product.dataset.productId === inputElement.id);
+                // Si se encuentra el producto, eliminarlo del array
+                if (indexToRemove !== -1) {
+                    selectedProducts.splice(indexToRemove, 1);
                 }
+
+                // if (searchInput.value === '') {
+                //     // Si la query está vacía, elimina el producto del contenedor de resultados
+                //     const productToRemove = document.querySelector(`[data-product-id="${product.id}"]`);
+                //     if (productToRemove) {
+                //         productToRemove.remove();
+                //     }
+                // }
             }
 
             CalculateSubtotal();
@@ -188,10 +234,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const productNameLink = document.createElement('h5');
         productNameLink.classList.add('fs-0');
+
+        const barcode = document.createElement('div');
+        barcode.classList.add('fs--1', 'text-500');
+        barcode.textContent = 'COD: '+ product.barcode;
     
         const productpatternH5 = document.createElement('div');
         productpatternH5.classList.add('flex-1');
-        productpatternH5.appendChild(productNameLink);
+        
     
         const productLink = document.createElement('a');
         productLink.classList.add('text-900');
@@ -201,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         productNameLink.appendChild(productLink);
         productpatternH5.appendChild(productNameLink);
+        productpatternH5.appendChild(barcode);
         dFlexContainer.appendChild(productpatternH5);
         leftColumn.appendChild(dFlexContainer);
     
@@ -211,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
         rowAlignItems.classList.add('row', 'align-items-center');
 
         const colMd8Container = document.createElement('div');
-        colMd8Container.classList.add('col-md-8', 'd-flex', 'justify-content-end', 'justify-content-md-center', 'order-0');
+        colMd8Container.classList.add('col-md-7', 'd-flex', 'justify-content-end', 'justify-content-md-center', 'order-0');
 
         const inputGroup = document.createElement('div');
         inputGroup.classList.add('input-group', 'input-group-sm', 'flex-nowrap');
@@ -222,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
         minusButton.setAttribute('data-type', 'minus');
         minusButton.setAttribute('data-prod-id', product.id);
         minusButton.textContent = '-';
+        minusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
 
         const quantityInput = document.createElement('input');
         quantityInput.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none');
@@ -238,9 +290,10 @@ document.addEventListener('DOMContentLoaded', function() {
         plusButton.setAttribute('data-type', 'plus');
         plusButton.setAttribute('data-prod-id', product.id);
         plusButton.textContent = '+';
+        plusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
 
         const colMd4 = document.createElement('div');
-        colMd4.classList.add('col-md-4', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
+        colMd4.classList.add('col-md-5', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
         colMd4.id = `price-${product.id}`;
         colMd4.textContent = `$ ${product.price}`;
 
@@ -277,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const productId = listItem.dataset.productId;
         const checkbox = document.getElementById(productId);
-        listItem.parentElement.removeChild(listItem);
+        // listItem.parentElement.removeChild(listItem);
     
         // Busca y elimina el producto del array selectedProducts
         const selectedIndex = selectedProducts.findIndex(selectedProduct => selectedProduct.dataset.productId === productId);
@@ -289,17 +342,18 @@ document.addEventListener('DOMContentLoaded', function() {
             checkbox.checked = false;
             checkbox.dispatchEvent(new Event('change')); // Dispara el evento 'change' para actualizar la lista
         }
+
+        // listItem.parentElement.removeChild(listItem);
     
         CalculateSubtotal();
     }
     
-
     function handleQuantityButtonClick(event) {
         const button = event.target;
         const type = button.getAttribute('data-type');
         const productId = button.getAttribute('data-prod-id');
-        const inputElement = document.getElementById(`cantidad-${productId}`);
-        
+        const inputElement = document.querySelector(`[id="cantidad-${productId}"]`);
+    
         if (type === 'plus') {
             // Incrementar el valor del input cuando se hace clic en el botón '+'
             inputElement.value = parseInt(inputElement.value, 10) + 1;
@@ -309,10 +363,22 @@ document.addEventListener('DOMContentLoaded', function() {
             // Asegurarse de que el valor no sea menor que 1
             inputElement.value = newValue >= 1 ? newValue : 1;
         }
+        
+        //  Actualiza la cantidad del producto seleccionado en la Lista de Productos encontrados
+        const selectedProductonList = findsProductsContainer.querySelector(`[id="cantidad-${productId}"]`);
+        if (selectedProductonList){
+            selectedProductonList.value = inputElement.value
+        }
 
-        const quantity = document.getElementById(`quantity-${productId}`);
-        quantity.textContent = `(x${inputElement.value})`;
-
+        // Actualizar el objeto en selectedProducts con la nueva cantidad
+        const selectedProduct = selectedProducts.find(product => product.dataset.productId === productId);
+        if (selectedProduct) {
+            const cantidadElement = selectedProduct.querySelector(`[id="cantidad-${productId}"]`);
+            if (cantidadElement) {
+                cantidadElement.value = inputElement.value;
+            }
+        }
+        
         CalculateSubtotal();
     }
 
@@ -344,11 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
       }
 
-    function updateTotal(){
-        const totalElement = document.getElementById('total');
-        const discountElement = document.getElementById('discount');
-        const TotalSuccess = document.getElementById('total-success');
-        
+    function updateTotal(){        
         var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
         var discount = parseFloat(discountElement.textContent.replace('$', '')).toFixed(2);
         var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);

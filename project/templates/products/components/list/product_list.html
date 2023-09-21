@@ -183,9 +183,11 @@
           </div>
         </div>
       </div>
-      <div class="card-body">
-        <a class="btn btn-primary d-block w-100 mt-3" href="{% url 'products_app:new_product' %}"> Crear nuevo Producto</a>
-      </div>
+      {% if user.is_staff %}
+        <div class="card-body">
+          <a class="btn btn-primary d-block w-100 mt-3" href="{% url 'products_app:new_product' %}"> Crear nuevo Producto</a>
+        </div>
+      {% endif %}
     </div>
   </div>
   
