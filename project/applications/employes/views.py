@@ -28,12 +28,22 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
 
     @transaction.atomic
     def form_valid(self, form):
+        user = self.request.user
         form.cleaned_data.pop('password2')
+        
+        if user.is_staff:
+            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            branch = branch_actualy
+        else:
+            branch = self.request.user.branch
+
         Employee.objects.create(
-            user_made = self.request.user,
+            user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
-            user = User.objects.create_user(**form.cleaned_data) # Funcion que crea EMPLEADOS
+            user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
             )
+        
         return super().form_valid(form)
     
     def form_invalid(self, form: Any) -> HttpResponse:
@@ -201,9 +211,9 @@ class EmployeeListView(LoginRequiredMixin,ListView):
 
     def get_queryset(self):
         branch = self.request.user.branch
-        branch_actualy = self.request.session.get('branch_actualy')
 
-        if  self.request.user.is_staff and branch_actualy:
+        if  self.request.user.is_staff:
+            branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
             return Employee.objects.get_employees_branch(branch_actualy)

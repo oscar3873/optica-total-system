@@ -9,9 +9,7 @@
 
 
 <div class="container py-4">
-  {% if form.errors %}
   {% include 'core/components/messages.html' %}
-  {% endif %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!-- Titulo del formulario wizard -->
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
@@ -30,20 +28,7 @@
       <!-- Cabecera del formulario wizard -->
       <ul class="nav justify-content-between nav-wizard">
         <li class="nav-item">
-          <a class="nav-link active fw-semi-bold" href="#bootstrap-wizard-validation-tab1" data-bs-toggle="tab"
-            data-wizard-step="data-wizard-step">
-            <span class="nav-item-circle-parent">
-              <span class="nav-item-circle">
-                <span class="fas fa-building">
-
-                </span>
-              </span>
-            </span>
-            <span class="d-none d-md-block mt-1 fs--1">Sucursal
-            </span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab2" data-bs-toggle="tab"
+          <a class="nav-link fw-semi-bold active" href="#bootstrap-wizard-validation-tab1" data-bs-toggle="tab"
             data-wizard-step="data-wizard-step">
             <span class="nav-item-circle-parent">
               <span class="nav-item-circle">
@@ -55,11 +40,11 @@
             <span class="d-none d-md-block mt-1 fs--1">
               Datos Personales</span></a>
         </li>
-        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab3"
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab2"
             data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
                 class="nav-item-circle"><span class="fas fa-lock"></span></span></span><span
               class="d-none d-md-block mt-1 fs--1">Cuenta</span></a></li>
-        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab4"
+        <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab3"
             data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span class="nav-item-circle-parent"><span
                 class="nav-item-circle"><span class="fas fa-thumbs-up"></span></span></span><span
               class="d-none d-md-block mt-1 fs--1">Finalizar</span></a></li>
@@ -71,20 +56,10 @@
       <form method="post" id="singup-employee" class="row g-3 " novalidate>
         {% csrf_token %}
         <div class="tab-content">
+    
           <!-- Tab 1 -->
-          <div class="tab-pane px-sm-3 px-md-5 pb-5 active" role="tabpanel"
-            aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-            <label for="{{ form.branch.id_for_label }}" class="form-label">Sucursal:</label>
-            {{form.branch}}
-            {% if form.branch.errors %}
-            <div class="text-danger fs--2">
-              Seleccione una de las opciones.
-            </div>
-            {% endif %}
-          </div>
-          <!-- Tab 2 -->
-          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab2"
-            id="bootstrap-wizard-validation-tab2">
+          <div class="tab-pane px-sm-3 px-md-5 pb-5 active" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1"
+            id="bootstrap-wizard-validation-tab1">
             <div class="tab-content">
               <div class="tab-pane preview-tab-pane active" role="tabpanel"
                 aria-labelledby="tab-dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d"
@@ -194,9 +169,9 @@
               </div>
             </div>
           </div>
-          <!-- Tab 3 -->
-          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab3"
-            id="bootstrap-wizard-validation-tab3">
+          <!-- Tab 2 -->
+          <div class="tab-pane px-sm-3 px-md-5 pb-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab2"
+            id="bootstrap-wizard-validation-tab2">
             <div class="row">
               <div class="col-12 col-sm-6">
                 <label for="{{ form.username.id_for_label }}" class="form-label">Usuario</label>
@@ -252,10 +227,9 @@
 
           </div>
 
-
           <!-- Ultima pestaña para enviar los datos al servidor -->
           <div class="tab-pane text-center px-sm-3 px-md-5" role="tabpanel"
-            aria-labelledby="bootstrap-wizard-validation-tab4" id="bootstrap-wizard-validation-tab4">
+            aria-labelledby="bootstrap-wizard-validation-tab3" id="bootstrap-wizard-validation-tab3">
             <div class="wizard-lottie-wrapper">
               <div class="lottie mx-auto my-3" style="width: 120px; height: 120px"
                 data-options='{"path":"{% static "cashregister/img/animated-icons/check-primary-light.json" %}"}'>
@@ -268,7 +242,7 @@
               </span></button>
           </div>
 
-
+        </div>
       </form>
     </div>
     <!-- Card footer -->
@@ -285,18 +259,17 @@
       </div>
     </div>
   </div>
-
-  <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 400px">
-      <div class="modal-content position-relative p-5">
-        <div class="d-flex align-items-center">
-          <div class="lottie me-3"
-            data-options='{"path":"{% static "cashregister/img/animated-icons/warning-light.json" %}"}'></div>
-          <div class="flex-1">
-            <button class="btn btn-link text-danger position-absolute top-0 end-0 mt-2 me-2"
-              data-bs-dismiss="modal"><span class="fas fa-times"></span></button>
-            <p class="mb-0">Ya no puede volver atras una vez que confirmo el ultimo paso</p>
-          </div>
+</div>
+<div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 400px">
+    <div class="modal-content position-relative p-5">
+      <div class="d-flex align-items-center">
+        <div class="lottie me-3"
+          data-options='{"path":"{% static "cashregister/img/animated-icons/warning-light.json" %}"}'></div>
+        <div class="flex-1">
+          <button class="btn btn-link text-danger position-absolute top-0 end-0 mt-2 me-2"
+            data-bs-dismiss="modal"><span class="fas fa-times"></span></button>
+          <p class="mb-0">Ya no puede volver atras una vez que confirmo el ultimo paso</p>
         </div>
       </div>
     </div>
@@ -306,8 +279,5 @@
 
 
 
+
 {% endblock main %}
-
-
-
-<!-- <form method="post" class="row g-3 needs-validation" novalidate> -->

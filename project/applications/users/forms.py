@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 
 from applications.core.mixins import ValidationFormMixin
 from applications.core.forms import PersonForm
-from applications.branches.models import Branch
+# from applications.branches.models import Branch
 
 class UserCreateForm(PersonForm):
     """
@@ -41,16 +41,16 @@ class UserCreateForm(PersonForm):
             })
     )
 
-    branch = forms.ModelChoiceField(
-        queryset=Branch.objects.all(),
-        label='Sucursal',
-        empty_label='Elija una sucursal',
-        required=True,
-        widget=forms.Select(attrs={
-            'placeholder' : 'Sucursal',
-            'class' : 'form-control'
-        })
-    )
+    # branch = forms.ModelChoiceField(
+    #     queryset=Branch.objects.all(),
+    #     label='Sucursal',
+    #     empty_label='Elija una sucursal',
+    #     required=True,
+    #     widget=forms.Select(attrs={
+    #         'placeholder' : 'Sucursal',
+    #         'class' : 'form-control'
+    #     })
+    # )
 
     class Meta:
         model = User
@@ -187,7 +187,6 @@ class UpdatePasswordForm(ValidationFormMixin):
         
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
-        return cleaned_data
     
     class Meta:
         model = User

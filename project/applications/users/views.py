@@ -73,8 +73,9 @@ class LoginView(views.RedirectURLMixin, FormView):
             password=form.cleaned_data['password']
         )
         login(self.request, user)
-        
         next_url = self.request.GET.get('next')  # Obtiene el valor del par�metro 'next' de la URL
+        
+        self.request.session['branch_actualy'] = int(self.request.user.branch.id)
         
         if next_url:
             return redirect(next_url)  # Redirige a la URL especificada en 'next'

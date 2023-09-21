@@ -9,7 +9,7 @@
     <!-- ===============================================-->
     <!--    Errores de Sistema (Backend)-->
     <!-- ===============================================-->
-
+  
     {% include 'core/components/messages.html' %}
 
     <!-- ===============================================-->
@@ -35,13 +35,20 @@
 				<div class="card-body py-4" id="wizard-controller">
 					<div class="tab-content">
 						<div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-							<form class="mt-3" method="post">
+							<form class="mt-3 needs-validation" method="post" novalidate="">
 									{% csrf_token %}
-									<div class="mb-3">
-                    <label for="id_name" class="form-label">Nombre</label>
-                    {{ form.name}}
-									</div>
-									<button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
+                  <div class="col-md-5">
+                    <div class="mb-3">
+                      <label for="id_name" class="form-label">Nombre</label>
+                      {{form.name}}
+                      <small>Debe ingresar <span class="text-warning fs--2">al menos 3 caracteres.</span></small>
+                      <!-- <div class="valid-feedback">Perfecto!</div> -->
+                      <div class="invalid-feedback">Error al enviar. Verifique que haya ingresado al menos 3 caracteres.</div>
+                      <small class="text-danger">{{form.name.errors}}</small>
+                      
+                    </div>
+                    <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
+                  </div>
 							</form>
 						</div>
 					</div>
