@@ -386,9 +386,9 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         branch = user.branch
 
         # Obtener el objeto Product actual utilizando self.get_object()
-        product = self.get_object()
+        object = self.get_object()
 
-        if not user.is_staff and not product.branch == branch: 
+        if not user.is_staff and not object.branch == branch: 
             # El usuario no tiene permiso para ver este producto
             messages.error(request, 'Lo sentimos, no puedes ver este producto.')
             return redirect('products_app:product_list')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
@@ -488,8 +488,8 @@ class ProductSearchView(ListView):
                 Q(name__icontains=query.upper()) |
                 Q(name__icontains=query.lower()) |
                 Q(name__icontains=query.title()) |
-                Q(barcode__icontains=query)
-            , branch=branch)
+                Q(barcode__icontains=query),
+                branch=branch)
         else:
             queryset = Product.objects.all()
 
@@ -497,12 +497,14 @@ class ProductSearchView(ListView):
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        data = [{'id': product.pk, 
-                'name': product.name, 
-                'description': product.description, 
-                'price': product.sale_price, 
-                'category': product.category.name, 
-                'brand': product.brand.name,
-                'barcode': product.barcode } for product in queryset]
+        data = [{
+            'id': product.pk, 
+            'name': product.name, 
+            'description': product.description, 
+            'price': product.sale_price, 
+            'category': product.category.name, 
+            'brand': product.brand.name,
+            'barcode': product.barcode 
+            } for product in queryset]
 
         return JsonResponse({'products': data})

@@ -30,7 +30,7 @@
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
             class="fa-inverse fa-stack-1x text-primary fas fa-store"></i></span>
         <div class="col">
-            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Punto de Venta {{request.user.branch.name}}</span><span
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Punto de Venta {{branch_selected}}</span><span
                 class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
             <p class="mb-0">Aquí puede realizar sus ventas diarias</p>
         </div>
@@ -58,7 +58,7 @@
                 </div>
                 
                 <div class="card-body">
-                    <div class="product-sale-item product-container">
+                    <div class="px-0 product-sale-item product-container">
                         <table class="table table-borderless fs--1 mb-0">
                             <tbody id="selected-products-list">
                                 <!-- Lista de productos seleccionados -->
@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <p class="fs--2 text-700">Ingrese el<span class="text-warning">codigo de barra</span> o el <span class="text-warning">nombre</span> del <span class="text-warning">producto</span></p>
+                    <p class="fs--2 text-700">Ingrese el <span class="text-warning">codigo de barra</span> o el <span class="text-warning">nombre</span> del <span class="text-warning">producto</span></p>
                 </div>
                 </div>
                 <!--Cabecera de los resultados-->
@@ -116,7 +116,7 @@
                             <div class="col-3 col-md-4">
                                 <div class="row">
                                     <div class="col-md-8 py-2 d-none d-md-block text-center">Cantidad</div>
-                                    <div class="col-12 col-md-4 pe-4 py-2">Precio</div>
+                                    <div class="col-12 col-md-4 px-0 py-2">Precio</div>
                                 </div>
                             </div>
                         </div>

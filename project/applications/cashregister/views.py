@@ -25,7 +25,6 @@ class CashRegisterCreateView(FormView):
         context = super().get_context_data(**kwargs)
         try:
             branch_actualy = self.request.session.get('branch_actualy')
-            print(branch_actualy)
             branch_actualy = Branch.objects.get(id=branch_actualy)
             cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False)
         except CashRegister.DoesNotExist:

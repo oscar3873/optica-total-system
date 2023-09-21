@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
+from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
@@ -212,6 +213,21 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
     model = Customer
     template_name = 'clients/customer_detail.html'
     context_object_name = 'customer'
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        branch = user.branch
+
+        # Obtener el objeto Product actual utilizando self.get_object()
+        object = self.get_object()
+
+        if not user.is_staff and not object.branch == branch: 
+            # El usuario no tiene permiso para ver este producto
+            messages.error(request, 'Lo sentimos, no puedes ver este cliente.')
+            return redirect('clients_app:customer_view')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
+        
+        return super().get(request, *args, **kwargs)
+    
 
     def get_context_data(self,**kwargs):
         customer = self.get_object()
