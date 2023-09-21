@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
+from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
@@ -81,16 +82,24 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     @transaction.atomic
     def form_valid(self, form):
         if form.is_valid():
+            user = self.request.user
+
             customer = form.save(commit=False)
             customer.user_made = self.request.user
-            customer.branch = self.request.user.branch
+
+            if user.is_staff:
+                branch_actualy = self.request.session.get('branch_actualy')
+                branch_actualy = Branch.objects.get(id=branch_actualy)
+                customer.branch = branch_actualy
+            else:
+                customer.branch = self.request.user.branch
             customer.save()
 
             for insurance in form.cleaned_data['h_insurance']:
                 Customer_HealthInsurance.objects.create(
                     h_insurance = insurance,
                     customer = customer,
-                    user_made=self.request.user
+                    user_made=user
                 )
         return super().form_valid(form)
 
@@ -205,6 +214,21 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
     template_name = 'clients/customer_detail.html'
     context_object_name = 'customer'
 
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        branch = user.branch
+
+        # Obtener el objeto Product actual utilizando self.get_object()
+        object = self.get_object()
+
+        if not user.is_staff and not object.branch == branch: 
+            # El usuario no tiene permiso para ver este producto
+            messages.error(request, 'Lo sentimos, no puedes ver este cliente.')
+            return redirect('clients_app:customer_view')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
+        
+        return super().get(request, *args, **kwargs)
+    
+
     def get_context_data(self,**kwargs):
         customer = self.get_object()
         context = super().get_context_data(**kwargs)
@@ -237,7 +261,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
         branch = self.request.user.branch
         branch_actualy = self.request.session.get('branch_actualy')
 
-        if  self.request.user.is_staff and branch_actualy:
+        if  self.request.user.is_staff:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
             return Customer.objects.filter(branch=branch_actualy, deleted_at=None)
