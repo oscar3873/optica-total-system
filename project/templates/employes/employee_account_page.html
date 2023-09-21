@@ -6,23 +6,53 @@
 {% endblock extra_css  %}
 
 {% block main %}
- {% include 'employes/components/employee_account.html' %}
+    {% include 'employes/components/employee_account.html' %}
 {% endblock main %}
 
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-	const editButton = document.getElementById('edit-button');
-	const editForm = document.getElementById('edit-form');
-	const cancelButton = document.getElementById('cancel-button');
+  function enableEdit() {
+    // Habilitar la edición de campos en el formulario con la clase "update-form"
+    const form = document.querySelector('.update-form');
+    if (form) {
+      form.querySelectorAll('input, select, textarea').forEach((el) => {
+        el.removeAttribute('readonly');
+        el.removeAttribute('disabled');
+      });
 
-	editButton.addEventListener('click', () => {
-		editButton.style.display = 'none';
-		editForm.style.display = 'block';
-	});
+      // Ocultar el botón "Editar" y mostrar los botones "Guardar Cambios" y "Cancelar"
+      form.querySelector('.btn-primary').style.display = 'none';
+      form.querySelector('.btn-warning').style.display = 'inline-block';
+      form.querySelector('.btn-secondary').style.display = 'inline-block';
 
-	cancelButton.addEventListener('click', () => {
-		editButton.style.display = 'block';
-		editForm.style.display = 'none';
-	});
+      // Actualizar el campo oculto para indicar que se está editando
+      form.querySelector('[name="is_editable"]').value = 'true';
+    }
+  }
+
+  function cancelEdit() {
+    // Deshabilitar la edición de campos en el formulario con la clase "update-form"
+    const form = document.querySelector('.update-form');
+    if (form) {
+      form.querySelectorAll('input, select, textarea').forEach((el) => {
+        el.setAttribute('readonly', 'readonly');
+        el.setAttribute('disabled', 'disabled');
+      });
+
+      // Mostrar el botón "Editar" y ocultar los botones "Guardar Cambios" y "Cancelar"
+      form.querySelector('.btn-primary').style.display = 'inline-block';
+      form.querySelector('.btn-warning').style.display = 'none';
+      form.querySelector('.btn-secondary').style.display = 'none';
+
+      // Actualizar el campo oculto para indicar que no se está editando
+      form.querySelector('[name="is_editable"]').value = 'false';
+    }
+  }
+
+  // Llamamos a cancelEdit() al cargar la página para deshabilitar la edición por defecto.
+  document.addEventListener("DOMContentLoaded", cancelEdit);
 </script>
+<script src="{% static 'employes/js/validarCurrentPassword.js' %}" ></script>
 {% endblock extra_js %}

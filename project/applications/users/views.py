@@ -82,7 +82,7 @@ class LoginView(views.RedirectURLMixin, FormView):
         return redirect(self.success_url)  # Si no hay 'next', redirige a una URL predeterminada
     
 
-class LogoutView(LoginRequiredMixin, View):
+class LogoutView( View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return render(request, template_name='users/logout.html', context={})
@@ -117,7 +117,7 @@ class AccountView(UpdateView):
     form2_class = UpdatePasswordForm
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form2'] = self.get_form(self.form2_class)  # Agregamos el segundo formulario al contexto
+        context['form2'] = self.get_form(self.form2_class)  # Se agrega el segundo formulario al contexto
         return context
 
     def post(self, request, *args, **kwargs):

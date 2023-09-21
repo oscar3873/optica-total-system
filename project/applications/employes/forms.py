@@ -9,7 +9,7 @@ from applications.users.models import User
 class EmployeeUpdateForm(PersonForm):
     class Meta:
         model = Employee
-        fields = ('email','first_name', 'last_name','dni', 'phone_number', 'address')
+        fields = ('email','first_name', 'last_name','dni', 'phone_code', 'phone_number', 'address')
 
 class EmployeeCreateForm(UserCreateForm):
     employment_date = forms.DateField(

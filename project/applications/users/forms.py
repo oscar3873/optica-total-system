@@ -142,12 +142,13 @@ class LoginForm(forms.Form):
     
 
 class UpdatePasswordForm(ValidationFormMixin):
-
+    
     passwordCurrent = forms.CharField(
         required=True, 
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Contraseña actual',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'id': 'id_passwordCurrent', # Para que lo identifique con ajax
             })
     )
 
@@ -166,7 +167,7 @@ class UpdatePasswordForm(ValidationFormMixin):
             'class' : 'form-control'
             })
     )
-
+    
     def clean_username(self):
         username = self.cleaned_data.get('username')
         username = username.lower()
@@ -215,3 +216,12 @@ class EmployeeCreateForm(UserCreateForm):
         employment_date = self.cleaned_data.get('employment_date')
         self.validate_date(employment_date)
         return employment_date """
+
+""" def clean_passwordCurrent(self):
+        passwordCurrent = self.cleaned_data.get('passwordCurrent')
+        user = self.user
+        # Verifica si la contraseña actual es válida para el usuario
+        if user and not authenticate(username=user.username, password=passwordCurrent):
+            raise forms.ValidationError('La contraseña actual es incorrecta.')
+        return passwordCurrent
+ """
