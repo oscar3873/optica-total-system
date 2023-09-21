@@ -7,8 +7,13 @@ app_name = 'sales_app'
 
 urlpatterns = [
     path(
-        'pos',
+        'pos/',
         PointOfSaleView.as_view(),
         name = 'point_of_sale_view'
+    ),
+    path(
+        'pay/',
+        PayView.as_view(),
+        name = 'pay'
     )
 ]
