@@ -11,9 +11,9 @@ class HealthInsurance(BaseAbstractWithUser):
     Clase para Obras Sociales
         se guardan datos basicos del cada obra social
     """
-    name = models.CharField(max_length=50, db_index=True)
-    phone_number = models.PositiveBigIntegerField(null=True, blank=True)
-    cuit = models.CharField(max_length=20)
+    name = models.CharField(max_length=50, db_index=True, verbose_name="Obra Social")
+    phone_number = models.PositiveBigIntegerField(null=True, blank=True, verbose_name="Telefono")
+    cuit = models.CharField(max_length=20, verbose_name="CUIT")
 
     class Meta:
         verbose_name = "Obra Socail"
