@@ -65,5 +65,15 @@ urlpatterns = [
         'movements/delete/<pk>',
         MovementsDeleteView.as_view(),
         name = 'movements_delete_view'
-    )
+    ),
+    path(
+        'currency/create',
+        CurrencyCreateView.as_view(),
+        name = 'movements_create_view'
+    ),
+    path(
+        'currency/',
+        CurrencyView.as_view(),
+        name = 'currency_view'
+    ),
 ]
