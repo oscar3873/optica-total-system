@@ -6,8 +6,10 @@
 {% endblock extra_css  %}
 
 {% block main %}
- {% include 'cashregister/components/cashregister_create_form.html' %}
+    {% include 'cashregister/components/cashregister_create_form.html' %}
 {% endblock main %}
 
 {% block extra_js %}
+    <script src="{% static 'cashregister/js/modals_handle_currency.js' %}"></script>
+    <script src="{% static 'cashregister/js/dinamic_create_currency.js' %}"></script>
 {% endblock extra_js %}

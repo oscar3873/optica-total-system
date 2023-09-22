@@ -178,7 +178,7 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
 class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
-    template_name = 'clients/customer_form.html'
+    template_name = 'clients/customer_update.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -198,7 +198,7 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
 class HealthInsuranceUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = HealthInsurance
     form_class = HealthInsuranceForm
-    template_name = 'clients/insurance_form.html'
+    template_name = 'clients/hinsurance_update.html'
     success_url = reverse_lazy('clients_app:insurance_view')
     
     def form_valid(self, form):

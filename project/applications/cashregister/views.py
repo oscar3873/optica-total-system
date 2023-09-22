@@ -1,7 +1,7 @@
 from typing import Any
 from django.shortcuts import redirect, render
 from django.views.generic import *
-from applications.cashregister.forms import CashRegisterForm, MovementForm
+from applications.cashregister.forms import CashRegisterForm, MovementForm, CurrencyForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.utils import timezone
@@ -27,9 +27,11 @@ class CashRegisterCreateView(FormView):
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
             cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False)
+            
         except CashRegister.DoesNotExist:
             cashregister = None
         context['cashregister'] = cashregister
+        context['currency_form'] = CurrencyForm
         return context
     
     def form_valid(self, form):
@@ -397,4 +399,34 @@ class MovementsDetailView(DetailView):
         return context
 
 
+class CurrencyView(TemplateView):
+    pass
+
+
+class CurrencyCreateView(FormView):
+    """
+    Crear una catogoria nueva para el producto
+    """
+    form_class = CurrencyForm
+    template_name = 'cashregister/currency_create_page.html'
+    success_url = reverse_lazy('cashregister_app:currency_list')
+
+    def form_valid(self, form):
+        print("------------------------------- ENTRE AQUI PORQUE CURRNECY")
+        currency = form.save(commit=False)
+        currency.user_made = self.request.user
+        currency.save()
+
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_currency_data = {
+                'id': currency.id,
+                'name': currency.name,
+                'symbol': currency.symbol,
+                'code': currency.code,
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_currency': new_currency_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#

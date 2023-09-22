@@ -13,7 +13,7 @@
 
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
-      class="fa-inverse fa-stack-1x text-primary fas fa-sticky-note"></i></span>
+          class="fa-inverse fa-stack-1x text-primary fas fa-sticky-note"></i></span>
       <div class="col">
         <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Notas</span><span
             class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
@@ -22,77 +22,119 @@
     </div>
   </div>
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <div class="card theme-wizard h-100 mb-5">
-      <div class="card-header bg-light pt-3 pb-2">
-        <div class="col">
-            <p class="fs--2 mb-0">Notas de sucursal <span class="text-warning">{{ user.branch }}</span>
-            </p>
-        </div>
-    </div>
-      <div class="card-body py-4" id="wizard-controller">
-        {% if notes %}
-        <div class="row row-ligth">
-          {% for note in notes %}
-          <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
-            <div class="card bg-gradient h-100 mb-3" style="background-color:{{ note.label.color}} ">
-              <div class="container mx-2 mt-2">
-                <div class="d-flex btn-reveal-trigger">
-                  <div class="flex-1 position-relative ps-3">
-                    <h6 class="fs-1 mb-0">{{ note.subject }}</h6>
-                    <p id="descripcion" class="text-1000 mb-0">{{ note.description }}</p>
-                    <div class="border-dashed-bottom my-3"></div>
-                    <div>
-                      <a href=""><button
-                              class="btn p-0" type="button" data-bs-toggle="tooltip"
-                              data-bs-placement="top" title="Ver"><span
-                                  class="text-500 far fa-eye"></span></button></a>
-                      <a href="{% url 'note_app:update_note' pk=note.pk %}"><button
-                              class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
-                              data-bs-placement="top" title="Editar"><span
-                                  class="text-500 fas fa-edit"></span></button></a>
-                     <a href="{% url 'note_app:delete_note' pk=note.pk %}"><button class="btn p-0 ms-2" type="button" data-bs-toggle="tooltip"
-                          data-bs-placement="top" title="Eliminar"><span
-                              class="text-500 fas fa-trash-alt"></span></button></a>
+    <div class="row">
+      <div class="col-lg-2 d-none d-md-block">
+        <div class="card theme-wizard h-100 mb-5">
+          <div class="card-header bg-light pt-3 pb-2">
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva Nota</a>
+            </div>
+            <div class="container my-3 mx-0 px-0">
+              {% if labels %}
+              <ul class="list-group list-group-flush">
+                {% for label in labels %}
+                <li class="list-group-item">
+                  <div class="row">
+                    <div class="col">
+                      {{label.label}}
+                    </div>
                   </div>
+                  <div class="row">
+                    <div class="col">
+                      <input type="color" class="form-control form-control-sm form-control-color" id="color-input-disabled" value="{{label.color}}" disabled>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </li>
+                {% endfor %}
+              {% endif %}
+              </ul>
             </div>
           </div>
-          {% endfor %}
         </div>
-        <!--Nav de paginacion-->
-        <nav aria-label="Notes page navigation">
-          <ul class="pagination justify-content-center">
-            <!-- Enlace a la página anterior -->
-            <li class="page-item{% if not page_obj.has_previous %} disabled{% endif %}">
-              <a class="page-link"
-                href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}" tabindex=""
-                aria-disabled="true">Anterior</a>
-            </li>
+      </div>
+      <div class="col-lg-10 col-sm-12">
+        <div class="card theme-wizard h-100 mb-5">
+          <div class="col">
+            <div class="card-header bg-light pt-3 pb-2">
+              <div class="col">
+                <p class="fs--2 mb-0">Notas de sucursal <span class="text-warning">{{ user.branch }}</span></p>
+              </div>
+            </div>
+            <div class="card-body py-4" id="wizard-controller">
+              
+              {% if notes %}
+              <div class="d-flex justify-content-center d-lg-none pb-3">
+                <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva Nota</a>
+              </div>
+              <div class="row row-ligth">
+                {% for note in notes %}
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-3">
+                  <div class="card h-100 mb-3" style="background-color:{{ note.label.color}} ">
+                    <div class="container mx-2 mt-2">
+                      <div class="">
+                        <div class="card-header">
+                          <h6 class="fs-1 mb-0">{{ note.subject }}</h6>
+                        </div>
+                        <div class="">
+                          <div class="card-body">
+                            <p id="descripcion" class="text-1000 mb-0">{{ note.description }}</p>
+                          </div>
+                          <div class="card-footer border-dashed-bottom"></div>
+                          <div>
+                            <a href=""><button class="btn p-0" type="button" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Ver"><span
+                                  class="text-500 far fa-eye"></span></button></a>
+                            <a href="{% url 'note_app:update_note' pk=note.pk %}"><button class="btn p-0 ms-2"
+                                type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar"><span
+                                  class="text-500 fas fa-edit"></span></button></a>
+                            <a href="{% url 'note_app:delete_note' pk=note.pk %}"><button class="btn p-0 ms-2"
+                                type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar"><span
+                                  class="text-500 fas fa-trash-alt"></span></button></a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+              <!--Nav de paginacion-->
+              <nav aria-label="Notes page navigation">
+                <ul class="pagination justify-content-center">
+                  <!-- Enlace a la página anterior -->
+                  <li class="page-item{% if not page_obj.has_previous %} disabled{% endif %}">
+                    <a class="page-link"
+                      href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% endif %}"
+                      tabindex="" aria-disabled="true">Anterior</a>
+                  </li>
 
-            <!-- Números de página -->
-            {% for num in page_obj.paginator.page_range %}
-            <li class="page-item{% if num == page_obj.number %} active{% endif %}">
-              <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-            </li>
-            {% endfor %}
+                  <!-- Números de página -->
+                  {% for num in page_obj.paginator.page_range %}
+                  <li class="page-item{% if num == page_obj.number %} active{% endif %}">
+                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                  </li>
+                  {% endfor %}
 
-            <!-- Enlace a la página siguiente -->
-            <li class="page-item{% if not page_obj.has_next %} disabled{% endif %}">
-              <a class="page-link"
-                href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}">Siguiente</a>
-            </li>
-          </ul>
-        </nav>
-        {% else %}
-        <div class="text-center py-5">
-          <h3>No hay notas disponibles</h3>
+                  <!-- Enlace a la página siguiente -->
+                  <li class="page-item{% if not page_obj.has_next %} disabled{% endif %}">
+                    <a class="page-link"
+                      href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% endif %}">Siguiente</a>
+                  </li>
+                </ul>
+              </nav>
+              {% else %}
+              <div class="text-center py-5">
+                <h3>No hay notas disponibles</h3>
+                <div class="d-flex justify-content-center pb-3">
+                  <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva Nota</a>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
         </div>
-        {% endif %}
       </div>
     </div>
-
   </div>
 </div>
 

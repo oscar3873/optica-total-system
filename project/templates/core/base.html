@@ -394,6 +394,14 @@
                                             class="nav-link-text ps-1">Añadir cliente</span>
                                     </div>
                                 </a>
+                            </a>
+                            <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:insurance_view' %}" role="button"
+                                aria-expanded="false">
+                                <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                            class="fas fa-eye"></span></span><span
+                                        class="nav-link-text ps-1">Ver Obras Sociales</span>
+                                </div>
+                            </a>
                             </li>
                             <li class="nav-item">
                                 <!-- label-->
@@ -549,7 +557,7 @@
                         aria-controls="navbarVerticalCollapse" aria-expanded="false"
                         aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
                                 class="toggle-line"></span></span></button>
-                    <a class="navbar-brand me-1 me-sm-3" href="index.html">
+                    <a class="navbar-brand me-1 me-sm-3" href="{% url 'core_app:home' %}">
                         <div class="d-flex align-items-center">
                             <span class="font-sans-serif">
                                 <img id="logoImageMovil" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"
