@@ -124,7 +124,10 @@ class AccountView(LoginRequiredMixin, UpdateView):
                 return self.form_valid(form) 
             else:
                 return self.form_invalid(form)
-        
+        else:
+            # Maneja el caso en que ninguna de las condiciones se cumple
+            # Puedes devolver una respuesta HTTP de error aquí si es necesario
+            return self.form_invalid(form)
     def get_context_data(self, **kwargs):
         is_editable = True
         context = super().get_context_data(**kwargs)
@@ -228,7 +231,6 @@ class EmployeeListView(LoginRequiredMixin,ListView):
         exclude_fields_user = ["role","first_name","last_name","phone_number","phone_code","dni","birth_date","address","id", "deleted_at", "created_at", "updated_at","date_joined","is_active","is_staff","password","last_login","username","is_superuser"]
         context['table_column'] = obtener_nombres_de_campos(Employee, *exclude_fields)
         context['table_column_user'] = obtener_nombres_de_campos(User, *exclude_fields_user)
-        # context['is_staff'] =self.request.user.is_staff iNNECESARIO, EN EL TEMPLATE YA EXISTE DEL PROPIO USUARIO
         return context
     
 
