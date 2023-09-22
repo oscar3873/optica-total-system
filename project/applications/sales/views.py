@@ -19,7 +19,7 @@ from .forms import *
 # Create your views here.
 
 class PointOfSaleView(LoginRequiredMixin, FormView):
-    form_class = OrderDetailForm
+    form_class = OrderDetailFormset
     template_name = 'sales/point_of_sale_page.html'
     success_url = reverse_lazy('core_app:home')
 
@@ -32,12 +32,12 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = self.request.user.branch
 
         context['branch_selected'] = branch.name
+        context['form'] = OrderDetailFormset(self.request.POST or None, prefix='variants')
         return context
 
     def form_valid(self, form):
         # Procesa los datos del formulario aquí
         selected_products = form.cleaned_data['products']
-        print('\n\n\n\n', form.cleaned_data)        
         if selected_products:
             for product in selected_products:
                 cantidad_field_name = f'cantidad-{product.id}'
