@@ -13,7 +13,7 @@ from .forms import NoteCreateForm, LabelCreateForm
 class NoteCreateView(CustomUserPassesTestMixin, FormView):
     form_class = NoteCreateForm
     template_name = 'notes/note_form.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('note_app:note_list')
 
     def get_form_kwargs(self): ##revisar
         kwargs = super().get_form_kwargs()
@@ -104,6 +104,12 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
     paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labels'] = Label.objects.all()
+
+        return context
     
     def get_queryset(self):
         branch = self.request.user.branch

@@ -1,5 +1,4 @@
-from django.urls import path, reverse_lazy
-from django.contrib.auth import views as auth_views
+from django.urls import path
 #
 from .views import *
 
@@ -11,9 +10,4 @@ urlpatterns = [
         PointOfSaleView.as_view(),
         name = 'point_of_sale_view'
     ),
-    path(
-        'pay/',
-        PayView.as_view(),
-        name = 'pay'
-    )
 ]

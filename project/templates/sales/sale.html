@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <form method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        {% for form in formset %}
+        <div class="order-detail-form">
+            {{ form.as_table }}
+        </div>
+        {% endfor %}
+        <input type="submit" value="Guardar Venta">
+    </form>
+    
+</body>
+</html>
