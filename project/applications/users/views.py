@@ -5,10 +5,14 @@ from django.urls import reverse_lazy
 
 from django.views.generic import View
 from django.views.generic.edit import (FormView,)
-from django.views.generic import (DetailView,UpdateView)
+from django.views.generic import (DetailView)
 
-from .forms import UserCreateForm, LoginForm, UpdatePasswordForm,UserUpdateForm
+
+from .forms import UserCreateForm
 from .models import User
+from .forms import *
+from .utils import generate_profile_img_and_assign
+from applications.branches.models import Branch
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
@@ -45,13 +49,17 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
             form.cleaned_data['phone_number'] = full_phone_number """
 
         form.cleaned_data.pop('password2')
-        User.objects.create_admin(**form.cleaned_data) # Funcion que crea ADMINIS
+        form.cleaned_data.pop('phone_code')
+        branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+        user = User.objects.create_admin(**form.cleaned_data, branch=branch_actualy) # Funcion que crea ADMINIS
+
+        if not form.cleaned_data.get('imagen'):
+            generate_profile_img_and_assign(user)
+
         return super().form_valid(form)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #Le paso este contexto al template, para no poner el input
-        # de fecha de alta de empleado cuando se este creando un 
-        # administrador
         context["admin"] = True 
         return context
     

@@ -17,7 +17,7 @@ class User(Person, AbstractUser):
 
     role = models.CharField(max_length=15, choices=ROLE, default='EMPLEADO', null=True, blank=True,verbose_name="rol")
     username = models.CharField(max_length=50, unique=True,verbose_name="Nombre de usuario")
-    # branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True)
+    imagen = models.ImageField(upload_to='profile/', null=True, blank=True, verbose_name='Imagen de perfil')
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']

@@ -93,7 +93,7 @@ class FeatureFullCreateView(FormView):
         Icluye el TIPO y CARACTERISTICA.
         ¡¡SOLO PARA PETICIONES FETCH!!
     """
-    form_class = FeatureForm_to_formset
+    form_class = FeatureForm_toWizard
 
     def form_valid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
@@ -119,7 +119,7 @@ class FeatureUnitCreateView(FormView):
     Añade una caracteristica a un TIPO seleccionado.
         ¡¡SOLO PARA PETICIONES FETCH!!
     """
-    form_class = FeatureForm_to_formset
+    form_class = FeatureForm_toWizard
 
     def form_valid(self, form):
         if len(form.cleaned_data['value']) < 1:
@@ -180,7 +180,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['category_form'] = CategoryForm
         context['brand_form'] = BrandForm
-        context['feature_form'] = FeatureForm_to_formset
+        context['feature_form'] = FeatureForm_toWizard
         # context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
@@ -240,7 +240,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         # context['named_formsets'] = FeatureFormSet(prefix='variants')
         context['category_form'] = CategoryForm(instance=self.object.category)
         context['brand_form'] = BrandForm(instance=self.object.brand)
-        context['feature_form'] = FeatureForm_to_formset
+        context['feature_form'] = FeatureForm_toWizard
         return context
 
     @transaction.atomic

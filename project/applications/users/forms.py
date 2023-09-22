@@ -41,20 +41,16 @@ class UserCreateForm(PersonForm):
             })
     )
 
-    # branch = forms.ModelChoiceField(
-    #     queryset=Branch.objects.all(),
-    #     label='Sucursal',
-    #     empty_label='Elija una sucursal',
-    #     required=True,
-    #     widget=forms.Select(attrs={
-    #         'placeholder' : 'Sucursal',
-    #         'class' : 'form-control'
-    #     })
-    # )
+    imagen = forms.ImageField(
+        required=False,  # Hacer que la carga de la imagen sea opcional
+        widget=forms.FileInput(attrs={
+            'class': 'form-control-file'
+            }),
+    )
 
     class Meta:
         model = User
-        fields = ('email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_code','phone_number', 'address', 'branch')
+        fields = ['email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number','phone_code', 'address', 'imagen']
     
     def clean_username(self):
         username = self.cleaned_data.get('username')

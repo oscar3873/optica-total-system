@@ -1,12 +1,11 @@
-import os
+from django.contrib.auth.models import User  # O utiliza tu propio modelo de usuario si tienes uno personalizado
 from PIL import Image, ImageDraw, ImageFont
+import io
 
-from project.settings.local import MEDIA_ROOT
-
-def generate_profile_img(first_name, last_name):
+def generate_profile_img_and_assign(user):
     # Definir el tamaño y el fondo de la imagen
     width, height = 200, 200
-    background_color=(42,123,228)
+    background_color=(42, 123, 228)
 
     # Crear una nueva imagen
     image = Image.new('RGB', (width, height), background_color)
@@ -15,7 +14,7 @@ def generate_profile_img(first_name, last_name):
     draw = ImageDraw.Draw(image)
 
     # Definir las iniciales y el tamaño de la fuente
-    initials = first_name[0] + last_name[0]
+    initials = user.first_name[0] + user.last_name[0]
     font_size = 120
 
     # Definir el tipo de fuente
@@ -32,16 +31,16 @@ def generate_profile_img(first_name, last_name):
     x = (width - text_width) // 2
     y = (height - text_height) // 2 - text_bbox[1]
 
-    # Crear el directorio de medios si no existe
-    media_directory = MEDIA_ROOT
-    if not os.path.exists(media_directory):
-        os.makedirs(media_directory)
-
-    # Ruta completa del archivo
-    file_path = os.path.join(media_directory, f'{initials}.png')
-
     # Dibujar el texto en la imagen con el color especificado
     draw.text((x, y), initials, align='center', font=font)
 
-    # Guardar la imagen en el directorio de medios
-    image.save(file_path)
+    # Guardar la imagen en un búfer de memoria
+    image_buffer = io.BytesIO()
+    image.save(image_buffer, format='PNG')
+    image_buffer.seek(0)
+
+    # Asignar la imagen al campo imagen_perfil del usuario
+    user.imagen.save(f'{user.username}_profile.png', image_buffer, save=True)
+
+    # Guardar el usuario para actualizar la imagen en la base de datos
+    user.save()

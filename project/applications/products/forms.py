@@ -285,7 +285,7 @@ class FeatureTypeForm(ValidationFormMixin):
 
 
 
-class FeatureForm_to_formset(ValidationFormMixin):
+class FeatureForm_toWizard(ValidationFormMixin):
     type = forms.CharField(
         max_length=20,
         label="Tipo de caracteristica",
@@ -323,7 +323,7 @@ class FeatureForm_to_formset(ValidationFormMixin):
 FeatureFormSet = forms.inlineformset_factory(
     Product, 
     Product_feature,
-    form=FeatureForm_to_formset,
+    form=FeatureForm_toWizard,
     extra=0,
     can_delete=False
     )

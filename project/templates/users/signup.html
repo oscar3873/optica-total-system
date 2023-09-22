@@ -224,6 +224,20 @@
               </div>
             </div>
 
+            <div class="row">
+              <div class="col-12 col-sm-6">
+                <label for="{{ form.imagen.id_for_label }}" class="form-label pt-3">Imagen de perfil</label>
+                {{form.imagen}}
+                {% if form.imagen.errors %}
+                {% for error in form.imagen.errors %}
+                <div class="text-danger fs--2">
+                  {{error}}
+                </div>
+                {% endfor %}
+                {% endif %}
+              </div>
+            </div>
+
 
           </div>
 

@@ -17,7 +17,8 @@ from .models import Employee
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
 from applications.users.models import User
-from applications.users.forms import UserUpdateForm,UpdatePasswordForm
+from applications.users.forms import UserUpdateForm
+from applications.users.utils import generate_profile_img_and_assign
 from .utils import obtener_nombres_de_campos
 
 # Create your views here.
@@ -38,11 +39,14 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         else:
             branch = self.request.user.branch
 
-        Employee.objects.create(
+        empleado = Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
             user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
             )
+    
+        if not form.cleaned_data.get('imagen'):
+            generate_profile_img_and_assign(empleado.user)
         
         return super().form_valid(form)
     
@@ -146,7 +150,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
         if not user.is_staff and user != user_get:
             return render(request, 'users/denied_permission.html')
         return super().get(request, *args, **kwargs)
-        
+      
     def get_success_url(self):
         return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
@@ -226,11 +230,26 @@ class EmployeeListView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
-        exclude_fields_user = ["role","first_name","last_name","phone_number","phone_code","dni","birth_date","address","id", "deleted_at", "created_at", "updated_at","date_joined","is_active","is_staff","password","last_login","username","is_superuser"]
-        context['table_column'] = obtener_nombres_de_campos(Employee, *exclude_fields)
-        context['table_column_user'] = obtener_nombres_de_campos(User, *exclude_fields_user)
+        exclude_fields_user = [
+            "role",
+            "phone_code",
+            "dni",
+            "birth_date",
+            "address",
+            "id",
+            "deleted_at",
+            "created_at", 
+            "updated_at",
+            "date_joined",
+            "is_active",
+            "is_staff",
+            "password",
+            "last_login",
+            "username",
+            "is_superuser",
+            "branch",
+        ]
+        context['table_column'] = obtener_nombres_de_campos(User, *exclude_fields_user)
         return context
     
 
