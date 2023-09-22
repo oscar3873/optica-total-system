@@ -56,11 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if (parseInt(selectedProductId) === product.id) {
                                     // Si estaba seleccionado previamente, marca el checkbox como seleccionado
                                     const checkbox = productElement.querySelector('input[type="checkbox"]');
-                                    const quantity = productElement.querySelector(`[id^="cantidad-${product.id}"]`);
-                                    const quantitySaved = document.getElementById(`cantidad-${product.id}`);
-                            
                                     checkbox.checked = true;
-                                    quantity.value = quantitySaved.value;
                                 }
                             });
         
@@ -88,15 +84,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function createSelectedProductElement(product, quantity) {
+    function createSelectedProductElement(product) {
         const rowProduct = document.createElement('tr');
         rowProduct.classList.add('border-bottom');
     
         const headerrow = document.createElement('th');
         headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
+        headerrow.textContent = `${product.name}`;
     
         const divdetail = document.createElement('div');
-        divdetail.classList.add('text-600', 'fw-normal', 'fs--2');
+        divdetail.classList.add('text-600', 'fw-normal', 'fs--1');
         divdetail.textContent = 'COD: ' + product.barcode;
     
         const buttonRemove = document.createElement('a');
@@ -113,8 +110,6 @@ document.addEventListener('DOMContentLoaded', function() {
         var pricewithno = product.price.replace(/\$/g, "");
         pricerow.textContent = `$ ${parseFloat(pricewithno).toFixed(2)}`;
     
-        headerrow.textContent = `${product.name}`;
-    
         const quantityRowcontainer = document.createElement('div');
         quantityRowcontainer.classList.add('my-3', 'col-8', 'col-sm-6', 'col-md-4', 'col-xl-8');
     
@@ -123,27 +118,30 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Crear botones de cantidad
         const minusButton = document.createElement('button');
-        minusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); // Aumenta el valor de px-3 para hacer los botones más grandes
+        minusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); 
         minusButton.setAttribute('data-type', 'minus');
         minusButton.setAttribute('data-prod-id', product.id);
         minusButton.textContent = '-';
-        minusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
+        minusButton.type = 'button';
+        minusButton.addEventListener('click', handleQuantityButtonClick);
     
         const quantityInput = document.createElement('input');
-        quantityInput.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none', 'input-fixed-size'); // Clases agregadas para fijar el tamaño
+        quantityInput.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none', 'input-fixed-size');
         quantityInput.type = 'number';
         quantityInput.min = '1';
-        quantityInput.disabled = true;
-        quantityInput.value = quantity;
+        // quantityInput.disabled = true;
+        quantityInput.value = '1';
         // quantityInput.setAttribute('aria-label', 'Amount (to the nearest dollar)');
-        quantityInput.id = `cantidad-${product.id}`;
+        quantityInput.id = `id_cantidad-${product.id}`;
+        quantityInput.name = `cantidad-${product.id}`;
     
         const plusButton = document.createElement('button');
-        plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); // Aumenta el valor de px-3 para hacer los botones más grandes
+        plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size');
         plusButton.setAttribute('data-type', 'plus');
         plusButton.setAttribute('data-prod-id', product.id);
         plusButton.textContent = '+';
-        plusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
+        plusButton.type = 'button';
+        plusButton.addEventListener('click', handleQuantityButtonClick);
     
         quantityRow.appendChild(minusButton);
         quantityRow.appendChild(quantityInput);
@@ -154,16 +152,21 @@ document.addEventListener('DOMContentLoaded', function() {
         headerrow.appendChild(divdetail);
         headerrow.appendChild(quantityRowcontainer);
         headerrow.appendChild(buttonRemove);
-    
+        
+        const checkboxform = document.createElement('input');
+        checkboxform.type = 'checkbox';
+        checkboxform.value = product.id;
+        checkboxform.name = 'products';
+        checkboxform.checked = true;
+
         rowProduct.appendChild(headerrow);
+        rowProduct.appendChild(checkboxform);
         rowProduct.appendChild(pricerow);
     
         rowProduct.dataset.productId = product.id;
     
         return rowProduct;
     }
-    
-    
 
     function createProductElement(product) {
         const productDiv = document.createElement('div');
@@ -177,13 +180,13 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.classList.add('form-check-input');
         inputElement.id = product.id;
         inputElement.type = 'checkbox';
+        inputElement.name = 'products';
+        inputElement.value = product.id;
         inputElement.addEventListener('change', function () {
             const isChecked = inputElement.checked;
             if (isChecked) {
-                const quantity = document.getElementById(`cantidad-${inputElement.id}`);
-
                 // Si el checkbox se marca, agrega el producto a la lista de seleccionados
-                const selectedProductElement = createSelectedProductElement(product, quantity.value);
+                const selectedProductElement = createSelectedProductElement(product);
                 selectproductsContainer.appendChild(selectedProductElement);
 
                 // Agregar el producto a la lista de productos seleccionados
@@ -250,58 +253,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const rightColumn = document.createElement('div');
         rightColumn.classList.add('col-4', 'py-3', 'ps-1');
 
-        const rowAlignItems = document.createElement('div');
-        rowAlignItems.classList.add('row', 'align-items-center');
-
-        const colMd8Container = document.createElement('div');
-        colMd8Container.classList.add('col-md-7', 'd-flex', 'justify-content-end', 'justify-content-md-center', 'order-0');
-
-        const inputGroup = document.createElement('div');
-        inputGroup.classList.add('input-group', 'input-group-sm', 'flex-nowrap');
-        inputGroup.setAttribute('data-quantity', 'data-quantity');
-
-        const minusButton = document.createElement('button');
-        minusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300', 'px-2');
-        minusButton.setAttribute('data-type', 'minus');
-        minusButton.setAttribute('data-prod-id', product.id);
-        minusButton.textContent = '-';
-        minusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
-
-        const quantityInput = document.createElement('input');
-        quantityInput.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none');
-        quantityInput.type = 'number';
-        quantityInput.min = '1';
-        quantityInput.disabled = true;
-        quantityInput.value = '1';
-        quantityInput.setAttribute('aria-label', 'Amount (to the nearest dollar)');
-        quantityInput.style.width = '50px';
-        quantityInput.id = `cantidad-${product.id}`;
-
-        const plusButton = document.createElement('button');
-        plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300', 'px-2');
-        plusButton.setAttribute('data-type', 'plus');
-        plusButton.setAttribute('data-prod-id', product.id);
-        plusButton.textContent = '+';
-        plusButton.addEventListener('click', handleQuantityButtonClick); // Agregar evento click
-
         const colMd4 = document.createElement('div');
-        colMd4.classList.add('col-md-5', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
+        colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
         colMd4.id = `price-${product.id}`;
         colMd4.textContent = `$ ${product.price}`;
 
-        inputGroup.appendChild(minusButton);
-        inputGroup.appendChild(quantityInput);
-        inputGroup.appendChild(plusButton);
-
-        const divemptyclass = document.createElement('div');
-        divemptyclass.appendChild(inputGroup)
-
-        colMd8Container.appendChild(divemptyclass);
-
-        rowAlignItems.appendChild(colMd8Container);
-        rowAlignItems.appendChild(colMd4);
-
-        rightColumn.appendChild(rowAlignItems);
+        rightColumn.appendChild(colMd4);
    
         innerRow.appendChild(leftColumn);
         innerRow.appendChild(rightColumn);
@@ -341,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = event.target;
         const type = button.getAttribute('data-type');
         const productId = button.getAttribute('data-prod-id');
-        const inputElement = document.querySelector(`[id="cantidad-${productId}"]`);
+        const inputElement = document.querySelector(`[id="id_cantidad-${productId}"]`);
     
         if (type === 'plus') {
             // Incrementar el valor del input cuando se hace clic en el botón '+'
@@ -354,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         //  Actualiza la cantidad del producto seleccionado en la Lista de Productos encontrados
-        const selectedProductonList = findsProductsContainer.querySelector(`[id="cantidad-${productId}"]`);
+        const selectedProductonList = findsProductsContainer.querySelector(`[id="id_cantidad-${productId}"]`);
         if (selectedProductonList){
             selectedProductonList.value = inputElement.value
         }
@@ -362,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Actualizar el objeto en selectedProducts con la nueva cantidad
         const selectedProduct = selectedProducts.find(product => product.dataset.productId === productId);
         if (selectedProduct) {
-            const cantidadElement = selectedProduct.querySelector(`[id="cantidad-${productId}"]`);
+            const cantidadElement = selectedProduct.querySelector(`[id="id_cantidad-${productId}"]`);
             if (cantidadElement) {
                 cantidadElement.value = inputElement.value;
             }
@@ -384,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Si el checkbox está marcado, obtén el precio y la cantidad del producto relacionado
             const productId = checkbox.id;
             const precio = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
-            const cantidad = parseFloat(document.getElementById(`cantidad-${productId}`).value);
+            const cantidad = parseFloat(document.getElementById(`id_cantidad-${productId}`).value);
             
             // Calcula el subtotal para el producto y agrégalo al subtotal total
             const productoSubtotal = precio * cantidad;
@@ -409,29 +366,4 @@ document.addEventListener('DOMContentLoaded', function() {
         TotalSuccess.textContent = `$ ${total}`;
     }
 
-    const enviarButton = document.getElementById("pay");
-    enviarButton.addEventListener("click", function() {
-        const selectedData = selectedProducts.map(prod => {
-            const productId = prod.dataset.productId;
-            const quantityId = `cantidad-${productId}`;
-            const quantityElement = document.getElementById(quantityId);
-            const quantity = quantityElement ? quantityElement.value : null;
-
-            return { productId, quantity };
-        });
-
-        // Obtener el token CSRF de la cookie
-        const csrfToken = getCookie('csrftoken');
-
-        console.log(selectedData);
-
-        fetch('/sales/pay/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken, // Incluye el token CSRF en el encabezado
-            },
-            body: JSON.stringify({ seleccionados: selectedData }),
-        });
-    });
 });

@@ -1,6 +1,7 @@
 import json
 from typing import Any
 from django import http
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import *
 from django.urls import reverse_lazy
@@ -16,8 +17,11 @@ from .forms import *
 
 
 # Create your views here.
-class PointOfSaleView(LoginRequiredMixin, TemplateView):
+
+class PointOfSaleView(LoginRequiredMixin, FormView):
+    form_class = OrderDetailForm
     template_name = 'sales/point_of_sale_page.html'
+    success_url = reverse_lazy('core_app:home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -29,47 +33,19 @@ class PointOfSaleView(LoginRequiredMixin, TemplateView):
 
         context['branch_selected'] = branch.name
         return context
-    
 
-class PayView(View):
-    template_name = 'sales/pay_page.html'
-
-    def post(self, request):
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-            seleccionados = data.get('seleccionados', [])
-            return seleccionados
-        except json.JSONDecodeError:
-            return []
+    def form_valid(self, form):
+        # Procesa los datos del formulario aquí
+        selected_products = form.cleaned_data['products']
+        print('\n\n\n\n', form.cleaned_data)        
+        if selected_products:
+            for product in selected_products:
+                cantidad_field_name = f'cantidad-{product.id}'
+                cantidad = form.cleaned_data[cantidad_field_name]
+                
+        else:
+            messages.error(self.request, "Debe Seleccionar un producto al menos para continuar con la venta.")
+            return super().form_invalid(form)
         
-
-class SalesPayView(View):
-    def post(self, request):
-        try:
-            data = json.loads(request.body.decode('utf-8'))
-            selected_data = data.get('seleccionados', [])
-
-            # Crear instancias de OrderDetail a partir de los datos recibidos
-            order_details = []
-            for item in selected_data:
-                product_id = item['productId']
-                quantity = item['quantity']
-                
-                # Buscar el producto en base a su ID
-                try:
-                    product = Product.objects.get(id=product_id)
-                except Product.DoesNotExist:
-                    return http.JsonResponse({'error': f'El producto con ID {product_id} no existe'}, status=400)
-                
-                # Crear la instancia de OrderDetail y agregarla a la lista
-                order_detail = OrderDetail(product=product, quantity=quantity)
-                order_details.append(order_detail)
-            
-            # Guardar las instancias de OrderDetail en la base de datos
-            OrderDetail.objects.bulk_create(order_details)
-            
-            # Puedes devolver una respuesta JSON como confirmación
-            response_data = {'mensaje': 'Valores procesados correctamente'}
-            return http.JsonResponse(response_data)
-        except json.JSONDecodeError:
-            return http.JsonResponse({'error': 'Error al procesar los datos'}, status=400)
+        messages.success(self.request, "Se ha generado la venta con éxito!")
+        return HttpResponseRedirect(self.success_url)

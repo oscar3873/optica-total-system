@@ -52,44 +52,50 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
-                    <h5 class="mb-0">Detalle de compra</h5>
-                    <button class="btn btn-falcon-default btn-sm" type="button" id="button-delete-all" title="Eliminar todo">
-                        <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
-                    </button>
-                </div>
-                
-                <div class="card-body">
-                    <div class="px-0 product-sale-item product-container">
-                        <table class="table table-borderless fs--1 mb-0">
-                            <tbody id="selected-products-list">
-                                <!-- Lista de productos seleccionados -->
-                            </tbody>
-                        </table>
+            <form method="post">
+                {% csrf_token %}
+                    <!-- <div>{{form.as_p}}</div> -->
+                    <!-- PRODUCTOS: name='product' y el value='id' -->
+                    <!-- CANTIDAD: name="cantidad-(id)" -->
+                <div class="card">
+                    <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
+                        <h5 class="mb-0">Detalle de compra</h5>
+                        <button class="btn btn-falcon-default btn-sm" type="button" id="button-delete-all" title="Eliminar todo">
+                            <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="px-0 product-sale-item product-container">
+                            <table class="table table-borderless fs--1 mb-0">
+                                <tbody id="selected-products-list">
+                                    <!-- Lista de productos seleccionados -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer d-flex justify-content-between bg-light py-2">
+                        <div class="fw-semi-bold">Subtotal</div>
+                        <div class="fw-bold" id="subtotal">$ 0.00</div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light py-3">
+                        <div class="fw-semi-bold">Descuento</div>
+                        <div class="fw-bold" id="discount">$ 0.00</div>
+                    </div>
+                    <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
+                        <div class="fw-semi-bold">Total a pagar</div>
+                        <div class="fw-bold" id="total">$ 0.00</div>
                     </div>
                 </div>
-
-                <div class="card-footer d-flex justify-content-between bg-light py-2">
-                    <div class="fw-semi-bold">Subtotal</div>
-                    <div class="fw-bold" id="subtotal">$ 0.00</div>
+                <div class="card mt-2">
+                    <button type="submit" class="btn btn-primary p-2">
+                        <span class="fs-2">
+                            ir a pagar
+                        </span>
+                    </button>
                 </div>
-                <div class="card-footer d-flex justify-content-between bg-light py-3">
-                    <div class="fw-semi-bold">Descuento</div>
-                    <div class="fw-bold" id="discount">$ 0.00</div>
-                </div>
-                <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
-                    <div class="fw-semi-bold">Total a pagar</div>
-                    <div class="fw-bold" id="total">$ 0.00</div>
-                </div>
-            </div>
-            <div class="card mt-2">
-                <a href="#" class="btn btn-primary p-2" id="pay">
-                    <span class="fs-2">
-                        ir a pagar
-                    </span>
-                </a>
-            </div>
+            </form>
         </div>
         <div class="col-xl-8">
             <div class="card mb-3">
