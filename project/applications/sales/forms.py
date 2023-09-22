@@ -21,26 +21,32 @@ class SaleForm(ValidationFormMixin):
 
 
 class OrderDetailForm(forms.ModelForm):
-    products = forms.ModelMultipleChoiceField(
-        queryset=Product.objects.all(),
-        widget=forms.CheckboxSelectMultiple(
-            attrs={
-                   'type' : 'checkbox'
-                   }
-        ),
-        required=False,
-    )
+    # products = forms.ModelMultipleChoiceField(
+    #     queryset=Product.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple(
+    #         attrs={
+    #                'type' : 'checkbox'
+    #                }
+    #     ),
+    #     required=False,
+    # )
     class Meta:
         model = OrderDetail
-        fields = ['product',]
+        fields = ['product', 'quantity']
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Agregar un campo de cantidad para cada producto seleccionado
         self.fields['product'].required = False
         
-        for product in self.fields['products'].queryset:
-            self.fields[f'cantidad-{product.id}'] = forms.IntegerField(
-                required=False,
-                initial=0,  # Puedes establecer un valor inicial predeterminado
-            )
+        # for product in self.fields['products'].queryset:
+        #     self.fields[f'cantidad-{product.id}'] = forms.IntegerField(
+        #         required=False,
+        #         initial=0,  # Puedes establecer un valor inicial predeterminado
+        #     )
+
+
+OrderDetailFormset = forms.formset_factory(
+    OrderDetailForm,
+    extra = 1
+)

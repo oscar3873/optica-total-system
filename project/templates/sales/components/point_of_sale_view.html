@@ -52,11 +52,55 @@
                     </div>
                 </div>
             </div>
-            <form method="post">
+            <!-- <form enctype="multipart/form-data" class="container" method="post" id="product_form">
                 {% csrf_token %}
-                    <!-- <div>{{form.as_p}}</div> -->
-                    <!-- PRODUCTOS: name='product' y el value='id' -->
-                    <!-- CANTIDAD: name="cantidad-(id)" -->
+                {{ form.management_form }}
+                <script type="text/html" id="variants-template">
+                    <tr id="variants-__prefix__" hidden>
+                        {% for fields in form.empty_form.hidden_fields %}
+                            {{ fields }}
+                        {% endfor %}
+                    
+                        {% for fields in form.empty_form.visible_fields %}
+                            <td>{{fields}}</td>
+                        {% endfor %}
+                    </tr>
+                </script>
+                <div id="item-variants">
+                        {{ form.management_form }}
+                        {% for field in formss.visible_fields %}
+                            {{field}}
+                        {% endfor %}
+                </div>
+
+                <a href="#" id="add-variant-button" class="btn btn-secondary add-variants">Add More</a> -->
+                
+                
+                <!-- <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                    // cuando el usuario hace clic en el botón "add more" de las variantes
+                    var addVariantsBtns = document.querySelectorAll('.add-variants');
+                    addVariantsBtns.forEach(function(btn) {
+                        btn.addEventListener('click', function(ev) {
+                            ev.preventDefault();
+                            var count = document.querySelectorAll('#item-variants').length;
+                            console.log(count);
+                            var tmplMarkup = document.getElementById('variants-template').innerHTML;
+                            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+                            var itemVariants = document.getElementById('item-variants');
+                            var newDiv = document.createElement('div');
+                            newDiv.innerHTML = compiledTmpl;
+                            itemVariants.appendChild(newDiv);
+
+                            // actualizar el contador de formularios
+                            var totalForms = document.getElementById('id_variants-TOTAL_FORMS');
+                            totalForms.value = count + 1;
+                        });
+                    });
+                });
+                </script> -->
+
+
                 <div class="card">
                     <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
                         <h5 class="mb-0">Detalle de compra</h5>
@@ -95,7 +139,7 @@
                         </span>
                     </button>
                 </div>
-            </form>
+            <!-- </form> -->
         </div>
         <div class="col-xl-8">
             <div class="card mb-3">
