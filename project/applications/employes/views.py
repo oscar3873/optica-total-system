@@ -10,13 +10,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
+
 from .forms import EmployeeCreateForm,EmployeeUpdateForm
 from .models import Employee
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
 from applications.users.models import User
-from applications.users.forms import UserUpdateForm,UpdatePasswordForm
+from applications.users.forms import UserUpdateForm
+from applications.users.utils import generate_profile_img_and_assign
 from .utils import obtener_nombres_de_campos
 
 # Create your views here.
@@ -37,11 +39,14 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         else:
             branch = self.request.user.branch
 
-        Employee.objects.create(
+        empleado = Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
             user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
             )
+    
+        if not form.cleaned_data.get('imagen'):
+            generate_profile_img_and_assign(empleado.user)
         
         return super().form_valid(form)
     
