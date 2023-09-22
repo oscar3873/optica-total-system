@@ -86,7 +86,7 @@
                                     {% for column in table_column %}
                                     <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
                                     {% endfor %}
-                                    <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
+                                    <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
                                 </tr>
                             </thead>
                             <tbody class="list" id="table-purchase-body">
@@ -105,7 +105,7 @@
                                     </td>
                                     <td class="align-start user_mades">{{ customer.user_made }}
                                     </td>
-                                    <td class="align-middle white-space-nowrap text-center">
+                                    <td class="align-middle white-space-nowrap text-start">
                                         <div class="dropstart font-sans-serif position-static d-inline-block">
                                             <button
                                                 class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"

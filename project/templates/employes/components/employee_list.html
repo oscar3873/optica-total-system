@@ -88,7 +88,7 @@
               {% for column in table_column %}
                 <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
-                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+              <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -110,7 +110,7 @@
                 <td class="align-start last_name">{{employee.user.last_name}}</td>
                 <td class="align-start phone_number">{{employee.user.phone_code}}{{employee.user.phone_number}}</td>
                 <td class="align-start email">{{employee.user.email}}</td>
-                <td class="align-middle white-space-nowrap text-end">
+                <td class="align-middle white-space-nowrap text-start">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span>
                     </button>
