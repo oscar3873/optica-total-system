@@ -30,7 +30,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = Branch.objects.get(id=branch_actualy)
         except Branch.DoesNotExist:
             branch = self.request.user.branch
-
+    
         context['branch_selected'] = branch.name
         context['form'] = OrderDetailFormset(self.request.POST or None, prefix='variants')
         return context

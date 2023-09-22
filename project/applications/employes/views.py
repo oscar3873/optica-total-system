@@ -99,7 +99,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
         if not user.is_staff and user != user_get:
             return render(request, 'users/denied_permission.html')
         return super().get(request, *args, **kwargs)
-      
+    
     def get_success_url(self):
         return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
@@ -168,11 +168,26 @@ class EmployeeListView(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
-        exclude_fields_user = ["role","first_name","last_name","phone_number","phone_code","dni","birth_date","address","id", "deleted_at", "created_at", "updated_at","date_joined","is_active","is_staff","password","last_login","username","is_superuser"]
-        context['table_column'] = obtener_nombres_de_campos(Employee, *exclude_fields)
-        context['table_column_user'] = obtener_nombres_de_campos(User, *exclude_fields_user)
+        exclude_fields_user = [
+            "role",
+            "phone_code",
+            "dni",
+            "birth_date",
+            "address",
+            "id",
+            "deleted_at",
+            "created_at", 
+            "updated_at",
+            "date_joined",
+            "is_active",
+            "is_staff",
+            "password",
+            "last_login",
+            "username",
+            "is_superuser",
+            "branch",
+        ]
+        context['table_column'] = obtener_nombres_de_campos(User, *exclude_fields_user)
         # context['is_staff'] =self.request.user.is_staff iNNECESARIO, EN EL TEMPLATE YA EXISTE DEL PROPIO USUARIO
         return context
     

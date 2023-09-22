@@ -8,6 +8,7 @@ from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
+from applications.cashregister.utils import obtener_nombres_de_campos
 
 from .models import *
 from .forms import *
@@ -83,7 +84,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     def form_valid(self, form):
         if form.is_valid():
             user = self.request.user
-
+            
             customer = form.save(commit=False)
             customer.user_made = self.request.user
 
@@ -257,10 +258,24 @@ class CustomerListView(LoginRequiredMixin, ListView):
     context_object_name = 'customers'
     paginate_by = 8
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Customer,
+            "id",
+            "deleted_at", 
+            "created_at", 
+            "updated_at",
+            "phone_code",
+            "branch",
+            "birth_date",
+            "address",
+            "email"
+            )
+        return context
+
     def get_queryset(self):
         branch = self.request.user.branch
         branch_actualy = self.request.session.get('branch_actualy')
-
         if  self.request.user.is_staff:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
