@@ -50,7 +50,7 @@ class UserCreateForm(PersonForm):
 
     class Meta:
         model = User
-        fields = ['email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number', 'address', 'imagen']
+        fields = ['email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number','phone_code', 'address', 'imagen']
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -92,7 +92,7 @@ class UserUpdateForm(PersonForm):
     
     class Meta:
         model = User
-        fields = ('email','first_name', 'last_name','dni', 'phone_number', 'address')
+        fields = ('email','first_name', 'last_name','dni', 'phone_code','phone_number', 'address')
 
 
 class LoginForm(forms.Form):
@@ -138,29 +138,32 @@ class LoginForm(forms.Form):
     
 
 class UpdatePasswordForm(ValidationFormMixin):
-
+    
     passwordCurrent = forms.CharField(
         required=True, 
         widget=forms.PasswordInput(attrs={
             'placeholder': 'Contraseña actual',
-            'class' : 'form-control'
+            'class' : 'form-control',
+            'id': 'id_passwordCurrent', # Para que lo identifique con ajax
             })
     )
 
     password = forms.CharField(
         required=True, 
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Nueva contraseña'
+            'placeholder': 'Nueva contraseña',
+            'class' : 'form-control'
             })
     )
     
     password2 = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={
-            'placeholder': 'Repita nueva contraseña'
+            'placeholder': 'Repita nueva contraseña',
+            'class' : 'form-control'
             })
     )
-
+    
     def clean_username(self):
         username = self.cleaned_data.get('username')
         username = username.lower()

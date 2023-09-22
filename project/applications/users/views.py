@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 
 from django.views.generic import View
-from django.views.generic import FormView, DetailView
+from django.views.generic import FormView, DetailView, UpdateView
 
 
 from .forms import UserCreateForm
@@ -22,8 +22,7 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
     context_object_name = 'admin'
 
     def get_object(self, queryset=None):
-        # pk = self.request.user.pk  # Obtén la pk del usuario
-        pk = self.kwargs.get('pk') # PK traido de la URL
+        pk = self.request.user.pk  # Obtén la pk del usuario
         try:
             admin = User.objects.get(pk=pk)
             #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
@@ -39,14 +38,14 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
     success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
-        # Extraer los valores del código telefónico y el número de teléfono
+        """  # Extraer los valores del código telefónico y el número de teléfono
         phone_code = form.cleaned_data.pop('phone_code', None)
         phone_number = form.cleaned_data.pop('phone_number', None)
 
         # Combinar el código telefónico y el número de teléfono si ambos existen
         if phone_code and phone_number:
             full_phone_number = f"{phone_code}{phone_number}"
-            form.cleaned_data['phone_number'] = full_phone_number
+            form.cleaned_data['phone_number'] = full_phone_number """
 
         form.cleaned_data.pop('password2')
         form.cleaned_data.pop('phone_code')
@@ -58,7 +57,6 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
             generate_profile_img_and_assign(user)
 
         return super().form_valid(form)
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["admin"] = True 
@@ -83,7 +81,6 @@ class LoginView(views.RedirectURLMixin, FormView):
         )
         login(self.request, user)
         next_url = self.request.GET.get('next')  # Obtiene el valor del par�metro 'next' de la URL
-        
         self.request.session['branch_actualy'] = int(self.request.user.branch.id)
         
         if next_url:
@@ -92,7 +89,7 @@ class LoginView(views.RedirectURLMixin, FormView):
         return redirect(self.success_url)  # Si no hay 'next', redirige a una URL predeterminada
     
 
-class LogoutView(LoginRequiredMixin, View):
+class LogoutView( View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return render(request, template_name='users/logout.html', context={})
@@ -118,3 +115,34 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         
         logout(self.request)
         return super().form_valid(form)
+    
+    
+class AccountView(UpdateView):
+    template_name = 'users/user_account_page.html'
+    model = User
+    form_class = UserUpdateForm
+    form2_class = UpdatePasswordForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form2'] = self.get_form(self.form2_class)  # Se agrega el segundo formulario al contexto
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form2 = self.get_form(self.form2_class)
+
+        if 'form2' in request.POST:
+            # Si se envió el formulario de cambio de contraseña
+            if form2.is_valid():
+                # Procesa el formulario de cambio de contraseña
+                self.object.set_password(form2.cleaned_data['password'])
+                self.object.save()
+                return redirect("users_app:login")
+            else:
+                # El formulario de cambio de contraseña no es válido
+                context = self.get_context_data(form2=form2)
+                return self.render_to_response(context)
+        else:
+            # Si no se envió el formulario de cambio de contraseña,
+            # procesa el formulario de actualización de datos de usuario
+            return super().post(request, *args, **kwargs)

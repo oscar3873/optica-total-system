@@ -5,7 +5,8 @@ from .views import (
     EmployeeCreateView,
     EmployeeDeleteView,
     AccountView,
-    EmployeeUpdateView
+    EmployeeUpdateView,
+    validate_password_current
     )
 
 app_name = 'employees_app'
@@ -40,6 +41,11 @@ urlpatterns = [
         'account/<int:pk>/', 
         AccountView.as_view(), 
         name='account'
+    ),
+    path(
+        'validate_current_password/',
+        validate_password_current,
+        name='validate_current_password'
     ),
     
 ]

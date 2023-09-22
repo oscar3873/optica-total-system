@@ -71,8 +71,9 @@ class PersonForm(ValidationFormMixin):
     )
 
     phone_code = forms.ChoiceField(
+        label='Código de país',
         choices=PHONE_CODE_CHOICES,
-        required=False,  # Puede ser opcional
+        required=True,  # Puede ser opcional
         widget=forms.Select(attrs={
             'class': 'form-control',
         })

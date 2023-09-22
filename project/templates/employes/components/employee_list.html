@@ -18,20 +18,12 @@
 
 
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!-- Titulo del formulario wizard -->
-    <div class="d-flex mb-4">
-      
-      <span class="fa-stack me-3 ms-n1">
-        <i class="fa-inverse fa-stack-1x text-primary fas fa-users fs-5" ></i>
-      </span>
-      
-      <div class="col">
-        <h5 class="mb-0 text-primary position-relative">
-          <span class="bg-200 dark__bg-1100 pe-3">Empleados</span>
-          <span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span>
-        </h5>
-        <p class="mb-0">Aquí puede vizualizar todos los empleados</p>          
-      </div>
+    <!--Titulo -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-users"></i></span>
+        <div class="col">
+          <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Empleados</span><span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+          <p class="mb-0">Aquí puede vizualizar todos los empleados</p>
+        </div>
     </div>
   </div>
 
@@ -42,7 +34,11 @@
   {% if employees %}
   <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
     <!--Card-->
+<<<<<<< HEAD
+    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user","user_made","date_employee","user.email","user.branch"],"page":8,"pagination":true}'>
+=======
     <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["first_name","last_name","phone_number","date_employee","user_made","email"],"page":8,"pagination":true}'>
+>>>>>>> 0ba3625ee4bc7d374a2daf73bd3a94405638000d
       <div class="card-header">
         <div class="row flex-between-center">
           <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
@@ -88,7 +84,14 @@
               {% for column in table_column %}
                 <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
+<<<<<<< HEAD
+              {% for column in table_column_user %}
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
+                {% endfor %}
+                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+=======
               <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
+>>>>>>> 0ba3625ee4bc7d374a2daf73bd3a94405638000d
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -106,9 +109,15 @@
                 <!-- <td class="align-middle white-space-nowrap employee">Slick - Drag &amp;</td> -->
                 <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
                 </td> -->
+<<<<<<< HEAD
+                <td class="align-start user">{{employee.user}}</td>
+                <td class="align-start user_made d-none d-sm-table-cell px-4">{{employee.user_made}}</td>
+                <td class="align-start employment_date">{{employee.employment_date}}</td>
+=======
                 <td class="align-start first_name">{{employee.user.first_name}}</td>
                 <td class="align-start last_name">{{employee.user.last_name}}</td>
                 <td class="align-start phone_number">{{employee.user.phone_code}}{{employee.user.phone_number}}</td>
+>>>>>>> 0ba3625ee4bc7d374a2daf73bd3a94405638000d
                 <td class="align-start email">{{employee.user.email}}</td>
                 <td class="align-middle white-space-nowrap text-start">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
@@ -116,7 +125,10 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
                       <a class="dropdown-item" href="{% url 'employees_app:profile_employee' employee.id %}">Detalle</a>
+<<<<<<< HEAD
+=======
                       
+>>>>>>> 0ba3625ee4bc7d374a2daf73bd3a94405638000d
                       {% if user.is_staff %}
                         <a class="dropdown-item" href="{% url 'employees_app:update_employee' employee.id %}">Editar</a>
                         <div class="dropdown-divider"></div>

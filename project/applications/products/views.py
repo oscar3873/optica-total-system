@@ -320,10 +320,12 @@ class ProductListView(LoginRequiredMixin, ListView):
         return Product.objects.filter(branch=branch, deleted_at=None)
 
     def get_context_data(self, **kwargs):
+        pk=self.request.user.pk
         context = super().get_context_data(**kwargs)
         
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
+        context['features']=Product_feature.objects.filter(product_id=pk)
         return context
 
 

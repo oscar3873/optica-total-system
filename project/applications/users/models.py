@@ -15,8 +15,8 @@ class User(Person, AbstractUser):
         ('EMPLEADO', 'EMPLEADO')
     ]
 
-    role = models.CharField(max_length=15, choices=ROLE, default='EMPLEADO', null=True, blank=True)
-    username = models.CharField(max_length=50, unique=True)
+    role = models.CharField(max_length=15, choices=ROLE, default='EMPLEADO', null=True, blank=True,verbose_name="rol")
+    username = models.CharField(max_length=50, unique=True,verbose_name="Nombre de usuario")
     imagen = models.ImageField(upload_to='profile/', null=True, blank=True, verbose_name='Imagen de perfil')
 
     USERNAME_FIELD = 'username'
