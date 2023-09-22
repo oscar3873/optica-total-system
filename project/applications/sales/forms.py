@@ -48,5 +48,5 @@ class OrderDetailForm(forms.ModelForm):
 
 OrderDetailFormset = forms.formset_factory(
     OrderDetailForm,
-    extra = 1
+    extra = 0
 )

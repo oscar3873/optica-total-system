@@ -181,3 +181,15 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
+
+
+class ImagenChangeForm(forms.ModelForm):
+    imagen = forms.ImageField(
+        required=False,  # Hacer que la carga de la imagen sea opcional
+        widget=forms.FileInput(attrs={
+            'class': 'form-control-file'
+            }),
+    )
+    class Meta:
+        model = User
+        fields = ['imagen',]

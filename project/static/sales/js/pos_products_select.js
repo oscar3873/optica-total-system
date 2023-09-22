@@ -1,4 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // cuando el usuario hace clic en el botón "add more" de las variantes
+    function addFormset() {
+        var count = document.querySelectorAll('#item-variants').length;
+        var tmplMarkup = document.getElementById('variants-template').innerHTML;
+        var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+        var itemVariants = document.getElementById('item-variants');
+        var newDiv = document.createElement('div');
+        newDiv.innerHTML = compiledTmpl;
+        itemVariants.appendChild(newDiv);
+
+        // actualizar el contador de formularios
+        var totalForms = document.getElementById('id_variants-TOTAL_FORMS');
+        totalForms.value = count + 1;
+    };
+
+
+
     const searchInput = document.getElementById('search-product');
     const findsProductsContainer = document.getElementById('product-container');
     const selectproductsContainer = document.getElementById('selected-products-list'); 
@@ -186,11 +203,15 @@ document.addEventListener('DOMContentLoaded', function() {
             const isChecked = inputElement.checked;
             if (isChecked) {
                 // Si el checkbox se marca, agrega el producto a la lista de seleccionados
+
                 const selectedProductElement = createSelectedProductElement(product);
                 selectproductsContainer.appendChild(selectedProductElement);
 
                 // Agregar el producto a la lista de productos seleccionados
                 selectedProducts.push(productDiv);
+
+                addFormset();
+
             } else {
                 // Si el checkbox se desmarca, elimina el producto de la lista de seleccionados si existe
                 const selectedProductToRemove = document.querySelector(`[data-product-id="${product.id}"]`);

@@ -29,20 +29,35 @@
   {% if user %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <div class="card mb-3">
-      
         <div class="row g-3 mb-3">
-            <div class="col-xxl-4 col-md-6 ">
-              <div class = "ml-4">
-                <div class="card-header position-relative min-vh-25 mb-7 ">
-                  <div class="bg-holder rounded-3 rounded-bottom-0" style="background-image:url(../../assets/img/generic/4.jpg);">
-                  </div>
+
+
+          <div class="col-xxl-4 col-md-6">
+            <div class="ml-4">
+              <div class="card-header position-relative min-vh-25 mb-7">
+                  <div class="bg-holder rounded-3 rounded-bottom-0" style="background-image:url(../../assets/img/generic/4.jpg);"></div>
                   <!--/.bg-holder-->
                   
-                  <div class="avatar avatar-5xl avatar-profile "><img class="rounded-circle img-thumbnail shadow-sm" src="../../assets/img/team/2.jpg" width="200" alt="Imagen del empleado/admin" /></div>
-                </div>
-
+                  <div class="avatar avatar-5xl avatar-profile">
+                      <img class="rounded-circle img-thumbnail shadow-sm" id="profile-image-preview" src="{{ user.imagen.url }}" width="200" alt="Imagen del empleado/admin" />
+                    <label for="id_imagen" class="rounded-circle custom-file-upload">
+                      Cambiar Foto
+                    </label>
+                  </div>
               </div>
             </div>
+            <form method="post" id="profile-image-form" enctype="multipart/form-data">
+              {% csrf_token %}
+              <div hidden>
+                {{ change_image.imagen }}
+              </div>
+              <div id="profile-image-buttons" style="display: none;">
+                  <button class="btn btn-primary" type="submit">Guardar</button>
+                  <button class="btn btn-danger" type="button" id="cancel-img-button">Cancelar</button>
+              </div>
+            </form>
+        </div>
+         
             
             <div class="col-xxl-4 col-md-6">
               <div class="h-100 mt-3">
@@ -109,10 +124,10 @@
 							<!-- Card body -->
 							<div class="card-body py-4" id="wizard-controller">
 					
-								<form method="post"  id="singup-employee" class="row g-3 " novalidate>
+								<form method="post"  id="singup-employee" class="row g-3 ">
 									{% csrf_token %}
 									<div class="tab-content">
-					
+                    {{form.errors}}
 											<div class="row">
 													<div class="col">
 														<label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre:</label>

@@ -110,6 +110,14 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     
 
+
+    # PARA CAMBIAR LA IMAGEN DEL USUARIO
+    # def get_context_data(self, **kwargs):
+    #         context = super().get_context_data(**kwargs)
+    #         context["change_image"] = ImagenChangeForm(instance=self.get_object())
+    #         return context
+
+
 ############## UNICA VIEW DISPONIBLE PARA EL USO #############
 # Perfil de empleado
 class EmployeeProfileView(LoginRequiredMixin, DetailView):

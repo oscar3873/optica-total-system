@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <!-- <form enctype="multipart/form-data" class="container" method="post" id="product_form">
+            <form enctype="multipart/form-data" class="container" method="post" id="product_form">
                 {% csrf_token %}
                 {{ form.management_form }}
                 <script type="text/html" id="variants-template">
@@ -67,79 +67,48 @@
                     </tr>
                 </script>
                 <div id="item-variants">
-                        {{ form.management_form }}
-                        {% for field in formss.visible_fields %}
-                            {{field}}
-                        {% endfor %}
                 </div>
-
-                <a href="#" id="add-variant-button" class="btn btn-secondary add-variants">Add More</a> -->
-                
-                
-                <!-- <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                    // cuando el usuario hace clic en el botón "add more" de las variantes
-                    var addVariantsBtns = document.querySelectorAll('.add-variants');
-                    addVariantsBtns.forEach(function(btn) {
-                        btn.addEventListener('click', function(ev) {
-                            ev.preventDefault();
-                            var count = document.querySelectorAll('#item-variants').length;
-                            console.log(count);
-                            var tmplMarkup = document.getElementById('variants-template').innerHTML;
-                            var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
-                            var itemVariants = document.getElementById('item-variants');
-                            var newDiv = document.createElement('div');
-                            newDiv.innerHTML = compiledTmpl;
-                            itemVariants.appendChild(newDiv);
-
-                            // actualizar el contador de formularios
-                            var totalForms = document.getElementById('id_variants-TOTAL_FORMS');
-                            totalForms.value = count + 1;
-                        });
-                    });
-                });
-                </script> -->
+            </form>
 
 
-                <div class="card">
-                    <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
-                        <h5 class="mb-0">Detalle de compra</h5>
-                        <button class="btn btn-falcon-default btn-sm" type="button" id="button-delete-all" title="Eliminar todo">
-                            <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
-                        </button>
-                    </div>
-                    
-                    <div class="card-body">
-                        <div class="px-0 product-sale-item product-container">
-                            <table class="table table-borderless fs--1 mb-0">
-                                <tbody id="selected-products-list">
-                                    <!-- Lista de productos seleccionados -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="card-footer d-flex justify-content-between bg-light py-2">
-                        <div class="fw-semi-bold">Subtotal</div>
-                        <div class="fw-bold" id="subtotal">$ 0.00</div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light py-3">
-                        <div class="fw-semi-bold">Descuento</div>
-                        <div class="fw-bold" id="discount">$ 0.00</div>
-                    </div>
-                    <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
-                        <div class="fw-semi-bold">Total a pagar</div>
-                        <div class="fw-bold" id="total">$ 0.00</div>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <button type="submit" class="btn btn-primary p-2">
-                        <span class="fs-2">
-                            ir a pagar
-                        </span>
+            <div class="card">
+                <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
+                    <h5 class="mb-0">Detalle de compra</h5>
+                    <button class="btn btn-falcon-default btn-sm" type="button" id="button-delete-all" title="Eliminar todo">
+                        <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
                     </button>
                 </div>
-            <!-- </form> -->
+                
+                <div class="card-body">
+                    <div class="px-0 product-sale-item product-container">
+                        <table class="table table-borderless fs--1 mb-0">
+                            <tbody id="selected-products-list">
+                                <!-- Lista de productos seleccionados -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer d-flex justify-content-between bg-light py-2">
+                    <div class="fw-semi-bold">Subtotal</div>
+                    <div class="fw-bold" id="subtotal">$ 0.00</div>
+                </div>
+                <div class="card-footer d-flex justify-content-between bg-light py-3">
+                    <div class="fw-semi-bold">Descuento</div>
+                    <div class="fw-bold" id="discount">$ 0.00</div>
+                </div>
+                <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
+                    <div class="fw-semi-bold">Total a pagar</div>
+                    <div class="fw-bold" id="total">$ 0.00</div>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <button type="submit" class="btn btn-primary p-2">
+                    <span class="fs-2">
+                        ir a pagar
+                    </span>
+                </button>
+            </div>
         </div>
         <div class="col-xl-8">
             <div class="card mb-3">
