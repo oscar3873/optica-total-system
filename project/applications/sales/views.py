@@ -30,7 +30,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = Branch.objects.get(id=branch_actualy)
         except Branch.DoesNotExist:
             branch = self.request.user.branch
-
+    
         context['branch_selected'] = branch.name
         return context
 
