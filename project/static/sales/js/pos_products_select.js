@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const discountElement = document.getElementById('discount');
     const TotalSuccess = document.getElementById('total-success');
 
+    const ButtonDelete = document.getElementById("button-delete-all");
+    ButtonDelete.addEventListener('click', function() {
+        const trSelected = selectproductsContainer.querySelectorAll('tr');
+        trSelected.forEach(tr => removeProduct(tr));
+    });
+
     // Guardar productos seleccionados
     const selectedProducts = [];
 
@@ -62,12 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             findsProductsContainer.appendChild(productElement);
                         });
                         
-
-                        // Agregar el evento click a todos los botones de cantidad
-                        // const quantityButtons = document.querySelectorAll('[data-type="plus"], [data-type="minus"]');
-                        // quantityButtons.forEach(button => {
-                        //     button.addEventListener('click', handleQuantityButtonClick);
-                        // });
                     }
                 })
                 .catch(error => console.error(error));
@@ -200,14 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (indexToRemove !== -1) {
                     selectedProducts.splice(indexToRemove, 1);
                 }
-
-                // if (searchInput.value === '') {
-                //     // Si la query está vacía, elimina el producto del contenedor de resultados
-                //     const productToRemove = document.querySelector(`[data-product-id="${product.id}"]`);
-                //     if (productToRemove) {
-                //         productToRemove.remove();
-                //     }
-                // }
             }
 
             CalculateSubtotal();
@@ -330,7 +322,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const productId = listItem.dataset.productId;
         const checkbox = document.getElementById(productId);
-        // listItem.parentElement.removeChild(listItem);
     
         // Busca y elimina el producto del array selectedProducts
         const selectedIndex = selectedProducts.findIndex(selectedProduct => selectedProduct.dataset.productId === productId);
@@ -342,8 +333,6 @@ document.addEventListener('DOMContentLoaded', function() {
             checkbox.checked = false;
             checkbox.dispatchEvent(new Event('change')); // Dispara el evento 'change' para actualizar la lista
         }
-
-        // listItem.parentElement.removeChild(listItem);
     
         CalculateSubtotal();
     }
@@ -419,4 +408,30 @@ document.addEventListener('DOMContentLoaded', function() {
         totalElement.textContent = `$ ${total}`;
         TotalSuccess.textContent = `$ ${total}`;
     }
+
+    const enviarButton = document.getElementById("pay");
+    enviarButton.addEventListener("click", function() {
+        const selectedData = selectedProducts.map(prod => {
+            const productId = prod.dataset.productId;
+            const quantityId = `cantidad-${productId}`;
+            const quantityElement = document.getElementById(quantityId);
+            const quantity = quantityElement ? quantityElement.value : null;
+
+            return { productId, quantity };
+        });
+
+        // Obtener el token CSRF de la cookie
+        const csrfToken = getCookie('csrftoken');
+
+        console.log(selectedData);
+
+        fetch('/sales/pay/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken, // Incluye el token CSRF en el encabezado
+            },
+            body: JSON.stringify({ seleccionados: selectedData }),
+        });
+    });
 });
