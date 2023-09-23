@@ -31,14 +31,10 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = self.request.user.branch
     
         context['branch_selected'] = branch.name
-
-        # context['form'] = OrderDetailFormset
-
         return context
 
     def form_valid(self, form):
         formsets = form
-        # formsets = OrderDetailFormset(self.request.POST)
         # Procesa los datos del formulario aquí
         for formset in formsets:
             if formset.is_valid():

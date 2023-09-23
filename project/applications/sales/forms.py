@@ -26,8 +26,13 @@ class OrderDetailForm(forms.ModelForm):
         # Agregar un campo de cantidad para cada producto seleccionado
         self.fields['quantity'].required = False
 
-
-OrderDetailFormset = forms.formset_factory(
-    OrderDetailForm,
-    extra = 0
+OrderDetailFormset = forms.inlineformset_factory(
+    Sale,
+    OrderDetail,
+    form=OrderDetailForm,
+    extra = 0,
 )
+# OrderDetailFormset = forms.formset_factory(
+#     OrderDetailForm,
+#     extra = 0
+# )

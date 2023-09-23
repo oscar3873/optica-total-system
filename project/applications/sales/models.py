@@ -56,10 +56,6 @@ class Sale(BaseAbstractWithUser):
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
 
-    def __str__(self) -> str:
-        return (f'Numero de factura: {self.invoice.invoice_num}\n'+
-                f'Tipo: {self.invoice.invoice_type}\n')
-
 
 # class PaymentMethod_Sale(BaseAbstractWithUser):
 #     """
