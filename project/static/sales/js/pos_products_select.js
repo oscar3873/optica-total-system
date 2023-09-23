@@ -1,18 +1,126 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     // cuando el usuario hace clic en el botón "add more" de las variantes
-    function addFormset() {
-        var count = document.querySelectorAll('#item-variants').length;
-        var tmplMarkup = document.getElementById('variants-template').innerHTML;
+    function addFormset(product) {
+        const form = $('#selected-products-list').children()
+        var count = form.length;
+        console.log(count);
+        var tmplMarkup = document.getElementById('form-template').innerHTML;
         var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
-        var itemVariants = document.getElementById('item-variants');
-        var newDiv = document.createElement('div');
-        newDiv.innerHTML = compiledTmpl;
-        itemVariants.appendChild(newDiv);
+        var itemVariants = document.getElementById('selected-products-list');
+
+        // var newDiv = document.createElement('div');
+        // newDiv.id = `form-formset-${product.id}`;
+        
+        const rowProduct = document.createElement('tr');
+        rowProduct.id = `form-formset-${product.id}`
+        rowProduct.classList.add('border-bottom');
+        rowProduct.innerHTML = compiledTmpl;
+    
+        const headerrow = document.createElement('th');
+        headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
+        headerrow.textContent = product.name;
+    
+        const divdetail = document.createElement('div');
+        divdetail.classList.add('text-600', 'fw-normal', 'fs--1');
+        divdetail.textContent = 'COD: ' + product.barcode;
+    
+        const buttonRemove = document.createElement('a');
+        buttonRemove.classList.add('text-danger');
+        buttonRemove.href = '#';
+        buttonRemove.textContent = 'Quitar';
+        buttonRemove.addEventListener('click', function () {
+            removeProduct(rowProduct); // Llama a la función removeProduct pasando la fila del producto
+            CalculateSubtotal();
+        });
+    
+        const pricerow = document.createElement('th');
+        pricerow.classList.add('fs-1', 'px-0', 'text-end', 'pt-0');
+        var pricewithno = product.price.replace(/\$/g, "");
+        pricerow.textContent = `$ ${parseFloat(pricewithno).toFixed(2)}`;
+
+        const checkbox_form = document.createElement('input');
+        checkbox_form.type = 'radio';
+        checkbox_form.name = `form-${count}-product`;
+        checkbox_form.value = product.id;
+        checkbox_form.checked = true;
+        checkbox_form.hidden = true;
+
+        const quantityRowcontainer = document.createElement('div');
+        quantityRowcontainer.classList.add('my-3', 'col-8', 'col-sm-6', 'col-md-5', 'col-xl-8');
+    
+        const quantityRow = document.createElement('div');
+        quantityRow.classList.add('input-group', 'input-group-sm', 'flex-nowrap');
+        
+        // Crear botones de cantidad
+        const minusButton = document.createElement('button');
+        minusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); 
+        minusButton.setAttribute('data-type', 'minus');
+        minusButton.setAttribute('data-prod-id', product.id);
+        minusButton.textContent = '-';
+        minusButton.type = 'button';
+        minusButton.addEventListener('click', handleQuantityButtonClick);
+        
+        // const quantity_variant = quantity_orginal.cloneNode();
+        const quantity_variant = document.createElement('input');
+        quantity_variant.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none', 'input-fixed-size');
+        quantity_variant.type = 'number';
+        quantity_variant.min = '1';
+        // quantity_variant.disabled = true;
+        quantity_variant.value = 1;
+        // quantity_variant.setAttribute('aria-label', 'Amount (to the nearest dollar)');
+        quantity_variant.id = `id_form-${product.id}-quantity`;
+        quantity_variant.name = `form-${count}-quantity`;
+        
+        const plusButton = document.createElement('button');
+        plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size');
+        plusButton.setAttribute('data-type', 'plus');
+        plusButton.setAttribute('data-prod-id', product.id);
+        plusButton.textContent = '+';
+        plusButton.type = 'button';
+        plusButton.addEventListener('click', handleQuantityButtonClick);
+        
+        quantityRow.appendChild(minusButton);
+        quantityRow.appendChild(quantity_variant);
+        quantityRow.appendChild(plusButton);
+    
+        quantityRowcontainer.appendChild(quantityRow);
+
+        headerrow.appendChild(divdetail);
+        headerrow.appendChild(checkbox_form);
+        headerrow.appendChild(quantityRowcontainer);
+        headerrow.appendChild(buttonRemove);
+
+        rowProduct.appendChild(headerrow);
+        rowProduct.appendChild(pricerow);
+    
+        rowProduct.dataset.productId = product.id;
+
+
+        itemVariants.appendChild(rowProduct);
 
         // actualizar el contador de formularios
-        var totalForms = document.getElementById('id_variants-TOTAL_FORMS');
+        var totalForms = document.getElementById('id_form-TOTAL_FORMS');
         totalForms.value = count + 1;
+
+        return rowProduct;
     };
+
+    function removeFromset(productId){
+
+        // HAY QUE REFORMULAR LA ELIMINACION, EL ENVIO A LA VIEW REQUIERE QUE LOS FORMSET SE MANDEN CON EL NAME ORDENADOS
+        // si tengo 3 formset: 0-1-2 , y borro el 0, la lectura lo hace desde el 0, y como ya se borro, peinsa que nunca hubo form
+
+        const form = $('#selected-products-list').children()
+        var count = form.length;
+
+        var productRemoved = $('#selected-products-list').find(`#form-formset-${productId}`);
+        productRemoved.remove();
+
+        // actualizar el contador de formularios
+        var totalForms = document.getElementById('id_form-TOTAL_FORMS');
+        totalForms.value = count - 1;
+    }
 
 
 
@@ -49,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (query === '') {
             // Si la búsqueda está vacía, simplemente muestra los productos seleccionados
             findsProductsContainer.innerHTML = 'Aqui veras los productos de la busqueda.';
-            renderSelectedProducts();
+            // renderSelectedProducts();
         } else {
             // Realiza la solicitud AJAX y obtiene los datos de los productos
             fetch(`/products/search/?q=${query}`)
@@ -86,104 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 .catch(error => console.error(error));
         }
     }
-    
 
-    function renderSelectedProducts() {
-        // Renderiza todos los productos seleccionados
-        selectedProducts.forEach(productElement => {
-            // Marca el checkbox como seleccionado
-            productElement.setAttribute('hidden', 'true');
-            const checkbox = productElement.querySelector('input[type="checkbox"]');
-            checkbox.checked = true;
-
-            // Agrega el elemento al contenedor de resultados
-            findsProductsContainer.appendChild(productElement);
-        });
-    }
-
-    function createSelectedProductElement(product) {
-        const rowProduct = document.createElement('tr');
-        rowProduct.classList.add('border-bottom');
-    
-        const headerrow = document.createElement('th');
-        headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
-        headerrow.textContent = `${product.name}`;
-    
-        const divdetail = document.createElement('div');
-        divdetail.classList.add('text-600', 'fw-normal', 'fs--1');
-        divdetail.textContent = 'COD: ' + product.barcode;
-    
-        const buttonRemove = document.createElement('a');
-        buttonRemove.classList.add('text-danger');
-        buttonRemove.href = '#';
-        buttonRemove.textContent = 'Quitar';
-        buttonRemove.addEventListener('click', function () {
-            removeProduct(rowProduct); // Llama a la función removeProduct pasando la fila del producto
-            CalculateSubtotal();
-        });
-    
-        const pricerow = document.createElement('th');
-        pricerow.classList.add('fs-1', 'px-0', 'text-end', 'pt-0');
-        var pricewithno = product.price.replace(/\$/g, "");
-        pricerow.textContent = `$ ${parseFloat(pricewithno).toFixed(2)}`;
-    
-        const quantityRowcontainer = document.createElement('div');
-        quantityRowcontainer.classList.add('my-3', 'col-8', 'col-sm-6', 'col-md-4', 'col-xl-8');
-    
-        const quantityRow = document.createElement('div');
-        quantityRow.classList.add('input-group', 'input-group-sm', 'flex-nowrap');
-    
-        // Crear botones de cantidad
-        const minusButton = document.createElement('button');
-        minusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size'); 
-        minusButton.setAttribute('data-type', 'minus');
-        minusButton.setAttribute('data-prod-id', product.id);
-        minusButton.textContent = '-';
-        minusButton.type = 'button';
-        minusButton.addEventListener('click', handleQuantityButtonClick);
-    
-        const quantityInput = document.createElement('input');
-        quantityInput.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none', 'input-fixed-size');
-        quantityInput.type = 'number';
-        quantityInput.min = '1';
-        // quantityInput.disabled = true;
-        quantityInput.value = '1';
-        // quantityInput.setAttribute('aria-label', 'Amount (to the nearest dollar)');
-        quantityInput.id = `id_cantidad-${product.id}`;
-        quantityInput.name = `cantidad-${product.id}`;
-    
-        const plusButton = document.createElement('button');
-        plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size');
-        plusButton.setAttribute('data-type', 'plus');
-        plusButton.setAttribute('data-prod-id', product.id);
-        plusButton.textContent = '+';
-        plusButton.type = 'button';
-        plusButton.addEventListener('click', handleQuantityButtonClick);
-    
-        quantityRow.appendChild(minusButton);
-        quantityRow.appendChild(quantityInput);
-        quantityRow.appendChild(plusButton);
-    
-        quantityRowcontainer.appendChild(quantityRow);
-    
-        headerrow.appendChild(divdetail);
-        headerrow.appendChild(quantityRowcontainer);
-        headerrow.appendChild(buttonRemove);
-        
-        const checkboxform = document.createElement('input');
-        checkboxform.type = 'checkbox';
-        checkboxform.value = product.id;
-        checkboxform.name = 'products';
-        checkboxform.checked = true;
-
-        rowProduct.appendChild(headerrow);
-        rowProduct.appendChild(checkboxform);
-        rowProduct.appendChild(pricerow);
-    
-        rowProduct.dataset.productId = product.id;
-    
-        return rowProduct;
-    }
 
     function createProductElement(product) {
         const productDiv = document.createElement('div');
@@ -204,14 +215,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isChecked) {
                 // Si el checkbox se marca, agrega el producto a la lista de seleccionados
 
-                const selectedProductElement = createSelectedProductElement(product);
-                selectproductsContainer.appendChild(selectedProductElement);
+                // Genera el formset con la id del producto y se coloca en la lista de seleccionados
+                addFormset(product);
+
 
                 // Agregar el producto a la lista de productos seleccionados
                 selectedProducts.push(productDiv);
-
-                addFormset();
-
             } else {
                 // Si el checkbox se desmarca, elimina el producto de la lista de seleccionados si existe
                 const selectedProductToRemove = document.querySelector(`[data-product-id="${product.id}"]`);
@@ -224,8 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (indexToRemove !== -1) {
                     selectedProducts.splice(indexToRemove, 1);
                 }
+                // Elimina el formset generado con la id del producto
+                removeFromset(product.id);
             }
-
             CalculateSubtotal();
         });
     
@@ -319,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const button = event.target;
         const type = button.getAttribute('data-type');
         const productId = button.getAttribute('data-prod-id');
-        const inputElement = document.querySelector(`[id="id_cantidad-${productId}"]`);
+        const inputElement = document.querySelector(`[id="id_form-${productId}-quantity"]`);
     
         if (type === 'plus') {
             // Incrementar el valor del input cuando se hace clic en el botón '+'
@@ -332,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         //  Actualiza la cantidad del producto seleccionado en la Lista de Productos encontrados
-        const selectedProductonList = findsProductsContainer.querySelector(`[id="id_cantidad-${productId}"]`);
+        const selectedProductonList = findsProductsContainer.querySelector(`[id="id_form-${productId}-quantity"]`);
         if (selectedProductonList){
             selectedProductonList.value = inputElement.value
         }
@@ -340,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Actualizar el objeto en selectedProducts con la nueva cantidad
         const selectedProduct = selectedProducts.find(product => product.dataset.productId === productId);
         if (selectedProduct) {
-            const cantidadElement = selectedProduct.querySelector(`[id="id_cantidad-${productId}"]`);
+            const cantidadElement = selectedProduct.querySelector(`[id="id_form-${productId}-quantity"]`);
             if (cantidadElement) {
                 cantidadElement.value = inputElement.value;
             }
@@ -362,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Si el checkbox está marcado, obtén el precio y la cantidad del producto relacionado
             const productId = checkbox.id;
             const precio = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
-            const cantidad = parseFloat(document.getElementById(`id_cantidad-${productId}`).value);
+            const cantidad = parseFloat(document.getElementById(`id_form-${productId}-quantity`).value);
             
             // Calcula el subtotal para el producto y agrégalo al subtotal total
             const productoSubtotal = precio * cantidad;
