@@ -1,7 +1,7 @@
 import json
 from typing import Any
 from django import http
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.views.generic import *
 from django.urls import reverse_lazy
@@ -14,7 +14,6 @@ import json
 from applications.branches.models import Branch
 from .models import *
 from .forms import *
-
 
 # Create your views here.
 
@@ -32,20 +31,24 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = self.request.user.branch
     
         context['branch_selected'] = branch.name
-        context['form'] = OrderDetailFormset(self.request.POST or None, prefix='variants')
+
+        # context['form'] = OrderDetailFormset
+
         return context
 
     def form_valid(self, form):
+        formsets = form
+        # formsets = OrderDetailFormset(self.request.POST)
         # Procesa los datos del formulario aquí
-        selected_products = form.cleaned_data['products']
-        if selected_products:
-            for product in selected_products:
-                cantidad_field_name = f'cantidad-{product.id}'
-                cantidad = form.cleaned_data[cantidad_field_name]
-                
-        else:
-            messages.error(self.request, "Debe Seleccionar un producto al menos para continuar con la venta.")
-            return super().form_invalid(form)
+        for formset in formsets:
+            if formset.is_valid():
+                print('\n\n\n',formset.cleaned_data) 
+            else:
+                print('\n\n\n',formset.errors) 
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
+
+    def form_invalid(self, form: Any) -> HttpResponse:
+        messages.error(self.request, "Error. Verifique los datos.")
+        return super().form_invalid(form)

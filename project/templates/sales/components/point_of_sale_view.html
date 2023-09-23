@@ -52,63 +52,57 @@
                     </div>
                 </div>
             </div>
-            <form enctype="multipart/form-data" class="container" method="post" id="product_form">
+           
+
+            <form method="post">
                 {% csrf_token %}
                 {{ form.management_form }}
-                <script type="text/html" id="variants-template">
-                    <tr id="variants-__prefix__" hidden>
+                <script type="text/html" id="form-template">
+                    <tr id="form-__prefix__" hidden>
                         {% for fields in form.empty_form.hidden_fields %}
                             {{ fields }}
                         {% endfor %}
-                    
-                        {% for fields in form.empty_form.visible_fields %}
-                            <td>{{fields}}</td>
-                        {% endfor %}
                     </tr>
                 </script>
-                <div id="item-variants">
-                </div>
-            </form>
+                <div class="card">
+                    <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
+                        <h5 class="mb-0">Detalle de compra</h5>
+                        <button class="btn btn-falcon-default btn-sm" type="button" id="button-delete-all" title="Eliminar todo">
+                            <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
+                        </button>
+                    </div>
+                        
+                        <div class="card-body">
+                            <div class="px-0 product-sale-item product-container">
+                                <table class="table table-borderless fs--1 mb-0">
+                                    <tbody id="selected-products-list">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    
 
-
-            <div class="card">
-                <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
-                    <h5 class="mb-0">Detalle de compra</h5>
-                    <button class="btn btn-falcon-default btn-sm" type="button" id="button-delete-all" title="Eliminar todo">
-                        <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
-                    </button>
-                </div>
-                
-                <div class="card-body">
-                    <div class="px-0 product-sale-item product-container">
-                        <table class="table table-borderless fs--1 mb-0">
-                            <tbody id="selected-products-list">
-                                <!-- Lista de productos seleccionados -->
-                            </tbody>
-                        </table>
+                    <div class="card-footer d-flex justify-content-between bg-light py-2">
+                        <div class="fw-semi-bold">Subtotal</div>
+                        <div class="fw-bold" id="subtotal">$ 0.00</div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light py-3">
+                        <div class="fw-semi-bold">Descuento</div>
+                        <div class="fw-bold" id="discount">$ 0.00</div>
+                    </div>
+                    <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
+                        <div class="fw-semi-bold">Total a pagar</div>
+                        <div class="fw-bold" id="total">$ 0.00</div>
                     </div>
                 </div>
-
-                <div class="card-footer d-flex justify-content-between bg-light py-2">
-                    <div class="fw-semi-bold">Subtotal</div>
-                    <div class="fw-bold" id="subtotal">$ 0.00</div>
+                <div class="card mt-2">
+                    <button type="submit" class="btn btn-primary p-2">
+                        <span class="fs-2">
+                            ir a pagar
+                        </span>
+                    </button>
                 </div>
-                <div class="card-footer d-flex justify-content-between bg-light py-3">
-                    <div class="fw-semi-bold">Descuento</div>
-                    <div class="fw-bold" id="discount">$ 0.00</div>
-                </div>
-                <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
-                    <div class="fw-semi-bold">Total a pagar</div>
-                    <div class="fw-bold" id="total">$ 0.00</div>
-                </div>
-            </div>
-            <div class="card mt-2">
-                <button type="submit" class="btn btn-primary p-2">
-                    <span class="fs-2">
-                        ir a pagar
-                    </span>
-                </button>
-            </div>
+            </form>
         </div>
         <div class="col-xl-8">
             <div class="card mb-3">
