@@ -380,29 +380,29 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}"
-                                    role="button" aria-expanded="false">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-eye"></span></span><span
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}" role="button"
+                                    aria-expanded="false">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button"
-                                    aria-expanded="false">
+                                {% if user.role != 'EMPLEADO' %}
+                                <!-- parent pages-->
+                                <a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-user-plus"></span></span><span
-                                            class="nav-link-text ps-1">Añadir cliente</span>
+                                                class="fas fa-user-plus"></span></span><span class="nav-link-text ps-1">Añadir cliente</span>
                                     </div>
                                 </a>
-                            </a>
-                            <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:insurance_view' %}" role="button"
-                                aria-expanded="false">
-                                <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                            class="fas fa-eye"></span></span><span
-                                        class="nav-link-text ps-1">Ver Obras Sociales</span>
-                                </div>
-                            </a>
+                                {% endif %}
+                                <!-- parent pages-->
+                                <a class="nav-link" href="{% url 'clients_app:insurance_view' %}" role="button"
+                                    aria-expanded="false">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-eye"></span></span><span
+                                            class="nav-link-text ps-1">Ver Obras Sociales</span>
+                                    </div>
+                                </a>
                             </li>
+                            {% if user.role != 'EMPLEADO' %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -429,6 +429,7 @@
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -473,6 +474,7 @@
                                             class="nav-link-text ps-1">Ver sucursales</span>
                                     </div>
                                 </a>
+                                {% if user.role != 'EMPLEADO' %}
                                 <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -480,6 +482,7 @@
                                             class="nav-link-text ps-1">Añadir sucursal</span>
                                     </div>
                                 </a>
+                                {% endif %}
                                 <!-- parent pages--><a class="nav-link" href="documentation/design-file.html"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -804,11 +807,11 @@
                                             Cuenta
                                         </a>
                                     {% else %}
-                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.pk %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.pk %}">
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>

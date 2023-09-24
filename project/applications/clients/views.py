@@ -144,6 +144,7 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['named_formsets'] = {
+            'client' : Customer.objects.get(pk=self.kwargs.get('pk_c')),
             'correction': CorrectionForm(instance=self.object.correction),
             'material': MaterialForm(instance=self.object.material),
             'color': ColorForm(instance=self.object.color),
@@ -195,6 +196,22 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
         
         return redirect('clients_app:customer_detail', pk=self.get_object().pk)
     
+class CustomerUpdateHealthInsurance(CustomUserPassesTestMixin, UpdateView):
+    model = Customer
+    form_class = CustomerForm
+    template_name = 'clients/update_customer_hinsurance.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['h_insurance'] = HealthInsuranceForm
+        return context
+
+    def form_valid(self, form):
+        customer = form.instance
+        customer.user_made = self.request.user
+        customer.save()
+        form_in_out_insurances(form, customer, self.request.user)
+        return redirect('clients_app:customer_detail', pk=self.get_object().pk)
     
 class HealthInsuranceUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = HealthInsurance

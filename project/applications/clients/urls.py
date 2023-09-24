@@ -51,6 +51,11 @@ urlpatterns = [
         HealthInsuranceUpdateView.as_view(), 
         name='insurance_update'
     ),
+    path(
+        '<pk>/update_for_employees',
+        CustomerUpdateHealthInsurance.as_view(),
+        name='customer_update_for_employees'
+    ),
 
     #### LIST ####
     path(

@@ -29,12 +29,13 @@
             <div class="row">
                 <p class="text-700 fs--2">
                     Cliente registrado por
-                    <a href="">{{user.last_name}}, {{user.first_name}}</a>
+                    <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
                     <span class="">el {{ customer.created_at|date:"l j \d\e F \d\e\l Y" }}</span>
                 </p>
             </div>
             <div class="row mt-2">
                 <div class="col">
+                    {% if user.role == 'ADMINISTRADOR' %}
                     <a class="btn btn-primary btn-sm" href="{% url 'clients_app:customer_new' %}">
                         <span class="fas fa-plus fs--2 me-1"></span>
                         Nuevo Cliente
@@ -45,9 +46,11 @@
                     </button>
                     <div class="dropdown-menu"><a class="dropdown-item"
                             href="{% url 'clients_app:customer_update' pk=customer.pk %}">Editar</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="{% url 'clients_app:customer_delete' pk=customer.pk %}">Borrar</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger"
+                            href="{% url 'clients_app:customer_delete' pk=customer.pk %}">Borrar</a>
                     </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -119,7 +122,11 @@
                     <div class="row">
                         <div class="col-6 mt-4 col-sm-4">
                             <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
+                                {% if user.role == 'ADMINISTRADOR' %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}">
+                                {% else %}
+                                <a href="{% url 'clients_app:customer_update_for_employees' customer.id %}">
+                                {% endif %}
                                     <button class="btn p-0" type="button" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="Agregar Obra Social">
                                         <span class="text-1000 far fa-plus-square"></span>
@@ -131,7 +138,8 @@
                             {% if customer.customer_insurance.all %}
                             {% for insurance in customer.customer_insurance.all %}
                             <p class="text-900 fw-bold fs-1 d-inline">
-                                <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}" class="text-decoration-none">
+                                <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}"
+                                    class="text-decoration-none">
                                     {{ insurance.h_insurance.name }}
                                 </a>
                             </p>
@@ -152,172 +160,188 @@
     </div>
 
     <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
-            <div class="card border-top z-index-1 mb-3" id="recentPurchaseTable"
-                data-list='{"valueNames":["user_made","diagnostic","armazon","observations","email","is_done"],"page":8,"pagination":true}'">
-                    <div class=" card-header">
-                        <div class="row flex-between-center">
-                            <div class="row">
-                                <div class="col">
-                                    <h5 class="mb-2">Tratamientos</h5>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <p class="text-700 fs--2">
-                                    Del cliente {{ customer.last_name }}, {{ customer.first_name }}
-                                </p>
-                            </div>
-                            <div class="col-6 col-sm-auto d-flex align-items-center pe-0 ">
-                                <div>
-                                    <form>
-                                        <div class="input-group">
-                                            <input class="form-control form-control-sm shadow-none search" type="search"
-                                                placeholder="Buscar" aria-label="search" />
-                                            <div class="input-group-text bg-transparent"><span
-                                                    class="fa fa-search fs--1 text-600"></span>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="col-6 col-sm-auto ms-auto text-end ps-0">
-                                <div class="d-none" id="table-purchases-actions">
-                                    <div class="d-flex">
-                                        <select class="form-select form-select-sm" aria-label="Bulk actions">
-                                            <option selected="">Accion masiva</option>
-                                            <option value="Delete">Borrar</option>
-                                        </select>
-                                        <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
-                                    </div>
-                                </div>
-                                <div id="table-purchases-replace-element">
-                                    <a href="{% url 'clients_app:laboratory_new' customer.pk %}" class="btn btn-falcon-default btn-sm"
-                                        type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
-                                            class="d-none d-sm-inline-block ms-1">Nuevo Laboratorio</span></a>
-                                    <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
-                                            data-fa-transform="shrink-3 down-2"></span><span
-                                            class="d-none d-sm-inline-block ms-1">Filtros</span></button>
-                                    <button class="btn btn-falcon-default btn-sm" type="button"><span
-                                            class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
-                                            class="d-none d-sm-inline-block ms-1">Exportar</span></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                <div class="border-top">
+        <div class="card border-top z-index-1 mb-3" id="recentPurchaseTable"
+            data-list='{"valueNames":["user_made","diagnostic","armazon","observations","email","is_done"],"page":8,"pagination":true}'">
+            <div class=" card-header">
+                <div class="row flex-between-center">
                     <div class="row">
                         <div class="col">
-                            <div class="text-center">
-                                {% if calibration_orders %}
-                                <div class="table-responsive scrollbar">
-                                    <table class="table table-sm fs--1 mb-0 overflow-hidden ">
-                                        <thead class="bg-200 text-900">
-                                            <tr>
-                                                <th class="white-space-nowrap">
-                                                    <div class="form-check mb-0 d-flex align-items-center">
-                                                        <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox"
-                                                            data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
-                                                    </div>
-                                                </th>
-                                                <th class="sort pe-1  align-start px-4 user_made" data-sort="user_made">
-                                                    Por
-                                                </th>
-                                                <th class="sort pe-1  align-start created_at px-4" data-sort="Fecha">
-                                                    Creado
-                                                </th>
-                                                <th class="sort pe-1  align-start diagnostic px-4 " data-sort="diagnostic">
-                                                    Diagnostico
-                                                </th>
-                                                <th class="sort pe-1  align-start armazon px-4 " data-sort="armazon">
-                                                    Armazon
-                                                </th>
-                                                <th class="sort pe-1  align-start observations px-4 " data-sort="obervations">
-                                                    Observacion
-                                                </th>
-                                                <th class="sort pe-1  align-start is_done px-4 " data-sort="is_done">
-                                                    Estado
-                                                </th>
-                                                <th class="align-start type_operation px-4"> Acciones</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="list" id="table-purchase-body">
-                                            {% for calibration_order in calibration_orders %}
-                                            <tr class="btn-reveal-trigger">
-                                                <td class="align-middle" style="width: 28px;">
-                                                    <div class="form-check mb-0">
-                                                        <input class="form-check-input" type="checkbox" id="recent-purchase-0"
-                                                            data-bulk-select-row="data-bulk-select-row" />
-                                                    </div>
-                                                </td>
-                                                <th class="align-start user_made px-4">{{ calibration_order.user_made }}</th>
-                                                <th class="align-start created_at px-4">{{ calibration_order.created_at |date:"d-m-Y" }}</th>
-                                                <th class="align-start diagnostic px-4">{{ calibration_order.diagnostic }}</th>
-                                                <td class="align-start armazon px-4">{{ calibration_order.armazon }}</td>
-                                                <td class="align-start observation px-4">{{ calibration_order.observations }}
-                                                </td>
-                                                <td class="align-start is_done px-4">
-                                                    <p class="h6">
-                                                        {% if calibration_order.is_done %}
-                                                        Completado
-                                                        {% else %}
-                                                        No Completado
-                                                        {% endif %}
-                                                    </p>
-                                                </td>
-                                                <td class="align-middle white-space-nowrap text-center">
-                                                    <div class="dropstart font-sans-serif position-static d-inline-block">
-                                                        <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                                            type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window"
-                                                            aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
-                                                            <span class="fas fa-ellipsis-h fs--1"></span></button>
-                                                        <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
-                                                            <a class="dropdown-item"
-                                                                href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
-                                                            <a class="dropdown-item"
-                                                                href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
-                                                            <a class=" dropdown-item text-danger"
-                                                                href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
-                                        </tbody>
-                                    </table>
+                            <h5 class="mb-2">Tratamientos</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="text-700 fs--2">
+                            Del cliente {{ customer.last_name }}, {{ customer.first_name }}
+                        </p>
+                    </div>
+                    <div class="col-6 col-sm-auto d-flex align-items-center pe-0 ">
+                        <div>
+                            <form>
+                                <div class="input-group">
+                                    <input class="form-control form-control-sm shadow-none search" type="search"
+                                        placeholder="Buscar" aria-label="search" />
+                                    <div class="input-group-text bg-transparent"><span
+                                            class="fa fa-search fs--1 text-600"></span>
+                                    </div>
                                 </div>
-                                {% else %}
-                                <div class="text-center py-5">
-                                    <p class="h4">No tiene tratamientos</p>
-                                </div>
-                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+                        <div class="d-none" id="table-purchases-actions">
+                            <div class="d-flex">
+                                <select class="form-select form-select-sm" aria-label="Bulk actions">
+                                    <option selected="">Accion masiva</option>
+                                    <option value="Delete">Borrar</option>
+                                </select>
+                                <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
                             </div>
                         </div>
-
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row align-items-center">
-                        <div class="pagination d-none"></div>
-                        <div class="col">
-                            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2"
-                                    data-list-info="data-list-info">
-                                </span><span class="d-none d-sm-inline-block me-2">&mdash; </span><a class="fw-semi-bold"
-                                    href="#!" data-list-view="*">Mostrar todo<span class="fas fa-angle-right ms-1"
-                                        data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!"
-                                    data-list-view="less">Mostrar menos<span class="fas fa-angle-right ms-1"
-                                        data-fa-transform="down-1"></span></a>
-                            </p>
-                        </div>
-                        <div class="col-auto d-flex">
-                            <button class="btn btn-sm btn-primary" type="button"
-                                data-list-pagination="prev"><span>Anterior</span></button>
-                            <button class="btn btn-sm btn-primary px-4 ms-2" type="button"
-                                data-list-pagination="next"><span>Siguiente</span></button>
+                        <div id="table-purchases-replace-element">
+                            {% if user.role == 'ADMINISTRADOR' %}
+                            <a href="{% url 'clients_app:laboratory_new' customer.pk %}"
+                                class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus"
+                                    data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Nuevo Laboratorio</span></a>
+                            {% endif %}
+                            <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
+                                    data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Filtros</span></button>
+                            <button class="btn btn-falcon-default btn-sm" type="button"><span
+                                    class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Exportar</span></button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div class="border-top">
+                <div class="row">
+                    <div class="col">
+                        <div class="text-center">
+                            {% if calibration_orders %}
+                            <div class="table-responsive scrollbar">
+                                <table class="table table-sm fs--1 mb-0 overflow-hidden ">
+                                    <thead class="bg-200 text-900">
+                                        <tr>
+                                            <th class="white-space-nowrap">
+                                                <div class="form-check mb-0 d-flex align-items-center">
+                                                    <input class="form-check-input" id="checkbox-bulk-purchases-select"
+                                                        type="checkbox"
+                                                        data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
+                                                </div>
+                                            </th>
+                                            <th class="sort pe-1  align-middle px-4 user_made white-space-nowrap"
+                                                data-sort="user_made">
+                                                Por
+                                            </th>
+                                            <th class="sort pe-1  align-middle created_at white-space-nowrap px-4"
+                                                data-sort="Fecha">
+                                                Creado
+                                            </th>
+                                            <th class="sort pe-1  align-middle diagnostic white-space-nowrap px-4 "
+                                                data-sort="diagnostic">
+                                                Diagnostico
+                                            </th>
+                                            <th class="sort pe-1  align-middle armazon white-space-nowrap px-4 "
+                                                data-sort="armazon">
+                                                Armazon
+                                            </th>
+                                            <th class="sort pe-1  align-middle observations white-space-nowrap px-4 "
+                                                data-sort="obervations">
+                                                Observacion
+                                            </th>
+                                            <th class="sort pe-1  align-middle is_done px-4 white-space-nowrap "
+                                                data-sort="is_done">
+                                                Estado
+                                            </th>
+                                            <th class="align-start type_operation white-space-nowrap px-4"> Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="list" id="table-purchase-body">
+                                        {% for calibration_order in calibration_orders %}
+                                        <tr class="btn-reveal-trigger">
+                                            <td class="align-middle" style="width: 28px;">
+                                                <div class="form-check mb-0">
+                                                    <input class="form-check-input" type="checkbox" id="recent-purchase-0"
+                                                        data-bulk-select-row="data-bulk-select-row" />
+                                                </div>
+                                            </td>
+                                            <th class="align-start user_made ">{{ calibration_order.user_made }}</th>
+                                            <th class="align-start created_at">{{ calibration_order.created_at | date:"d-m-Y" }}</th>
+                                            <th class="align-start diagnostic">{{ calibration_order.diagnostic }}</th>
+                                            <td class="align-start armazon">{{ calibration_order.armazon }}</td>
+                                            <td class="align-start observation">{{ calibration_order.observations }}
+                                            </td>
+                                            <td class="align-start is_done">
+                                                <p class="h6">
+                                                    {% if calibration_order.is_done %}
+                                                    Completado
+                                                    {% else %}
+                                                    No Completado
+                                                    {% endif %}
+                                                </p>
+                                            </td>
+                                            <td class="align-middle white-space-nowrap text-center">
+                                                <div class="dropstart font-sans-serif position-static d-inline-block">
+                                                    <button
+                                                        class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                                        type="button" id="dropdown0" data-bs-toggle="dropdown"
+                                                        data-boundary="window" aria-haspopup="true" aria-expanded="false"
+                                                        data-bs-reference="parent">
+                                                        <span class="fas fa-ellipsis-h fs--1"></span></button>
+                                                    <div class="dropdown-menu dropdown-menu-end border py-2"
+                                                        aria-labelledby="dropdown0">
+                                                        <a class="dropdown-item"
+                                                            href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
+                                                            {% if user.role == 'ADMINISTRADOR' %}
+                                                            <a class="dropdown-item"
+                                                            href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
+                                                        <a class=" dropdown-item text-danger"
+                                                        href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-5">
+                                <p class="h4">No tiene tratamientos</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="pagination d-none"></div>
+                    <div class="col">
+                        <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info">
+                            </span><span class="d-none d-sm-inline-block me-2">&mdash; </span><a class="fw-semi-bold"
+                                href="#!" data-list-view="*">Mostrar todo<span class="fas fa-angle-right ms-1"
+                                    data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!"
+                                data-list-view="less">Mostrar menos<span class="fas fa-angle-right ms-1"
+                                    data-fa-transform="down-1"></span></a>
+                        </p>
+                    </div>
+                    <div class="col-auto d-flex">
+                        <button class="btn btn-sm btn-primary" type="button"
+                            data-list-pagination="prev"><span>Anterior</span></button>
+                        <button class="btn btn-sm btn-primary px-4 ms-2" type="button"
+                            data-list-pagination="next"><span>Siguiente</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    
 </div>
 
 {% endblock main %}

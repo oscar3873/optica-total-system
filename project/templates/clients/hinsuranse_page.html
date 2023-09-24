@@ -56,9 +56,11 @@
                         </div>
                     </div>
                     <div id="table-purchases-replace-element">
+                        {% if user.role == 'ADMINISTRADOR' %}
                         <a href="{% url 'clients_app:hi_new' %}" class="btn btn-falcon-default btn-sm"
                             type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Nueva Obra Social</span></a>
+                        {% endif %}
                         <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
                                 data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Filtros</span></button>
@@ -116,10 +118,12 @@
                                         aria-labelledby="dropdown0">
                                         <a class="dropdown-item"
                                             href="{% url 'clients_app:hi_detail' pk=h_insurance.pk %}">Detalle</a>
-                                        <a class="dropdown-item"
+                                        {% if user.role == 'ADMINISTRADOR' %}
+                                            <a class="dropdown-item"
                                             href="{% url 'clients_app:insurance_update' pk=h_insurance.pk %}">Editar</a> <!--  url 'clients_app:insurance_update' pk=h_insurance.pk -->
                                         <a class=" dropdown-item text-danger"
                                             href="{% url 'clients_app:hi_delete' pk=h_insurance.pk %}">Eliminar</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </td>

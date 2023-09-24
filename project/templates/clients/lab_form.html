@@ -18,7 +18,8 @@
                 <h5 class="mb-0 text-primary position-relative"><span
                         class="bg-200 dark__bg-1100 pe-3">Laboratorio</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-                <p class="mb-0">Nuevo laboratorio para NOMBRE DE CLIENTE</p>
+                <p class="mb-0">Nuevo laboratorio para el cliente  <a class="link-600 fw-semi-bold" href="{% url 'clients_app:customer_detail' named_formsets.client.id %}"><span
+                    class="text-warning">{{named_formsets.client}}</span></a></p>
             </div>
         </div>
     </div>
@@ -293,6 +294,9 @@
             </div>
         </div>
     </div>
+    <a class="btn btn-secondary btn-sm px-5 px-sm-6" href="{% url 'clients_app:customer_detail' named_formsets.client.id %}">
+        Cancelar
+    </a>
 </div>
 
 {% endblock main %}
