@@ -19,7 +19,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         supplier = form.save(commit=False)
         supplier.user_made = self.request.user
         supplier.save()
-
+        
         for product in form.cleaned_data['products']:
             Product_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
         return super().form_valid(form)
@@ -58,7 +58,7 @@ class SuppliersListView(CustomUserPassesTestMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","phone_code"]
         context['table_column'] = obtener_nombres_de_campos(Supplier, *exclude_fields)
         return context
 

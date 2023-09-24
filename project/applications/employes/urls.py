@@ -6,7 +6,9 @@ from .views import (
     EmployeeDeleteView,
     AccountView,
     EmployeeUpdateView,
-    validate_password_current
+    validate_password_current,
+    UpdatePasswordView,
+    UpdateUserInfoView,
     )
 
 app_name = 'employees_app'
@@ -42,6 +44,12 @@ urlpatterns = [
         AccountView.as_view(), 
         name='account'
     ),
+    # Ruta para actualizar la información del usuario
+    path('update_user_info/<int:pk>/', UpdateUserInfoView.as_view(), name='update_user_info'),
+
+    # Ruta para actualizar la contraseña
+    path('update_password/<int:pk>/', UpdatePasswordView.as_view(), name='update_password'),
+
     path(
         'validate_current_password/',
         validate_password_current,

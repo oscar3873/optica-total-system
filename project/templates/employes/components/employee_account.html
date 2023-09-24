@@ -85,6 +85,7 @@
           </div>
 						<div class="card theme-wizard h-100 mb-5 ">
 							<!-- Card body -->
+<<<<<<< Updated upstream
 							<div class="card-body py-4" id="wizard-controller">
 					
 								<form method="post"  id="singup-employee" class="row g-3 " novalidate>
@@ -169,6 +170,103 @@
           <div class="card-footer bg-light p-0 border-top">
             <button class="btn btn-link d-block w-100 btn-intro-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#profile-intro" aria-expanded="true" aria-controls="profile-intro">Show <span class="less">less<span class="fas fa-chevron-up ms-2 fs--2"></span></span><span class="full">full<span class="fas fa-chevron-down ms-2 fs--2"></span></span></button>
           </div>
+=======
+                <div class="card-body py-2" id="wizard-controller">
+                  <div class="row">
+                    <form method="post" action="{% url 'employees_app:update_user_info' user.employee.pk %}" id="singup-employee" class="row g-3 update-form " novalidate>
+                      {% csrf_token %}
+                      <div class="tab-content">
+                          <div class="row">
+                              <div class="col-12 col-sm-6">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label">Nombre:</label>
+                                
+                                    {{ form.first_name }}
+  
+                                {% if form.first_name.errors %}
+                                <div class="text-danger fs--2">
+                                  Este campo es obligatorio.
+                                </div>
+                                {% endif %}
+                              </div>
+                              <div class="col-12 col-sm-6">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label">Apellido:</label>
+                                    {{ form.last_name }}
+  
+                                {% if form.last_name.errors %}
+                                <div class="text-danger fs--2">
+                                  Este campo es obligatorio.
+                                </div>
+                                {% endif %}
+                              </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <label for="{{ form.dni.id_for_label }}" class="form-label">DNI:</label>
+                              
+                                {{ form.dni }}
+                              {% if form.dni.errors %}
+                              <div class="text-danger fs--2">
+                                Este campo es obligatorio.
+                              </div>
+                              {% endif %}
+                            </div> 
+                            <div class="col-12 col-sm-3">
+                              <label for="{{ form.phone_code.id_for_label }}" class="form-label">Codigo de pais:</label>
+                              
+                                  {{ form.phone_code }}
+  
+                              {% if form.phone_code.errors %}
+                              <div class="text-danger fs--2">
+                                Este campo es obligatorio.
+                              </div>
+                              {% endif %}
+                            </div>
+                            <div class="col-12 col-sm">
+                              <label for="{{ form.phone_number.id_for_label }}" class="form-label">Celular:</label>
+                                {{ form.phone_number }}
+  
+                              {% if form.phone_number.errors %}
+                              <div class="text-danger fs--2">
+                                Este campo es obligatorio.
+                              </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="row">
+                            <div class="col-12">
+                              <label for="{{ form.address.id_for_label }}" class="form-label pt-3">Domicilio:</label>
+                              {{ form.address }}
+                              {% if form.address.errors %}
+                              <div class="text-danger fs--2">
+                                Este campo es obligatorio.
+                              </div>
+                              {% endif %}
+                            </div>
+                            <div class="col-12">
+                              <label for="{{ form.email.id_for_label }}" class="form-label ">Correo</label>
+                                {{ form.email }}
+  
+                              {% if form.email.errors %}
+                              <div class="text-danger fs--2">
+                                Este campo es obligatorio.
+                              </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                          <div class="mt-4 mb-2 text-center ">
+                            <button class="btn btn-warning px-2 " type="submit" name="submit-button">Guardar Cambios</button>
+                            <button class="btn btn-secondary px-5 " type="button" onclick="cancelEdit()">Cancelar</button>
+                            <button class="btn btn-primary px-5" type="button" onclick="enableEdit()">Editar</button>
+                          </div>
+                          <input type="hidden" name="is_editable" value="{{ is_editable }}">
+                        
+                      </div>
+                    </form>
+
+                  </div>
+                </div>
+            </div>
+>>>>>>> Stashed changes
         </div>
       </div>
         <div class="col-lg-4 ps-lg-2">
@@ -178,7 +276,7 @@
                 <h5 class="mb-0">Cambiar Contraseña</h5>
               </div>
               <div class="card-body fs--1">
-                <form method="post" id="password-form" class="row g-2" novalidate>
+                <form method="post" action="{% url 'employees_app:update_password' user.employee.pk %}" id="password-form" class="row g-2" novalidate>
                   {% csrf_token %}
                   <label for="{{ form.passwordCurrent.id_for_label }}" class="form-label">Contraseña Actual:</label>
                   {{ form2.passwordCurrent }}
