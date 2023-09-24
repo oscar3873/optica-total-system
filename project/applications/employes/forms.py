@@ -27,11 +27,8 @@ class EmployeeCreateForm(UserCreateForm):
         self.validate_date(employment_date)
         return employment_date
     
+    
 class EmployeeUpdateForm(UserUpdateForm):
-    # Campos de Person
-
-
-    # Campos de Employee
     employment_date = forms.DateField(
         required=False,
         widget=forms.DateInput(
@@ -45,10 +42,6 @@ class EmployeeUpdateForm(UserUpdateForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
-        # if self.instance.pk:
-        #     # Rellenar los campos de User y Person con los datos existentes
-        #     self.fields['employment_date'].initial = self.instance.employment_date
             
     class Meta:
         model = Employee

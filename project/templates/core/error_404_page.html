@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+<!-- Google font -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet">
+
+<!-- Custom stlylesheet -->
+<link type="text/css" rel="stylesheet" href="{% static 'core/css/error_404.css' %}" />
+
+{% endblock extra_css  %}
+
+{% block main %}
+{% include 'core/components/error_404.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}

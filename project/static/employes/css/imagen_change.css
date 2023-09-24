@@ -29,6 +29,7 @@
     cursor: pointer;
     opacity: 0; /* Hacerlo invisible inicialmente */
     transition: opacity 0.3s ease;
+    color: rgb(0, 0, 0);
 }
 
 /* Estilos para mostrar el botón cuando se coloca el mouse sobre la imagen */

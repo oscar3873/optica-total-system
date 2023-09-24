@@ -41,6 +41,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         
         if user.is_staff:
             branch_actualy = self.request.session.get('branch_actualy')
+            print(branch_actualy)
             branch_actualy = Branch.objects.get(id=branch_actualy)
             branch = branch_actualy
         else:
@@ -91,12 +92,6 @@ class EmployeeUpdateView(UpdateView):
         con alguna pk de la tabla users_employee"""
         employee = super().get_object(queryset)
         return employee.user
-
-    # PARA CAMBIAR LA IMAGEN DEL USUARIO
-    # def get_context_data(self, **kwargs):
-    #         context = super().get_context_data(**kwargs)
-    #         context["change_image"] = ImagenChangeForm(instance=self.get_object())
-    #         return context
 
 
 ############## UNICA VIEW DISPONIBLE PARA EL USO #############
@@ -206,39 +201,44 @@ class AccountView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserUpdateForm
     form2_class = UpdatePasswordForm
+
     def get_context_data(self, **kwargs):
         is_editable = True
         context = super().get_context_data(**kwargs)
         context['form2'] = self.get_form(self.form2_class)  # Agregamos el segundo formulario al contexto
+        context['change_image'] = ImagenChangeForm(instance=self.get_object())
         return context
 
     def get_object(self, queryset=None):
-        employee = Employee.objects.get(pk=self.kwargs['pk'])
+        try:
+            employee = Employee.objects.get(pk=self.kwargs['pk'])
+        except Employee.DoesNotExist:
+            return None
         return employee.user
 
     def get(self, request, *args, **kwargs):
         user = self.request.user
         user_get = self.get_object()
         
+        if user_get is None:
+            return render(request, 'core/error_404_page.html')
+        
         if not user.is_staff and user != user_get:
             return render(request, 'users/denied_permission.html')
+        
         return super().get(request, *args, **kwargs)
     
     def get_success_url(self):
         return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
-
     def form_invalid(self, form):
-        # Lógica para manejar errores en el formulario UserUpdateForm
-        # Agregar mensajes de error al contexto
         context = self.get_context_data(form=form)
         return self.render_to_response(context)
 
     def form2_invalid(self, form):
-        # Lógica para manejar errores en el formulario UpdatePasswordForm
-        # Agregar mensajes de error al contexto
         context = self.get_context_data(form2=form)
         return self.render_to_response(context)
+
 
 #View para validar formulario UserUpdateForm
 class UpdateUserInfoView(LoginRequiredMixin, UpdateView):
@@ -266,6 +266,7 @@ class UpdateUserInfoView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form=form)
         messages.error(self.request, 'Error en el formulario de actualización de usuario.')
         return self.render_to_response(context)
+
 
 # View para validar formulario UpdatePasswordForm
 class UpdatePasswordView(LoginRequiredMixin, UpdateView):

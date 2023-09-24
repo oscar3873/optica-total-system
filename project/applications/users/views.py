@@ -1,10 +1,13 @@
+from typing import Any
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.urls import reverse_lazy
 
 from django.views.generic import View
-from django.views.generic import FormView, DetailView,UpdateView
+from django.views.generic import FormView, DetailView, UpdateView, RedirectView
 
 
 from .forms import UserCreateForm
@@ -146,3 +149,33 @@ class AccountView(UpdateView):
             # Si no se envió el formulario de cambio de contraseña,
             # procesa el formulario de actualización de datos de usuario
             return super().post(request, *args, **kwargs)
+        
+
+
+class UserChangeImagen(RedirectView):
+    def post(self, request, pk):
+        # Obtén el objeto de usuario
+        user_profile = User.objects.get(pk=pk)
+
+        # Obtiene la imagen del formulario
+        new_image = request.FILES.get('imagen')
+
+        if new_image:
+            # Actualiza la imagen del perfil de usuario con la nueva imagen
+            user_profile.imagen = new_image
+            user_profile.save()
+
+            # Mensaje de éxito
+            messages.success(request, 'Imagen de perfil actualizada correctamente.')
+        else:
+            # Mensaje de error si no se proporcionó una imagen
+            messages.error(request, 'Debes seleccionar una imagen válida.')
+
+        # Redirige de nuevo a la página donde se encuentra el formulario
+        return super().post(request, pk=pk)
+
+    def get_redirect_url(self, *args, **kwargs):
+        user_profile = User.objects.get(pk = kwargs['pk'])
+        kwargs['pk'] = user_profile.employee.pk
+        # Debes especificar la URL a la que deseas redirigir después de guardar la imagen
+        return reverse_lazy('employees_app:account', kwargs=kwargs)
