@@ -50,7 +50,7 @@ class UserCreateForm(PersonForm):
 
     class Meta:
         model = User
-        fields = ['email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number','phone_code', 'address', 'imagen']
+        fields = ['email', 'username','first_name', 'last_name', 'birth_date', 'dni', 'phone_number','phone_code', 'address']
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
@@ -184,6 +184,10 @@ class UpdatePasswordForm(ValidationFormMixin):
         if password and password2 and password != password2:
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
+    
+    class Meta:
+        model=User
+        fields = ("passwordCurrent","password","password2")
 
 
 class ImagenChangeForm(forms.ModelForm):
