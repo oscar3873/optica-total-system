@@ -10,8 +10,11 @@ def send_global_message(message):
     """
     Funcion para Enviar un mensaje en tiempo real
     """
+    note = {}
+    note['type'] = "note.message"
+    note['message'] = message['note']
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)("global_notes", {"type": "note.message", "message": message})
+    async_to_sync(channel_layer.group_send)("global_notes", note)
 
 
 def send_notifications(message):
@@ -48,6 +51,7 @@ class NoteConsumer(AsyncWebsocketConsumer):
         )
 
     async def note_message(self, event):
+        print('######\n\n\n', event, '#########\n')
         message = event["message"]
 
         # Send the message to the client

@@ -13,7 +13,7 @@ from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
-from applications.notes.routing import websocket_urlpatterns
+from applications.core.routing import websocket_urlpatterns
 
 # application = get_asgi_application() # Original
 

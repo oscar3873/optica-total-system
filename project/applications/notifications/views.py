@@ -5,10 +5,10 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from applications.core.consumers import send_notifications
 from .forms import NotificationsForm
 from .models import Notifications
 from .utils import get_notifications_JSON
-from applications.notes.consumers import send_notifications
 # Create your views here.
 
 class NotificationsCreateView(LoginRequiredMixin, CreateView):
