@@ -261,7 +261,7 @@ class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'products/category_update_page.html'
-    success_url = reverse_lazy('products_ap:category_list')
+    success_url = reverse_lazy('products_app:category_list')
     
     def form_valid(self, form):
         category = form.save(commit=False)
@@ -275,7 +275,7 @@ class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'products/brand_update_page.html'
-    success_url = reverse_lazy('products_ap:brand_list')
+    success_url = reverse_lazy('products_app:brand_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -285,7 +285,7 @@ class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'products/feature_update_page.html'
-    success_url = reverse_lazy('products_ap:feature_list')
+    success_url = reverse_lazy('products_app:feature_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -510,3 +510,38 @@ class ProductSearchView(ListView):
             } for product in queryset]
 
         return JsonResponse({'products': data})
+
+#################### Actualizar Precio ###############
+
+from django.shortcuts import render, redirect
+from .models import Product, Brand, Category
+from .forms import PriceUpdateForm
+
+def price_update_view(request):
+    if request.method == 'POST':
+        form = PriceUpdateForm(request.POST)
+        if form.is_valid():
+            # Obtén los datos del formulario
+            percentage = form.cleaned_data['percentage']
+            brand = form.cleaned_data['brand']
+            category = form.cleaned_data['category']
+
+            # Filtra los productos según la marca o categoría seleccionada
+            products = Product.objects.filter(sale_price__isnull=False)
+            if brand:
+                products = products.filter(brand=brand)
+            if category:
+                products = products.filter(category=category)
+
+            # Actualiza los precios de los productos
+            for product in products:
+                new_price = round(product.sale_price * (1 + percentage / 100), 2)
+                product.sale_price = new_price
+                product.save()
+
+            # Redirige a donde desees después de la actualización
+            return redirect('products_app:product_list')
+    else:
+        form = PriceUpdateForm()
+
+    return render(request, 'products/price_update.html', {'form': form})

@@ -138,4 +138,11 @@ urlpatterns = [
         ProductSearchView.as_view(),
         name='product_search'
     ),
+
+    ############# Precio
+    path(
+        'precio/',
+        price_update_view,
+        name="price_update"
+    ),
 ]

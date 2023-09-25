@@ -185,8 +185,8 @@ class ProductForm(ValidationFormMixin):
         queryset=Feature.objects.all().order_by('type'),
         widget=forms.CheckboxSelectMultiple(
             attrs={'class':'form-check-input',
-                   'type' : 'checkbox'
-                   }
+                'type' : 'checkbox'
+                }
         ),
         required=False,
     )
@@ -326,4 +326,27 @@ FeatureFormSet = forms.inlineformset_factory(
     form=FeatureForm_toWizard,
     extra=0,
     can_delete=False
+    )
+
+
+# ###################### Form Actualizar Precio
+from django import forms
+from .models import Brand, Category
+
+class PriceUpdateForm(forms.Form):
+    percentage = forms.DecimalField(
+        label='Porcentaje de Aumento',
+        min_value=0,
+        max_value=100,
+        decimal_places=2,
+    )
+    brand = forms.ModelChoiceField(
+        queryset=Brand.objects.all(),
+        required=False,
+        empty_label='Todas las Marcas',
+    )
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        empty_label='Todas las Categorías',
     )
