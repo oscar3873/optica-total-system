@@ -164,12 +164,6 @@ class UpdatePasswordForm(ValidationFormMixin):
             })
     )
     
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        username = username.lower()
-        self.validate_username(username)
-        return username
-    
     def clean_password(self):
         password = self.cleaned_data.get('password')
         password = password.lower()

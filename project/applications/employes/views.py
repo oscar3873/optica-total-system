@@ -257,12 +257,17 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UpdatePasswordForm
 
-    def form_valid(self,form):
+    def form_valid(self, form):
         # Lógica para el formulario de UpdatePasswordForm (cambio de contraseña)
         # Cambia la contraseña del usuario y redirige al inicio de sesión
-        self.object.set_password(form.cleaned_data['password'])
-        self.object.save()
-        return redirect('users_app:logout')
+        employee = Employee.objects.get(pk = self.kwargs['pk'])
+        if authenticate(user = employee.user, password = form.cleaned_data['passwordCurrent']):
+            self.object.set_password(form.cleaned_data['password'])
+            self.object.save()
+            return reverse(reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']}))
+        
+        messages.error(self.request, 'La contraseña actual es incorrecta.')
+        return redirect('employees_app:account', pk = self.kwargs['pk'])
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -274,7 +279,6 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         employee = Employee.objects.get(pk=self.kwargs['pk'])
         return employee.user
-
     
     def form_invalid(self, form):
         # Lógica para manejar errores en el formulario UpdatePasswordForm
@@ -282,6 +286,7 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form2=form)
         messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
         return self.render_to_response(context)
+
 
 # Funcion que se usa en la peticion ajax para validar la contraseña actual
 def validate_password_current(request):

@@ -1,5 +1,8 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView, View
+from django.contrib.sessions.models import Session
+
 
 #TEST PDF
 from reportlab.pdfgen import canvas
@@ -11,6 +14,10 @@ from django.http import FileResponse
 
 class HomePageView(LoginRequiredMixin , TemplateView):
     template_name = "core/home_page.html"
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        print(Session.objects.all())
+        return super().get_context_data(**kwargs)
 
 class TestPDFView(View):
     def get(self, request):

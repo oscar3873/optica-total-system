@@ -728,14 +728,14 @@
                                     <button type="submit" style="display: none;"></button>
                                 </form>
                             </li>
+                            <script>
+                                // Escucha el evento 'change' del select
+                                document.getElementById('branch_id').addEventListener('change', function () {
+                                    // Envía el formulario automáticamente cuando se selecciona una sucursal
+                                    document.getElementById('branch-change-form').submit();
+                                });
+                            </script>
                         {% endif %}
-                        <script>
-                            // Escucha el evento 'change' del select
-                            document.getElementById('branch_id').addEventListener('change', function () {
-                                // Envía el formulario automáticamente cuando se selecciona una sucursal
-                                document.getElementById('branch-change-form').submit();
-                            });
-                        </script>
 
 
                         <li class="nav-item">
