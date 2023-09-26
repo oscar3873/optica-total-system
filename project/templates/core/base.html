@@ -748,14 +748,14 @@
                                     <button type="submit" style="display: none;"></button>
                                 </form>
                             </li>
+                            <script>
+                                // Escucha el evento 'change' del select
+                                document.getElementById('branch_id').addEventListener('change', function () {
+                                    // Envía el formulario automáticamente cuando se selecciona una sucursal
+                                    document.getElementById('branch-change-form').submit();
+                                });
+                            </script>
                         {% endif %}
-                        <script>
-                            // Escucha el evento 'change' del select
-                            document.getElementById('branch_id').addEventListener('change', function () {
-                                // Envía el formulario automáticamente cuando se selecciona una sucursal
-                                document.getElementById('branch-change-form').submit();
-                            });
-                        </script>
 
 
                         <li class="nav-item">
@@ -827,11 +827,11 @@
                                             Cuenta
                                         </a>
                                     {% else %}
-                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.id %}">
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>
@@ -853,11 +853,9 @@
                 </nav>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <a href="/notes/list/">
-                    <div id="notes-container">
-                        <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
-                    </div>
-                </a>
+                <div id="notes-container">
+                    <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
+                </div>
 
                 <!-- NOTIFICACIONES GLOBALES -->
                 <a href="/notifications/list/">

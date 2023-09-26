@@ -5,10 +5,11 @@ from django.db import transaction
 from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
+from applications.core.consumers import send_global_message
 from applications.branches.models import Branch
-from .consumers import send_global_message
 from .models import Note, Label
 from .forms import NoteCreateForm, LabelCreateForm
+from .utils import get_notes_JSON
 
 class NoteCreateView(CustomUserPassesTestMixin, FormView):
     form_class = NoteCreateForm
@@ -36,7 +37,6 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
             note.branch = self.request.user.branch  # Asigna directamente la sucursal del usuario
             
             branches = list(form.cleaned_data['branch'])
-            print(branches)
             for branch in branches:
                 new_note = Note()
                 new_note.subject = note.subject
@@ -48,20 +48,15 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
             
 
             note.save()
+            send_global_message(get_notes_JSON(note))
 
             return HttpResponseRedirect(self.get_success_url())
         
     def form_invalid(self,form):
         messages.error(self.request,'ERROR')
         return super().form_invalid(form)
-        
-        
-        # Comenté esta sección, me da error -> Error 111 connecting to 127.0.0.1:6379. 111.
-        # Send a global message using the send_global_message function
-        send_global_message(f"A new note has been created: {note.subject}")
-
-        return super().form_valid(form)
     
+
 class NoteUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Note
     form_class = NoteCreateForm
@@ -87,7 +82,7 @@ class LabelCreateView(CustomUserPassesTestMixin, FormView):
     def form_valid(self,form):
         label = form.save(commit=False)
         label.user_made = self.request.user
-        label.save();
+        label.save()
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
             new_label_data = {
                 'id' : label.id,

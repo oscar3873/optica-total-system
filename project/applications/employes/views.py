@@ -39,11 +39,9 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         user = self.request.user
         form.cleaned_data.pop('password2')
         
-        if user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
-            print(branch_actualy)
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = branch_actualy
+        branch_actualy = self.request.session.get('branch_actualy')
+        if user.is_staff and branch_actualy:
+            branch = Branch.objects.get(id=branch_actualy)
         else:
             branch = self.request.user.branch
 
@@ -106,12 +104,8 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         user_actual = self.request.user
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
-        try:
-            employee_watching = self.get_object()
-        except Employee.DoesNotExist:
-            employee_watching = None
 
-        if not user_actual.is_staff and user_actual!=employee_watching: # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
+        if not user_actual.is_staff and user_actual.employee != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
         return context
 
@@ -119,20 +113,9 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         """ Obtén el valor del parámetro 'pk' de la URL, este 
         parametro, puede ser la pk de un user, comprobar que esta pk esta relacionada 
         con alguna pk de la tabla users_employee"""
-        # pk = self.request.user.pk
-
-        pk = self.kwargs.get('pk') # PK traido de la URL
         try:
-            employee = Employee.objects.get(pk=pk)
-
-            # if not self.request.user.is_staff:
-            #     employee = Employee.objects.get(user_id=pk)
-            # else:
-            #     employee = None
-            #busco en la tabla user de la base de datos un usuario con user_id=pk
-
+            employee = Employee.objects.get(pk=self.kwargs['pk'])
         except Employee.DoesNotExist:
-            #si no encuentro lo pongo en None para manejar las vistas en los templates
             employee = None
         return employee
 
@@ -146,8 +129,8 @@ class EmployeeListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         branch = self.request.user.branch
 
-        if  self.request.user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy')
+        if  self.request.user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
             return Employee.objects.get_employees_branch(branch_actualy)
@@ -206,7 +189,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
         is_editable = True
         context = super().get_context_data(**kwargs)
         context['form2'] = self.get_form(self.form2_class)  # Agregamos el segundo formulario al contexto
-        context['change_image'] = ImagenChangeForm(instance=self.get_object())
+        context['change_image'] = ImagenChangeForm
         return context
 
     def get_object(self, queryset=None):
@@ -274,12 +257,17 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UpdatePasswordForm
 
-    def form_valid(self,form):
+    def form_valid(self, form):
         # Lógica para el formulario de UpdatePasswordForm (cambio de contraseña)
         # Cambia la contraseña del usuario y redirige al inicio de sesión
-        self.object.set_password(form.cleaned_data['password'])
-        self.object.save()
-        return redirect('users_app:logout')
+        employee = Employee.objects.get(pk = self.kwargs['pk'])
+        if authenticate(user = employee.user, password = form.cleaned_data['passwordCurrent']):
+            self.object.set_password(form.cleaned_data['password'])
+            self.object.save()
+            return reverse(reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']}))
+        
+        messages.error(self.request, 'La contraseña actual es incorrecta.')
+        return redirect('employees_app:account', pk = self.kwargs['pk'])
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -291,7 +279,6 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     def get_object(self, queryset=None):
         employee = Employee.objects.get(pk=self.kwargs['pk'])
         return employee.user
-
     
     def form_invalid(self, form):
         # Lógica para manejar errores en el formulario UpdatePasswordForm
@@ -299,6 +286,7 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
         context = self.get_context_data(form2=form)
         messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
         return self.render_to_response(context)
+
 
 # Funcion que se usa en la peticion ajax para validar la contraseña actual
 def validate_password_current(request):
