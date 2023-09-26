@@ -39,11 +39,9 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         user = self.request.user
         form.cleaned_data.pop('password2')
         
-        if user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
-            print(branch_actualy)
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = branch_actualy
+        branch_actualy = self.request.session.get('branch_actualy')
+        if user.is_staff and branch_actualy:
+            branch = Branch.objects.get(id=branch_actualy)
         else:
             branch = self.request.user.branch
 
@@ -146,8 +144,8 @@ class EmployeeListView(LoginRequiredMixin,ListView):
     def get_queryset(self):
         branch = self.request.user.branch
 
-        if  self.request.user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy')
+        if  self.request.user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
             return Employee.objects.get_employees_branch(branch_actualy)

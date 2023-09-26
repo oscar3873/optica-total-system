@@ -188,7 +188,7 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
-        customer = form.instance
+        customer = form.save(commit=False)
         customer.user_made = self.request.user
         customer.save()
 
@@ -245,7 +245,6 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
             return redirect('clients_app:customer_view')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
         
         return super().get(request, *args, **kwargs)
-    
 
     def get_context_data(self,**kwargs):
         customer = self.get_object()
@@ -293,7 +292,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         branch = self.request.user.branch
         branch_actualy = self.request.session.get('branch_actualy')
-        if  self.request.user.is_staff:
+        if  self.request.user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
             return Customer.objects.filter(branch=branch_actualy, deleted_at=None)

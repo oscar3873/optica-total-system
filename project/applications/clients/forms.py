@@ -25,7 +25,7 @@ class CustomerForm(PersonForm):
     class Meta:
         model = Customer
         fields = '__all__'
-        exclude = ['user_made','deleted_at']
+        exclude = ['user_made','deleted_at', 'branch']
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
