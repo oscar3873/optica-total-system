@@ -807,11 +807,11 @@
                                             Cuenta
                                         </a>
                                     {% else %}
-                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.id %}">
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>

@@ -104,12 +104,8 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         user_actual = self.request.user
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
-        try:
-            employee_watching = self.get_object()
-        except Employee.DoesNotExist:
-            employee_watching = None
 
-        if not user_actual.is_staff and user_actual!=employee_watching: # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
+        if not user_actual.is_staff and user_actual.employee != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
         return context
 
@@ -117,20 +113,9 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         """ Obtén el valor del parámetro 'pk' de la URL, este 
         parametro, puede ser la pk de un user, comprobar que esta pk esta relacionada 
         con alguna pk de la tabla users_employee"""
-        # pk = self.request.user.pk
-
-        pk = self.kwargs.get('pk') # PK traido de la URL
         try:
-            employee = Employee.objects.get(pk=pk)
-
-            # if not self.request.user.is_staff:
-            #     employee = Employee.objects.get(user_id=pk)
-            # else:
-            #     employee = None
-            #busco en la tabla user de la base de datos un usuario con user_id=pk
-
+            employee = Employee.objects.get(pk=self.kwargs['pk'])
         except Employee.DoesNotExist:
-            #si no encuentro lo pongo en None para manejar las vistas en los templates
             employee = None
         return employee
 
@@ -204,7 +189,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
         is_editable = True
         context = super().get_context_data(**kwargs)
         context['form2'] = self.get_form(self.form2_class)  # Agregamos el segundo formulario al contexto
-        context['change_image'] = ImagenChangeForm(instance=self.get_object())
+        context['change_image'] = ImagenChangeForm
         return context
 
     def get_object(self, queryset=None):
