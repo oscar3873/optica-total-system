@@ -109,9 +109,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const ButtonDelete = document.getElementById("button-delete-all");
     ButtonDelete.addEventListener('click', function() {
-        const trSelected = selectproductsContainer.querySelectorAll('tr');
-        trSelected.forEach(tr => removeProduct(tr));
+        const productIds = [...selectproductsContainer.querySelectorAll('tr')]
+            .map(tr => tr.getAttribute('data-product-id'))
+            .filter(productId => productId);
+        // Llama a removeProduto con cada id
+        productIds.forEach(productId => removeProduct(productId));
     });
+
 
     // Guardar productos seleccionados
     const selectedProducts = [];

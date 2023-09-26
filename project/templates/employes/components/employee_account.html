@@ -195,7 +195,7 @@
                   {{ form2.passwordCurrent }}
                   {% if form2.passwordCurrent.errors %}
                     <div class="text-danger fs--2">
-                      Este campo es obligatorio.
+                      {{form2.passwordCurrent.errors.0}}
                     </div>
                   {% endif %}
                     
@@ -206,7 +206,7 @@
                   {{ form2.password }}
                   {% if form2.password.errors %}
                     <div class="text-danger fs--2">
-                      Este campo es obligatorio.
+                      {{form2.password.errors.0}}
                     </div>
                   {% endif %}
                 
@@ -215,7 +215,7 @@
                   {{ form2.password2 }}
                   {% if form2.password2.errors %}
                     <div class="text-danger fs--2">
-                      Este campo es obligatorio.
+                      {{form2.password2.errors.0}}
                     </div>
                   {% endif %}
                   <input type="hidden" name="change_password_form" value="True">

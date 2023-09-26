@@ -239,8 +239,8 @@ class UpdateUserInfoView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Agregar el formulario UserUpdateForm al contexto
-        password_update_form = UpdatePasswordForm(instance=self.object)  # Crea una instancia del formulario con el objeto actual
-        context['form2'] = password_update_form
+        context['change_image'] = ImagenChangeForm
+        context['form2'] = UpdatePasswordForm(instance=self.object)  # Crea una instancia del formulario con el objeto actual
         return context
 
     def form_invalid(self, form):
@@ -283,9 +283,8 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     def form_invalid(self, form):
         # Lógica para manejar errores en el formulario UpdatePasswordForm
         # Agregar mensajes de error al contexto
-        context = self.get_context_data(form2=form)
         messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
-        return self.render_to_response(context)
+        return redirect('employees_app:account', pk=self.kwargs['pk'])
 
 
 # Funcion que se usa en la peticion ajax para validar la contraseña actual

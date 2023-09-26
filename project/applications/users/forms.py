@@ -163,6 +163,14 @@ class UpdatePasswordForm(ValidationFormMixin):
             'class' : 'form-control'
             })
     )
+
+    def clean_passwordCurrent(self):
+        passwordCurrent = self.cleaned_data.get('passwordCurrent')
+        user = self.instance  # Obtiene la instancia de usuario actual
+
+        if user and not authenticate(username=user.username, password=passwordCurrent):
+            raise forms.ValidationError('La contraseña actual es incorrecta')
+        return passwordCurrent
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
