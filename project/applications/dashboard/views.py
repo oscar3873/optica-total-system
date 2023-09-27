@@ -10,3 +10,6 @@ class DashboardView(TemplateView):
         contex=super().get_context_data(**kwargs)
         contex['total_semanal']=20
         return contex
+    
+class DailyReportsView(TemplateView):
+    template_name = 'dashboard/daily_summary.html'

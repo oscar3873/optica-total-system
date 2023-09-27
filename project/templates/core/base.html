@@ -90,7 +90,7 @@
                             data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span
                                 class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
 
-                    </div><a class="navbar-brand" href="index.html">
+                    </div><a class="navbar-brand" href="/">
                         <div class="d-flex align-items-center py-3">
                             <span class="font-sans-serif">
                                 <img id="logoImage" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"
@@ -115,7 +115,7 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse show" id="dashboard">
-                                    <li class="nav-item"><a class="nav-link active" href="index.html"
+                                    <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard_app:home' %}"
                                             aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-calendar-alt"></span></span><span
@@ -124,7 +124,8 @@
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="dashboard/analytics.html"
+                                    <!-- CREAR VIEW Y CORREGIR -->
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard_app:daily_summary' %}"
                                             aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-file-alt"></span></span><span
