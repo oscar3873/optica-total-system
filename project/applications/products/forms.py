@@ -38,6 +38,7 @@ class BrandForm(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Rusty'
                 }
         )
     )
@@ -237,7 +238,8 @@ class FeatureForm(ValidationFormMixin):
     value = forms.CharField(
         max_length=100,
         widget = forms.TextInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control',
+                   }
         ),
     )
     type  = forms.ModelChoiceField(
@@ -293,6 +295,7 @@ class FeatureForm_toWizard(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Color'
                 }
         )
     )
@@ -303,6 +306,7 @@ class FeatureForm_toWizard(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Rojo'
                 }
         )
     )
