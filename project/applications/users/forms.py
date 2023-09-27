@@ -64,7 +64,8 @@ class UserCreateForm(PersonForm):
         return password
     
     def clean_password2(self):
-        password2 = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+        self.validate_length(password2, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password2
 
     def clean_email(self):
