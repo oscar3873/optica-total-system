@@ -63,7 +63,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
 
 class EmployeeUpdateView(UpdateView):
     model = Employee
-    template_name = 'employes/employee_update_page.html'
+    template_name = 'employes/components/employee_update_form.html'
     form_class = EmployeeUpdateForm
 
     def form_valid(self, form):
