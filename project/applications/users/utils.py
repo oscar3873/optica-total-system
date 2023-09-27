@@ -18,7 +18,7 @@ def generate_profile_img_and_assign(user):
     font_size = 120
 
     # Definir el tipo de fuente
-    font = ImageFont.truetype('static/fonts/poppins-semibold.ttf', font_size)
+    font = ImageFont.truetype('arial.ttf', font_size)
 
     # Obtener el cuadro delimitador del texto
     text_bbox = draw.textbbox((0, 0), initials, font=font)
