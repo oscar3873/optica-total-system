@@ -258,14 +258,14 @@ class FeatureForm(ValidationFormMixin):
 
     def clean_value(self):
         value = self.cleaned_data['value']
-        value_formated = value.upper()
+        value_formated = value
         try:
             Feature.objects.get(value=value_formated)
             raise forms.ValidationError("Ya existe una categoria con ese nombre.")
         except Feature.DoesNotExist:
             pass
         self.validate_length(value, 3, 'La categoria debe tener al menos 3 caracteres.')
-        return value
+        return value.title()
 
 
 class FeatureTypeForm(ValidationFormMixin):
@@ -283,7 +283,7 @@ class FeatureTypeForm(ValidationFormMixin):
     def clean_name(self):
         name = self.cleaned_data['name']
         self.validate_length(name, 2, 'El nombre del tipo de característica debe tener al menos 3 caracteres.')
-        return name
+        return name.title()
 
 
 
@@ -315,13 +315,13 @@ class FeatureForm_toWizard(ValidationFormMixin):
         fields = ('value',)
 
     def clean_type(self):
-        type = self.cleaned_data['type'].upper()
+        type = self.cleaned_data['type']
         self.validate_length(type, 2, 'El tipo debe tener almenos 3 caracteres.')
-        return type
+        return type.title()
     
     def clean_value(self):
-        value = self.cleaned_data['value'].upper()
-        return value
+        value = self.cleaned_data['value']
+        return value.title()
 
 
 FeatureFormSet = forms.inlineformset_factory(
