@@ -72,6 +72,80 @@
     </div>
   </div>
 
+  <div class="col h-100 mt-3">
+    <div class="card theme-wizard h-100">
+      <div class="card-header">
+        <div class="row">
+          <div class="col">
+            <h3 class="mb-2">Objetivos Sucursales Activos</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-body border-top h-100">
+        {% if branch_objectives %}
+        <div class="scrollbar-overlay pt-0 px-card ask-analytics">
+          {% for branch_objective in branch_objectives %}
+          <div class="border border-1 border-300 rounded-2 p-3 ask-analytics-item position-relative mb-3">
+            <div class="d-flex align-items-center mb-3"><span class="fas fa-map-marker-alt text-primary"></span><a class="stretched-link text-decoration-none" href="{% url 'branches_app:branch_detail' pk=branch_objective.branch.pk %}">
+                <h5 class="fs--1 text-600 mb-0 ps-3">{{branch_objective.branch.name}}</h5>
+              </a></div>
+            <h5 class="fs--3 text-800">{{branch_objective.objetive.title}}</h5>
+            <p class="fs--3 py-0 my-0 fw-lighter text-600">{{branch_objective.objetive.description}}</p>
+            <p class="fs--3 py-0 my-0 fw-lighter text-600">Acumulado:
+              <span class="text-{% if branch_objective.is_completed %}success{% else %}warning{% endif %}">
+                {{branch_objective.accumulated}} - {% if branch_objective.is_completed %}Cumplido{% else %}No cumplido{% endif %}
+              </span>
+            </p>
+            <div class="card-footer">
+              <div class="card-footer bg-light text-end me-1 py-2"><a class="btn btn-link btn-sm px-0 fw-medium" href="#!">Historico de Sucursal<span class="fas fa-chevron-right ms-1 fs--2"></span></a></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+          <h3 class="mb-2">No hay objetivos activos en ninguna sucursal.</h3>
+          <button>Agregar objetivo</button>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="card theme-wizard h-100 mt-3">
+      <div class="card-header">
+        <div class="row">
+          <div class="col">
+            <h3 class="mb-2">Objetivos de Empleados Activos</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-body border-top h-100">
+        {% if employees_objectives %}
+        <div class="scrollbar-overlay pt-0 px-card ask-analytics">
+          {% for employee_objective in employees_objectives %}
+          <div class="border border-1 border-300 rounded-2 p-3 ask-analytics-item position-relative mb-3">
+            <div class="d-flex align-items-center mb-3"><span class="fas fa-project-diagram"></span><a class="stretched-link text-decoration-none" href="#!">
+                <h5 class="fs--1 text-600 mb-0 ps-3">{{employee_objective.employee}}</h5>
+              </a></div>
+            <h5 class="fs--3 text-800">{{employee_objective.objetive.title}}</h5>
+            <p class="fs--3 py-0 my-0 fw-lighter text-600">{{employee_objective.objetive.description}}</p>
+            <p class="fs--3 py-0 my-0 fw-lighter text-600">Acumulado:
+              <span class="text-{% if employee_objective.is_completed %}success{% else %}warning{% endif %}">
+                {{employee_objective.accumulated}} - {% if employee_objective.is_completed %}Cumplido{% else %}No cumplido{% endif %}
+              </span>
+            </p>
+            <div class="card-footer">
+              <div class="card-footer bg-light text-end me-1 py-2"><a class="btn btn-link btn-sm px-0 fw-medium" href="#!">Historico de Empleado<span class="fas fa-chevron-right ms-1 fs--2"></span></a></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+          <h3 class="mb-2">No hay objetivos activos en ningun empleado.</h3>
+          <button>Agregar objetivo</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
 	{% else %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
 		<!--Card-->

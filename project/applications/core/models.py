@@ -73,3 +73,7 @@ class Objetives(SoftDeletionModel, TimestampsModel):
     start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
     exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
     quantity = models.PositiveIntegerField(null=True, blank=True, verbose_name='Objetivo')
+
+
+    def __str__(self) ->str:
+        return f'{self.title} - {self.start_date} a {self.exp_date} para {self.to}'
