@@ -20,7 +20,7 @@ from applications.users.forms import *
 from applications.users.utils import generate_profile_img_and_assign
 
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
-from .models import Employee
+from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
 
 from django.contrib.auth import authenticate
@@ -101,8 +101,10 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_actual = self.request.user
+        employee_pk = self.kwargs['pk']
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
+        context['objectives'] = context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk)
 
         if not user_actual.is_staff and user_actual.employee != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
