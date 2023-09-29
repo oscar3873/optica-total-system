@@ -15,7 +15,7 @@ class UserCreateForm(PersonForm):
     username = forms.CharField(
         required = False,
         widget = forms.TextInput(attrs={
-            'placeholder' : 'Ej: Javi28',
+            'placeholder' : 'usuario',
             'class' : 'form-control',
             'autocomplete' : 'off',
         }),
