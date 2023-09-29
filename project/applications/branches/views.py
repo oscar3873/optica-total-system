@@ -49,7 +49,7 @@ class BranchUpdateView(CustomUserPassesTestMixin, UpdateView):
 class BranchDetailView(CustomUserPassesTestMixin, DetailView):
     model = Branch
     template_name = 'branches/branch_detail.html'
-    context_object_name = 'Branch'
+    context_object_name = 'branch'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

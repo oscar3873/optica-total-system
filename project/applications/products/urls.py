@@ -138,4 +138,17 @@ urlpatterns = [
         ProductSearchView.as_view(),
         name='product_search'
     ),
+
+    ################# actualizacion de precio
+    path(
+        'update-price/', 
+        UpdatePriceView.as_view(), 
+        name='update_price_advanced'
+    ),
+    path(
+        'search_categories_or_brands/', 
+        search_categories_or_brands, 
+        name='search_categories_or_brands'
+    ), 
+
 ]

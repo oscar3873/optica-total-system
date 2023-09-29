@@ -8,42 +8,62 @@
 {% block main %}
 
 <div class="container py-4">
-    <div class="col h-100 mt-3">
-        <div class="card theme-wizard h-100">
-            DETALLE de SUCURSAL
+  <div class="col h-100 mt-3">
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+      <!-- Titulo del formulario wizard -->
+      <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg" style="color: #000000;"></i></span>
+        <div class="col">
+          <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Sucursales</span><span
+              class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+          <p class="mb-0">{{branch.name}}</p>
         </div>
-        <div class="card theme-wizard mt-3 h-100">
-          <div class="card-header">
-            <div class="row">
-              <div class="col">
-                <h3 class="mb-2">Objetivos sucursal</h3>
-              </div>
-            </div>
-          </div>
-          <div class="card-body border-top h-100">
-            {% if objectives %}
-            <div class=" pt-0 px-card ask-analytics">
-              {% for objective in objectives %}
-              <div class="border border-1 border-300 rounded-2 p-3 ask-analytics-item position-relative mb-3">
-                <div class="d-flex align-items-center mb-3"><span class="fas fa-map-marker-alt text-primary"></span><a class="stretched-link text-decoration-none" href="#!">
-                    <h5 class="fs--5 text-600 mb-0 ps-3">{{objective.objetive.title}}</h5>
-                  </a></div>
-                <h5 class="fs--3 text-800">{{objective.objetive.description}}</h5>
-                <p class="fs--3 py-0 my-0 fw-lighter text-600">De {{objective.objetive.start_date}} hasta {{objective.objetive.exp_date}}. Cantidad: {{objective.objetive.quantity}}</p>
-                <p class="fs--3 py-0 my-0 fw-lighter text-600">
-                  <span class="text-{% if branch_objective.is_completed %}success{% else %}warning{% endif %}"> {% if branch_objective.is_completed %}Cumplido{% else %}No cumplido{% endif %}
-                  </span>
-                </p>
-              </div>
-              {% endfor %}
-            </div>
-            {% else %}
-              <h3 class="mb-2">No hay objetivos activos en ninguna sucursal.</h3>
-              <button>Agregar objetivo</button>
-            {% endif %}
-          </div>
-        </div>
+      </div>
     </div>
+    </div>
+    <div class="card theme-wizard h-100">
+      <div class="card">
+        <div class="card-header">
+          <h3>{{branch.address}}</h3>
+        </div>
+        <div class="card-body">
+          <h5>{{branch.open_hs}} - {{ branch.close_hs}}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="card theme-wizard mt-3 h-100">
+      <div class="card-header">
+        <div class="row">
+          <div class="col">
+            <h3 class="mb-2">Objetivos sucursal</h3>
+          </div>
+        </div>
+      </div>
+      <div class="card-body border-top h-100">
+        {% if objectives %}
+        <div class=" pt-0 px-card ask-analytics">
+          {% for objective in objectives %}
+          <div class="border border-1 border-300 rounded-2 p-3 ask-analytics-item position-relative mb-3">
+            <div class="d-flex align-items-center mb-3"><span class="fas fa-map-marker-alt text-primary"></span><a
+                class="stretched-link text-decoration-none" href="#!">
+                <h5 class="fs--5 text-600 mb-0 ps-3">{{objective.objetive.title}} - {% if objective.objetive.is_active %}ACTIVO{% else %}INACTIVO{% endif %}</h5>
+              </a></div>
+            <h5 class="fs--3 text-800">{{objective.objetive.description}}</h5>
+            <p class="fs--3 py-0 my-0 fw-lighter text-600">De {{objective.objetive.start_date}} hasta
+              {{objective.objetive.exp_date}}. Cantidad: {{objective.objetive.quantity}}</p>
+            <p class="fs--3 py-0 my-0 fw-lighter text-600">
+              <span class="text-{% if branch_objective.is_completed %}success{% else %}warning{% endif %}"> {% if branch_objective.is_completed %}Cumplido{% else %}No cumplido{% endif %}
+              </span>
+            </p>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <h3 class="mb-2">No hay objetivos activos en ninguna sucursal.</h3>
+        <button>Agregar objetivo</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
 
 

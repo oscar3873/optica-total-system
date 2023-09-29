@@ -1,0 +1,18 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.8/lottie.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{% static 'products/css/brands_categories_selected.css' %}">
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'products/components/update_price.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'products/js/update_price.js' %}"></script>
+
+{% endblock extra_js %}

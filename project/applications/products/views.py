@@ -1,17 +1,25 @@
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-from django.shortcuts import redirect
-from django.urls import reverse_lazy,reverse
-from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.decorators.http import require_GET
+from django.views.generic import (
+    FormView,
+    UpdateView,
+    DetailView,
+    ListView,
+    DeleteView
+)
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-
-from applications.core.mixins import CustomUserPassesTestMixin # Para Autenticar usuario administrador
-
+from applications.core.mixins import CustomUserPassesTestMixin
+from .models import Brand, Category, Product
 from .forms import *
-from .models import *
 from .utils import *
+import math
+
 # Create your views here.
 
 class CategoryCreateView(CustomUserPassesTestMixin, FormView):
@@ -261,7 +269,7 @@ class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'products/category_update_page.html'
-    success_url = reverse_lazy('products_ap:category_list')
+    success_url = reverse_lazy('products_app:category_list')
     
     def form_valid(self, form):
         category = form.save(commit=False)
@@ -275,7 +283,7 @@ class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'products/brand_update_page.html'
-    success_url = reverse_lazy('products_ap:brand_list')
+    success_url = reverse_lazy('products_app:brand_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -285,7 +293,7 @@ class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'products/feature_update_page.html'
-    success_url = reverse_lazy('products_ap:feature_list')
+    success_url = reverse_lazy('products_app:feature_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -510,3 +518,66 @@ class ProductSearchView(ListView):
             } for product in queryset]
 
         return JsonResponse({'products': data})
+
+#################### Actualizar Precio ###############
+from django.shortcuts import render
+
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views import View
+from .models import Brand, Category, Product
+from django.views.decorators.http import require_GET
+
+class UpdatePriceView(View):
+    template_name = 'products/update_price_advanced.html'
+
+    def get(self, request, *args, **kwargs):
+        # Renderizar el formulario y el HTML existente
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        # Procesar el formulario y realizar la validación
+        form = UpdatePriceForm(request.POST)
+        
+        if form.is_valid():
+            # Obtener datos del formulario
+            search_type = form.cleaned_data['search_type']
+            #me devuelve el objeto de categoria
+            selected_value = form.cleaned_data['brand' if search_type == 'brand' else 'category']
+            value= form.cleaned_data['brand']
+            percentage = form.cleaned_data['percentage']
+
+            # Obtener los productos relacionados con la marca o categoría seleccionada
+            if search_type == "brand":
+                related_products = Product.objects.filter(brand=selected_value)
+            elif search_type == "category":
+                related_products = Product.objects.filter(category=selected_value)
+
+            # Actualizar los precios de los productos
+            for product in related_products:
+                new_price = product.sale_price + product.sale_price*(percentage/100)
+                # Redondear al múltiplo de 50 más cercano siempre para arriba
+                new_price = math.ceil(new_price / 50) * 50
+                product.sale_price = new_price
+                product.save()
+
+            return redirect('products_app:product_list')
+
+        # Si el formulario no es válido, renderizar el HTML existente con el formulario y errores
+        return render(request, self.template_name, {'form': form})
+
+@require_GET
+def search_categories_or_brands(request):
+    search_term = request.GET.get('search_term', '')
+    option = request.GET.get('option', '')
+
+    results = []
+
+    if option == 'category':
+        categories = Category.objects.filter(name__icontains=search_term)
+        results = [{'id': category.id, 'name': category.name} for category in categories]
+    elif option == 'brand':
+        brands = Brand.objects.filter(name__icontains=search_term)
+        results = [{'id': brand.id, 'name': brand.name} for brand in brands]
+
+    return JsonResponse(results, safe=False)

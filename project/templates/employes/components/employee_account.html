@@ -87,7 +87,7 @@
 							<!-- Card body -->
                 <div class="card-body py-2" id="wizard-controller">
                   <div class="row">
-                    <form method="post" action="{% url 'employees_app:update_user_info' user.employee.pk %}" id="singup-employee" class="row g-3 update-form " novalidate>
+                    <form method="post" id="singup-employee" class="row g-3 update-form">
                       {% csrf_token %}
                       <div class="tab-content">
                           <div class="row">
