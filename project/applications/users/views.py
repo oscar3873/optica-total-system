@@ -9,12 +9,17 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from django.views.generic import FormView, DetailView, UpdateView, RedirectView
 
+from applications.core.models import Objetives
+from django.utils import timezone
+from applications.core.models import Objetives
+
 
 from .forms import UserCreateForm
 from .models import User
 from .forms import *
 from .utils import generate_profile_img_and_assign
-from applications.branches.models import Branch
+from applications.branches.models import Branch, Branch_Objetives
+from applications.employes.models import Employee_Objetives
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
@@ -33,6 +38,17 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
             #si no encuentro lo pongo en None para manejar las vistas en los templates
             admin = None
         return admin
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+
+        current_date = timezone.now().date()
+        active_objetives = Objetives.objects.filter(start_date__lte=current_date,exp_date__gte=current_date)
+        context['branch_objectives'] = Branch_Objetives.objects.filter(objetive__in=active_objetives)
+        #context['branch_objectives'] = Branch_Objetives.active_objectives.all()
+        context['employees_objectives'] = Employee_Objetives.objects.filter(objetive__in=active_objetives)
+        return context
 
 
 class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS

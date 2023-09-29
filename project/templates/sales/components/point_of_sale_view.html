@@ -57,13 +57,6 @@
             <form method="post">
                 {% csrf_token %}
                 {{ form.management_form }}
-                <!-- <script type="text/html" id="order_detaill-template">
-                    <tr id="order_detaill-__prefix__" hidden>
-                        {% for fields in form.empty_form.hidden_fields %}
-                            {{ fields }}
-                        {% endfor %}
-                    </tr>
-                </script> -->
                 <div class="card">
                     <div class="card-header bg-light btn-reveal-trigger d-flex justify-content-between">
                         <h5 class="mb-0">Detalle de compra</h5>

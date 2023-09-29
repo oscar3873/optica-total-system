@@ -2,15 +2,14 @@ from audioop import reverse
 from typing import Any
 
 from django.contrib import messages
-from django.contrib.auth.hashers import check_password
+from django.forms.models import BaseModelForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (
-    CreateView, DetailView, UpdateView, FormView, ListView, DeleteView
+    DetailView, UpdateView, FormView, ListView, DeleteView
 )
-from django.db import models, transaction
-from django.forms.models import BaseModelForm
+from django.db import transaction
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -21,7 +20,7 @@ from applications.users.forms import *
 from applications.users.utils import generate_profile_img_and_assign
 
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
-from .models import Employee
+from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
 
 from django.contrib.auth import authenticate
@@ -63,7 +62,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
 
 class EmployeeUpdateView(UpdateView):
     model = Employee
-    template_name = 'employes/employee_update_page.html'
+    template_name = 'employes/components/employee_update_form.html'
     form_class = EmployeeUpdateForm
 
     def form_valid(self, form):
@@ -102,8 +101,10 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user_actual = self.request.user
+        employee_pk = self.kwargs['pk']
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
+        context['objectives'] = context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk)
 
         if not user_actual.is_staff and user_actual.employee != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
@@ -183,12 +184,10 @@ class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'employes/employee_account_page.html'
     model = User
     form_class = UserUpdateForm
-    form2_class = UpdatePasswordForm
 
     def get_context_data(self, **kwargs):
-        is_editable = True
         context = super().get_context_data(**kwargs)
-        context['form2'] = self.get_form(self.form2_class)  # Agregamos el segundo formulario al contexto
+        context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
         context['change_image'] = ImagenChangeForm
         return context
 
@@ -205,50 +204,16 @@ class AccountView(LoginRequiredMixin, UpdateView):
         
         if user_get is None:
             return render(request, 'core/error_404_page.html')
-        
         if not user.is_staff and user != user_get:
             return render(request, 'users/denied_permission.html')
-        
         return super().get(request, *args, **kwargs)
     
     def get_success_url(self):
         return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
-    def form_invalid(self, form):
-        context = self.get_context_data(form=form)
-        return self.render_to_response(context)
-
-    def form2_invalid(self, form):
-        context = self.get_context_data(form2=form)
-        return self.render_to_response(context)
-
-
-#View para validar formulario UserUpdateForm
-class UpdateUserInfoView(LoginRequiredMixin, UpdateView):
-    template_name = 'employes/employee_account_page.html'
-    model = User
-    form_class = UserUpdateForm
-
-    def get_object(self, queryset=None):
-        employee = Employee.objects.get(pk=self.kwargs['pk'])
-        return employee.user
-    
-    def get_success_url(self):
-        return reverse_lazy('employees_app:account', kwargs={'pk': self.object.employee.pk})
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Agregar el formulario UserUpdateForm al contexto
-        password_update_form = UpdatePasswordForm(instance=self.object)  # Crea una instancia del formulario con el objeto actual
-        context['form2'] = password_update_form
-        return context
-
-    def form_invalid(self, form):
-        # Lógica para manejar errores en el formulario UserUpdateForm
-        # Agregar mensajes de error
-        context = self.get_context_data(form=form)
-        messages.error(self.request, 'Error en el formulario de actualización de usuario.')
-        return self.render_to_response(context)
+    def form_valid(self, form):
+        messages.success(self.request, "Se actualizaron los datos con exito.")
+        return super().form_valid(form)
 
 
 # View para validar formulario UpdatePasswordForm
@@ -260,21 +225,14 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         # Lógica para el formulario de UpdatePasswordForm (cambio de contraseña)
         # Cambia la contraseña del usuario y redirige al inicio de sesión
-        employee = Employee.objects.get(pk = self.kwargs['pk'])
-        if authenticate(user = employee.user, password = form.cleaned_data['passwordCurrent']):
+        if form.is_valid():
             self.object.set_password(form.cleaned_data['password'])
             self.object.save()
-            return reverse(reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']}))
+            messages.success(self.request, 'La contraseña se ha cambiado con exito.')
+            return redirect('employees_app:account', pk=self.kwargs['pk'])
         
         messages.error(self.request, 'La contraseña actual es incorrecta.')
-        return redirect('employees_app:account', pk = self.kwargs['pk'])
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Agregar el formulario UserUpdateForm al contexto
-        user_update_form = UserUpdateForm(instance=self.object)  # Crea una instancia del formulario con el objeto actual
-        context['form'] = user_update_form
-        return context
+        return redirect('employees_app:account', pk=self.kwargs['pk'])
 
     def get_object(self, queryset=None):
         employee = Employee.objects.get(pk=self.kwargs['pk'])
@@ -283,9 +241,8 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     def form_invalid(self, form):
         # Lógica para manejar errores en el formulario UpdatePasswordForm
         # Agregar mensajes de error al contexto
-        context = self.get_context_data(form2=form)
         messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
-        return self.render_to_response(context)
+        return redirect('employees_app:account', pk=self.kwargs['pk'])
 
 
 # Funcion que se usa en la peticion ajax para validar la contraseña actual

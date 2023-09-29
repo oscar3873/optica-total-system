@@ -139,10 +139,16 @@ urlpatterns = [
         name='product_search'
     ),
 
-    ############# Precio
+    ################# actualizacion de precio
     path(
-        'precio/',
-        price_update_view,
-        name="price_update"
+        'update-price/', 
+        UpdatePriceView.as_view(), 
+        name='update_price_advanced'
     ),
+    path(
+        'search_categories_or_brands/', 
+        search_categories_or_brands, 
+        name='search_categories_or_brands'
+    ), 
+
 ]

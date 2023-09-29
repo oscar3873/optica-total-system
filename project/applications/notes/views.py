@@ -15,11 +15,6 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
     form_class = NoteCreateForm
     template_name = 'notes/note_form.html'
     success_url = reverse_lazy('note_app:note_list')
-
-    def get_form_kwargs(self): ##revisar
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Pasa el usuario actual al formulario
-        return kwargs
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -32,25 +27,11 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
         if form.is_valid():
             # Creo una nueva instancia de Nota y asigno sucursal
             note = form.save(commit=False)
-            
             note.user_made = self.request.user
-            note.branch = self.request.user.branch  # Asigna directamente la sucursal del usuario
-            
-            branches = list(form.cleaned_data['branch'])
-            for branch in branches:
-                new_note = Note()
-                new_note.subject = note.subject
-                new_note.label = note.label
-                new_note.description = note.description
-                new_note.user_made = note.user_made
-                new_note.branch = branch    # Asigna la instancia de Branch seleccionada
-                new_note.save()
-            
-
             note.save()
             send_global_message(get_notes_JSON(note))
 
-            return HttpResponseRedirect(self.get_success_url())
+        return HttpResponseRedirect(self.get_success_url())
         
     def form_invalid(self,form):
         messages.error(self.request,'ERROR')

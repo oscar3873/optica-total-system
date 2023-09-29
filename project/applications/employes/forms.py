@@ -9,7 +9,7 @@ from applications.users.models import User
 
 class EmployeeCreateForm(UserCreateForm):
     employment_date = forms.DateField(
-        required=False,
+        required=True,
         widget=forms.DateInput(
             attrs={
                 'class': 'form-control',

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (FormView, DetailView, UpdateView, DeleteView, ListView, View) #aqui
 from django.contrib import messages
 from .forms import BranchForm
-from .models import Branch
+from .models import Branch, Branch_Objetives
 
 from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 
@@ -48,12 +48,14 @@ class BranchUpdateView(CustomUserPassesTestMixin, UpdateView):
 
 class BranchDetailView(CustomUserPassesTestMixin, DetailView):
     model = Branch
-    template_name = 'branches/branch_form.html'
-    context_object_name = 'Branch'
+    template_name = 'branches/branch_detail.html'
+    context_object_name = 'branch'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['features'] = self.model.objects.get_features(self.get_object())
+        branch_pk = self.kwargs['pk']
+        context['objectives'] = Branch_Objetives.objects.filter(branch_id=branch_pk)
+        #context['features'] = self.model.objects.get_features(self.get_object())
         return context
 
 ####################### DELETE #####################

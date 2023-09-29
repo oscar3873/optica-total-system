@@ -1,13 +1,21 @@
 from django.urls import path
 
-from .views import DashboardView
+from .views import DailyReportsView, DashboardView
 
 app_name = 'dashboard_app'
 
 urlpatterns = [
     path(
-        'home/',
+        'reports/general',
         DashboardView.as_view(),
         name='home'
+    ),
+    path(
+        'reports/daily',
+        DailyReportsView.as_view(),
+        name='daily_summary'
     )
 ]
+
+
+

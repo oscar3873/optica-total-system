@@ -18,10 +18,10 @@ def generate_profile_img_and_assign(user):
     font_size = 120
 
     # Definir el tipo de fuente
-    font = ImageFont.truetype('static/fonts/poppins-semibold.ttf', font_size)
+    #font = ImageFont.truetype('arial.ttf', font_size)
 
     # Obtener el cuadro delimitador del texto
-    text_bbox = draw.textbbox((0, 0), initials, font=font)
+    text_bbox = draw.textbbox((0, 0), initials)
 
     # Calcular el ancho y alto del texto a partir del cuadro delimitador
     text_width = text_bbox[2] - text_bbox[0]
@@ -32,7 +32,7 @@ def generate_profile_img_and_assign(user):
     y = (height - text_height) // 2 - text_bbox[1]
 
     # Dibujar el texto en la imagen con el color especificado
-    draw.text((x, y), initials, align='center', font=font)
+    draw.text((x, y), initials, align='center')
 
     # Guardar la imagen en un búfer de memoria
     image_buffer = io.BytesIO()

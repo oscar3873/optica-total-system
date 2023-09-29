@@ -13,7 +13,7 @@ class UserCreateForm(PersonForm):
         fields: [first_name, last_name, email, password(1,2), dni, phone_number, ]
     """
     username = forms.CharField(
-        required = True,
+        required = False,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Ej: Javi28',
             'class' : 'form-control',
@@ -44,7 +44,7 @@ class UserCreateForm(PersonForm):
     imagen = forms.ImageField(
         required=False,  # Hacer que la carga de la imagen sea opcional
         widget=forms.FileInput(attrs={
-            'class': 'form-control-file'
+            'class': 'form-control'
             }),
     )
 
@@ -54,21 +54,31 @@ class UserCreateForm(PersonForm):
     
     def clean_username(self):
         username = self.cleaned_data.get('username')
-        username = username
+        if not username: 
+            first_name = str(self.cleaned_data.get('first_name'))
+            last_name = str(self.cleaned_data.get('last_name'))
+            username = (first_name + last_name).lower()
         self.validate_username(username)
         return username
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
+        if not password:
+            password = 'opticatotal'
         self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password
     
     def clean_password2(self):
-        password2 = self.cleaned_data.get('password')
+        password2 = self.cleaned_data.get('password2')
+        if not password2:
+            password2 = 'opticatotal'
+        self.validate_length(password2, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password2
 
     def clean_email(self):
-        email = super().clean_email()
+        email = self.cleaned_data.get('email')
+        if not email:
+            email = self.clean_username() + '@opticatotal.com'
         try:
             User.objects.get(email=email)
             raise forms.ValidationError("El correo ingresado ya está en uso.")
@@ -77,6 +87,8 @@ class UserCreateForm(PersonForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if not "username" in cleaned_data:
+            cleaned_data['username'] = self.clean_username()
         password = cleaned_data.get('password')
         password2 = cleaned_data.get('password2')
         
@@ -163,6 +175,14 @@ class UpdatePasswordForm(ValidationFormMixin):
             'class' : 'form-control'
             })
     )
+
+    def clean_passwordCurrent(self):
+        passwordCurrent = self.cleaned_data.get('passwordCurrent')
+        user = self.instance  # Obtiene la instancia de usuario actual
+
+        if user and not authenticate(username=user.username, password=passwordCurrent):
+            raise forms.ValidationError('La contraseña actual es incorrecta')
+        return passwordCurrent
     
     def clean_password(self):
         password = self.cleaned_data.get('password')

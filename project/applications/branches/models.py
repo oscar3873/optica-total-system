@@ -3,6 +3,8 @@ from django.db import models
 from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
+from applications.branches.managers import ObjectiveActiveBranchManager
+
 
 # Create your models here.
 class Branch(SoftDeletionModel, TimestampsModel):
@@ -35,3 +37,8 @@ class Branch_Objetives(SoftDeletionModel, TimestampsModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
     objetive = models.ForeignKey('core.Objetives', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Objetivo')
     accumulated = models.PositiveIntegerField(default= 0, null=True, blank=True, verbose_name='Acumulado')
+
+    active_objectives = ObjectiveActiveBranchManager()
+
+    def ___str__(self) ->str:
+        return f'{self.objetive} - {self.is_completed}'

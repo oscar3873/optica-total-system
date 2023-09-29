@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from applications.branches.models import Branch
+from datetime import date
 
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
@@ -73,3 +74,11 @@ class Objetives(SoftDeletionModel, TimestampsModel):
     start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
     exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
     quantity = models.PositiveIntegerField(null=True, blank=True, verbose_name='Objetivo')
+
+
+    def __str__(self) ->str:
+        return f'{self.title} - {self.start_date} a {self.exp_date} para {self.to}'
+    
+    def is_active(self) ->bool:
+        current_day = date.today()
+        return current_day <= self.exp_date

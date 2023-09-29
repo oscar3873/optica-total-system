@@ -3,9 +3,13 @@
 		<div class="notfound">
 			<div class="notfound-404">
 				<h1>Oops!</h1>
-				<h2>404 - La página no funciona</h2>
+				<h2>404 - HA OCURRIDO UN ERROR</h2>
 			</div>
-			<a href="{% url 'core_app:home' %}">Volver al inicio</a>
+			{% if url %}
+			<a href="{{url}}">Volver a {{reverse}}</a>
+			{% else %}
+			<a href="{% url 'core_app:home' %}">Volver</a>
+			{% endif %}
 		</div>
 	</div>
 

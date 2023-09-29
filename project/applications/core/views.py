@@ -15,10 +15,6 @@ from django.http import FileResponse
 class HomePageView(LoginRequiredMixin , TemplateView):
     template_name = "core/home_page.html"
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
-        print(Session.objects.all())
-        return super().get_context_data(**kwargs)
-
 class TestPDFView(View):
     def get(self, request):
         # Crear un objeto BytesIO para almacenar el PDF

@@ -67,10 +67,11 @@
               {% if user.role != 'EMPLEADO' %}
                 <a href="{% url 'products_app:new_product' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo Producto</span></a>
                 
-                {% endif %}
-                <a href="{% url 'products_app:price_update' %}" class="btn btn-falcon-default btn-sm" type="button">
+                <a href="{% url 'products_app:update_price_advanced' %}" class="btn btn-falcon-default btn-sm" type="button">
                   <span class="d-none d-sm-inline-block ms-1">Actualizar Precio</span>
-              </a>
+                </a>
+                {% endif %}
+            
               
               
                 

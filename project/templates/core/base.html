@@ -90,7 +90,7 @@
                             data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span
                                 class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
 
-                    </div><a class="navbar-brand" href="index.html">
+                    </div><a class="navbar-brand" href="/">
                         <div class="d-flex align-items-center py-3">
                             <span class="font-sans-serif">
                                 <img id="logoImage" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"
@@ -115,7 +115,7 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse show" id="dashboard">
-                                    <li class="nav-item"><a class="nav-link active" href="index.html"
+                                    <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard_app:home' %}"
                                             aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-calendar-alt"></span></span><span
@@ -124,7 +124,8 @@
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="dashboard/analytics.html"
+                                    <!-- CREAR VIEW Y CORREGIR -->
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard_app:daily_summary' %}"
                                             aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-file-alt"></span></span><span
@@ -223,6 +224,7 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="authentication">
+                                    {% if   request.user.is_staff %}
                                     <li class="nav-item"><a class="nav-link" href="#authentication-modal"
                                             data-bs-toggle="modal" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
@@ -231,6 +233,7 @@
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
+                                    {% endif %}
                                     <li class="nav-item"><a class="nav-link" href="#authentication-modal"
                                             data-bs-toggle="modal" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ver
@@ -336,6 +339,7 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="descuentos">
+                                    {% if   request.user.is_staff %}
                                     <li class="nav-item"><a class="nav-link"
                                             href="documentation/customization/configuration.html" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Nueva promocion</span>
@@ -343,6 +347,7 @@
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
+                                    {% endif %}
                                     <li class="nav-item"><a class="nav-link"
                                             href="documentation/customization/styling.html" aria-expanded="false">
                                             <div class="d-flex align-items-center"><span
@@ -401,14 +406,12 @@
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
-                                {% if user.role != 'EMPLEADO' %}
                                 <!-- parent pages-->
                                 <a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span class="nav-link-text ps-1">Añadir cliente</span>
                                     </div>
                                 </a>
-                                {% endif %}
                                 <!-- parent pages-->
                                 <a class="nav-link" href="{% url 'clients_app:insurance_view' %}" role="button"
                                     aria-expanded="false">
@@ -417,7 +420,7 @@
                                     </div>
                                 </a>
                             </li>
-                            {% if user.role != 'EMPLEADO' %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -445,6 +448,7 @@
                                 </a>
                             </li>
                             {% endif %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -471,6 +475,8 @@
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -489,15 +495,15 @@
                                             class="nav-link-text ps-1">Ver sucursales</span>
                                     </div>
                                 </a>
-                                {% if user.role != 'EMPLEADO' %}
-                                <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
+                                <!--{% if   request.user.is_staff %}
+                                    <a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-square"></span></span><span
                                             class="nav-link-text ps-1">Añadir sucursal</span>
                                     </div>
                                 </a>
-                                {% endif %}
+                                {% endif %}-->
                                 <!-- parent pages--><a class="nav-link" href="documentation/design-file.html"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -506,6 +512,8 @@
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -537,6 +545,8 @@
                                 {% endif %}
                                     
                             </li>
+                            {% endif %}
+                            {% if request.user.role == 'ad' %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -548,13 +558,13 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><!--<a class="nav-link" href="documentation/getting-started.html"
                                     role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cog"></span></span><span
                                             class="nav-link-text ps-1">Configuraciones generales</span>
                                     </div>
-                                </a>
+                                </a>-->
                                 <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -563,6 +573,7 @@
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -730,7 +741,7 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
-                        {% if user.is_staff %}
+                        {% if request.user.is_staff %}
                             <li class="nav-item">
                                 <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
                                     {% csrf_token %}
@@ -748,14 +759,14 @@
                                     <button type="submit" style="display: none;"></button>
                                 </form>
                             </li>
-                            <script>
-                                // Escucha el evento 'change' del select
-                                document.getElementById('branch_id').addEventListener('change', function () {
-                                    // Envía el formulario automáticamente cuando se selecciona una sucursal
-                                    document.getElementById('branch-change-form').submit();
-                                });
-                            </script>
                         {% endif %}
+                        <script>
+                            // Escucha el evento 'change' del select
+                            document.getElementById('branch_id').addEventListener('change', function () {
+                                // Envía el formulario automáticamente cuando se selecciona una sucursal
+                                document.getElementById('branch-change-form').submit();
+                            });
+                        </script>
 
 
                         <li class="nav-item">
@@ -827,11 +838,11 @@
                                             Cuenta
                                         </a>
                                     {% else %}
-                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.id %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' request.user.employee.pk %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.id %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' request.user.employee.pk %}">
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>

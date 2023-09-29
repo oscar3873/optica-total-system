@@ -29,10 +29,6 @@ class NoteCreateForm(ValidationFormMixin):
     fields: [subject, description, branch]
     """
 
-    def __init__(self, user, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['branch'].queryset = Branch.objects.exclude(user=user)  #excluyo la sucursal del usuario
-
     subject = forms.CharField(
         label='Asunto',
         widget=forms.TextInput(
@@ -58,20 +54,10 @@ class NoteCreateForm(ValidationFormMixin):
         })
     )
 
-    branch = forms.ModelMultipleChoiceField(
-        queryset=Branch.objects.none(),
-        label='Sucursales',
-        widget=forms.CheckboxSelectMultiple(
-            attrs={
-                'class': 'checkbox-list'
-            }
-        )
-    )
-
     class Meta:
         model = Note
-        fields = ['subject','description','label']
-        exclude = ['user_made',]
+        fields = ['subject', 'description', 'label']
+
 
     def clean_subject(self):
         subject = self.cleaned_data.get('subject')
