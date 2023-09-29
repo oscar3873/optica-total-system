@@ -40,7 +40,7 @@ def generate_profile_img_and_assign(user):
     image_buffer.seek(0)
 
     # Asignar la imagen al campo imagen_perfil del usuario
-    user.imagen.save(f'{user.username}_profile.png', image_buffer, save=True)
+    user.imagen.save(f'{initials}.png', image_buffer, save=True)
 
     # Guardar el usuario para actualizar la imagen en la base de datos
     user.save()

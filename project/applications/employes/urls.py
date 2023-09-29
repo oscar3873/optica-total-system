@@ -39,10 +39,4 @@ urlpatterns = [
         UpdatePasswordView.as_view(),
         name='update_password'
     ),
-    path(
-        'validate_current_password/',
-        validate_password_current,
-        name='validate_current_password'
-    ),
-    
 ]

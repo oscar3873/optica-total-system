@@ -1,13 +1,11 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Employee
 
-############### CONSULTAR SI RELAMENTE ES NECESARIO YA QUE ESTA LA VIEW  ###############
-# @receiver(post_save, sender=Employee)
-# def set_employee_role(sender, instance, created, **kwargs):
-#     if created:
-#         instance.user.role = 'EMPLEADO'
-#         instance.user.save()
+from .models import User
+from .utils import generate_profile_img_and_assign
 
-# # Registrar la señal
-# post_save.connect(set_employee_role, sender=Employee, dispatch_uid='set_employee_role')
+@receiver(post_save, sender=User)
+def set_imagen_user(sender, instance, created, **kwargs):
+    print('\n\n\n\n\n POST_SAVE \n\n\n\n')
+    if created:
+        generate_profile_img_and_assign(instance)
