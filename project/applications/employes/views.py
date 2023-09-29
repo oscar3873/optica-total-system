@@ -1,6 +1,4 @@
-from audioop import reverse
 from typing import Any
-
 from django.contrib import messages
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -22,9 +20,6 @@ from applications.users.utils import generate_profile_img_and_assign
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
-
-from django.contrib.auth import authenticate
-
 
 
 # Create your views here.
@@ -55,7 +50,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         
         return super().form_valid(form)
     
-    def form_invalid(self, form: Any) -> HttpResponse:
+    def form_invalid(self, form):
         messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
         return super().form_invalid(form)
 
@@ -73,15 +68,6 @@ class EmployeeUpdateView(UpdateView):
             return redirect('employees_app:list_employee')
         else:
             return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
-
-    # def get_form_kwargs(self):
-    #     # Obtener la instancia de Employee que se va a editar
-    #     employee_instance = get_object_or_404(Employee, pk=self.kwargs['pk'])
-        
-    #     # Pasar la instancia al formulario como kwarg
-    #     kwargs = super().get_form_kwargs()
-    #     kwargs['instance'] = employee_instance
-    #     return kwargs
     
     def get_object(self, queryset=None): 
         """ Obtén el valor del parámetro 'pk' de la URL, este 
@@ -178,8 +164,6 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 ############################ Account ####################################
-# En el template 'employes/employee_account_page.html'
-# cada formulario tiene un action a UpdateUserInfoView y a UpdatePasswordView respectivamente 
 class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'employes/employee_account_page.html'
     model = User
@@ -209,11 +193,8 @@ class AccountView(LoginRequiredMixin, UpdateView):
         return super().get(request, *args, **kwargs)
     
     def get_success_url(self):
-        return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
-
-    def form_valid(self, form):
         messages.success(self.request, "Se actualizaron los datos con exito.")
-        return super().form_valid(form)
+        return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
 
 # View para validar formulario UpdatePasswordForm
@@ -233,24 +214,12 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
         
         messages.error(self.request, 'La contraseña actual es incorrecta.')
         return redirect('employees_app:account', pk=self.kwargs['pk'])
-
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
+        return redirect('employees_app:account', pk=self.kwargs['pk'])
+    
     def get_object(self, queryset=None):
         employee = Employee.objects.get(pk=self.kwargs['pk'])
         return employee.user
-    
-    def form_invalid(self, form):
-        # Lógica para manejar errores en el formulario UpdatePasswordForm
-        # Agregar mensajes de error al contexto
-        messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
-        return redirect('employees_app:account', pk=self.kwargs['pk'])
 
-
-# Funcion que se usa en la peticion ajax para validar la contraseña actual
-def validate_password_current(request):
-    if request.method == 'POST':
-        password_current = request.POST.get('password_current')
-        user = request.user  # Obtén al usuario actualmente autenticado
-        if authenticate(username=user.username, password=password_current):
-            return JsonResponse({'valid': True})
-        else:
-            return JsonResponse({'valid': False})

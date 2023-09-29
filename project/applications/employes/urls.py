@@ -5,7 +5,7 @@ app_name = 'employees_app'
 
 urlpatterns = [
     path(
-        'new/', 
+        'signup/', 
         EmployeeCreateView.as_view(),
         name='new_employee'
     ),
@@ -20,7 +20,7 @@ urlpatterns = [
         name='profile_employee'
     ),
     path(
-        'list/',
+        '',
         EmployeeListView.as_view(),
         name='list_employee'
     ),
@@ -39,10 +39,4 @@ urlpatterns = [
         UpdatePasswordView.as_view(),
         name='update_password'
     ),
-    path(
-        'validate_current_password/',
-        validate_password_current,
-        name='validate_current_password'
-    ),
-    
 ]

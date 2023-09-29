@@ -13,9 +13,14 @@
     display: inline-block; /* Hace que el div se ajuste al contenido */
 }
 
-.note-label p {
+.note-label p{
     font-size: 0.9rem;
     margin: 0;
+}
+
+.note-message p{
+    font-size: 1rem;
+    margin: 0.5rem 0;
 }
 
 .close-note-button {

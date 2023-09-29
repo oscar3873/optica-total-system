@@ -115,7 +115,7 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse show" id="dashboard">
-                                    <li class="nav-item"><a class="nav-link active" href="index.html"
+                                    <li class="nav-item"><a class="nav-link active" href="{% url 'dashboard_app:home' %}"
                                             aria-expanded="false" id="daily_reports">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-calendar-alt"></span></span><span
@@ -124,7 +124,8 @@
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="dashboard/analytics.html"
+                                    <!-- CREAR VIEW Y CORREGIR -->
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'dashboard_app:daily_summary' %}"
                                             aria-expanded="false" id="general_reports">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-file-alt"></span></span><span
@@ -174,26 +175,8 @@
                                             class="nav-link-text ps-1">Movimientos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link dropdown-indicator" href="#cashregister-arching"
-                                    role="button" data-bs-toggle="collapse" aria-expanded="false"
-                                    aria-controls="cashregister-arching">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-calculator"></span></span><span
-                                            class="nav-link-text ps-1">Arqueo de Caja</span>
-                                    </div>
-                                </a>
-                                <ul class="nav collapse false" id="cashregister-arching">
-                                    <li class="nav-item"><a class="nav-link" href="{% url 'cashregister_app:cashregister_arching_view' %}"
-                                            aria-expanded="false">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="nav-link-text ps-1">Realizar un arqueo</span>
-                                            </div>
-                                        </a>
-                                        <!-- more inner pages-->
-                                    </li>
-                                </ul>
-                                <!-- parent pages--><a class="nav-link" href="" role="button"
-                                    aria-expanded="false">
+                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_close_view' %}" role="button"
+                                    aria-expanded="false" id="cashregister_closed">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock"></span></span><span
                                             class="nav-link-text ps-1">Cierres de caja</span>
@@ -241,7 +224,8 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="authentication">
-                                    <li class="nav-item"><a class="nav-link dropdown-sales_objetives" href="#authentication-modal"
+                                    {% if   request.user.is_staff %}
+                                    <li class="nav-item"><a class="nav-link" href="#authentication-modal"
                                             data-bs-toggle="modal" aria-expanded="false" id="sales_objetives_new">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Establecer objetivo de venta</span>
@@ -249,7 +233,8 @@
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link dropdown-sales_objetives" href="#authentication-modal"
+                                    {% endif %}
+                                    <li class="nav-item"><a class="nav-link" href="#authentication-modal"
                                             data-bs-toggle="modal" aria-expanded="false" id="sales_objetives_list">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ver
                                                     objetivos de venta</span>
@@ -303,14 +288,15 @@
                                     </div>
                                 </a>
                                 
-                                {% if user.role != 'EMPLEADO' %}
-                                <!-- parent pages--><a class="nav-link" href="{% url 'products_app:new_product' %}" role="button"
-                                aria-expanded="false" id="products_new">
-                                <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                            class="fas fa-plus"></span></span><span
-                                        class="nav-link-text ps-1">Añadir producto</span>
-                                </div>
-                            </a>                        
+                                {% if request.user.is_staff %}
+                                    <!-- parent pages--><a class="nav-link" href="{% url 'products_app:new_product' %}" role="button"
+                                        aria-expanded="false" id="products_new">
+                                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                    class="fas fa-plus"></span></span><span
+                                                class="nav-link-text ps-1">Añadir producto</span>
+                                        </div>
+                                    </a>
+                                    
                                 {% endif %}
                                     
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#customization"
@@ -332,13 +318,13 @@
                                     </li>
                                     <li class="nav-item">
                                         
-                                        {% if user.role != 'EMPLEADO' %}
-                                        <a class="nav-link dropdown-categories"
-                                            href="{% url 'products_app:new_category' %}" aria-expanded="false" id="products_categories_new">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="nav-link-text ps-1">Añadir categoria</span>
-                                            </div>
-                                        </a>
+                                        {% if request.user.is_staff %}
+                                            <a class="nav-link"
+                                                href="{% url 'products_app:new_category' %}" aria-expanded="false" id="products_categories_new">
+                                                <div class="d-flex align-items-center"><span
+                                                        class="nav-link-text ps-1">Añadir categoria</span>
+                                                </div>
+                                            </a>
                                         {% endif %}
                                             
                                         <!-- more inner pages-->
@@ -353,8 +339,8 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="descuentos">
-                                    {% if   request.user.is_staff %}
-                                    <li class="nav-item"><a class="nav-link dropdown-promotions"
+                                    {% if  request.user.is_staff %}
+                                    <li class="nav-item"><a class="nav-link"
                                         href="documentation/customization/configuration.html" aria-expanded="false" id="products_promotions_new">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Nueva promocion</span>
                                             </div>
@@ -362,7 +348,7 @@
                                         <!-- more inner pages-->
                                     </li>
                                     {% endif %}
-                                    <li class="nav-item"><a class="nav-link dropdown-promotions"
+                                    <li class="nav-item"><a class="nav-link"
                                         href="documentation/customization/styling.html" aria-expanded="false" id="products_promotions_history">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Historial de promociones</span>
@@ -391,14 +377,14 @@
                                     </div>
                                 </a>
                                 
-                                {% if user.role != 'EMPLEADO' %}
-                                <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:new_supplier' %}" role="button"
-                                    aria-expanded="false" id="suppliers_new">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-user-plus"></span></span><span
-                                            class="nav-link-text ps-1">Añadir proveedor</span>
-                                    </div>
-                                </a>
+                                {% if  request.user.is_staff %}
+                                    <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:new_supplier' %}" role="button"
+                                        aria-expanded="false" id="suppliers_new">
+                                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                    class="fas fa-user-plus"></span></span><span
+                                                class="nav-link-text ps-1">Añadir proveedor</span>
+                                        </div>
+                                    </a>
                                     
                                 {% endif %}
                                     
@@ -414,15 +400,14 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}"
-                                    role="button" aria-expanded="false" id="customers_list">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-eye"></span></span><span
+                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}" role="button"
+                                    aria-expanded="false" id="customers_list">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button"
-                                    aria-expanded="false" id="customers_new">
+                                <!-- parent pages-->
+                                <a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button" aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span class="nav-link-text ps-1">Añadir cliente</span>
                                     </div>
@@ -510,13 +495,15 @@
                                             class="nav-link-text ps-1">Ver sucursales</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
+                                <!--{% if   request.user.is_staff %}
+                                    <a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
                                     aria-expanded="false" id="branches_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-square"></span></span><span
                                             class="nav-link-text ps-1">Añadir sucursal</span>
                                     </div>
                                 </a>
+                                {% endif %}-->
                                 <!-- parent pages--><a class="nav-link" href="documentation/design-file.html"
                                     role="button" aria-expanded="false" id="branches_admin">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -546,20 +533,20 @@
                                     </div>
                                 </a>
                                 
-                                {% if user.role != 'EMPLEADO' %}
-                                <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:new_employee' %}" role="button"
-                                    aria-expanded="false" id="employees_new">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-user-plus"></span></span><span
-                                            class="nav-link-text ps-1">Registrar empleado</span>
-                                    </div>
-                                </a>
+                                {% if  request.user.is_staff %}
+                                    <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:new_employee' %}" role="button"
+                                        aria-expanded="false" id="employees_new">
+                                        <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                    class="fas fa-user-plus"></span></span><span
+                                                class="nav-link-text ps-1">Registrar empleado</span>
+                                        </div>
+                                    </a>
                                     
                                 {% endif %}
                                     
                             </li>
                             {% endif %}
-                            {% if request.user.role == 'ad' %}
+                            {% if request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -571,13 +558,13 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
+                                <!-- parent pages--><!--<a class="nav-link" href="documentation/getting-started.html"
                                     role="button" aria-expanded="false" id="general_settings">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cog"></span></span><span
                                             class="nav-link-text ps-1">Configuraciones generales</span>
                                     </div>
-                                </a>
+                                </a>-->
                                 <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
                                     aria-expanded="false" id="afip_settings">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -841,7 +828,7 @@
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
-                                    {% if user.role != 'EMPLEADO' %}
+                                    {% if request.user.is_staff %}
                                         <a class="dropdown-item" href="{% url 'users_app:profile_admin' user.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil

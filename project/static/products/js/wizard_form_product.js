@@ -262,4 +262,36 @@ document.addEventListener('DOMContentLoaded', function() {
           }
     });
     
+    const cost_price = document.getElementById("id_cost_price");
+    const suggested_price = document.getElementById("id_suggested_price");
+    const sale_price = document.getElementById("id_sale_price");
+
+    cost_price.addEventListener("input", () => {
+        const suggestedValue = parseFloat(cost_price.value);
+        const roundedSaleValue = roundToNearest50(suggestedValue);
+        suggested_price.value = suggestedValue.toFixed(2); // Muestra dos decimales en suggested_price
+        sale_price.value = roundedSaleValue.toFixed(2); // Muestra dos decimales en sale_price
+    });
+
+    function roundToNearest50(value) {
+        const cents = (value/100) % 1; // Obtiene la parte decimal del número
+        cents = formatCents(value);
+        console.log(cents);
+        if (cents >= 0.01 && cents <= 0.4999) {
+            // Redondea a la cantidad más cercana que termina en .50
+            return Math.floor(value) + 0.5;
+        } else if (cents >= 0.5001 && cents <= 0.9999) {
+            // Redondea a la cantidad más cercana que termina en .00
+            return Math.ceil(value);
+        } else {
+            return value; // No necesita redondeo
+        }
+    }
+
+    function formatCents(value) {
+        const cents = (value) % 1; // Obtiene la parte decimal del número
+        const formattedCents = (cents * 10000).toFixed(0).padStart(4, '0');
+        return formattedCents;
+    }
+
 });

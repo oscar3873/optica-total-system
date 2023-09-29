@@ -1,6 +1,33 @@
-<h1>Lo sentimos, parece que te falta 5 pal peso</h1>
-<a href="{% url 'core_app:home' %}">
-    <button>
-        Volver al Inicio
-    </button>
-</a>
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+<!-- Google font -->
+<link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet">
+
+<!-- Custom stlylesheet -->
+<link type="text/css" rel="stylesheet" href="{% static 'core/css/error_404.css' %}" />
+
+{% endblock extra_css  %}
+
+{% block main %}
+
+<div id="notfound">
+    <div class="notfound">
+        <div class="notfound-404">
+            <h1>Oops!</h1>
+            <h2>403 - NO TIENES SUFICIENTES PERMISOS PARA INGRESAR</h2>
+        </div>
+        {% if url %}
+        <a href="{{url}}">Volver a {{reverse}}</a>
+        {% else %}
+        <a href="{% url 'core_app:home' %}">Volver</a>
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}
