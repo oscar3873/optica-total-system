@@ -11,13 +11,15 @@
     {% include 'core/components/messages.html' %}
 
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
-                    style="color: #000000;"></i></span>
+        
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-flask"></i></span>
             <div class="col">
                 <h5 class="mb-0 text-primary position-relative"><span
                         class="bg-200 dark__bg-1100 pe-3">Laboratorio</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-                <p class="mb-0">Nuevo laboratorio para NOMBRE DE CLIENTE</p>
+                <p class="mb-0">Nuevo laboratorio para el cliente  <a class="link-600 fw-semi-bold" href="{% url 'clients_app:customer_detail' named_formsets.client.id %}"><span
+                    class="text-warning">{{named_formsets.client}}</span></a></p>
             </div>
         </div>
     </div>
@@ -292,6 +294,9 @@
             </div>
         </div>
     </div>
+    <a class="btn btn-secondary btn-sm px-5 px-sm-6" href="{% url 'clients_app:customer_detail' named_formsets.client.id %}">
+        Cancelar
+    </a>
 </div>
 
 {% endblock main %}

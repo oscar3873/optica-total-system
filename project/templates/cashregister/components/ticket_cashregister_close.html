@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Fiscal</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            width: 300px; /* Aproximadamente 80mm */
+            margin: 0 auto;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Logo y nombre */
+        .header {
+            text-align: start;
+            margin-bottom: 10px;
+        }
+
+        .header img {
+            display: block;
+            width: 50%;
+            margin: auto auto 10px;
+        }
+
+        /* Detalles del ticket */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 3px 5px;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        /* Detalles del cierre */
+        .footer {
+            margin-top: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera con logo y nombre -->
+    <div class="header">
+        <img src="../../../static/core/img/logo_optica_light.png" alt="Logo de la empresa">
+        <p><strong>Resumen de la Caja</strong></p>
+    </div>
+
+    <!-- Fechas de apertura y cierre -->
+    <p>Fecha de Apertura: <span id="fecha-apertura">DD/MM/YYYY</span></p>
+    <p>Fecha de Cierre: <span id="fecha-cierre">DD/MM/YYYY</span></p>
+    <p>Monto incial de la caja: <span id="fecha-cierre">$XX.XXXX</span></p>
+    <p>Monto final de la caja: <span id="fecha-cierre">$XX.XXXX</span></p>
+
+    <!-- Resumen de cuentas -->
+    <table>
+        <thead>
+            <tr>
+                <th>Detalle</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Total Teórico</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td>Total Real</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td>Diferencia</td>
+                <td>$XXX.XX</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Detalles de los movimientos -->
+    <h3>Movimientos:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Movimiento</th>
+                <th>Monto</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Efectivo</td>
+                <td>Ingreso</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td>Efectivo</td>
+                <td>Egreso</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Total Efectivo</strong></td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td>T. de Credito</td>
+                <td>Ingreso</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Total T. Credito</strong></td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td>T. de Debito</td>
+                <td>Ingreso</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Total T. Debito</strong></td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td>Transferencia</td>
+                <td>Ingreso</td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Total Transferencias</strong></td>
+                <td>$XXX.XX</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Total Ingresos</strong></td>
+                <td>$XXX.XX</td>
+            </tr>
+            <!-- Repite filas similares para otros movimientos, como Transferencia, Tarjeta de Crédito, etc. -->
+        </tbody>
+    </table>
+
+    <!-- Firma y aclaración -->
+    <div class="footer">
+        <p>Firma: ____________________</p>
+        <p>Aclaración: <span id="nombre-encargado">Nombre del Encargado</span></p>
+    </div>
+
+</body>
+</html>

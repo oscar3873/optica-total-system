@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css %}
+
+{% block main %}
+
+<div class="container py-4">
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Titulo del formulario wizard -->
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
+                    style="color: #000000;"></i></span>
+            <span class="fa-stack me-2 ms-n1">
+                <i class="fas fa-circle fa-stack-2x text-300"></i>
+                <i class="fa-inverse fa-stack-1x text-primary fas fa-user-plus"></i>
+            </span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Cliente</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Editar Cliente</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center my-2">
+        <div class="col">
+            {% if form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Se encontraron errores:</h4>
+                <ul>
+                    {% for field_errors in form.errors.values %}
+                    {% for error in field_errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col h-100">
+        <div class="card theme-wizard h-100 mb-5"   >
+            <div class="card-header bg-light pt-3 pb-2">
+                <div class="d-flex mb-2">
+                    <div class="col">
+                        <p class="fs--2 mb-0"><span class="text-warning">{{user.last_name}}, {{user.first_name}}</span> esta por editar un
+                            cliente de <a class="link-600 fw-semi-bold" href="#!"><span
+                                    class="text-warning">{{user.branch}}</span></a></p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body" id="wizard-controller">
+                <div class="tab-content">
+                    <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel"
+                        aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                        <form method="post" class="row g-3 needs-validation align-items-center" novalidate="">
+                            {% csrf_token %}
+                            <div class="row justify-content-sm-center">
+                                <div class="col-12 col-sm">
+                                    <div class="row align-items-center">
+                                        <label for="id_h_insurance"
+                                            class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                            <span>Obra Social</span>
+                                            <button class="btn" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#HI-modal" title="Cargar una Obra Social">
+                                                <span class="text-1000 far fa-plus-square"></span>
+                                            </button>
+                                        </label>
+                                    </div>
+                                    <div class="container d-none">
+                                        {{form.as_p}}
+                                    </div>
+                                    <div class="mb-2" id="checkboxes_form">
+                                        {% for checkbox in form.h_insurance %}
+                                        <div class="form-check form-check-inline">
+                                            {{ checkbox }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="mt-1">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary" name="submit">Guardar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock main %}
+
+{% block extra_js %}
+{% endblock extra_js %}

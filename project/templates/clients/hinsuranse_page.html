@@ -12,12 +12,13 @@
     
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
-        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
-                    style="color: #000000;"></i></span>
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-eye"></i></span>
             <div class="col">
                 <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Obras
                         Sociales</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                        <p class="mb-0">Aqui se visualizan las obras sociales</p>
             </div>
         </div>
     </div>
@@ -55,9 +56,11 @@
                         </div>
                     </div>
                     <div id="table-purchases-replace-element">
+                        {% if user.role == 'ADMINISTRADOR' %}
                         <a href="{% url 'clients_app:hi_new' %}" class="btn btn-falcon-default btn-sm"
                             type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Nueva Obra Social</span></a>
+                        {% endif %}
                         <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
                                 data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Filtros</span></button>
@@ -115,10 +118,12 @@
                                         aria-labelledby="dropdown0">
                                         <a class="dropdown-item"
                                             href="{% url 'clients_app:hi_detail' pk=h_insurance.pk %}">Detalle</a>
-                                        <a class="dropdown-item"
+                                        {% if user.role == 'ADMINISTRADOR' %}
+                                            <a class="dropdown-item"
                                             href="{% url 'clients_app:insurance_update' pk=h_insurance.pk %}">Editar</a> <!--  url 'clients_app:insurance_update' pk=h_insurance.pk -->
                                         <a class=" dropdown-item text-danger"
                                             href="{% url 'clients_app:hi_delete' pk=h_insurance.pk %}">Eliminar</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </td>

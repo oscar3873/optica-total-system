@@ -31,7 +31,7 @@ class PersonForm(ValidationFormMixin):
     )
 
     dni = forms.CharField(
-        required = True,
+        required = False,
         widget = forms.TextInput(attrs={
             'placeholder' : 'DNI',
             'class' : 'form-control',
@@ -47,7 +47,7 @@ class PersonForm(ValidationFormMixin):
     )
 
     address = forms.CharField(
-        required=True,
+        required=False,
         widget=forms.TextInput(attrs={
             'placeholder' : 'Domicilio',
             'class' : 'form-control',
@@ -71,6 +71,7 @@ class PersonForm(ValidationFormMixin):
     )
 
     phone_code = forms.ChoiceField(
+        label='Código de país',
         choices=PHONE_CODE_CHOICES,
         required=False,  # Puede ser opcional
         widget=forms.Select(attrs={
@@ -79,7 +80,7 @@ class PersonForm(ValidationFormMixin):
     )
 
     phone_number = forms.IntegerField(
-        required = True,
+        required = False,
         widget = forms.TextInput(attrs={
             'placeholder' : 'Telefono de contacto',
             'class' : 'form-control',
@@ -89,6 +90,7 @@ class PersonForm(ValidationFormMixin):
     )
 
     birth_date = forms.DateField(
+        required=False,
         widget=forms.DateInput(
             attrs={
                 'placeholder': 'Fecha de Nacimiento',
@@ -100,6 +102,7 @@ class PersonForm(ValidationFormMixin):
     )
 
     email = forms.CharField(
+        required=False,
         widget=forms.TextInput(attrs={
             'placeholder' : 'Correo electrónico',
             'class': 'form-control',
@@ -108,9 +111,7 @@ class PersonForm(ValidationFormMixin):
             }
         )
     )
-    def __init__(self, *args, **kwargs):
-        self.edit_person = kwargs.pop('edit_person', None)  # Recuperar la persona a editar (si se proporciona)
-        super().__init__(*args, **kwargs)
+
     class Meta:
         model = Person
         fields = ["first_name","last_name","dni","address","email","phone_code","phone_number","birth_date"]
@@ -127,32 +128,13 @@ class PersonForm(ValidationFormMixin):
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
+        if phone_number:
+            phone_number_pattern = re.compile(r'^(?:\+?[0-9]{1,3})?[0-9]{6,}$')
 
-        # Expresión regular para validar números de teléfono de varios países.
-        phone_number_pattern = re.compile(r'^(?:\+?[0-9]{1,3})?[0-9]{6,}$')
-
-        if not phone_number_pattern.match(str(phone_number)):
-            raise forms.ValidationError("Ingrese un número de teléfono válido.")
-
+            if not phone_number_pattern.match(str(phone_number)):
+                raise forms.ValidationError("Ingrese un número de teléfono válido.")
         return phone_number
-
-    """ def clean_phone_number(self):
-        phone_number = self.cleaned_data['phone_number']
-        self.validate_length(phone_number, 9, "Ingrese un número de teléfono válido")
-        return phone_number
-     """
     
-    def clean_dni(self):
-        dni = self.cleaned_data['dni']
-        # Expresión regular para validar DNI: 7 dígitos seguidos de una letra o una letra seguida de 7 dígitos.
-        #dni_pattern = re.compile(r'^\d{7}[A-Z]$|^[A-Z]\d{7}$')
-        """ # Expresión regular para validar DNI: permite que los dígitos y las letras aparezcan en cualquier orden.
-        dni_pattern = re.compile(r'^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8}$')"""
-        """ if not dni_pattern.match(dni):
-            raise forms.ValidationError("Ingrese un DNI válido (7 dígitos seguidos de una letra o viceversa).") """
-
-        return dni
-
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
@@ -160,7 +142,8 @@ class PersonForm(ValidationFormMixin):
     
     def clean_address(self):
         address = self.cleaned_data['address']
-        self.validate_length(address, 5, "Ingrese una dirección válida.")
+        if address:
+            self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
     
     def clean_email(self):

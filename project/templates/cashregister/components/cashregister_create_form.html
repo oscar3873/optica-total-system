@@ -91,12 +91,10 @@
                             <div class="col-md-2">
                                 <label for="id_initial_balance" class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                 </label>
-                                <a href="" class="text-center">
-                                    <span class="fa-stack me-2 ms-n1" data-bs-toggle="tooltip" data-bs-placement="top" title="Añadir nueva divisa">
-                                        <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                                        <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
-                                    </span>
-                                </a>
+                                <span id="addCurrency" class="fa-stack me-2 ms-n1 ps-3" data-bs-toggle="tooltip" data-bs-target="#currency-modal" data-bs-original-title="Añadir nueva moneda" style="cursor: pointer">
+                                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
+                                </span>
                             </div>
                             {% if not cashregister %}
                             <div class="col-12">
@@ -128,3 +126,37 @@
 <!-- ===============================================-->
 <!--    Fin Contentenedor del block main-->
 <!-- ===============================================-->
+
+<!-- Modal para crear la moneda-->
+<div class="modal fade" id="currency-modal" tabindex="-1" aria-labelledby="currency-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="currency-modalLabel">Crear moneda</h5>
+            </div>
+            <div class="modal-body">
+                <form id="currency-form" method="post">
+                    {% csrf_token %}
+                    <div class="pb-3">
+                        <label for="{{ currency_form.name.id_for_label }}" class="form-label">Nombre:</label>
+                        {{currency_form.name}}
+                    </div>
+                    <div class="pb-3">
+                        <label for="{{ currency_form.symbol.id_for_label }}" class="form-label">Simbolo:</label>
+                        {{currency_form.symbol}}
+                    </div>
+                    <div class="pb-3">
+                        <label for="{{ currency_form.code.id_for_label }}" class="form-label">Codigo:</label>
+                        {{currency_form.code}}
+                    </div>
+                    <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                    <button class="btn btn-primary" type="button" id="save-currency">Guardar</button>
+                    <!-- Fin del formulario de creación de Currency-->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

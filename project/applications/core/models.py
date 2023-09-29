@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 from applications.branches.models import Branch
+from datetime import date
 
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
@@ -12,14 +13,14 @@ class Person(SoftDeletionModel, TimestampsModel):
     Clase para el almacenamiento de datos basicos de personas
     """
     first_name = models.CharField(max_length=50, verbose_name="Nombre")
-    last_name = models.CharField(max_length=50, db_index=True)
-    phone_code = models.CharField(max_length=10, blank=True, null=True)
-    phone_number = models.PositiveBigIntegerField(null=True, blank=True)
-    dni = models.CharField(max_length=20, db_index=True, null=True, blank=False)
-    birth_date = models.DateField(null=True, blank=True)
-    address = models.CharField(max_length=120, blank=True, null=True)
-    email = models.EmailField(unique=True, null=True, blank=True)
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True)
+    last_name = models.CharField(max_length=50, db_index=True, verbose_name="Apellido")
+    phone_code = models.CharField(max_length=10, blank=True, null=True, verbose_name="COD.Pais")
+    phone_number = models.PositiveBigIntegerField(null=True, blank=True, verbose_name="Telefono")
+    dni = models.CharField(max_length=20, db_index=True, null=True, blank=False, verbose_name="DNI")
+    birth_date = models.DateField(null=True, blank=True, verbose_name="Fecha")
+    address = models.CharField(max_length=120, blank=True, null=True, verbose_name="Domicilio")
+    email = models.EmailField(unique=True, null=True, blank=True, verbose_name="Correo")
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sucursal")
 
     class Meta:
         abstract = True
@@ -29,7 +30,7 @@ class Person(SoftDeletionModel, TimestampsModel):
 
     def __str__(self) -> str:
         return f'{self.get_full_name()}\nDNI: {self.dni}'
- 
+
 
 class BaseAbstractWithUser(SoftDeletionModel, TimestampsModel):
     """
@@ -73,3 +74,11 @@ class Objetives(SoftDeletionModel, TimestampsModel):
     start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
     exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
     quantity = models.PositiveIntegerField(null=True, blank=True, verbose_name='Objetivo')
+
+
+    def __str__(self) ->str:
+        return f'{self.title} - {self.start_date} a {self.exp_date} para {self.to}'
+    
+    def is_active(self) ->bool:
+        current_day = date.today()
+        return current_day <= self.exp_date

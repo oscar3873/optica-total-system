@@ -3,10 +3,12 @@ from django import forms
 from .models import Supplier, Product_Supplier
 from applications.products.models import Product
 from applications.core.mixins import ValidationFormMixin
+from django.core.validators import RegexValidator
 
 
 class SupplierForm(ValidationFormMixin):
     name = forms.CharField(
+        required=True,
         max_length=50,
         widget=forms.TextInput(
             attrs={
@@ -15,8 +17,26 @@ class SupplierForm(ValidationFormMixin):
                 'type': 'text',
                 'pattern': '.{3,}',  # Mínimo 3 caracteres
                 }
-        )
+        ),
+        validators=[RegexValidator(r'^[a-zA-Z\s]+$', 'El nombre solo puede contener letras y espacios.')]
     )
+
+    PHONE_CODE_CHOICES = (
+        ('+54', '+54'),
+        ('+56', '+56'),
+        ('+591', '+591'),
+        # Agrega más opciones según tus necesidades
+    )
+
+    phone_code = forms.ChoiceField(
+        label='Código de país',
+        choices=PHONE_CODE_CHOICES,
+        required=True,  # Puede ser opcional
+        widget=forms.Select(attrs={
+            'class': 'form-control',
+        })
+    )
+
     phone_number = forms.IntegerField(
         widget=forms.TextInput(
             attrs={
@@ -43,7 +63,7 @@ class SupplierForm(ValidationFormMixin):
         )
     class Meta:
         model = Supplier
-        fields = ('name','phone_number','email','products',)
+        fields = ('name','phone_number','phone_code','email','products',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -64,7 +84,7 @@ class SupplierForm(ValidationFormMixin):
         return name
     
 
-    def clean_phone_number(self):
+    """ def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
 
         # Expresión regular para validar números de teléfono de varios países.
@@ -74,8 +94,8 @@ class SupplierForm(ValidationFormMixin):
             raise forms.ValidationError("Ingrese un número de teléfono válido.")
 
         return phone_number
-    
-    def clean_email(self):
+    """
+    """ def clean_email(self):
         email = self.cleaned_data['email']
 
         # Utiliza el validador de Django para validar la dirección de correo electrónico.
@@ -87,4 +107,4 @@ class SupplierForm(ValidationFormMixin):
             raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
 
         return email
-
+"""

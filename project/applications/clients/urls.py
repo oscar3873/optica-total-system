@@ -22,7 +22,7 @@ urlpatterns = [
     path(
         'lab/new/',  # PARA CREAR PERDIDO DE LAB "FANTASMA" (SIN CLIENTE)
         CalibrationOrderCreateView.as_view(), 
-        name='laboratory_new'
+        name='only_laboratory_new'
     ),
     path(
         '<pk>/lab/new/',  # ASIGNA EL PEDIDO DE LAB POR CREAR AL CLIENTE EN EL QUE ESTÁ
@@ -50,6 +50,11 @@ urlpatterns = [
         'health_insurance/<pk>/update/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
         HealthInsuranceUpdateView.as_view(), 
         name='insurance_update'
+    ),
+    path(
+        '<pk>/update_for_employees',
+        CustomerUpdateHealthInsurance.as_view(),
+        name='customer_update_for_employees'
     ),
 
     #### LIST ####

@@ -1,7 +1,7 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 #
-from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView,AdminProfileView
+from .views import LoginView, LogoutView, UpdatePasswordView, AdminCreateView, AdminProfileView, UserChangeImagen
 
 app_name = 'users_app'
 
@@ -30,6 +30,11 @@ urlpatterns = [
         'profile/<pk>/', 
         AdminProfileView.as_view(),
         name='profile_admin'
+    ),
+    path(
+        'img/<pk>/', 
+        UserChangeImagen.as_view(),
+        name='change_img'
     ),
 
     # DJANGO RESET PASSWORD -> PARA CAMBIO DE PASSWORD OLVIDADA

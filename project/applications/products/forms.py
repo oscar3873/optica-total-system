@@ -38,6 +38,7 @@ class BrandForm(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Rusty'
                 }
         )
     )
@@ -185,8 +186,8 @@ class ProductForm(ValidationFormMixin):
         queryset=Feature.objects.all().order_by('type'),
         widget=forms.CheckboxSelectMultiple(
             attrs={'class':'form-check-input',
-                   'type' : 'checkbox'
-                   }
+                'type' : 'checkbox'
+                }
         ),
         required=False,
     )
@@ -237,7 +238,8 @@ class FeatureForm(ValidationFormMixin):
     value = forms.CharField(
         max_length=100,
         widget = forms.TextInput(
-            attrs={'class':'form-control'}
+            attrs={'class':'form-control',
+                   }
         ),
     )
     type  = forms.ModelChoiceField(
@@ -256,14 +258,14 @@ class FeatureForm(ValidationFormMixin):
 
     def clean_value(self):
         value = self.cleaned_data['value']
-        value_formated = value.upper()
+        value_formated = value
         try:
             Feature.objects.get(value=value_formated)
             raise forms.ValidationError("Ya existe una categoria con ese nombre.")
         except Feature.DoesNotExist:
             pass
         self.validate_length(value, 3, 'La categoria debe tener al menos 3 caracteres.')
-        return value
+        return value.title()
 
 
 class FeatureTypeForm(ValidationFormMixin):
@@ -281,11 +283,11 @@ class FeatureTypeForm(ValidationFormMixin):
     def clean_name(self):
         name = self.cleaned_data['name']
         self.validate_length(name, 2, 'El nombre del tipo de característica debe tener al menos 3 caracteres.')
-        return name
+        return name.title()
 
 
 
-class FeatureForm_to_formset(ValidationFormMixin):
+class FeatureForm_toWizard(ValidationFormMixin):
     type = forms.CharField(
         max_length=20,
         label="Tipo de caracteristica",
@@ -293,6 +295,7 @@ class FeatureForm_to_formset(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Color'
                 }
         )
     )
@@ -303,6 +306,7 @@ class FeatureForm_to_formset(ValidationFormMixin):
         widget=forms.TextInput(
             attrs={
                 'class': 'form-control',
+                'placeholder': 'Ej: Rojo'
                 }
         )
     )
@@ -311,19 +315,104 @@ class FeatureForm_to_formset(ValidationFormMixin):
         fields = ('value',)
 
     def clean_type(self):
-        type = self.cleaned_data['type'].upper()
+        type = self.cleaned_data['type']
         self.validate_length(type, 2, 'El tipo debe tener almenos 3 caracteres.')
-        return type
+        return type.title()
     
     def clean_value(self):
-        value = self.cleaned_data['value'].upper()
-        return value
+        value = self.cleaned_data['value']
+        return value.title()
 
 
 FeatureFormSet = forms.inlineformset_factory(
     Product, 
     Product_feature,
-    form=FeatureForm_to_formset,
+    form=FeatureForm_toWizard,
     extra=0,
     can_delete=False
     )
+
+
+# ###################### Form Actualizar Precio
+from django import forms
+from .models import Brand, Category
+
+class PriceUpdateForm(forms.Form):
+    search_type = forms.ChoiceField(
+        label='Tipo de Búsqueda',
+        choices=(('brand', 'Marca'), ('category', 'Categoría')),
+        widget=forms.RadioSelect,
+        required=True,
+        initial='brand',  # Marca seleccionada por defecto
+    )
+    percentage = forms.DecimalField(
+        label='Porcentaje de Aumento',
+        min_value=0,
+        max_value=100,
+        decimal_places=2,
+    )
+    brand = forms.ModelChoiceField(
+        queryset=Brand.objects.all(),
+        required=False,
+        widget=forms.RadioSelect,
+        empty_label='Todas las Marcas',
+    )
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        widget=forms.RadioSelect,
+        empty_label='Todas las Categorías',
+    )
+
+############# Actualizacion avanzada
+# En forms.py
+from django import forms
+
+class AdvancedSearchForm(forms.Form):
+    search_type = forms.ChoiceField(
+        label='Tipo de Búsqueda',
+        choices=(('brand', 'Marca'), ('category', 'Categoría')),
+        widget=forms.RadioSelect,
+        required=True,
+        initial='brand',  # Marca seleccionada por defecto
+    )
+    search_term = forms.CharField(
+        label='Búsqueda por Marca o Categoría',
+        max_length=100,
+        required=True,
+    )
+    percentage = forms.DecimalField(
+        label='Porcentaje de Aumento',
+        max_digits=5,
+        decimal_places=2,
+        required=True,
+        initial=0.0,  # Puedes establecer un valor inicial aquí
+    )
+
+class UpdatePriceForm(forms.Form):
+    search_type = forms.ChoiceField(
+        label='Tipo de Búsqueda',
+        choices=(('brand', 'Marca'), ('category', 'Categoría')),
+        widget=forms.RadioSelect,
+        required=True,
+        initial='brand',  # Marca seleccionada por defecto
+    )
+    percentage = forms.DecimalField(
+        label='Porcentaje de Aumento',
+        min_value=0,
+        max_value=100,
+        decimal_places=2,
+    )
+    brand = forms.ModelChoiceField(
+        queryset=Brand.objects.all(),
+        required=False,
+        widget=forms.RadioSelect,
+        empty_label='Todas las Marcas',
+    )
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        widget=forms.RadioSelect,
+        empty_label='Todas las Categorías',
+    )
+

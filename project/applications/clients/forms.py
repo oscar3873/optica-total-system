@@ -25,14 +25,13 @@ class CustomerForm(PersonForm):
     class Meta:
         model = Customer
         fields = '__all__'
-        exclude = ['user_made','deleted_at']
+        exclude = ['user_made','deleted_at', 'branch']
 
     def clean_birth_date(self):
         birth_date = self.cleaned_data['birth_date']
         self.validate_birth_date(birth_date)
-        return birth_date
-
-
+        return birth_date      
+    
 class HealthInsuranceForm(ValidationFormMixin):
 
     name = forms.CharField( 
@@ -83,7 +82,6 @@ class HealthInsuranceForm(ValidationFormMixin):
         cuit_str = str(cuit)
         self.validate_length(cuit_str, 10, "Ingrese un CUIT válido.")
         return cuit
-
 
 class CorrectionForm(forms.ModelForm):
 
@@ -240,7 +238,6 @@ class MaterialForm(forms.ModelForm):
         cleaned_data[material_choice] = True
         return cleaned_data
 
-
 class ColorForm(forms.ModelForm):
     COLOR_CHOICES = [
         ('white', 'Blanco'),
@@ -280,7 +277,6 @@ class ColorForm(forms.ModelForm):
 
         cleaned_data[color_choice] = True
         return cleaned_data
-
 
 class CristalForm(forms.ModelForm):
     CRISTAL_CHOICES = [
@@ -323,7 +319,6 @@ class CristalForm(forms.ModelForm):
         cleaned_data[cristal_choice] = True
         return cleaned_data
 
-
 class TratamientForm(forms.ModelForm):
     TRATAMIENT_CHOICES = [
         ('antireflex', 'Antireflex'),
@@ -365,7 +360,6 @@ class TratamientForm(forms.ModelForm):
 
         cleaned_data[tratamient_choice] = True
         return cleaned_data
-
 
 class InterpupillaryForm(forms.ModelForm):
     cer_od_nanopupilar = forms.CharField(
@@ -462,7 +456,6 @@ class InterpupillaryForm(forms.ModelForm):
         model = Interpupillary
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
-
 
 class Calibration_OrderForm(forms.ModelForm):
 

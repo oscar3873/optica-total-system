@@ -1,12 +1,5 @@
 from django.urls import path
-from .views import (
-    EmployeeProfileView,
-    EmployeeListView,
-    EmployeeCreateView,
-    EmployeeDeleteView,
-    AccountView,
-    EmployeeUpdateView
-    )
+from .views import *
 
 app_name = 'employees_app'
 
@@ -40,6 +33,16 @@ urlpatterns = [
         'account/<int:pk>/', 
         AccountView.as_view(), 
         name='account'
+    ),
+    # Ruta para actualizar la contraseña
+    path(' account/<int:pk>/',
+        UpdatePasswordView.as_view(),
+        name='update_password'
+    ),
+    path(
+        'validate_current_password/',
+        validate_password_current,
+        name='validate_current_password'
     ),
     
 ]

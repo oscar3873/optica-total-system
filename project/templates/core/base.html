@@ -90,7 +90,7 @@
                             data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span
                                 class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
 
-                    </div><a class="navbar-brand" href="index.html">
+                    </div><a class="navbar-brand" href="/">
                         <div class="d-flex align-items-center py-3">
                             <span class="font-sans-serif">
                                 <img id="logoImage" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"
@@ -116,7 +116,7 @@
                                 </a>
                                 <ul class="nav collapse show" id="dashboard">
                                     <li class="nav-item"><a class="nav-link active" href="index.html"
-                                            aria-expanded="false">
+                                            aria-expanded="false" id="daily_reports">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-calendar-alt"></span></span><span
                                                     class="nav-link-text ps-1">Reportes diarios</span>
@@ -125,7 +125,7 @@
                                         <!-- more inner pages-->
                                     </li>
                                     <li class="nav-item"><a class="nav-link" href="dashboard/analytics.html"
-                                            aria-expanded="false">
+                                            aria-expanded="false" id="general_reports">
                                             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                         class="fas fa-file-alt"></span></span><span
                                                     class="nav-link-text ps-1">Reportes generales</span>
@@ -147,34 +147,52 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_create_view' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="cashregister_open">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock-open"></span></span><span
                                             class="nav-link-text ps-1">Abrir caja</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_view' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="cashregister_active">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cash-register"></span></span><span
                                             class="nav-link-text ps-1">Ver caja activa</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_list_view' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="cashregister_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Lista de cajas</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:movements_view' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="cashregister_movements">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-exchange-alt"></span></span><span
                                             class="nav-link-text ps-1">Movimientos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_close_view' %}" role="button"
+                                <!-- parent pages--><a class="nav-link dropdown-indicator" href="#cashregister-arching"
+                                    role="button" data-bs-toggle="collapse" aria-expanded="false"
+                                    aria-controls="cashregister-arching">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-calculator"></span></span><span
+                                            class="nav-link-text ps-1">Arqueo de Caja</span>
+                                    </div>
+                                </a>
+                                <ul class="nav collapse false" id="cashregister-arching">
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'cashregister_app:cashregister_arching_view' %}"
+                                            aria-expanded="false">
+                                            <div class="d-flex align-items-center"><span
+                                                    class="nav-link-text ps-1">Realizar un arqueo</span>
+                                            </div>
+                                        </a>
+                                        <!-- more inner pages-->
+                                    </li>
+                                </ul>
+                                <!-- parent pages--><a class="nav-link" href="" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock"></span></span><span
@@ -194,21 +212,21 @@
                                     </div>
                                 </div>
                                     <!-- parent pages--><a class="nav-link" href="{% url 'sales_app:point_of_sale_view' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="sales_point">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-store"></span></span><span
                                             class="nav-link-text ps-1">Punto de venta</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="pages/starter.html" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="sales_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-circle"></span></span><span
                                             class="nav-link-text ps-1">Nueva venta</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="pages/landing.html" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="sales_history">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-history"></span></span><span
                                             class="nav-link-text ps-1">Historial de ventas</span>
@@ -216,23 +234,23 @@
                                 </a>
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#authentication"
                                     role="button" data-bs-toggle="collapse" aria-expanded="false"
-                                    aria-controls="authentication">
+                                    aria-controls="authentication" id="sales_objetives">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-bullseye"></span></span><span
                                             class="nav-link-text ps-1">Objetivos de ventas</span>
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="authentication">
-                                    <li class="nav-item"><a class="nav-link" href="#authentication-modal"
-                                            data-bs-toggle="modal" aria-expanded="false">
+                                    <li class="nav-item"><a class="nav-link dropdown-sales_objetives" href="#authentication-modal"
+                                            data-bs-toggle="modal" aria-expanded="false" id="sales_objetives_new">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Establecer objetivo de venta</span>
                                             </div>
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="#authentication-modal"
-                                            data-bs-toggle="modal" aria-expanded="false">
+                                    <li class="nav-item"><a class="nav-link dropdown-sales_objetives" href="#authentication-modal"
+                                            data-bs-toggle="modal" aria-expanded="false" id="sales_objetives_list">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ver
                                                     objetivos de venta</span>
                                             </div>
@@ -242,23 +260,23 @@
                                 </ul>
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#facturacion"
                                     role="button" data-bs-toggle="collapse" aria-expanded="false"
-                                    aria-controls="facturacion">
+                                    aria-controls="facturacion" id="sales_billing">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-receipt"></span></span><span
                                             class="nav-link-text ps-1">Facturación</span>
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="facturacion">
-                                    <li class="nav-item"><a class="nav-link" href="#facturacion-modal"
-                                            data-bs-toggle="modal" aria-expanded="false">
+                                    <li class="nav-item"><a class="nav-link dropdown-sales-billing" href="#facturacion-modal"
+                                            data-bs-toggle="modal" aria-expanded="false" id="sales_billing_new">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Crear factura</span>
                                             </div>
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link" href="#facturacion-modal"
-                                            data-bs-toggle="modal" aria-expanded="false">
+                                    <li class="nav-item"><a class="nav-link dropdown-sales-billing" href="#facturacion-modal"
+                                            data-bs-toggle="modal" aria-expanded="false" id="sales_billing_history">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Historial de facturacion</span>
                                             </div>
                                         </a>
@@ -278,63 +296,74 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'products_app:product_list' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="products_view">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span class="nav-link-text ps-1">Ver
                                             productos</span>
                                     </div>
                                 </a>
+                                
+                                {% if user.role != 'EMPLEADO' %}
                                 <!-- parent pages--><a class="nav-link" href="{% url 'products_app:new_product' %}" role="button"
-                                    aria-expanded="false">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-plus"></span></span><span
-                                            class="nav-link-text ps-1">Añadir producto</span>
-                                    </div>
-                                </a>
+                                aria-expanded="false" id="products_new">
+                                <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                            class="fas fa-plus"></span></span><span
+                                        class="nav-link-text ps-1">Añadir producto</span>
+                                </div>
+                            </a>                        
+                                {% endif %}
+                                    
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#customization"
                                     role="button" data-bs-toggle="collapse" aria-expanded="false"
-                                    aria-controls="customization">
+                                    aria-controls="customization" id="products_categories">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-layer-group"></span></span><span
                                             class="nav-link-text ps-1">Categorias</span>
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="customization">
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="{% url 'products_app:category_list' %}" aria-expanded="false">
+                                    <li class="nav-item"><a class="nav-link dropdown-categories"
+                                            href="{% url 'products_app:category_list' %}" aria-expanded="false" id="products_categories_view">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Ver
                                                     categorias</span>
                                             </div>
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="{% url 'products_app:new_category' %}" aria-expanded="false">
+                                    <li class="nav-item">
+                                        
+                                        {% if user.role != 'EMPLEADO' %}
+                                        <a class="nav-link dropdown-categories"
+                                            href="{% url 'products_app:new_category' %}" aria-expanded="false" id="products_categories_new">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Añadir categoria</span>
                                             </div>
                                         </a>
+                                        {% endif %}
+                                            
                                         <!-- more inner pages-->
                                     </li>
                                 </ul>
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#descuentos"
                                     role="button" data-bs-toggle="collapse" aria-expanded="false"
-                                    aria-controls="descuentos">
+                                    aria-controls="descuentos" id="products_promotions">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-percent"></span></span><span
                                             class="nav-link-text ps-1">Promociones y Descuentos</span>
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="descuentos">
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="documentation/customization/configuration.html" aria-expanded="false">
+                                    {% if   request.user.is_staff %}
+                                    <li class="nav-item"><a class="nav-link dropdown-promotions"
+                                        href="documentation/customization/configuration.html" aria-expanded="false" id="products_promotions_new">
                                             <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Nueva promocion</span>
                                             </div>
                                         </a>
                                         <!-- more inner pages-->
                                     </li>
-                                    <li class="nav-item"><a class="nav-link"
-                                            href="documentation/customization/styling.html" aria-expanded="false">
+                                    {% endif %}
+                                    <li class="nav-item"><a class="nav-link dropdown-promotions"
+                                        href="documentation/customization/styling.html" aria-expanded="false" id="products_promotions_history">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Historial de promociones</span>
                                             </div>
@@ -355,19 +384,24 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:list_supplier' %}"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="suppliers_view">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver proveedores</span>
                                     </div>
                                 </a>
+                                
+                                {% if user.role != 'EMPLEADO' %}
                                 <!-- parent pages--><a class="nav-link" href="{% url 'suppliers_app:new_supplier' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="suppliers_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
                                             class="nav-link-text ps-1">Añadir proveedor</span>
                                     </div>
                                 </a>
+                                    
+                                {% endif %}
+                                    
                             </li>
                             <li class="nav-item">
                                 <!-- label-->
@@ -381,20 +415,27 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_view' %}"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="customers_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver clientes</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'clients_app:customer_new' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="customers_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-user-plus"></span></span><span
-                                            class="nav-link-text ps-1">Añadir cliente</span>
+                                                class="fas fa-user-plus"></span></span><span class="nav-link-text ps-1">Añadir cliente</span>
+                                    </div>
+                                </a>
+                                <!-- parent pages-->
+                                <a class="nav-link" href="{% url 'clients_app:insurance_view' %}" role="button"
+                                    aria-expanded="false">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-eye"></span></span><span
+                                            class="nav-link-text ps-1">Ver Obras Sociales</span>
                                     </div>
                                 </a>
                             </li>
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -407,20 +448,22 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'note_app:new_note' %}"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="notes_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-square"></span></span><span
                                             class="nav-link-text ps-1">Añadir Nota</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'note_app:note_list' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="notes_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver notas</span>
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -433,20 +476,22 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'notifications_app:list' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="notifications_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver notificaciones</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="notifications_config">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cog"></span></span><span
                                             class="nav-link-text ps-1">Configurar notificaciones</span>
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -459,27 +504,29 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:branch_list' %}"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="branches_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver sucursales</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'branches_app:new_branch' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="branches_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-plus-square"></span></span><span
                                             class="nav-link-text ps-1">Añadir sucursal</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="documentation/design-file.html"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="branches_admin">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cogs"></span></span><span
                                             class="nav-link-text ps-1">Administrar sucursales</span>
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
+                            {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -492,20 +539,27 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:list_employee' %}"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="employees_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver empleados</span>
                                     </div>
                                 </a>
+                                
+                                {% if user.role != 'EMPLEADO' %}
                                 <!-- parent pages--><a class="nav-link" href="{% url 'employees_app:new_employee' %}" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="employees_new">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-user-plus"></span></span><span
                                             class="nav-link-text ps-1">Registrar empleado</span>
                                     </div>
                                 </a>
+                                    
+                                {% endif %}
+                                    
                             </li>
+                            {% endif %}
+                            {% if request.user.role == 'ad' %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -518,20 +572,21 @@
                                     </div>
                                 </div>
                                 <!-- parent pages--><a class="nav-link" href="documentation/getting-started.html"
-                                    role="button" aria-expanded="false">
+                                    role="button" aria-expanded="false" id="general_settings">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cog"></span></span><span
                                             class="nav-link-text ps-1">Configuraciones generales</span>
                                     </div>
                                 </a>
                                 <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
-                                    aria-expanded="false">
+                                    aria-expanded="false" id="afip_settings">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-file-invoice"></span></span><span
                                             class="nav-link-text ps-1">Configuracion AFIP</span>
                                     </div>
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </div>
                 </div>
@@ -549,7 +604,7 @@
                         aria-controls="navbarVerticalCollapse" aria-expanded="false"
                         aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
                                 class="toggle-line"></span></span></button>
-                    <a class="navbar-brand me-1 me-sm-3" href="index.html">
+                    <a class="navbar-brand me-1 me-sm-3" href="{% url 'core_app:home' %}">
                         <div class="d-flex align-items-center">
                             <span class="font-sans-serif">
                                 <img id="logoImageMovil" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"
@@ -699,7 +754,7 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
-                        {% if user.is_staff %}
+                        {% if request.user.is_staff %}
                             <li class="nav-item">
                                 <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
                                     {% csrf_token %}
@@ -779,14 +834,14 @@
                         <li class="nav-item dropdown"><a class="nav-link pe-0" id="navbarDropdownUser" href="#"
                                 role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
-                                    <img class="rounded-circle" src="{% static 'users/img/anya.jpg' %}" alt="" />
+                                    <img class="rounded-circle" src="{{request.user.imagen.url}}" alt=""/>
 
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
-                                    {% if user.is_staff %}
+                                    {% if user.role != 'EMPLEADO' %}
                                         <a class="dropdown-item" href="{% url 'users_app:profile_admin' user.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
@@ -796,12 +851,11 @@
                                             Cuenta
                                         </a>
                                     {% else %}
-                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' user.employee.pk %}">
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' request.user.employee.pk %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                        <a class="dropdown-item" href="{% url 'employees_app:account' user.employee.id %}">
-                                            
+                                        <a class="dropdown-item" href="{% url 'employees_app:account' request.user.employee.pk %}">
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>
@@ -812,7 +866,7 @@
                                         <span class="fas fa-cog"></span>
                                         Configuraciones
                                     </a>
-                                    <a class="dropdown-item" href="{% url 'users_app:logout' %}">
+                                    <a class="dropdown-item" href="{% url 'users_app:logout' %}" id="logout">
                                         <span class="fas fa-sign-out-alt"></span>
                                         Cerrar sesion
                                     </a>
@@ -823,11 +877,9 @@
                 </nav>
 
                 <!-- NOTIFICACIONES GLOBALES -->
-                <a href="/notes/list/">
-                    <div id="notes-container">
-                        <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
-                    </div>
-                </a>
+                <div id="notes-container">
+                    <source id="notes-source" src="{% static 'notes/audio/audio.ogg' %}" type="audio/ogg">
+                </div>
 
                 <!-- NOTIFICACIONES GLOBALES -->
                 <a href="/notifications/list/">
@@ -880,6 +932,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{% static 'vendors/list.js/list.min.js' %}"></script>
     <script src="{% static 'core/js/theme.js' %}"></script>
+    <script src="{% static 'core/js/sidebar_item_active.js' %}"></script>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static 'notifications/js/notifications.js' %}"></script> <!-- Agregar este enlace -->

@@ -1,14 +1,25 @@
+from typing import Any
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
 from django.urls import reverse_lazy
 
 from django.views.generic import View
-from django.views.generic.edit import (FormView,)
-from django.views.generic import (DetailView,UpdateView)
+from django.views.generic import FormView, DetailView, UpdateView, RedirectView
 
-from .forms import UserCreateForm, LoginForm, UpdatePasswordForm,UserUpdateForm
+from applications.core.models import Objetives
+from django.utils import timezone
+from applications.core.models import Objetives
+
+
+from .forms import UserCreateForm
 from .models import User
+from .forms import *
+from .utils import generate_profile_img_and_assign
+from applications.branches.models import Branch, Branch_Objetives
+from applications.employes.models import Employee_Objetives
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
@@ -19,8 +30,7 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
     context_object_name = 'admin'
 
     def get_object(self, queryset=None):
-        # pk = self.request.user.pk  # Obtén la pk del usuario
-        pk = self.kwargs.get('pk') # PK traido de la URL
+        pk = self.request.user.pk  # Obtén la pk del usuario
         try:
             admin = User.objects.get(pk=pk)
             #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
@@ -28,6 +38,17 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
             #si no encuentro lo pongo en None para manejar las vistas en los templates
             admin = None
         return admin
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+
+        current_date = timezone.now().date()
+        active_objetives = Objetives.objects.filter(start_date__lte=current_date,exp_date__gte=current_date)
+        context['branch_objectives'] = Branch_Objetives.objects.filter(objetive__in=active_objetives)
+        #context['branch_objectives'] = Branch_Objetives.active_objectives.all()
+        context['employees_objectives'] = Employee_Objetives.objects.filter(objetive__in=active_objetives)
+        return context
 
 
 class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINIS
@@ -36,25 +57,27 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
     success_url = reverse_lazy('core_app:home')
     
     def form_valid(self, form):
-        # Extraer los valores del código telefónico y el número de teléfono
+        """  # Extraer los valores del código telefónico y el número de teléfono
         phone_code = form.cleaned_data.pop('phone_code', None)
         phone_number = form.cleaned_data.pop('phone_number', None)
 
         # Combinar el código telefónico y el número de teléfono si ambos existen
         if phone_code and phone_number:
             full_phone_number = f"{phone_code}{phone_number}"
-            form.cleaned_data['phone_number'] = full_phone_number
+            form.cleaned_data['phone_number'] = full_phone_number """
 
         form.cleaned_data.pop('password2')
         form.cleaned_data.pop('phone_code')
-        User.objects.create_admin(**form.cleaned_data) # Funcion que crea ADMINIS
+        branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+        user = User.objects.create_admin(**form.cleaned_data, branch=branch_actualy) # Funcion que crea ADMINIS
+
+        if not form.cleaned_data.get('imagen'):
+            generate_profile_img_and_assign(user)
+
         return super().form_valid(form)
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        #Le paso este contexto al template, para no poner el input
-        # de fecha de alta de empleado cuando se este creando un 
-        # administrador
         context["admin"] = True 
         return context
     
@@ -76,8 +99,8 @@ class LoginView(views.RedirectURLMixin, FormView):
             password=form.cleaned_data['password']
         )
         login(self.request, user)
-        
         next_url = self.request.GET.get('next')  # Obtiene el valor del par�metro 'next' de la URL
+        self.request.session['branch_actualy'] = int(self.request.user.branch.id)
         
         if next_url:
             return redirect(next_url)  # Redirige a la URL especificada en 'next'
@@ -85,7 +108,7 @@ class LoginView(views.RedirectURLMixin, FormView):
         return redirect(self.success_url)  # Si no hay 'next', redirige a una URL predeterminada
     
 
-class LogoutView(LoginRequiredMixin, View):
+class LogoutView( View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return render(request, template_name='users/logout.html', context={})
@@ -111,3 +134,64 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         
         logout(self.request)
         return super().form_valid(form)
+    
+    
+class AccountView(UpdateView):
+    template_name = 'users/user_account_page.html'
+    model = User
+    form_class = UserUpdateForm
+    form2_class = UpdatePasswordForm
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form2'] = self.get_form(self.form2_class)  # Se agrega el segundo formulario al contexto
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form2 = self.get_form(self.form2_class)
+
+        if 'form2' in request.POST:
+            # Si se envió el formulario de cambio de contraseña
+            if form2.is_valid():
+                # Procesa el formulario de cambio de contraseña
+                self.object.set_password(form2.cleaned_data['password'])
+                self.object.save()
+                return redirect("users_app:login")
+            else:
+                # El formulario de cambio de contraseña no es válido
+                context = self.get_context_data(form2=form2)
+                return self.render_to_response(context)
+        else:
+            # Si no se envió el formulario de cambio de contraseña,
+            # procesa el formulario de actualización de datos de usuario
+            return super().post(request, *args, **kwargs)
+        
+
+
+class UserChangeImagen(RedirectView):
+    def post(self, request, pk):
+        # Obtén el objeto de usuario
+        user_profile = User.objects.get(pk=pk)
+
+        # Obtiene la imagen del formulario
+        new_image = request.FILES.get('imagen')
+
+        if new_image:
+            # Actualiza la imagen del perfil de usuario con la nueva imagen
+            user_profile.imagen = new_image
+            user_profile.save()
+
+            # Mensaje de éxito
+            messages.success(request, 'Imagen de perfil actualizada correctamente.')
+        else:
+            # Mensaje de error si no se proporcionó una imagen
+            messages.error(request, 'Debes seleccionar una imagen válida.')
+
+        # Redirige de nuevo a la página donde se encuentra el formulario
+        return super().post(request, pk=pk)
+
+    def get_redirect_url(self, *args, **kwargs):
+        user_profile = User.objects.get(pk = kwargs['pk'])
+        kwargs['pk'] = user_profile.employee.pk
+        # Debes especificar la URL a la que deseas redirigir después de guardar la imagen
+        return reverse_lazy('employees_app:account', kwargs=kwargs)

@@ -24,11 +24,11 @@ class ValidationFormMixin(forms.ModelForm):
             Debe tener por lo menos 3 meses de vida o no superar los 85 años.
         """
         if birth_date :
-            if birth_date >= DATE_NOW.date() - timedelta(days=30):
+            if birth_date >= DATE_NOW.date() - timedelta(days=2*365):
                 raise forms.ValidationError('La fecha establecida no puede registrarse.')
-            age_limit = DATE_NOW.date() - timedelta(days=85*365)
+            age_limit = DATE_NOW.date() - timedelta(days=90*365)
             if birth_date <= age_limit:
-                raise forms.ValidationError('La fecha establecida no puede superar los 85 años.')
+                raise forms.ValidationError('La fecha establecida no puede superar los 90 años.')
 
     def validate_email(self, email):
         """

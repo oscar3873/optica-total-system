@@ -3,25 +3,16 @@
     max-height: 700px;
     overflow-y: auto;
     padding-right: 16px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--falcon-soft-primary); /* Usando las variables de color */
-    border-radius: 10px; /* Puntas redondeadas */
 }
 
 /* Barra de scroll personalizada */
 .product-container::-webkit-scrollbar {
-    width: 12px; /* Ancho total del riel */
-}
-
-.product-container::-webkit-scrollbar-track {
-    border-radius: 6px; /* Puntas redondeadas de los bordes */
-    border: 2px solid var(--falcon-border-color); /* Color de los bordes del área de seguimiento */
-    background: transparent; /* Fondo transparente del área de seguimiento */
+    width: 5px; /* Ancho total del riel */
 }
 
 .product-container::-webkit-scrollbar-thumb {
     background-color: var(--falcon-200); /* Color de la barra de scroll */
-    border-radius: 20px; /* Puntas redondeadas de la barra de scroll */
+    border-radius: 12px; /* Puntas redondeadas de la barra de scroll */
 }
 
 .product-item {

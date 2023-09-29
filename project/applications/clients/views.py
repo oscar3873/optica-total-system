@@ -1,12 +1,14 @@
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy, reverse
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
+from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
+from applications.cashregister.utils import obtener_nombres_de_campos
 
 from .models import *
 from .forms import *
@@ -19,10 +21,22 @@ class CalibrationOrderCreateView(LoginRequiredMixin, FormView):
     template_name = 'clients/lab_form.html'
     success_url = reverse_lazy('clients_app:lab_view')
 
+    def get(self, request, *args, **kwargs):
+        try:
+            Customer.objects.get(pk=self.kwargs['pk'])
+            return super().get(request, *args, **kwargs)
+        except Customer.DoesNotExist:
+            error_context = {
+                'url': reverse('clients_app:customer_view'),
+                'reverse': 'LISTA DE CLIENTES'
+            }
+            return render(request, 'core/error_404_page.html', context=error_context) # Le paso contexto para que muestre la url de Volver a ...
+        
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['form'] = Calibration_OrderForm()
         context['named_formsets'] = {
+            'client' : Customer.objects.get(pk=self.kwargs['pk']),
             'pupilar': InterpupillaryForm,
             'correction': CorrectionForm,
             'material': MaterialForm,
@@ -81,16 +95,24 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
     @transaction.atomic
     def form_valid(self, form):
         if form.is_valid():
+            user = self.request.user
+            
             customer = form.save(commit=False)
             customer.user_made = self.request.user
-            customer.branch = self.request.user.branch
+
+            if user.is_staff:
+                branch_actualy = self.request.session.get('branch_actualy')
+                branch_actualy = Branch.objects.get(id=branch_actualy)
+                customer.branch = branch_actualy
+            else:
+                customer.branch = self.request.user.branch
             customer.save()
 
             for insurance in form.cleaned_data['h_insurance']:
                 Customer_HealthInsurance.objects.create(
                     h_insurance = insurance,
                     customer = customer,
-                    user_made=self.request.user
+                    user_made=user
                 )
         return super().form_valid(form)
 
@@ -99,6 +121,17 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     form_class = HealthInsuranceForm
     template_name = 'clients/insurance_form.html'
     success_url = reverse_lazy('clients_app:insurance_view')
+
+    def get(self, request, *args, **kwargs):
+        try:
+            Customer.objects.get(pk=self.kwargs['pk'])
+            return super().get(request, *args, **kwargs)
+        except Customer.DoesNotExist:
+            error_context = {
+                'url': reverse('clients_app:customer_view'),
+                'reverse': 'LISTA DE CLIENTES'
+            }
+            return render(request, 'core/error_404_page.html', context=error_context) # Le paso contexto para que muestre la url de Volver a ...
 
     def form_valid(self, form):
         insurance = form.save(commit=False)
@@ -131,9 +164,21 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'clients/lab_form.html'
     success_url = reverse_lazy('clients_app:lab_view')
 
+    def get(self, request, *args, **kwargs):
+        try:
+            Customer.objects.get(pk=self.kwargs['pk'])
+            return super().get(request, *args, **kwargs)
+        except Customer.DoesNotExist:
+            error_context = {
+                'url': reverse('clients_app:customer_view'),
+                'reverse': 'LISTA DE CLIENTES'
+            }
+            return render(request, 'core/error_404_page.html', context=error_context) # Le paso contexto para que muestre la url de Volver a ...
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['named_formsets'] = {
+            'client' : Customer.objects.get(pk=self.kwargs.get('pk_c')),
             'correction': CorrectionForm(instance=self.object.correction),
             'material': MaterialForm(instance=self.object.material),
             'color': ColorForm(instance=self.object.color),
@@ -169,7 +214,37 @@ class CalibrationOrderUpdateView(LoginRequiredMixin, UpdateView):
 class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
-    template_name = 'clients/customer_form.html'
+    template_name = 'clients/customer_update.html'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            Customer.objects.get(pk=self.kwargs['pk'])
+            return super().get(request, *args, **kwargs)
+        except Customer.DoesNotExist:
+            error_context = {
+                'url': reverse('clients_app:customer_view'),
+                'reverse': 'LISTA DE CLIENTES'
+            }
+            return render(request, 'core/error_404_page.html', context=error_context) # Le paso contexto para que muestre la url de Volver a ...
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['h_insurance'] = HealthInsuranceForm
+        return context
+
+    def form_valid(self, form):
+        customer = form.save(commit=False)
+        customer.user_made = self.request.user
+        customer.save()
+
+        form_in_out_insurances(form, customer, self.request.user)
+        
+        return redirect('clients_app:customer_detail', pk=self.get_object().pk)
+    
+class CustomerUpdateHealthInsurance(CustomUserPassesTestMixin, UpdateView):
+    model = Customer
+    form_class = CustomerForm
+    template_name = 'clients/update_customer_hinsurance.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -180,16 +255,13 @@ class CustomerUpdateView(LoginRequiredMixin, UpdateView):
         customer = form.instance
         customer.user_made = self.request.user
         customer.save()
-
         form_in_out_insurances(form, customer, self.request.user)
-        
         return redirect('clients_app:customer_detail', pk=self.get_object().pk)
-    
     
 class HealthInsuranceUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = HealthInsurance
     form_class = HealthInsuranceForm
-    template_name = 'clients/insurance_form.html'
+    template_name = 'clients/hinsurance_update.html'
     success_url = reverse_lazy('clients_app:insurance_view')
     
     def form_valid(self, form):
@@ -205,6 +277,20 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
     template_name = 'clients/customer_detail.html'
     context_object_name = 'customer'
 
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        branch = user.branch
+
+        # Obtener el objeto Product actual utilizando self.get_object()
+        object = self.get_object()
+
+        if not user.is_staff and not object.branch == branch: 
+            # El usuario no tiene permiso para ver este producto
+            messages.error(request, 'Lo sentimos, no puedes ver este cliente.')
+            return redirect('clients_app:customer_view')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
+        
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self,**kwargs):
         customer = self.get_object()
         context = super().get_context_data(**kwargs)
@@ -218,11 +304,33 @@ class CalibrationOrderDetailView(LoginRequiredMixin, DetailView):
     template_name = 'clients/lab_detail.html'
     context_object_name = 'laboratory_orders'
 
+    def get(self, request, *args, **kwargs):
+        try:
+            Calibration_Order.objects.get(pk=self.kwargs['pk'])
+            return super().get(request, *args, **kwargs)
+        except Calibration_Order.DoesNotExist:
+            error_context = {
+                'url': reverse('clients_app:customer_view'),
+                'reverse': 'LISTA DE CLIENTES'
+            }
+            return render(request, 'core/error_404_page.html', context=error_context) # Le paso contexto para que muestre la url de Volver a ...
+
 
 class HealthInsuranceDetailView(LoginRequiredMixin, DetailView):
     model = HealthInsurance
     template_name = 'clients/hinsuranse_detail.html'
     context_object_name = 'h_insurance'
+
+    def get(self, request, *args, **kwargs):
+        try:
+            HealthInsurance.objects.get(pk=self.kwargs['pk'])
+            return super().get(request, *args, **kwargs)
+        except HealthInsurance.DoesNotExist:
+            error_context = {
+                'url': reverse('clients_app:insurance_view'),
+                'reverse': 'LISTA DE OBRAS SOCIALES'
+            }
+            return render(request, 'core/error_404_page.html', context=error_context) # Le paso contexto para que muestre la url de Volver a ...
 
 
 ############################## LISTING ###############################
@@ -233,10 +341,24 @@ class CustomerListView(LoginRequiredMixin, ListView):
     context_object_name = 'customers'
     paginate_by = 8
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['table_column'] = obtener_nombres_de_campos(Customer,
+            "id",
+            "deleted_at", 
+            "created_at", 
+            "updated_at",
+            "phone_code",
+            "branch",
+            "birth_date",
+            "address",
+            "email"
+            )
+        return context
+
     def get_queryset(self):
         branch = self.request.user.branch
         branch_actualy = self.request.session.get('branch_actualy')
-
         if  self.request.user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
@@ -278,10 +400,11 @@ class CalibrationOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
             return context
 
     def get_success_url(self):
-        if 'pk_c' in self.kwargs: # pk de customer pasado por url
-            customer_pk = self.kwargs.get('pk_c')
-            return reverse_lazy('clients_app:customer_detail', kwargs={'pk': customer_pk}) # en caso de tener pk de customer, entonces entre al delete por la vista de un cliente especifico
-        return super().get_success_url() # Si entre al delete desde la lista general de pedidos de lab
+        try:
+            customer = Customer.objects.get(pk=self.kwargs['pk_c'])
+            return reverse_lazy('clients_app:customer_detail', kwargs={'pk': customer.pk}) # en caso de tener pk de customer, entonces entre al delete por la vista de un cliente especifico
+        except Customer.DoesNotExist:
+            return super().get_success_url() # Si entre al delete desde la lista general de pedidos de lab
         
 
 class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):

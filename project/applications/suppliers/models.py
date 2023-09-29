@@ -14,6 +14,7 @@ from django.core.validators import RegexValidator
 class Supplier(BaseAbstractWithUser):
     """ # Para validar un número de telefono
     phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$") """
+    phone_code = models.CharField(max_length=10, blank=True, null=True, verbose_name="COD.Pais")
     phone_number = models.BigIntegerField(unique=True ,verbose_name='Telefono de contacto')
     name = models.CharField(max_length=50, verbose_name='Nombre')
     email = models.EmailField(verbose_name='Correo electronico', null=True, blank=True)

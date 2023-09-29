@@ -1,15 +1,25 @@
 from django.db import transaction
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db.models import Q
-from django.urls import reverse_lazy,reverse
-from django.views.generic import FormView, UpdateView, DetailView, ListView, DeleteView
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.views.decorators.http import require_GET
+from django.views.generic import (
+    FormView,
+    UpdateView,
+    DetailView,
+    ListView,
+    DeleteView
+)
 from django.contrib import messages
-
-from applications.core.mixins import CustomUserPassesTestMixin # Para Autenticar usuario administrador
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from applications.core.mixins import CustomUserPassesTestMixin
+from .models import Brand, Category, Product
 from .forms import *
-from .models import *
 from .utils import *
+import math
+
 # Create your views here.
 
 class CategoryCreateView(CustomUserPassesTestMixin, FormView):
@@ -36,7 +46,7 @@ class CategoryCreateView(CustomUserPassesTestMixin, FormView):
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
 
-class BrandCreateView(CustomUserPassesTestMixin, FormView):
+class BrandCreateView(LoginRequiredMixin, FormView):
     """
     Crear una marca nueva para los productos
     """
@@ -85,41 +95,39 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
         return super().form_valid(form)
     
 
-class FeatureFullCreateView(CustomUserPassesTestMixin, FormView):
+class FeatureFullCreateView(FormView):
     """
-    Crear una característica nueva para el producto
-    Previa carga del Tipo de Característica
+    Crear una característica nueva para el producto.
+        Icluye el TIPO y CARACTERISTICA.
+        ¡¡SOLO PARA PETICIONES FETCH!!
     """
-    form_class = FeatureForm_to_formset
-    template_name = 'products/feature_create_page.html'
-    success_url = reverse_lazy('core_app:home')
+    form_class = FeatureForm_toWizard
 
     def form_valid(self, form):
-        
-        feature, created_ft, created_f = validate_exists_feature_full(form, self.request.user)
-        type = form.cleaned_data['type']
-
-        if not created_f: # Pregunta si ya existe la caracteristica (incluido el tipo)
-            return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
-        
-        elif not created_ft: # Pregunta si ya existe el tipo solo
-            return JsonResponse({'status': 'error', 'error_message': f'Por favor cree la nueva característica desde la columna "{type}".'})
-
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            feature, created_ft, created_f = validate_exists_feature_full(form, self.request.user)
+            type = form.cleaned_data['type']
+
+            if not created_f: # Pregunta si ya existe la caracteristica (incluido el tipo)
+                return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
+            
+            elif not created_ft: # Pregunta si ya existe el tipo solo
+                return JsonResponse({'status': 'error', 'error_message': f'Por favor cree la nueva característica desde la columna "{type}".'})
+
             new_feature_data = {
                 'id':  feature.id,
                 'name': feature.__str__(),
             }
             # Si es una solicitud AJAX, devuelve una respuesta JSON
             return JsonResponse({'status': 'success', 'new_feature': new_feature_data})
-            
-        else:
-            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
-            return super().form_valid(form)
-        
+
         
 class FeatureUnitCreateView(FormView):
-    form_class = FeatureForm_to_formset
+    """
+    Añade una caracteristica a un TIPO seleccionado.
+        ¡¡SOLO PARA PETICIONES FETCH!!
+    """
+    form_class = FeatureForm_toWizard
 
     def form_valid(self, form):
         if len(form.cleaned_data['value']) < 1:
@@ -180,17 +188,25 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['category_form'] = CategoryForm
         context['brand_form'] = BrandForm
-        context['feature_form'] = FeatureForm_to_formset
+        context['feature_form'] = FeatureForm_toWizard
         # context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
     @transaction.atomic
     def form_valid(self, form):
-        print(form.cleaned_data)
+        user = self.request.user
+
         if form.is_valid():
+            if user.is_staff:
+                branch_actualy = self.request.session.get('branch_actualy')
+                branch_actualy = Branch.objects.get(id=branch_actualy)
+                branch = branch_actualy
+            else:
+                branch = user.branch
+
             product = form.save(commit=False)
             product.user_made = self.request.user
-            product.branch = self.request.user.branch
+            product.branch = branch
             product.save()
             form_in_out_features(form, product, self.request.user)
 
@@ -232,7 +248,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         # context['named_formsets'] = FeatureFormSet(prefix='variants')
         context['category_form'] = CategoryForm(instance=self.object.category)
         context['brand_form'] = BrandForm(instance=self.object.brand)
-        context['feature_form'] = FeatureForm_to_formset
+        context['feature_form'] = FeatureForm_toWizard
         return context
 
     @transaction.atomic
@@ -253,7 +269,7 @@ class CategoryUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Category
     form_class = CategoryForm
     template_name = 'products/category_update_page.html'
-    success_url = reverse_lazy('products_ap:category_list')
+    success_url = reverse_lazy('products_app:category_list')
     
     def form_valid(self, form):
         category = form.save(commit=False)
@@ -267,7 +283,7 @@ class BrandUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Brand
     form_class = BrandForm
     template_name = 'products/brand_update_page.html'
-    success_url = reverse_lazy('products_ap:brand_list')
+    success_url = reverse_lazy('products_app:brand_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -277,7 +293,7 @@ class FeatureUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature
     form_class = FeatureForm
     template_name = 'products/feature_update_page.html'
-    success_url = reverse_lazy('products_ap:feature_list')
+    success_url = reverse_lazy('products_app:feature_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -295,32 +311,33 @@ class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
 
 ################## LIST ######################
 
-class ProductListView(CustomUserPassesTestMixin, ListView):
+class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
 
     def get_queryset(self):
-        branch = self.request.user.branch
-        branch_actualy = self.request.session.get('branch_actualy')
-
-        if  self.request.user.is_staff and branch_actualy:
+        user = self.request.user
+        if user.is_staff:
+            branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
-            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
-            return Product.objects.filter(branch=branch_actualy, deleted_at=None)
-        
-        # En otros casos, filtra por la sucursal del usuario
+            branch = branch_actualy
+        else:
+            branch = user.branch
+
         return Product.objects.filter(branch=branch, deleted_at=None)
 
     def get_context_data(self, **kwargs):
+        pk=self.request.user.pk
         context = super().get_context_data(**kwargs)
         
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at"]
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
+        context['features']=Product_feature.objects.filter(product_id=pk)
         return context
 
 
-class BrandListView(CustomUserPassesTestMixin, ListView):
+class BrandListView(LoginRequiredMixin, ListView):
     model = Brand
     template_name = 'products/brand_list_page.html'
     context_object_name = 'brands'
@@ -335,7 +352,7 @@ class BrandListView(CustomUserPassesTestMixin, ListView):
         return context
 
 
-class CategoryListView(CustomUserPassesTestMixin, ListView):
+class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
     template_name = 'products/category_list_page.html'
     context_object_name = 'categories'
@@ -350,7 +367,7 @@ class CategoryListView(CustomUserPassesTestMixin, ListView):
         return context
 
 
-class FeatureTypeListView(CustomUserPassesTestMixin, ListView):
+class FeatureTypeListView(LoginRequiredMixin, ListView):
     model = Feature_type
     template_name = 'products/feature_type_page.html'
     context_object_name = 'feature_type'
@@ -359,7 +376,7 @@ class FeatureTypeListView(CustomUserPassesTestMixin, ListView):
         # Filtra los productos que no han sido eliminados suavemente
         return Feature_type.objects.filter(deleted_at=None)
 
-class FeatureListView(CustomUserPassesTestMixin, ListView):
+class FeatureListView(LoginRequiredMixin, ListView):
     model = Feature
     template_name = 'products/feature_page.html'
     context_object_name = 'feature'
@@ -370,42 +387,50 @@ class FeatureListView(CustomUserPassesTestMixin, ListView):
 
 #################### DETAILS #####################
 
-class ProductDetailView(CustomUserPassesTestMixin, DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
     template_name = 'products/product_page.html'
             
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        branch = user.branch
+
+        # Obtener el objeto Product actual utilizando self.get_object()
+        object = self.get_object()
+
+        if not user.is_staff and not object.branch == branch: 
+            # El usuario no tiene permiso para ver este producto
+            messages.error(request, 'Lo sentimos, no puedes ver este producto.')
+            return redirect('products_app:product_list')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
+        
+        return super().get(request, *args, **kwargs)
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        branch = self.request.user.branch
-        
-        if not self.object.branch == branch: # Valida que el usuario no pueda entrar por URL (product/<pk>/)
-            messages.error(self.request, 'Lo sentimos, no puedes ver este producto.')
-        
         context['features'] = self.model.objects.get_features(self.get_object())
         return context
     
     
-class CategoryDetailView(CustomUserPassesTestMixin, DetailView):
+class CategoryDetailView(LoginRequiredMixin, DetailView):
     model = Category
     template_name = 'products/category_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['products'] = Product.objects.filter(category=self.object, deleted_at=None, branch = self.request.user.branch)
+        context['products'] = Product.objects.filter(category=self.object, deleted_at=None)
         # AGREGAR MAS DETALLES RELACIONADOS
         return context
 
 
-class BrandDetailView(CustomUserPassesTestMixin, DetailView):
-    
+class BrandDetailView(LoginRequiredMixin, DetailView):
     model = Brand
     template_name = 'products/brand_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None, branch = self.request.user.branch)
+        context['products'] = Product.objects.filter(brand=self.object, deleted_at=None)
         # AGREGAR MAS DETALLES RELACIONADOS
         return context
     
@@ -419,10 +444,6 @@ class CategoryDeleteView(CustomUserPassesTestMixin, DeleteView):
     template_name = 'products/category_delete_page.html'
     success_url = reverse_lazy('products_app:category_list')
     
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()  # Realiza la eliminación suave
-        return HttpResponseRedirect(self.get_success_url())
 
 class BrandDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Brand
@@ -451,26 +472,34 @@ class FeatureTypeDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 ###################### SEARCH #########################
 class ProductSearchView(ListView):
-    model = Product
-    template_name = 'products/product_search.html'  # Reemplaza 'product_search.html' con la ruta a tu plantilla HTML de búsqueda de productos
-    context_object_name = 'products'
+    """
+    Buscador de productos para el Punto de Venta (PoS)
+        ¡¡SOLO PARA PETICIONES FETCH!!
+    """
 
     def get_queryset(self):
-        branch = self.request.user.branch
+        user = self.request.user
+        if user.is_staff:
+            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            branch = branch_actualy
+        else:
+            branch = user.branch
 
         query = self.request.GET.get('q')
         if query:
             # Convertir la consulta a minúsculas
             query = query.lower()
 
-            # Realizar una búsqueda insensible a mayúsculas/minúsculas y que contenga la palabra
+            # Realizar una búsqueda insensible a mayúsculas/minúsculas y que contenga la palabra en los campos 'name' y 'barcode'
             queryset = Product.objects.filter(
                 Q(name__icontains=query) |
                 Q(name__icontains=query.capitalize()) |
                 Q(name__icontains=query.upper()) |
                 Q(name__icontains=query.lower()) |
-                Q(name__icontains=query.title())
-            , branch=branch)
+                Q(name__icontains=query.title()) |
+                Q(barcode__icontains=query),
+                branch=branch)
         else:
             queryset = Product.objects.all()
 
@@ -478,6 +507,77 @@ class ProductSearchView(ListView):
 
     def get(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        data = [{'id': product.pk, 'name': product.name, 'description': product.description, 'price': product.sale_price, 'category': product.category.name, 'brand': product.brand.name } for product in queryset]
+        data = [{
+            'id': product.pk, 
+            'name': product.name, 
+            'description': product.description, 
+            'price': product.sale_price, 
+            'category': product.category.name, 
+            'brand': product.brand.name,
+            'barcode': product.barcode 
+            } for product in queryset]
 
         return JsonResponse({'products': data})
+
+#################### Actualizar Precio ###############
+from django.shortcuts import render
+
+from django.http import JsonResponse
+from django.shortcuts import render
+from django.views import View
+from .models import Brand, Category, Product
+from django.views.decorators.http import require_GET
+
+class UpdatePriceView(View):
+    template_name = 'products/update_price_advanced.html'
+
+    def get(self, request, *args, **kwargs):
+        # Renderizar el formulario y el HTML existente
+        return render(request, self.template_name)
+
+    def post(self, request, *args, **kwargs):
+        # Procesar el formulario y realizar la validación
+        form = UpdatePriceForm(request.POST)
+        
+        if form.is_valid():
+            # Obtener datos del formulario
+            search_type = form.cleaned_data['search_type']
+            #me devuelve el objeto de categoria
+            selected_value = form.cleaned_data['brand' if search_type == 'brand' else 'category']
+            value= form.cleaned_data['brand']
+            percentage = form.cleaned_data['percentage']
+
+            # Obtener los productos relacionados con la marca o categoría seleccionada
+            if search_type == "brand":
+                related_products = Product.objects.filter(brand=selected_value)
+            elif search_type == "category":
+                related_products = Product.objects.filter(category=selected_value)
+
+            # Actualizar los precios de los productos
+            for product in related_products:
+                new_price = product.sale_price + product.sale_price*(percentage/100)
+                # Redondear al múltiplo de 50 más cercano siempre para arriba
+                new_price = math.ceil(new_price / 50) * 50
+                product.sale_price = new_price
+                product.save()
+
+            return redirect('products_app:product_list')
+
+        # Si el formulario no es válido, renderizar el HTML existente con el formulario y errores
+        return render(request, self.template_name, {'form': form})
+
+@require_GET
+def search_categories_or_brands(request):
+    search_term = request.GET.get('search_term', '')
+    option = request.GET.get('option', '')
+
+    results = []
+
+    if option == 'category':
+        categories = Category.objects.filter(name__icontains=search_term)
+        results = [{'id': category.id, 'name': category.name} for category in categories]
+    elif option == 'brand':
+        brands = Brand.objects.filter(name__icontains=search_term)
+        results = [{'id': brand.id, 'name': brand.name} for brand in brands]
+
+    return JsonResponse(results, safe=False)

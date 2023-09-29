@@ -1,12 +1,33 @@
+.notes-container {
+    background-color: var(--falcon-300);
+    border-radius: 6px;
+    color: var(--falcon-dropdown-link-color);
+}
+
 .notes {
-    background-color: #00e83e;
-    padding: 5px;
-    margin-bottom: 5px;
     border-radius: 5px;
     animation: fadeOut 10s; /* Agregar una animación para desvanecer */
 }
 
-@keyframes fadeOut {
+.note-label {
+    display: inline-block; /* Hace que el div se ajuste al contenido */
+}
+
+.note-label p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.close-note-button {
+    background-color: transparent;
+    border: none;
+    color: var(--falcon-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+
+/* @keyframes fadeOut {
     0% { opacity: 1; }
     100% { opacity: 0; display: none; }
-}
+} */

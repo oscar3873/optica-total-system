@@ -1,5 +1,8 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import TemplateView, View
+from django.contrib.sessions.models import Session
+
 
 #TEST PDF
 from reportlab.pdfgen import canvas

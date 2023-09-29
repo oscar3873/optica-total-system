@@ -31,16 +31,16 @@ class Product(BaseAbstractWithUser):
         almacena datos necesarios para el manejo de productos
             
     """
-    name = models.CharField(max_length=50, blank=False, null=False)
+    name = models.CharField(max_length=50, blank=False, null=False, verbose_name="Nombre")
     barcode = models.PositiveBigIntegerField(verbose_name='Codigo de barra', null=True)
     cost_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de costo")
     suggested_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio sugerido")
     sale_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de venta")
-    description = models.CharField(max_length=250)
+    description = models.CharField(max_length=250,verbose_name="Descripción")
     stock = models.PositiveSmallIntegerField()
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category')
-    brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand')
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch')
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category',verbose_name="Categoria")
+    brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand',verbose_name="Marca")
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch',verbose_name="Sucursal")
 
     objects = ProductManager()
 
@@ -50,6 +50,9 @@ class Product(BaseAbstractWithUser):
                 f'{self.category} - '+
                 f'Stock: {self.stock}'
                 ) 
+    class Meta:
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
 
 
 class Feature_type(BaseAbstractWithUser):
