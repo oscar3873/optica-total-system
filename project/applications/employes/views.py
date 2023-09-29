@@ -164,8 +164,6 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 ############################ Account ####################################
-# En el template 'employes/employee_account_page.html'
-# cada formulario tiene un action a UpdateUserInfoView y a UpdatePasswordView respectivamente 
 class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'employes/employee_account_page.html'
     model = User
@@ -195,11 +193,8 @@ class AccountView(LoginRequiredMixin, UpdateView):
         return super().get(request, *args, **kwargs)
     
     def get_success_url(self):
-        return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
-
-    def form_valid(self, form):
         messages.success(self.request, "Se actualizaron los datos con exito.")
-        return super().form_valid(form)
+        return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
 
 # View para validar formulario UpdatePasswordForm

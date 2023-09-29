@@ -32,7 +32,3 @@ OrderDetailFormset = forms.inlineformset_factory(
     form=OrderDetailForm,
     extra = 0,
 )
-# OrderDetailFormset = forms.formset_factory(
-#     OrderDetailForm,
-#     extra = 0
-# )

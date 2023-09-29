@@ -5,7 +5,7 @@ app_name = 'employees_app'
 
 urlpatterns = [
     path(
-        'new/', 
+        'signup/', 
         EmployeeCreateView.as_view(),
         name='new_employee'
     ),
@@ -20,7 +20,7 @@ urlpatterns = [
         name='profile_employee'
     ),
     path(
-        'list/',
+        '',
         EmployeeListView.as_view(),
         name='list_employee'
     ),
