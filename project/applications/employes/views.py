@@ -216,8 +216,10 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
         return redirect('employees_app:account', pk=self.kwargs['pk'])
     
     def form_invalid(self, form):
-        # Lógica para manejar errores en el formulario UpdatePasswordForm
-        # Agregar mensajes de error al contexto
         messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
         return redirect('employees_app:account', pk=self.kwargs['pk'])
+    
+    def get_object(self, queryset=None):
+        employee = Employee.objects.get(pk=self.kwargs['pk'])
+        return employee.user
 
