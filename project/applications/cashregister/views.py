@@ -144,28 +144,26 @@ class CashRegisterDeleteView(DeleteView):
     success_url = reverse_lazy('cashregister_app:cashregister_list_view')
 
 
-class CashRegisterClosedView(View):
-    template_name = 'cashregister/cashregister_closed_page.html'
+class CashRegisterArching(View):
+    template_name = 'cashregister/cashregister_arching_page.html'
     
-    #pasar contexto de cashregiter
     def get(self, request, *args, **kwargs):
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = self.request.user.branch
-            cashregister = CashRegister.objects.get(is_close=False, branch= branch_actualy)
-        except CashRegister.DoesNotExist:
+            cashregister = CashRegister.objects.get(is_close=False, branch= branch_actualy) #pasar contexto de cashregiter
+        except CashRegister.DoesNotExist: 
             messages.error(request, 'No hay una caja registradora activa para esta sucursal')
             return redirect('cashregister_app:cashregister_create_view')
         
         initial_data = [
             {
-                'type_method': method,
-                'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister)
+                'type_method': method, # tipo de metodo de pago
+                'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister) # calculo de monto registrado por el metodo de pago elegido
             }
             for method in PaymentType.objects.all()]
-        #Hay que buscar una alternativa a esta linea de codigo
-        #Porque todo deja de funcionar si se saca initial=initial_data
+        # Hay que buscar una alternativa a esta linea de codigo
+        # Porque todo deja de funcionar si se saca initial=initial_data
         formset = CashRegisterDetailFormSet(initial=initial_data)
         context = {'cashregister': cashregister, 'formset': formset}
         
@@ -175,7 +173,6 @@ class CashRegisterClosedView(View):
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = self.request.user.branch
             cashregister = CashRegister.objects.get(is_close=False, branch= branch_actualy)
         except CashRegister.DoesNotExist:
             cashregister = None
@@ -188,16 +185,13 @@ class CashRegisterClosedView(View):
                 'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister)
             }
             for method in PaymentType.objects.all()]
-        #Falta implementar la logica completa para el arqueo y el cierre en los managers.py
         
         if formset.is_valid():
-            branch = self.request.user.branch
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
             cashregister = CashRegister.objects.get(is_close=False, branch=branch_actualy)
-            final_data
             
-            for form, data in zip(formset, final_data):
+            for form, data in zip(formset, final_data): # Esto esta provisorio, machea cada metodo con un form del formset, pero si se cambian de orden se rompe todo
                 if form.is_valid():
                     instance = form.save(commit=False)
                     instance.user_made = request.user
@@ -207,9 +201,9 @@ class CashRegisterClosedView(View):
                     instance.counted_amount = abs(instance.counted_amount)
                     instance.difference = instance.counted_amount - instance.registered_amount
                     instance.save()
-            # IMPORTANTE CON ESTO SE CIERRA LA CAJA
-            cashregister.is_close = True
-            cashregister.save()
+            # Se comento esto porque ahora no se cierra la caja sino que se registra una arqueo nada mas 
+            # cashregister.is_close = True
+            # cashregister.save()
             
         else:
             print("----------------Error formset create cashregister----------------")

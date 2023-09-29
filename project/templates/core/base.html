@@ -175,7 +175,25 @@
                                             class="nav-link-text ps-1">Movimientos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_close_view' %}" role="button"
+                                <!-- parent pages--><a class="nav-link dropdown-indicator" href="#cashregister-arching"
+                                    role="button" data-bs-toggle="collapse" aria-expanded="false"
+                                    aria-controls="cashregister-arching">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-calculator"></span></span><span
+                                            class="nav-link-text ps-1">Arqueo de Caja</span>
+                                    </div>
+                                </a>
+                                <ul class="nav collapse false" id="cashregister-arching">
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'cashregister_app:cashregister_arching_view' %}"
+                                            aria-expanded="false">
+                                            <div class="d-flex align-items-center"><span
+                                                    class="nav-link-text ps-1">Realizar un arqueo</span>
+                                            </div>
+                                        </a>
+                                        <!-- more inner pages-->
+                                    </li>
+                                </ul>
+                                <!-- parent pages--><a class="nav-link" href="" role="button"
                                     aria-expanded="false">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock"></span></span><span

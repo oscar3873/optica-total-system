@@ -37,8 +37,13 @@ urlpatterns = [
         name = 'cashregister_create_view'
     ),
     path(
+        'arching/',
+        CashRegisterArching.as_view(),
+        name = 'cashregister_arching_view'
+    ),
+    path(
         'close/',
-        CashRegisterClosedView.as_view(),
+        CashRegisterArching.as_view(),
         name = 'cashregister_close_view'
     ),
     path(
