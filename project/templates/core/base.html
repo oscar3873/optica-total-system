@@ -546,7 +546,7 @@
                                     
                             </li>
                             {% endif %}
-                            {% if request.user.role == 'ad' %}
+                            {% if request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
@@ -828,7 +828,7 @@
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
-                                    {% if user.role != 'EMPLEADO' %}
+                                    {% if request.user.is_staff %}
                                         <a class="dropdown-item" href="{% url 'users_app:profile_admin' user.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil

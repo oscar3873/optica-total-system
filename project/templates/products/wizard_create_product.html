@@ -4,6 +4,7 @@
 
 {% block extra_css %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.8/lottie.min.js"></script>
+<link rel="stylesheet" href="{% static 'products/css/product_form.css' %}">
 {% endblock extra_css %}
 
 
@@ -179,7 +180,6 @@
                   <div class="col-12, col-md-3">
                     <label for="{{ form.suggested_price.id_for_label }}" class="form-label">Precio sugerido:</label>
                     {{form.suggested_price}}
-                    <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
                     {% if form.suggested_price.errors %}
                       <div class="text-danger fs--2">
                         {{form.suggested_price.errors}}

@@ -59,7 +59,7 @@
             </div>
             <div id="table-purchases-replace-element">
               
-              {% if user.role != 'EMPLEADO' %}
+              {% if request.user.is_staff %}
                 <a href="{% url 'employees_app:new_employee' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo Empleado</span></a>
                 
               {% endif %}
@@ -117,7 +117,7 @@
                     <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
                       <a class="dropdown-item" href="{% url 'employees_app:profile_employee' employee.id %}">Detalle</a>
                       
-                      {% if user.role != 'EMPLEADO' %}
+                      {% if request.user.is_staff %}
                         <a class="dropdown-item" href="{% url 'employees_app:update_employee' employee.id %}">Editar</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-danger" href="{% url 'employees_app:employee_delete' employee.id %}">Borrar</a>

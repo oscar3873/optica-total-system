@@ -18,7 +18,7 @@ class CategoryForm(ValidationFormMixin):
     )
     class Meta:
         model = Category
-        #necesario para el front 
+        #necesario para el front
         fields = ('name',)
     
     def clean_name(self):
@@ -74,6 +74,7 @@ class ProductForm(ValidationFormMixin):
         )
     )
     barcode = forms.IntegerField(
+        required=False,
         label='Codigo de barra',
         min_value=0,
         widget=forms.NumberInput(
@@ -100,9 +101,9 @@ class ProductForm(ValidationFormMixin):
         decimal_places=2,
         widget=forms.NumberInput(
             attrs={
-                'placeholder': 'Ej: 123.32',
-                'class': 'form-control',
-                'placeholder' : '0.00'
+                'class': 'form-control price-suggested-price',
+                'placeholder' : '0.00',
+                'readonly' : True
                 }
         )
     )

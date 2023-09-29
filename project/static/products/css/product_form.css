@@ -1,0 +1,8 @@
+.price-suggested-price {
+    border: none !important; /* Elimina el borde del input */
+    background: none !important;  /* Elimina el fondo del input */
+    outline: none !important; /* Elimina el resaltado al enfocar */
+    /* padding: 0; Ajusta el espacio interior si es necesario */
+    cursor: default !important; /* Cambia el cursor para indicar que no se puede editar */
+    /* Agrega estilos adicionales según sea necesario */
+}
