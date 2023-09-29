@@ -23,6 +23,11 @@ class LabelCreateForm(ValidationFormMixin):
         model = Label
         fields = ['label','color']
 
+    def clean_label(self):
+        label = self.cleaned_data.get('label')
+        self.validate_length(label, 3, 'Debe contener por lo menos 3 caracteres.')
+        return label.upper() 
+
 class NoteCreateForm(ValidationFormMixin):
     """
     Formulario para ingresar una nueva nota
@@ -62,12 +67,12 @@ class NoteCreateForm(ValidationFormMixin):
     def clean_subject(self):
         subject = self.cleaned_data.get('subject')
         self.validate_length(subject, 3, 'El título debe tener al menos 3 caracteres.')
-        return subject
+        return subject.title()
 
     def clean_description(self):
         description = self.cleaned_data.get('description')
         self.validate_length(description, 5, 'El contenido del mensaje debe ser de al menos 5 caracteres.')
-        return description
+        return description.title()
 
     def clean_label(self):
         label = self.cleaned_data.get('label')

@@ -21,7 +21,7 @@ noteSocket.onmessage = function(e) {
     noteLabel.classList.add('note-label', 'px-2', 'py-1');
 
     const noteLabelText = document.createElement('p');
-    noteLabelText.textContent = message_note.label;
+    noteLabelText.innerHTML = `<strong>${message_note.label}</strong>`;
 
     noteLabel.appendChild(noteLabelText);
 
@@ -38,11 +38,10 @@ noteSocket.onmessage = function(e) {
 
     // Contenido de la nota
     const noteContent = document.createElement('div');
-    noteContent.classList.add('mx-2', 'my-1');
+    noteContent.classList.add('note-message');
     
     const notemessage = document.createElement('p');
-    notemessage.textContent =  `${message_note.subject}: ${message_note.description}`;
-    notemessage.style.margin = '1rem 0';
+    notemessage.innerHTML =  `<strong>${message_note.subject}:</strong> ${message_note.description}`;
 
     noteContent.appendChild(notemessage);
 

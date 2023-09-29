@@ -88,16 +88,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
         return context
     
     def get_queryset(self):
-        branch = self.request.user.branch
-        branch_actualy = self.request.session.get('branch_actualy')
-
-        if  self.request.user.is_staff and branch_actualy:
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
-            return Note.objects.filter(branch=branch_actualy, deleted_at=None)
-        
-        # En otros casos, filtra por la sucursal del usuario
-        return Note.objects.filter(branch=branch, deleted_at=None)
+        return Note.objects.filter(deleted_at=None).order_by('-created_at')
 
 
 ########################### DELETE ####################################
@@ -106,7 +97,6 @@ class NoteDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Note
     template_name = 'notes/note_delete.html'
     success_url = reverse_lazy('core_app:home')
-    
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
