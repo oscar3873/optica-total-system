@@ -46,3 +46,30 @@ def generate_profile_img_and_assign(user):
 
     # Guardar el usuario para actualizar la imagen en la base de datos
     user.save()
+
+
+
+
+
+
+
+"""Si no funcionara lo de arriba dejo algo como para implementar y refactorizar"""
+"""
+from PIL import Image, ImageDraw, ImageFont
+
+
+def create_image(size, bgColor, message, font, fontColor):
+    W, H = size
+    image = Image.new('RGB', size, bgColor)
+    draw = ImageDraw.Draw(image)
+    _, _, w, h = draw.textbbox((0, 0), message, font=font)
+    draw.text(((W-w)/2, (H-h)/2), message, font=font, fill=fontColor)
+    return image
+
+myFont = ImageFont.truetype('Roboto-Regular.ttf', 16)
+myMessage = 'Hello World'
+myImage = create_image((300, 200), 'yellow', myMessage, myFont, 'black')
+myImage.save('hello_world.png', "PNG")
+
+
+"""
