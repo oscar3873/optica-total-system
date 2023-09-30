@@ -13,7 +13,7 @@ class ValidationFormMixin(forms.ModelForm):
             Para nombres, apellidos, direcciones, telefonos, etc.
             Muestra el error mandado por argumento.
         """
-        if field_value is not None:
+        if field_value:
             field_value = str(field_value)
             if len(field_value) < min_length:
                 raise forms.ValidationError(error_message)

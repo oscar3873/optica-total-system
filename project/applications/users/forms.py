@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 from .models import User
 from django.contrib.auth import authenticate
@@ -97,15 +98,15 @@ class UserCreateForm(PersonForm):
         return cleaned_data
     
 class UserUpdateForm(PersonForm):
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['birth_date'].required=False
+        for field_name, field in self.fields.items():
+            field.required = True
     
     class Meta:
         model = User
-        fields = ('email','first_name', 'last_name','dni', 'phone_code','phone_number', 'address')
-
+        fields = ('email','first_name', 'last_name','dni', 'phone_code','phone_number', 'address', 'birth_date')
 
 class LoginForm(forms.Form):
     """Formulario para iniciar sesión."""
@@ -186,7 +187,13 @@ class UpdatePasswordForm(ValidationFormMixin):
     
     def clean_password(self):
         password = self.cleaned_data.get('password')
-        password = password.lower()
+        password = password
+        self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
+        return password
+    
+    def clean_password2(self):
+        password = self.cleaned_data.get('password2')
+        password = password
         self.validate_length(password, 6, 'La contraseña debe tener al menos 6 carácteres')
         return password
 

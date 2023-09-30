@@ -829,11 +829,11 @@
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
                                     {% if request.user.is_staff %}
-                                        <a class="dropdown-item" href="{% url 'users_app:profile_admin' user.id %}">
+                                        <a class="dropdown-item" href="{% url 'users_app:profile_admin' request.user.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
                                         </a>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{% url 'users_app:account_admin' request.user.id %}">
                                             <span class="fas fa-user-circle"></span>
                                             Cuenta
                                         </a>
