@@ -70,7 +70,11 @@
           <div class="col-lg-8">
             <h4 class="mb-1"> {{object}}<span data-bs-toggle="tooltip" data-bs-placement="right" title="Verified"><small class="fa fa-check-circle text-primary" data-fa-transform="shrink-4 down-2"></small></span>
             </h4>
+            {% if request.user.is_staff %}
+            <h5 class="fs-0 fw-normal">Administrador de Optica Total</h5>
+            {% else %}
             <h5 class="fs-0 fw-normal">Empleado de Optica Total</h5>
+            {% endif %}
             <p class="text-500">{{object.email}}</p>
             
             <div class="border-dashed-bottom my-4 d-lg-none"></div>
