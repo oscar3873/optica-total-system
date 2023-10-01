@@ -160,7 +160,7 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
 
 ############################ Account ####################################
 class AccountView(LoginRequiredMixin, UpdateView):
-    template_name = 'employes/employee_account_page.html'
+    template_name = 'users/user_account_page.html'
     model = User
     form_class = UserUpdateForm
 
