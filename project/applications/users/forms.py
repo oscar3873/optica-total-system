@@ -97,6 +97,7 @@ class UserCreateForm(PersonForm):
             self.add_error('password2', 'Las contraseñas no coinciden')
         return cleaned_data
     
+    
 class UserUpdateForm(PersonForm):
 
     def __init__(self, *args, **kwargs):
@@ -129,14 +130,6 @@ class LoginForm(forms.Form):
             'class' : 'form-control'
             })
     )
-
-    def clean_username(self):
-        username = self.cleaned_data.get('username')
-        return username
-    
-    def clean_password(self):
-        password = self.cleaned_data.get('password')
-        return password
     
     def clean(self):
         cleaned_data = super().clean()
@@ -146,7 +139,7 @@ class LoginForm(forms.Form):
         if username and password:
             user = authenticate(username=username, password=password)
             if not user:
-                raise forms.ValidationError('Correo electrónico o contraseña incorrectos')
+                raise forms.ValidationError('El usuario o contraseña son incorrectos.')
         return cleaned_data
     
 

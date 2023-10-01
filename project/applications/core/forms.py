@@ -116,7 +116,6 @@ class PersonForm(ValidationFormMixin):
     def clean_first_name(self):
         name = self.cleaned_data['first_name']
         self.validate_length(name, 3, "Ingrese un nombre válido.")
-        print('\n\n\n\n')
         return name.capitalize()
     
     def clean_last_name(self):

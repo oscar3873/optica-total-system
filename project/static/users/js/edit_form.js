@@ -5,25 +5,17 @@ document.addEventListener("DOMContentLoaded", function() {
     update_button_form.addEventListener("click", enableEdit);
     cancel_button_form.addEventListener("click", cancelEdit);
     
-    var name = null;
-    var last_name = null;
-    var dni = null;
-    var address = null;
-    var phone_code = null;
-    var phone = null;
-    var email = null;
-    
+    var name = document.getElementById('id_first_name').value;
+    var last_name = document.getElementById('id_last_name').value;
+    var dni = document.getElementById('id_dni').value;
+    var address = document.getElementById('id_address').value;
+    var phone_code = document.getElementById('id_phone_code').value;
+    var phone = document.getElementById('id_phone_number').value;
+    var email = document.getElementById('id_email').value;
+
     cancelEdit();
     
     function enableEdit() {
-        name = document.getElementById('id_first_name').value;
-        last_name = document.getElementById('id_last_name').value;
-        dni = document.getElementById('id_dni').value;
-        address = document.getElementById('id_address').value;
-        phone_code = document.getElementById('id_phone_code').value;
-        phone = document.getElementById('id_phone_number').value;
-        email = document.getElementById('id_email').value;
-
         // Habilitar la edición de campos en el formulario con la clase "update-form"
         const form = document.querySelector('[id^="singup"]');
         if (form) {
