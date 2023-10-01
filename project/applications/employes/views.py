@@ -158,39 +158,6 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         user.delete()  # Realiza la eliminación suave del usuario y por consecuencia, el empleado
         return HttpResponseRedirect(self.get_success_url())
 
-############################ Account ####################################
-class AccountView(LoginRequiredMixin, UpdateView):
-    template_name = 'users/user_account_page.html'
-    model = User
-    form_class = UserUpdateForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
-        context['change_image'] = ImagenChangeForm
-        return context
-
-    def get_object(self, queryset=None):
-        try:
-            employee = Employee.objects.get(pk=self.kwargs['pk'])
-        except Employee.DoesNotExist:
-            return None
-        return employee.user
-
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        user_get = self.get_object()
-        
-        if user_get is None:
-            return render(request, 'core/error_404_page.html')
-        if not user.is_staff and user != user_get:
-            return render(request, 'users/denied_permission.html')
-        return super().get(request, *args, **kwargs)
-    
-    def get_success_url(self):
-        messages.success(self.request, "Se actualizaron los datos con exito.")
-        return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
-
 
 # View para validar formulario UpdatePasswordForm
 class UpdatePasswordView(LoginRequiredMixin, UpdateView):

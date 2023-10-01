@@ -53,13 +53,6 @@ class PersonForm(ValidationFormMixin):
             'class' : 'form-control',
             'type' : 'text',
             }),
-            validators=[
-            RegexValidator(
-                r'^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$',
-                'No deje espacios en blanco al final',
-                'invalid_address'
-            )
-        ]
     )
     PHONE_CODE_CHOICES = (
         ('+54', '+54'),

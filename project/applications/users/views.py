@@ -133,7 +133,7 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
     
     
-class AccountView(CustomUserPassesTestMixin, UpdateView):
+class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'users/user_account_page.html'
     model = User
     form_class = UserUpdateForm
@@ -144,15 +144,15 @@ class AccountView(CustomUserPassesTestMixin, UpdateView):
         context['change_image'] = ImagenChangeForm
         return context
 
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        user_get = self.get_object()
+    # def get(self, request, *args, **kwargs):
+    #     user = self.request.user
+    #     user_get = self.get_object()
         
-        if user_get is None:
-            return render(request, 'core/error_404_page.html')
-        if not user.is_staff and user != user_get:
-            return render(request, 'users/denied_permission.html')
-        return super().get(request, *args, **kwargs)
+    #     if user_get is None:
+    #         return render(request, 'core/error_404_page.html')
+    #     if not user.is_staff and user != user_get:
+    #         return render(request, 'users/denied_permission.html')
+    #     return super().get(request, *args, **kwargs)
     
     def form_valid(self, form):
         print(form.cleaned_data['phone_number'])
@@ -160,7 +160,7 @@ class AccountView(CustomUserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, "Se actualizaron los datos con exito.")
-        return reverse_lazy('users_app:account_admin', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy('users_app:account', kwargs={'pk': self.kwargs['pk']})
         
 
 # View para validar formulario UpdatePasswordForm
@@ -175,14 +175,14 @@ class UpdatePasswordView(CustomUserPassesTestMixin, UpdateView):
             self.object.set_password(form.cleaned_data['password'])
             self.object.save()
             messages.success(self.request, 'La contraseña se ha cambiado con exito.')
-            return redirect('users_app:account_admin', pk=self.kwargs['pk'])
+            return redirect('users_app:account', pk=self.kwargs['pk'])
         
         messages.error(self.request, 'La contraseña actual es incorrecta.')
-        return redirect('users_app:account_admin', pk=self.kwargs['pk'])
+        return redirect('users_app:account', pk=self.kwargs['pk'])
     
     def form_invalid(self, form):
         messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
-        return redirect('users_app:account_admin', pk=self.kwargs['pk'])
+        return redirect('users_app:account', pk=self.kwargs['pk'])
 
 
 class UserChangeImagen(RedirectView):
@@ -211,4 +211,4 @@ class UserChangeImagen(RedirectView):
         user_profile = User.objects.get(pk = kwargs['pk'])
         kwargs['pk'] = user_profile.pk
         # Debes especificar la URL a la que deseas redirigir después de guardar la imagen
-        return reverse_lazy('users_app:account_admin', kwargs=kwargs)
+        return reverse_lazy('users_app:account', kwargs=kwargs)

@@ -29,12 +29,12 @@ urlpatterns = [
     path(
         'profile/<pk>/', 
         AdminProfileView.as_view(),
-        name='profile_admin'
+        name='profile'
     ),
     path(
         'account/<pk>/', 
         AccountView.as_view(),
-        name='account_admin'
+        name='account'
     ),
     path(
         'img/<pk>/', 
