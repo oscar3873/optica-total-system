@@ -64,7 +64,6 @@
                 
               {% endif %}
                 
-              <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filtros</span></button>
               <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></button>
             </div>
           </div>
@@ -77,11 +76,6 @@
             <!-- HEAD TABLA -->
             <thead class="bg-200 text-900">
               <tr>
-                <th class="white-space-nowrap">
-                  <div class="form-check mb-0 d-flex align-items-center">
-                    <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox" data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
-                  </div>
-                </th>
               {% for column in table_column %}
                 <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
@@ -96,11 +90,6 @@
               
               {% for employee in employees %}
               <tr class="btn-reveal-trigger">
-                <td class="align-middle" style="width: 28px;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="recent-purchase-0" data-bulk-select-row="data-bulk-select-row" />
-                  </div>
-                </td>
                 <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
                 <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
                 <!-- <td class="align-middle white-space-nowrap employee">Slick - Drag &amp;</td> -->
@@ -139,7 +128,9 @@
         <div class="row align-items-center">
           <div class="pagination d-none"></div>
           <div class="col">
-            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+            <p class="mb-0 fs--1">
+              <span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span>
+              <!-- <a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a> -->
             </p>
           </div>
           <div class="col-auto d-flex">
