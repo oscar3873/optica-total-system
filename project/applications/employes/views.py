@@ -153,9 +153,12 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'employes/employee_delete_page.html'
     success_url = reverse_lazy('employees_app:list_employee')
     
-    def form_valid(self, form):
-        user = self.get_object().user
-        user.delete()  # Realiza la eliminación suave del usuario y por consecuencia, el empleado
+    def form_valid(self,form):
+        employee = self.get_object()
+        user = employee.user
+        user.is_active = False  # Realiza la eliminación suave del usuario y por consecuencia, el empleado
+        user.delete()
+        employee.delete()
         return HttpResponseRedirect(self.get_success_url())
 
 
