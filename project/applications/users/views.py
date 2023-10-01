@@ -1,5 +1,5 @@
-from typing import Any
-from django.http import HttpRequest, HttpResponse
+from django.forms.models import BaseModelForm
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,8 +11,6 @@ from django.views.generic import FormView, DetailView, UpdateView, RedirectView
 
 from applications.core.models import Objetives
 from django.utils import timezone
-from applications.core.models import Objetives
-
 
 from .forms import UserCreateForm
 from .models import User
@@ -41,7 +39,6 @@ class AdminProfileView(LoginRequiredMixin, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
 
         current_date = timezone.now().date()
         active_objetives = Objetives.objects.filter(start_date__lte=current_date,exp_date__gte=current_date)
@@ -136,36 +133,56 @@ class UpdatePasswordView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
     
     
-class AccountView(UpdateView):
+class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'users/user_account_page.html'
     model = User
     form_class = UserUpdateForm
-    form2_class = UpdatePasswordForm
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form2'] = self.get_form(self.form2_class)  # Se agrega el segundo formulario al contexto
+        context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
+        context['change_image'] = ImagenChangeForm
         return context
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        form2 = self.get_form(self.form2_class)
-
-        if 'form2' in request.POST:
-            # Si se envió el formulario de cambio de contraseña
-            if form2.is_valid():
-                # Procesa el formulario de cambio de contraseña
-                self.object.set_password(form2.cleaned_data['password'])
-                self.object.save()
-                return redirect("users_app:login")
-            else:
-                # El formulario de cambio de contraseña no es válido
-                context = self.get_context_data(form2=form2)
-                return self.render_to_response(context)
-        else:
-            # Si no se envió el formulario de cambio de contraseña,
-            # procesa el formulario de actualización de datos de usuario
-            return super().post(request, *args, **kwargs)
+    # def get(self, request, *args, **kwargs):
+    #     user = self.request.user
+    #     user_get = self.get_object()
         
+    #     if user_get is None:
+    #         return render(request, 'core/error_404_page.html')
+    #     if not user.is_staff and user != user_get:
+    #         return render(request, 'users/denied_permission.html')
+    #     return super().get(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        print(form.cleaned_data['phone_number'])
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, "Se actualizaron los datos con exito.")
+        return reverse_lazy('users_app:account', kwargs={'pk': self.kwargs['pk']})
+        
+
+# View para validar formulario UpdatePasswordForm
+class UpdatePasswordView(CustomUserPassesTestMixin, UpdateView):
+    model = User
+    form_class = UpdatePasswordForm
+
+    def form_valid(self, form):
+        # Lógica para el formulario de UpdatePasswordForm (cambio de contraseña)
+        # Cambia la contraseña del usuario y redirige al inicio de sesión
+        if form.is_valid():
+            self.object.set_password(form.cleaned_data['password'])
+            self.object.save()
+            messages.success(self.request, 'La contraseña se ha cambiado con exito.')
+            return redirect('users_app:account', pk=self.kwargs['pk'])
+        
+        messages.error(self.request, 'La contraseña actual es incorrecta.')
+        return redirect('users_app:account', pk=self.kwargs['pk'])
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
+        return redirect('users_app:account', pk=self.kwargs['pk'])
 
 
 class UserChangeImagen(RedirectView):
@@ -192,6 +209,6 @@ class UserChangeImagen(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         user_profile = User.objects.get(pk = kwargs['pk'])
-        kwargs['pk'] = user_profile.employee.pk
+        kwargs['pk'] = user_profile.pk
         # Debes especificar la URL a la que deseas redirigir después de guardar la imagen
-        return reverse_lazy('employees_app:account', kwargs=kwargs)
+        return reverse_lazy('users_app:account', kwargs=kwargs)

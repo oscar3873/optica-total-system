@@ -7,7 +7,7 @@ from applications.users.models import User
 # Create your models here.
 
 #No se usa el modelo
-class Employee(models.Model):
+class Employee(BaseAbstractWithUser):
     """No se puede hacer uso del softDelete"""
     """
     Clase de Empleados.
@@ -16,8 +16,8 @@ class Employee(models.Model):
         -employment_date: fecha del alta de relacion de dependencia.
     """
     objects = EmployeeManager()
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee',verbose_name="Nombre")
-    user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employees')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee_type', verbose_name="Nombre")
+    # user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employees')
     employment_date = models.DateField(verbose_name='Fecha de contratación', null=True, blank=True)
 
     class Meta:

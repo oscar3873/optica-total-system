@@ -40,9 +40,6 @@ class EmployeeUpdateForm(UserUpdateForm):
         )
     )
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-            
     class Meta:
         model = Employee
         fields = ('email','first_name', 'last_name','dni', 'phone_code', 'phone_number', 'address')

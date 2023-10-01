@@ -15,10 +15,13 @@ def generate_profile_img_and_assign(user):
 
     # Definir las iniciales y el tamaño de la fuente
     initials = user.first_name[0] + user.last_name[0]
-    font_size = 120
+    font_size = 100
 
     # Definir el tipo de fuente
-    #font = ImageFont.truetype('arial.ttf', font_size)
+    try:
+        font = ImageFont.truetype('arial.ttf', font_size)
+    except OSError:
+        font = ImageFont.load_default()
 
     # Obtener el cuadro delimitador del texto
     text_bbox = draw.textbbox((0, 0), initials)
@@ -29,10 +32,9 @@ def generate_profile_img_and_assign(user):
 
     # Calcular la posición del texto en el centro de la imagen
     x = (width - text_width) // 2
-    y = (height - text_height) // 2 - text_bbox[1]
-
-    # Dibujar el texto en la imagen con el color especificado
-    draw.text((x, y), initials, align='center')
+    y = (height - text_height) // 2
+    # Dibujar el texto en la imagen con el color especificado, esta hardcodeado ...  (ESTOY CANSADO VIEJOOOO)
+    draw.text(((width-x)/2 - 14, (height-y)/2 - 14), initials, fill=(255, 255, 255), font=font, align='center')
 
     # Guardar la imagen en un búfer de memoria
     image_buffer = io.BytesIO()
@@ -44,3 +46,30 @@ def generate_profile_img_and_assign(user):
 
     # Guardar el usuario para actualizar la imagen en la base de datos
     user.save()
+
+
+
+
+
+
+
+"""Si no funcionara lo de arriba dejo algo como para implementar y refactorizar"""
+"""
+from PIL import Image, ImageDraw, ImageFont
+
+
+def create_image(size, bgColor, message, font, fontColor):
+    W, H = size
+    image = Image.new('RGB', size, bgColor)
+    draw = ImageDraw.Draw(image)
+    _, _, w, h = draw.textbbox((0, 0), message, font=font)
+    draw.text(((W-w)/2, (H-h)/2), message, font=font, fill=fontColor)
+    return image
+
+myFont = ImageFont.truetype('Roboto-Regular.ttf', 16)
+myMessage = 'Hello World'
+myImage = create_image((300, 200), 'yellow', myMessage, myFont, 'black')
+myImage.save('hello_world.png', "PNG")
+
+
+"""

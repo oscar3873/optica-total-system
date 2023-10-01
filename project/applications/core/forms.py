@@ -52,16 +52,7 @@ class PersonForm(ValidationFormMixin):
             'placeholder' : 'Domicilio',
             'class' : 'form-control',
             'type' : 'text',
-            'pattern': '^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$'
-
             }),
-            validators=[
-            RegexValidator(
-                r'^[a-zA-Z0-9]+([a-zA-Z0-9 ]*[a-zA-Z0-9]+)*$',
-                'No deje espacios en blanco al final',
-                'invalid_address'
-            )
-        ]
     )
     PHONE_CODE_CHOICES = (
         ('+54', '+54'),
@@ -107,7 +98,6 @@ class PersonForm(ValidationFormMixin):
             'placeholder' : 'Correo electrónico',
             'class': 'form-control',
             'type' : 'email',
-            'pattern' : '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
             }
         )
     )
@@ -129,6 +119,7 @@ class PersonForm(ValidationFormMixin):
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']
         if phone_number:
+            self.validate_length(phone_number, 6, "Ingrese un número de teléfono válido.")
             phone_number_pattern = re.compile(r'^(?:\+?[0-9]{1,3})?[0-9]{6,}$')
 
             if not phone_number_pattern.match(str(phone_number)):
@@ -145,6 +136,12 @@ class PersonForm(ValidationFormMixin):
         if address:
             self.validate_length(address, 5, "Ingrese una dirección válida.")
         return address
+    
+    def clean_dni(self):
+        dni = self.cleaned_data['dni']
+        if dni:
+            self.validate_length(dni, 6, "Ingrese una DNI válida.")
+        return dni
     
     def clean_email(self):
         email = self.cleaned_data['email']

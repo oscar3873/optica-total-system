@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView, UpdateView, FormView, ListView, DeleteView
 )
-from django.db import transaction
+from django.db import models, transaction
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -58,23 +58,20 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
 class EmployeeUpdateView(UpdateView):
     model = Employee
     template_name = 'employes/components/employee_update_form.html'
-    form_class = EmployeeUpdateForm
+    form_class = UserUpdateForm
+    success_url = reverse_lazy('employees_app:list_employee')
 
-    def form_valid(self, form):
-        user_form = UserUpdateForm(self.request.POST, instance=self.object)
-        if user_form.is_valid():
-            user_form.save()
-            form.save()
-            return redirect('employees_app:list_employee')
-        else:
-            return self.render_to_response(self.get_context_data(form=form, user_form=user_form))
+    def get_object(self, queryset=None):
+        return super().get_object(queryset).user
     
-    def get_object(self, queryset=None): 
-        """ Obtén el valor del parámetro 'pk' de la URL, este 
-        parametro, puede ser la pk de un user, comprobar que esta pk esta relacionada 
-        con alguna pk de la tabla users_employee"""
-        employee = super().get_object(queryset)
-        return employee.user
+    def form_valid(self, form):
+        employee = form.instance
+        messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.last_name, employee.first_name))
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
+        return super().form_invalid(form)
 
 
 ############## UNICA VIEW DISPONIBLE PARA EL USO #############
@@ -92,7 +89,7 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
         context['objectives'] = context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk)
 
-        if not user_actual.is_staff and user_actual.employee != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
+        if not user_actual.is_staff and user_actual.employee_type != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
         return context
 
@@ -118,12 +115,10 @@ class EmployeeListView(LoginRequiredMixin,ListView):
 
         branch_actualy = self.request.session.get('branch_actualy')
         if  self.request.user.is_staff and branch_actualy:
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,
-            return Employee.objects.get_employees_branch(branch_actualy)
-        
+            branch = Branch.objects.get(id=branch_actualy)
+            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,        
         # En otros casos, filtra por la sucursal del usuario
-        return Employee.objects.get_employees_branch(branch)
+        return Employee.objects.get_employees_branch(branch).filter(deleted_at=None)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -158,43 +153,13 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'employes/employee_delete_page.html'
     success_url = reverse_lazy('employees_app:list_employee')
     
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()  # Realiza la eliminación suave
+    def form_valid(self,form):
+        employee = self.get_object()
+        user = employee.user
+        user.is_active = False  # Realiza la eliminación suave del usuario y por consecuencia, el empleado
+        user.delete()
+        employee.delete()
         return HttpResponseRedirect(self.get_success_url())
-
-############################ Account ####################################
-class AccountView(LoginRequiredMixin, UpdateView):
-    template_name = 'employes/employee_account_page.html'
-    model = User
-    form_class = UserUpdateForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
-        context['change_image'] = ImagenChangeForm
-        return context
-
-    def get_object(self, queryset=None):
-        try:
-            employee = Employee.objects.get(pk=self.kwargs['pk'])
-        except Employee.DoesNotExist:
-            return None
-        return employee.user
-
-    def get(self, request, *args, **kwargs):
-        user = self.request.user
-        user_get = self.get_object()
-        
-        if user_get is None:
-            return render(request, 'core/error_404_page.html')
-        if not user.is_staff and user != user_get:
-            return render(request, 'users/denied_permission.html')
-        return super().get(request, *args, **kwargs)
-    
-    def get_success_url(self):
-        messages.success(self.request, "Se actualizaron los datos con exito.")
-        return reverse_lazy('employees_app:account', kwargs={'pk': self.kwargs['pk']})
 
 
 # View para validar formulario UpdatePasswordForm

@@ -29,11 +29,6 @@ urlpatterns = [
         EmployeeDeleteView.as_view(),
         name='employee_delete'
     ),
-    path(
-        'account/<int:pk>/', 
-        AccountView.as_view(), 
-        name='account'
-    ),
     # Ruta para actualizar la contraseña
     path(' account/<int:pk>/',
         UpdatePasswordView.as_view(),
