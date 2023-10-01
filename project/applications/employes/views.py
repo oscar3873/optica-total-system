@@ -89,7 +89,7 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
         context['objectives'] = context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk)
 
-        if not user_actual.is_staff and user_actual.employee != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
+        if not user_actual.is_staff and user_actual.employee_type != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
         return context
 
