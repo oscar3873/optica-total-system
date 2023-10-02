@@ -77,11 +77,11 @@
             <thead class="bg-200 text-900">
               <tr>
               {% for column in table_column %}
-                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
+                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Apellido'%}d-none d-sm-table-cell{% endif %}" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
               {% for column in table_column_user %}
-                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
-                {% endfor %}
+                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">{{column.1}}</th>
+              {% endfor %}
               <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
               </tr>
             </thead>
@@ -90,15 +90,17 @@
               
               {% for employee in employees %}
               <tr class="btn-reveal-trigger">
-                <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
-                <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
-                <!-- <td class="align-middle white-space-nowrap employee">Slick - Drag &amp;</td> -->
-                <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
-                </td> -->
-                <td class="align-start first_name">{{employee.user.first_name}}</td>
-                <td class="align-start last_name">{{employee.user.last_name}}</td>
-                <td class="align-start phone_number">{{employee.user.phone_code}}{{employee.user.phone_number}}</td>
-                <td class="align-start email">{{employee.user.email}}</td>
+                <td class="align-start first_name">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-s me-1">
+                      <img class="rounded-circle" src="{{employee.imagen.url}}" alt="" />
+                    </div>
+                    {{employee.first_name}}
+                  </div>
+                </td>
+                <td class="align-start last_name">{{employee.last_name}}</td>
+                <td class="align-start phone_number d-none d-sm-table-cell"><a href="https://wa.me/{{employee.phone_code}}{{employee.phone_number}}">{{employee.phone_code}}{{employee.phone_number}}</a></td>
+                <td class="align-start email d-none d-sm-table-cell"><a href="mailto:{{employee.email}}">{{employee.email}}</a></td>
                 <td class="align-middle white-space-nowrap text-start">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span>
