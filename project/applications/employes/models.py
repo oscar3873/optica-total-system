@@ -4,6 +4,7 @@ from .managers import EmployeeManager
 from applications.core.models import BaseAbstractWithUser, Objetives
 from applications.users.models import User
 
+
 # Create your models here.
 
 #No se usa el modelo

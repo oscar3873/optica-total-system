@@ -818,12 +818,13 @@
                             </div>
 
                         </li>
-                        <li class="nav-item dropdown"><a class="nav-link pe-0" id="navbarDropdownUser" href="#"
+                        <li class="nav-item dropdown">
+                            <a class="nav-link pe-0 d-flex align-items-center" id="navbarDropdownUser" href="#"
                                 role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
                                     <img class="rounded-circle" src="{{request.user.imagen.url}}" alt=""/>
-
                                 </div>
+                                <span class="ps-2 d-none d-md-inline">{{request.user.get_full_name}}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
