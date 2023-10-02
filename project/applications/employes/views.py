@@ -58,15 +58,12 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
 class EmployeeUpdateView(UpdateView):
     model = Employee
     template_name = 'employes/components/employee_update_form.html'
-    form_class = UserUpdateForm
+    form_class = EmployeeUpdateForm
     success_url = reverse_lazy('employees_app:list_employee')
-
-    def get_object(self, queryset=None):
-        return super().get_object(queryset).user
     
     def form_valid(self, form):
         employee = form.instance
-        messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.last_name, employee.first_name))
+        messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.user.last_name, employee.user.first_name))
         return super().form_valid(form)
     
     def form_invalid(self, form):
