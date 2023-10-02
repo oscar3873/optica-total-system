@@ -34,7 +34,7 @@
                   </div>
               </div>
             </div>
-            <form method="post" id="profile-image-form" enctype="multipart/form-data" action="{% url 'users_app:change_img' object.pk %}">
+            <form method="post" id="profile-image-form" class="pt-3 ps-2" enctype="multipart/form-data" action="{% url 'users_app:change_img' object.pk %}">
               {% csrf_token %}
               <div hidden>
                 {{ change_image.imagen }}
@@ -54,7 +54,7 @@
     <div class="card-body">
         <div class="row">
           <div class="col-lg-8">
-            <h4 class="mb-1"> {{object}}<span data-bs-toggle="tooltip" data-bs-placement="right" title="Verified"><small class="fa fa-check-circle text-primary" data-fa-transform="shrink-4 down-2"></small></span>
+            <h4 class="mb-1"> {{object}}
             </h4>
             {% if user.is_staff %}
             <h5 class="fs-0 fw-normal">Administrador de Optica Total</h5> <!--Esto de 'Optica Total' es hardcodeo en la proxima version almacenar datos del negocio-->
@@ -111,7 +111,7 @@
                               {% endif %}
                             </div>
                             <div class="col-sm-6">
-                              <label for="{{ form.email.id_for_label }}" class="form-label ">Correo</label>
+                              <label for="{{ form.email.id_for_label }}" class="form-label ">Correo:</label>
                                 {{ form.email }}
                               {% if form.email.errors %}
                               <div class="text-danger fs--2">
