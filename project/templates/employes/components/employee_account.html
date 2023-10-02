@@ -204,7 +204,7 @@
                 <h5 class="mb-0">Cambiar Contraseña</h5>
               </div>
               <div class="card-body fs--1">
-                <form method="post" action="{% url 'employees_app:update_password' object.employee_type.pk %}" id="password-form" class="row g-2" novalidate>
+                <form method="post" action="{% url 'users_app:update_password' object.pk %}" id="password-form" class="row g-2" novalidate>
                   {% csrf_token %}
                   <label for="{{ form.passwordCurrent.id_for_label }}" class="form-label">Contraseña Actual:</label>
                   {{ form2.passwordCurrent }}
