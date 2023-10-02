@@ -22,7 +22,6 @@ from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
 
 # Para la generacion de excel
-from excel_response import ExcelResponse
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
 from openpyxl.worksheet.dimensions import ColumnDimension
