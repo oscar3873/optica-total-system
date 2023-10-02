@@ -3339,7 +3339,7 @@ var listInit = function listInit() {
         });
 
         var updateListControls = function updateListControls() {
-          listInfo && (listInfo.innerHTML = "".concat(list.i, " to ").concat(numberOfcurrentItems, " of ").concat(totalItem));
+          listInfo && (listInfo.innerHTML = "".concat(list.i, " a ").concat(numberOfcurrentItems, " de ").concat(totalItem));
           paginationButtonPrev && togglePaginationButtonDisable(paginationButtonPrev, pageCount === 1);
           paginationButtonNext && togglePaginationButtonDisable(paginationButtonNext, pageCount === pageQuantity);
 
