@@ -67,6 +67,7 @@ class EmployeeUpdateView(UpdateView):
         return super().form_valid(form)
     
     def form_invalid(self, form):
+        print('\n\n\n\n\n', form.errors)
         messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
         return super().form_invalid(form)
 

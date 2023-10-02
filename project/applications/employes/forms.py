@@ -53,7 +53,6 @@ class EmployeeUpdateForm(PersonForm):
         self.fields['address'].initial = self.instance.user.address
         self.fields['phone_code'].initial = self.instance.user.phone_code
         self.fields['phone_number'].initial = self.instance.user.phone_number
-        self.fields['email'].initial = self.instance.user.email
         self.fields['birth_date'].initial = self.instance.user.birth_date
 
         self.fields['email'].required = False
