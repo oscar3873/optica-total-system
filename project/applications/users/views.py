@@ -164,7 +164,7 @@ class AccountView(LoginRequiredMixin, UpdateView):
         
 
 # View para validar formulario UpdatePasswordForm
-class UpdatePasswordView(CustomUserPassesTestMixin, UpdateView):
+class UpdatePasswordView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UpdatePasswordForm
 
