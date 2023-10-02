@@ -39,15 +39,11 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         else:
             branch = self.request.user.branch
 
-        empleado = Employee.objects.create(
+        Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
             user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
             )
-    
-        if not form.cleaned_data.get('imagen'):
-            generate_profile_img_and_assign(empleado.user)
-        
         return super().form_valid(form)
     
     def form_invalid(self, form):
@@ -63,11 +59,22 @@ class EmployeeUpdateView(UpdateView):
     
     def form_valid(self, form):
         employee = form.instance
-        messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.user.last_name, employee.user.first_name))
+
+        if form.is_valid():
+            employee.user.first_name = form.cleaned_data.get('first_name')
+            employee.user.last_name = form.cleaned_data.get('last_name')
+            employee.user.dni = form.cleaned_data.get('id')
+            employee.user.address = form.cleaned_data.get('address')
+            employee.user.phone_number = form.cleaned_data.get('phone_number')
+            employee.user.phone_code = form.cleaned_data.get('phone_code')
+            employee.user.birth_date = form.cleaned_data.get('birth_date')
+
+            employee.user.save()
+
+            messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.user.last_name, employee.user.first_name))
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        print('\n\n\n\n\n', form.errors)
         messages.error(self.request, 'Hubo un error al cargar los datos. Por favor, revise los campos.')
         return super().form_invalid(form)
 
@@ -100,9 +107,9 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         except Employee.DoesNotExist:
             employee = None
         return employee
+    
 
-#Listar
-
+################################## LISTING  ##################################
 class EmployeeListView(LoginRequiredMixin,ListView):
     model = Employee
     template_name = 'employes/employee_list_page.html'
@@ -158,31 +165,3 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         user.delete()
         employee.delete()
         return HttpResponseRedirect(self.get_success_url())
-
-
-# View para validar formulario UpdatePasswordForm
-class UpdatePasswordView(LoginRequiredMixin, UpdateView):
-    template_name = 'employes/employee_account_page.html'
-    model = User
-    form_class = UpdatePasswordForm
-
-    def form_valid(self, form):
-        # Lógica para el formulario de UpdatePasswordForm (cambio de contraseña)
-        # Cambia la contraseña del usuario y redirige al inicio de sesión
-        if form.is_valid():
-            self.object.set_password(form.cleaned_data['password'])
-            self.object.save()
-            messages.success(self.request, 'La contraseña se ha cambiado con exito.')
-            return redirect('employees_app:account', pk=self.kwargs['pk'])
-        
-        messages.error(self.request, 'La contraseña actual es incorrecta.')
-        return redirect('employees_app:account', pk=self.kwargs['pk'])
-    
-    def form_invalid(self, form):
-        messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
-        return redirect('employees_app:account', pk=self.kwargs['pk'])
-    
-    def get_object(self, queryset=None):
-        employee = Employee.objects.get(pk=self.kwargs['pk'])
-        return employee.user
-
