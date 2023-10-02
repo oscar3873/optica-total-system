@@ -24,7 +24,6 @@ from .utils import obtener_nombres_de_campos
 # Para la generacion de excel
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
-from openpyxl.worksheet.dimensions import ColumnDimension
 
 # Create your views here.
 class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
@@ -201,9 +200,9 @@ def export_employee_list_to_excel(request):
         cell.fill = header_style["fill"]
 
     # Modificar el ancho de la columna (ajustar según tus necesidades)
-    worksheet.column_dimensions[worksheet.cell(row=1, column=2).column].width = 20
-    worksheet.column_dimensions[worksheet.cell(row=1, column=3).column].width = 20
-    worksheet.column_dimensions[worksheet.cell(row=1, column=4).column].width = 30
+    # worksheet.column_dimensions[worksheet.cell(row=1, column=2).column].width = 20
+    # worksheet.column_dimensions[worksheet.cell(row=1, column=3).column].width = 20
+    # worksheet.column_dimensions[worksheet.cell(row=1, column=4).column].width = 30
 
     # Agregar los datos de los empleados a la hoja de cálculo
     for row_num, employee in enumerate(queryset, 2):
