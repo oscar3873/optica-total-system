@@ -21,6 +21,10 @@ from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
 
+# Para la generacion de excel
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill
+from openpyxl.worksheet.dimensions import ColumnDimension
 
 # Create your views here.
 class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
@@ -165,3 +169,52 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         user.delete()
         employee.delete()
         return HttpResponseRedirect(self.get_success_url())
+
+########################### GENERACION EXCEL ####################################
+
+def export_employee_list_to_excel(request):
+    branch = request.user.branch
+
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
+    
+    queryset = Employee.objects.get_employees_branch(branch).filter(deleted_at=None)
+    
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    # Estilos personalizados
+    header_style = {
+        "font": Font(name='Arial', size=14, bold=True, color='d8e2ef'),
+        "fill": PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
+    }
+
+    # Define los encabezados de las columnas
+    exclude_fields_user = ["deleted_at", "created_at", "updated_at"]
+    headers = [ campo[1]  for campo in obtener_nombres_de_campos(Employee, *exclude_fields_user)]
+
+    # Aplicar estilos a los encabezados y escribir los encabezados
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num, value=header)
+        cell.font = header_style["font"]
+        cell.fill = header_style["fill"]
+
+    # Modificar el ancho de la columna (ajustar según tus necesidades)
+    worksheet.column_dimensions[worksheet.cell(row=1, column=2).column].width = 20
+    worksheet.column_dimensions[worksheet.cell(row=1, column=3).column].width = 20
+    worksheet.column_dimensions[worksheet.cell(row=1, column=4).column].width = 30
+
+    # Agregar los datos de los empleados a la hoja de cálculo
+    for row_num, employee in enumerate(queryset, 2):
+        worksheet.cell(row=row_num, column=1, value=str(employee.id))
+        worksheet.cell(row=row_num, column=2, value=str(employee.user_made))
+        worksheet.cell(row=row_num, column=3, value=employee.user.get_full_name())
+        worksheet.cell(row=row_num, column=4, value=employee.employment_date)
+
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=employee_data.xlsx'
+
+    workbook.save(response)
+
+    return response
