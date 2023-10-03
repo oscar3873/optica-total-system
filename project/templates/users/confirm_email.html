@@ -10,7 +10,8 @@
     <div class="text-center"><img class="d-block mx-auto mb-4" src="{% static 'users/img/confirm_mail.png' %}"
         alt="Email" width="150" />
       <h4 class="mb-2">¡Por favor revisa tu correo!</h4>
-      <p>Se ha enviado un mail a <strong>{{user.mail}}</strong>. Haga clic en el enlace incluido para
+      <p>
+        Haga clic en el enlace incluido para
         restablecer su contraseña.
       </p><a class="btn btn-primary btn-sm mt-3" href="{% url 'users_app:login' %}"><span>Regresar al Inicio de sesión</span></a>
     </div>

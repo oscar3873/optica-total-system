@@ -22,7 +22,7 @@
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-users"></i></span>
         <div class="col">
           <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Empleados</span><span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-          <p class="mb-0">Aquí puede visualizar todos los empleados</p>
+          <p class="mb-0">Aquí puede vizualizar todos los empleados</p>
         </div>
     </div>
   </div>
@@ -34,14 +34,14 @@
   {% if employees %}
   <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
     <!--Card-->
-    <div class="card z-index-1 mb-3" id="recentPurchaseTable">
+    <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["first_name","last_name","phone_number","date_employee","user_made","email"],"page":8,"pagination":true}'>
       <div class="card-header">
         <div class="row flex-between-center">
           <div class="col-12 col-sm-auto d-flex align-items-center pe-0">
             <div>
-              <form method="get">
+              <form>
                 <div class="input-group">
-                  <input class="form-control form-control-sm shadow-none search" type="search" name="q" placeholder="Buscar" aria-label="search" value="{{ request.GET.q }}">
+                  <input class="form-control form-control-sm shadow-none search" type="search" placeholder="Buscar" aria-label="search" />
                   <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                 </div>
               </form>
@@ -77,13 +77,12 @@
             <thead class="bg-200 text-900">
               <tr>
               {% for column in table_column %}
-                <th class="sortable pe-1 align-middle white-space-nowrap">{{column.1}}&nbsp;<i class="fas fa-sort"></i>
-                </th>
+                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Apellido'%}d-none d-sm-table-cell{% endif %}" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
               {% for column in table_column_user %}
-                <th class="pe-1 align-middle white-space-nowrap">{{column.1}}</th>
+                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
-              <th class="align-start data-table-row-action"> Acciones</th>
+              <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -113,6 +112,8 @@
                         <a class="dropdown-item" href="{% url 'employees_app:update_employee' employee.id %}">Editar</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-danger" href="{% url 'employees_app:employee_delete' employee.id %}">Borrar</a>
+                      {% else %}
+                        
                       {% endif %}
                         
                       {% comment %} <button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-id="{{ employee.id }}" data-url="{% url 'employees_app:employee_delete' employee.id %}" data-bs-target="#delete-employee-modal">Borrar</button> {% endcomment %}
@@ -127,20 +128,16 @@
       </div>
       <div class="card-footer">
         <div class="row align-items-center">
+          <div class="pagination d-none"></div>
           <div class="col">
             <p class="mb-0 fs--1">
-              <span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info">
-                Mostrando {{ page_obj.start_index }} - {{ page_obj.end_index }} de {{ page_obj.paginator.count }} empleados.
-              </span>
+              <span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span>
+              <!-- <a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a> -->
             </p>
           </div>
           <div class="col-auto d-flex">
-            {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-primary ms-2"><span>Anterior</span></a>
-            {% endif %}
-            {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}" type="button" class="btn btn-sm btn-primary ms-2"><span>Siguiente</span></a>
-            {% endif %}
+            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Anterior</span></button>
+            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Siguiente</span></button>
           </div>
         </div>
       </div>
@@ -169,7 +166,7 @@
     </div>
   </div>
   {% else %}
-  
+	
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!--Card-->
     <div class="card bg-transparent-50 overflow-hidden">

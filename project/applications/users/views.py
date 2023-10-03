@@ -1,3 +1,4 @@
+import os
 from django.forms.models import BaseModelForm
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -185,30 +186,27 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
         return redirect('users_app:account', pk=self.kwargs['pk'])
 
 
-class UserChangeImagen(RedirectView):
-    def post(self, request, pk):
-        # Obtén el objeto de usuario
-        user_profile = User.objects.get(pk=pk)
+class UserChangeImagen(FormView):
+    form_class = ImagenChangeForm
 
-        # Obtiene la imagen del formulario
-        new_image = request.FILES.get('imagen')
+    def form_valid(self, form):
+        pk = self.kwargs['pk']
+        user_profile = User.objects.get(pk=pk)
+        new_image = form.cleaned_data['imagen']
 
         if new_image:
-            # Actualiza la imagen del perfil de usuario con la nueva imagen
+            if user_profile.imagen:
+                user_profile.imagen.delete()
+                os.remove(user_profile.imagen.path)
             user_profile.imagen = new_image
             user_profile.save()
-
-            # Mensaje de éxito
-            messages.success(request, 'Imagen de perfil actualizada correctamente.')
+            messages.success(self.request, 'Imagen de perfil actualizada correctamente.')
         else:
-            # Mensaje de error si no se proporcionó una imagen
-            messages.error(request, 'Debes seleccionar una imagen válida.')
+            messages.error(self.request, 'Debes seleccionar una imagen válida.')
+        return super().form_valid(form)
 
-        # Redirige de nuevo a la página donde se encuentra el formulario
-        return super().post(request, pk=pk)
-
-    def get_redirect_url(self, *args, **kwargs):
-        user_profile = User.objects.get(pk = kwargs['pk'])
-        kwargs['pk'] = user_profile.pk
-        # Debes especificar la URL a la que deseas redirigir después de guardar la imagen
-        return reverse_lazy('users_app:account', kwargs=kwargs)
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        user_profile = User.objects.get(pk=pk)
+        # Especifica la URL a la que deseas redirigir después de guardar la imagen
+        return reverse_lazy('users_app:account', kwargs={'pk': user_profile.pk})
