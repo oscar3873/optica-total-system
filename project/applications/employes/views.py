@@ -179,30 +179,35 @@ def export_employee_list_to_excel(request):
         branch = Branch.objects.get(id=branch_actualy)
     
     queryset = Employee.objects.get_employees_branch(branch).filter(deleted_at=None)
-    
+
+    # Crear un libro de trabajo de Excel
     workbook = Workbook()
     worksheet = workbook.active
 
-    # Estilos personalizados
-    header_style = {
-        "font": Font(name='Arial', size=14, bold=True, color='d8e2ef'),
-        "fill": PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
-    }
+    # Definir estilos personalizados para los encabezados
+    header_style = Font(name='Arial', size=14, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
 
-    # Define los encabezados de las columnas
+    # Definir los encabezados de las columnas
     exclude_fields_user = ["deleted_at", "created_at", "updated_at"]
-    headers = [ campo[1]  for campo in obtener_nombres_de_campos(Employee, *exclude_fields_user)]
+    headers = [campo[1] for campo in obtener_nombres_de_campos(Employee, *exclude_fields_user)]
 
     # Aplicar estilos a los encabezados y escribir los encabezados
     for col_num, header in enumerate(headers, 1):
         cell = worksheet.cell(row=1, column=col_num, value=header)
-        cell.font = header_style["font"]
-        cell.fill = header_style["fill"]
+        cell.font = header_style
+        cell.fill = header_fill
 
     # Modificar el ancho de la columna (ajustar según tus necesidades)
-    # worksheet.column_dimensions[worksheet.cell(row=1, column=2).column].width = 20
-    # worksheet.column_dimensions[worksheet.cell(row=1, column=3).column].width = 20
-    # worksheet.column_dimensions[worksheet.cell(row=1, column=4).column].width = 30
+    #################################################
+    try: 
+        from openpyxl.cell import get_column_letter
+    except ImportError:
+        from openpyxl.utils import get_column_letter
+    #################################################
+    for col_num, _ in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 25
 
     # Agregar los datos de los empleados a la hoja de cálculo
     for row_num, employee in enumerate(queryset, 2):
@@ -211,6 +216,7 @@ def export_employee_list_to_excel(request):
         worksheet.cell(row=row_num, column=3, value=employee.user.get_full_name())
         worksheet.cell(row=row_num, column=4, value=employee.employment_date)
 
+    # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=employee_data.xlsx'
 
