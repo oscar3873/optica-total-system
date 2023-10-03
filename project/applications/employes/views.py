@@ -113,10 +113,11 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
     
 
 ################################## LISTING  ##################################
-class EmployeeListView(LoginRequiredMixin,ListView):
+class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
     template_name = 'employes/employee_list_page.html'
     context_object_name = 'employees'
+    paginate_by = 8
 
     def get_queryset(self):
         branch = self.request.user.branch
