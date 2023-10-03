@@ -28,7 +28,7 @@ class EmployeeCreateForm(UserCreateForm):
         return employment_date
     
     
-class EmployeeUpdateForm(UserUpdateForm):
+class EmployeeUpdateForm(PersonForm):
     employment_date = forms.DateField(
         required=False,
         widget=forms.DateInput(
@@ -42,4 +42,17 @@ class EmployeeUpdateForm(UserUpdateForm):
 
     class Meta:
         model = Employee
-        fields = ('email','first_name', 'last_name','dni', 'phone_code', 'phone_number', 'address')
+        fields = ('employment_date', )
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.fields['first_name'].initial = self.instance.user.first_name
+        self.fields['last_name'].initial = self.instance.user.last_name
+        self.fields['dni'].initial = self.instance.user.dni
+        self.fields['address'].initial = self.instance.user.address
+        self.fields['phone_code'].initial = self.instance.user.phone_code
+        self.fields['phone_number'].initial = self.instance.user.phone_number
+        self.fields['birth_date'].initial = self.instance.user.birth_date
+
+        self.fields['email'].required = False

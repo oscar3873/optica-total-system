@@ -21,6 +21,9 @@ from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
 
+# Para la generacion de excel
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill
 
 # Create your views here.
 class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMPLEADOS
@@ -39,15 +42,11 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         else:
             branch = self.request.user.branch
 
-        empleado = Employee.objects.create(
+        Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
             user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
             )
-    
-        if not form.cleaned_data.get('imagen'):
-            generate_profile_img_and_assign(empleado.user)
-        
         return super().form_valid(form)
     
     def form_invalid(self, form):
@@ -58,15 +57,24 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
 class EmployeeUpdateView(UpdateView):
     model = Employee
     template_name = 'employes/components/employee_update_form.html'
-    form_class = UserUpdateForm
+    form_class = EmployeeUpdateForm
     success_url = reverse_lazy('employees_app:list_employee')
-
-    def get_object(self, queryset=None):
-        return super().get_object(queryset).user
     
     def form_valid(self, form):
         employee = form.instance
-        messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.last_name, employee.first_name))
+
+        if form.is_valid():
+            employee.user.first_name = form.cleaned_data.get('first_name')
+            employee.user.last_name = form.cleaned_data.get('last_name')
+            employee.user.dni = form.cleaned_data.get('id')
+            employee.user.address = form.cleaned_data.get('address')
+            employee.user.phone_number = form.cleaned_data.get('phone_number')
+            employee.user.phone_code = form.cleaned_data.get('phone_code')
+            employee.user.birth_date = form.cleaned_data.get('birth_date')
+
+            employee.user.save()
+
+            messages.success(self.request, 'Se actualizo los datos de %s, %s con exito.''.' % (employee.user.last_name, employee.user.first_name))
         return super().form_valid(form)
     
     def form_invalid(self, form):
@@ -102,9 +110,9 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         except Employee.DoesNotExist:
             employee = None
         return employee
+    
 
-#Listar
-
+################################## LISTING  ##################################
 class EmployeeListView(LoginRequiredMixin,ListView):
     model = Employee
     template_name = 'employes/employee_list_page.html'
@@ -161,30 +169,57 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
         employee.delete()
         return HttpResponseRedirect(self.get_success_url())
 
+########################### GENERACION EXCEL ####################################
 
-# View para validar formulario UpdatePasswordForm
-class UpdatePasswordView(LoginRequiredMixin, UpdateView):
-    template_name = 'employes/employee_account_page.html'
-    model = User
-    form_class = UpdatePasswordForm
+def export_employee_list_to_excel(request):
+    branch = request.user.branch
 
-    def form_valid(self, form):
-        # Lógica para el formulario de UpdatePasswordForm (cambio de contraseña)
-        # Cambia la contraseña del usuario y redirige al inicio de sesión
-        if form.is_valid():
-            self.object.set_password(form.cleaned_data['password'])
-            self.object.save()
-            messages.success(self.request, 'La contraseña se ha cambiado con exito.')
-            return redirect('employees_app:account', pk=self.kwargs['pk'])
-        
-        messages.error(self.request, 'La contraseña actual es incorrecta.')
-        return redirect('employees_app:account', pk=self.kwargs['pk'])
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
     
-    def form_invalid(self, form):
-        messages.error(self.request, 'Error en el formulario de cambio de contraseña.')
-        return redirect('employees_app:account', pk=self.kwargs['pk'])
-    
-    def get_object(self, queryset=None):
-        employee = Employee.objects.get(pk=self.kwargs['pk'])
-        return employee.user
+    queryset = Employee.objects.get_employees_branch(branch).filter(deleted_at=None)
 
+    # Crear un libro de trabajo de Excel
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    # Definir estilos personalizados para los encabezados
+    header_style = Font(name='Arial', size=14, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
+
+    # Definir los encabezados de las columnas
+    exclude_fields_user = ["deleted_at", "created_at", "updated_at"]
+    headers = [campo[1] for campo in obtener_nombres_de_campos(Employee, *exclude_fields_user)]
+
+    # Aplicar estilos a los encabezados y escribir los encabezados
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num, value=header)
+        cell.font = header_style
+        cell.fill = header_fill
+
+    # Modificar el ancho de la columna (ajustar según tus necesidades)
+    #################################################
+    try: 
+        from openpyxl.cell import get_column_letter
+    except ImportError:
+        from openpyxl.utils import get_column_letter
+    #################################################
+    for col_num, _ in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 25
+
+    # Agregar los datos de los empleados a la hoja de cálculo
+    for row_num, employee in enumerate(queryset, 2):
+        worksheet.cell(row=row_num, column=1, value=str(employee.id))
+        worksheet.cell(row=row_num, column=2, value=str(employee.user_made))
+        worksheet.cell(row=row_num, column=3, value=employee.user.get_full_name())
+        worksheet.cell(row=row_num, column=4, value=employee.employment_date)
+
+    # Crear una respuesta HTTP con el archivo Excel adjunto
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=employee_data.xlsx'
+
+    workbook.save(response)
+
+    return response

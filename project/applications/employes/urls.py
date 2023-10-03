@@ -29,5 +29,13 @@ urlpatterns = [
         EmployeeDeleteView.as_view(),
         name='employee_delete'
     ),
+    
+    ####################### Extras ###################
+    
+    path(
+        'export-employee-list/', 
+        export_employee_list_to_excel,
+        name='export_employee_list_to_excel'
+    ),
 
 ]

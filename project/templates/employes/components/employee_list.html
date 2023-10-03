@@ -64,8 +64,7 @@
                 
               {% endif %}
                 
-              <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filtros</span></button>
-              <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></button>
+              <a class="btn btn-falcon-default btn-sm" href="{% url 'employees_app:export_employee_list_to_excel' %}" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
             </div>
           </div>
         </div>
@@ -77,17 +76,12 @@
             <!-- HEAD TABLA -->
             <thead class="bg-200 text-900">
               <tr>
-                <th class="white-space-nowrap">
-                  <div class="form-check mb-0 d-flex align-items-center">
-                    <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox" data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
-                  </div>
-                </th>
               {% for column in table_column %}
-                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
+                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Apellido'%}d-none d-sm-table-cell{% endif %}" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
               {% for column in table_column_user %}
-                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
-                {% endfor %}
+                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">{{column.1}}</th>
+              {% endfor %}
               <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
               </tr>
             </thead>
@@ -96,20 +90,17 @@
               
               {% for employee in employees %}
               <tr class="btn-reveal-trigger">
-                <td class="align-middle" style="width: 28px;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="recent-purchase-0" data-bulk-select-row="data-bulk-select-row" />
+                <td class="align-start first_name">
+                  <div class="d-flex align-items-center">
+                    <div class="avatar avatar-s me-1">
+                      <img class="rounded-circle" src="{{employee.user.imagen.url}}" alt="" />
+                    </div>
+                    {{employee.user.first_name}}
                   </div>
                 </td>
-                <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
-                <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
-                <!-- <td class="align-middle white-space-nowrap employee">Slick - Drag &amp;</td> -->
-                <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
-                </td> -->
-                <td class="align-start first_name">{{employee.user.first_name}}</td>
                 <td class="align-start last_name">{{employee.user.last_name}}</td>
-                <td class="align-start phone_number">{{employee.user.phone_code}}{{employee.user.phone_number}}</td>
-                <td class="align-start email">{{employee.user.email}}</td>
+                <td class="align-start phone_number d-none d-sm-table-cell"><a href="https://wa.me/{{employee.user.phone_code}}{{employee.user.phone_number}}">{{employee.user.phone_code}}{{employee.user.phone_number}}</a></td>
+                <td class="align-start email d-none d-sm-table-cell"><a href="mailto:{{employee.user.email}}">{{employee.user.email}}</a></td>
                 <td class="align-middle white-space-nowrap text-start">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span>
@@ -139,12 +130,14 @@
         <div class="row align-items-center">
           <div class="pagination d-none"></div>
           <div class="col">
-            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
+            <p class="mb-0 fs--1">
+              <span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span>
+              <!-- <a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a> -->
             </p>
           </div>
           <div class="col-auto d-flex">
-            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button>
-            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button>
+            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Anterior</span></button>
+            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Siguiente</span></button>
           </div>
         </div>
       </div>

@@ -145,14 +145,13 @@ class PersonForm(ValidationFormMixin):
     
     def clean_email(self):
         email = self.cleaned_data['email']
-
-        # Utiliza el validador de Django para validar la dirección de correo electrónico.
-        email_validator = EmailValidator()
-
-        try:
-            email_validator(email)
-        except forms.ValidationError:
-            raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
+        if email:
+            # Utiliza el validador de Django para validar la dirección de correo electrónico.
+            email_validator = EmailValidator()
+            try:
+                email_validator(email)
+            except forms.ValidationError:
+                raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
 
         return email
 
