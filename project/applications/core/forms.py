@@ -39,7 +39,7 @@ class PersonForm(ValidationFormMixin):
         }),
         validators=[
             RegexValidator(
-                r'^(?:[FMfm]?\d{1,8}|\d{1,8})$',
+                r'^(?:[FMfm]?\d{1,10}|\d{1,10})$',
                 'Ingrese un DNI válido (hasta 8 dígitos numéricos o precedidos por "F" o "M").',
                 'invalid_dni'
             )

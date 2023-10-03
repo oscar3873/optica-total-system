@@ -4,8 +4,8 @@ from django.dispatch import receiver
 from .models import User
 from .utils import generate_profile_img_and_assign
 
+
 @receiver(post_save, sender=User)
-def set_imagen_user(sender, instance, created, **kwargs):
-    print('\n\n\n\n\n POST_SAVE \n\n\n\n')
-    if created:
+def set_imagen_user(instance, created, **kwargs):
+    if not instance.imagen:
         generate_profile_img_and_assign(instance)
