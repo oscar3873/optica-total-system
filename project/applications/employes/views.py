@@ -8,6 +8,7 @@ from django.views.generic import (
     DetailView, UpdateView, FormView, ListView, DeleteView
 )
 from django.db import models, transaction
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -20,6 +21,7 @@ from applications.users.utils import generate_profile_img_and_assign
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
+from django.db.models import Q
 
 # Para la generacion de excel
 from openpyxl import Workbook
@@ -117,7 +119,7 @@ class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
     template_name = 'employes/employee_list_page.html'
     context_object_name = 'employees'
-    paginate_by = 8
+    paginate_by = 5
 
     def get_queryset(self):
         branch = self.request.user.branch
@@ -224,3 +226,62 @@ def export_employee_list_to_excel(request):
     workbook.save(response)
 
     return response
+
+
+########################### RUTINAS PARA PETICIONES AJAX ####################################
+
+def ajax_search_employee(request):
+    branch = request.user.branch
+
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
+        
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        
+        # Truncar search_term a 50 caracteres si es más largo
+        search_term = request.GET.get('search_term')
+        search_term = search_term[:50]
+        if search_term:
+            search_term = search_term.strip()
+            search_term = search_term.lower()
+        else:
+            #En caso de que no se haya ingresado termino se muestra la cantidad de empleado por defecto que muestra EmployeeListView
+            paginate_by = EmployeeListView().paginate_by
+            #Traer los primeros paginate_by empleados
+            employees = Employee.objects.get_employees_branch(branch).filter(deleted_at=None)[:paginate_by]
+            data = [{
+                'id': employee.id,
+                'first_name': employee.user.first_name,
+                'last_name': employee.user.last_name,
+                'phone_number': employee.user.phone_number,
+                'phone_code': employee.user.phone_code,
+                'email': employee.user.email,
+                'image_url': employee.user.imagen.url,
+                'is_staf': request.user.is_staff
+            } for employee in employees]
+            
+            return JsonResponse({'data': data})
+            
+        #Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
+        employees = Employee.objects.get_employees_branch(branch).filter(
+            Q(user__first_name__icontains=search_term) | 
+            Q(user__last_name__icontains=search_term) | 
+            Q(user__phone_number__icontains=search_term) | 
+            Q(user__phone_code__icontains=search_term) | 
+            Q(user__email__icontains=search_term)
+        )
+        
+        # Se crea una lista de diccionarios con los datos de los empleados
+        data = [{
+            'id': employee.id,
+            'first_name': employee.user.first_name,
+            'last_name': employee.user.last_name,
+            'phone_number': employee.user.phone_number,
+            'phone_code': employee.user.phone_code,
+            'email': employee.user.email,
+            'image_url': employee.user.imagen.url,
+            'is_staf': request.user.is_staff
+        } for employee in employees]
+        
+        return JsonResponse({'data': data})

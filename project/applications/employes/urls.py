@@ -30,12 +30,20 @@ urlpatterns = [
         name='employee_delete'
     ),
     
-    ####################### Extras ###################
+    ####################### EXCEL EXPORT  ###################
     
     path(
         'export-employee-list/', 
         export_employee_list_to_excel,
         name='export_employee_list_to_excel'
     ),
-
+    
+    
+    ####################### AJAX SEARCH ###################
+    
+    path(
+        'ajax-search-employee/',
+        ajax_search_employee,
+        name='ajax_search_employee'
+    )
 ]
