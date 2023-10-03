@@ -51,7 +51,6 @@ class NoteConsumer(AsyncWebsocketConsumer):
         )
 
     async def note_message(self, event):
-        print('######\n\n\n', event, '#########\n')
         message = event["message"]
 
         # Send the message to the client
@@ -81,7 +80,6 @@ class NotificationConsumer(AsyncWebsocketConsumer):
         )
 
     async def notification_message(self, event):
-        print('######\n\n\n', event, '#########\n')
         message = event["message"]
 
         # Send the message to the client

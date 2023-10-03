@@ -3417,7 +3417,6 @@ var listInit = function listInit() {
 
 var lottieInit = function lottieInit() {
   var lotties = document.querySelectorAll('.lottie');
-  console.log(lotties);
   if (lotties.length) {
     lotties.forEach(function (item) {
       var options = utils.getData(item, 'options');
@@ -4407,7 +4406,6 @@ var wizardInit = function wizardInit() {
     var count = 0;
 
     prevButton.classList.add('d-none'); // on button click tab change
-    console.log(form);
     nextButton.addEventListener('click', function () {
       if (form.className.includes('needs-validation')) {
         form.classList.add('was-validated');

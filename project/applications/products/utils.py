@@ -19,7 +19,6 @@ def obtener_nombres_de_campos(modelo, *campos_a_ignorar):
     
     from miapp.models import CashRegister
     nombres_de_campos = obtener_nombres_de_campos(CashRegister, 'user_made', 'deleted_at')
-    print(nombres_de_campos)
     """
     campos_a_ignorar = list(campos_a_ignorar)
     
@@ -34,7 +33,6 @@ def obtener_nombres_de_campos(modelo, *campos_a_ignorar):
 # Uso de la función
 # from miapp.models import CashRegister
 # nombres_de_campos = obtener_nombres_de_campos(CashRegister, 'user_made', 'deleted_at')
-# print(nombres_de_campos)
 
 
 

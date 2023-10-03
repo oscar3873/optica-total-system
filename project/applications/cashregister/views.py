@@ -206,7 +206,6 @@ class CashRegisterArching(View):
             # cashregister.save()
             
         else:
-            print("----------------Error formset create cashregister----------------")
             messages.error(request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
             return render(request, self.template_name, {'formset': formset})
         return redirect('cashregister_app:cashregister_create_view')
@@ -290,8 +289,6 @@ class MovementsCreateView(FormView):
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        print("----------------Error form creation movements----------------")
-        print(form.data)
         
         messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
         
@@ -304,8 +301,6 @@ class MovementsDeleteView(DeleteView):
     success_url = reverse_lazy('cashregister_app:movements_view')
     
     def delete(self, request, *args, **kwargs):
-        print("----------------Success delete movements----------------")
-        print(request.POST)
         
         messages.success(self.request, 'El movimiento fue eliminado con éxito')
         
@@ -318,11 +313,7 @@ class MovementsDeleteView(DeleteView):
         return context
     
     def post(self, request, *args, **kwargs):
-        print("----------------Success post delete movements----------------")
-        print(request.POST)
-        
         messages.success(self.request, 'El movimiento fue eliminado con éxito')
-        
         return super().post(request, *args, **kwargs)
     
 
@@ -368,18 +359,12 @@ class MovementsUpdateView(UpdateView):
             # e.args.__add__(("Movement deleted",))
             # raise e
             
-            print("----------------Argumentos en el ValueError----------------", e.args)
-            
             return redirect('cashregister_app:movements_create_view')
         
         return super().form_valid(form)
     
     def form_invalid(self, form):
-        print("----------------Error form update movements----------------")
-        print(form.data)
-        
         messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
-        
         return super().form_invalid(form)
 
 
@@ -406,7 +391,6 @@ class CurrencyCreateView(FormView):
     success_url = reverse_lazy('cashregister_app:currency_list')
 
     def form_valid(self, form):
-        print("------------------------------- ENTRE AQUI PORQUE CURRNECY")
         currency = form.save(commit=False)
         currency.user_made = self.request.user
         currency.save()

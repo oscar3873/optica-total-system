@@ -8,23 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
     searchForm.addEventListener('keyup', function (e) {
         e.preventDefault();
         const searchUrl = searchForm.getAttribute('data-ajax-search-url'); // URL para la búsqueda AJAX
-        const searchTerm = searchInput.value.trim();
+        let searchTerm = searchInput.value.trim();
 
         // Verifica si el término de búsqueda contiene solo espacios en blanco
-        if (searchTerm !== ' ') {
+        if (searchTerm !== '' && searchTerm !== ' ') {
             // Hay término de búsqueda válido, se realiza la solicitud
             // Realiza la solicitud AJAX al backend para obtener los resultados
-
-            // Truncar search_term a 50 caracteres si es más largo
-            searchTerm = searchTerm[50]
             $.ajax({
                 url: searchUrl,
                 data: { search_term: searchTerm },
                 success: function (data) {
                     // Limpia los resultados anteriores
-                    searchResults.innerHTML = '';
-
                     if (data.data.length > 0) {
+                        searchResults.innerHTML = '';
                         data.data.forEach(function (employee) {
                             const row = document.createElement('tr');
                             row.className = 'btn-reveal-trigger';
@@ -129,17 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             searchResults.appendChild(row);
                         });
 
-                        // Habilita o deshabilita los botones de paginación según sea necesario
-                        prevPageButton.disabled = currentPage === 1;
-                        nextPageButton.disabled = !data.has_next;  // Asegúrate de incluir la información de paginación en tu respuesta JSON
-
                     } else {
                         // Mostrar un mensaje si no se encuentran resultados
                         searchResults.innerHTML = '<tr><td colspan="5">No se encontraron resultados</td></tr>';
                     }
-
-                    // Actualiza la URL del navegador para reflejar la página actual (opcional)
-                    window.history.pushState({}, '', `?page=${page}`);
 
                 },
                 error: function (error) {

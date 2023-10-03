@@ -165,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // Envía el formulario si los campos no están vacíos
             // Obtener el formulario dentro del modal personalizado
             var formData = new FormData(document.getElementById("Feature-form"));
-            console.log(document.getElementById("Feature-form"));
             // Obtener los datos del formulario
             var errorMessage = document.getElementById('error_feature');
             errorMessage.textContent = '';
@@ -276,7 +275,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function roundToNearest50(value) {
         const cents = (value/100) % 1; // Obtiene la parte decimal del número
         cents = formatCents(value);
-        console.log(cents);
         if (cents >= 0.01 && cents <= 0.4999) {
             // Redondea a la cantidad más cercana que termina en .50
             return Math.floor(value) + 0.5;

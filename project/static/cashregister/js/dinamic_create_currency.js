@@ -20,11 +20,9 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("addCurrency").addEventListener("click", openModal);
 
     // Manejar la creación de una nueva categoría
-    console.log(document.getElementById("save-currency"));
     document.getElementById("save-currency").addEventListener("click", function() {
         var formData = new FormData(document.getElementById("currency-form"));
         var csrfToken = getCSRFToken(); // Obtener el token CSRF
-        console.log(formData);
         if (csrfToken) {
             $.ajax({
                 url: `/cashregister/currency/create`,

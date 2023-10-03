@@ -156,7 +156,6 @@ class AccountView(LoginRequiredMixin, UpdateView):
     #     return super().get(request, *args, **kwargs)
     
     def form_valid(self, form):
-        print(form.cleaned_data['phone_number'])
         return super().form_valid(form)
 
     def get_success_url(self):

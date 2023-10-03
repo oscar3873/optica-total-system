@@ -42,9 +42,7 @@ class CashRegisterDetailManager(models.Manager):
         initial_balance_cashregister = cashregister.initial_balance or 0
         #Se recupera el total de ingresos y egresos de la caja
         total_amount_ingresos = movements.filter(type_operation='in').aggregate(total=models.Sum('amount'))['total'] or 0
-        print("----------Ingreso--------------", total_amount_ingresos)
         total_amount_egresos = movements.filter(type_operation='out').aggregate(total=models.Sum('amount'))['total'] or 0
-        print("----------Egreso--------------", total_amount_egresos)
         #Se calcula el total de la caja
         total_amount = total_amount_ingresos - total_amount_egresos
         
@@ -52,7 +50,6 @@ class CashRegisterDetailManager(models.Manager):
         
         #harcodeado
         registered_amount = (total_amount + initial_balance_cashregister) if type_method.name == "Efectivo" else total_amount
-        print("------Total------", registered_amount)
         return registered_amount
 
 

@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function() {
             contentType: false,
             success: function(data) {
                 if(data.status === 'success') {
-                    console.log('Adding new option to select');
                     // Crear una nueva opción para agregar al select
                     var newOption = new Option(data.new_type.label, data.new_type.id);
                     
@@ -27,7 +26,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     newOption.selected = true;
                     
                     // Cerrar el modal después de agregar la etiqueta
-                    console.log('Closing modal');
                     closeModal();
                 } else {
                     // Manejar errores de validación si la solicitud no fue exitosa
