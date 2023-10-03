@@ -14,7 +14,7 @@ def generate_profile_img_and_assign(user):
     draw = ImageDraw.Draw(image)
 
     # Definir las iniciales y el tamaño de la fuente
-    initials = user.first_name[0] + user.last_name[0]
+    initials = user.first_name[0].upper() + user.last_name[0].upper()
     font_size = 100
 
     # Definir el tipo de fuente
