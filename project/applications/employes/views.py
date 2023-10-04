@@ -265,7 +265,6 @@ def ajax_search_employee(request):
             'phone_code': employee.user.phone_code,
             'email': employee.user.email,
             'image_url': employee.user.imagen.url,
-            'is_staf': request.user.is_staff
+            'is_staff': 1 if request.user.is_staff else 0 
         } for employee in employees]
-
         return JsonResponse({'data': data})
