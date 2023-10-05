@@ -18,7 +18,7 @@
                 <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Lista de
                         clientes</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-                <p class="mb-0">Aquí puede vizualizar todos los clientes</p>
+                <p class="mb-0">AquÃ­ puede vizualizar todos los clientes</p>
             </div>
         </div>
 
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <div id="table-purchases-replace-element">
-                                {% if user.role == 'ADMINISTRADOR' %}
+                                {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_new' %}" class="btn btn-falcon-default btn-sm"
                                     type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                         class="d-none d-sm-inline-block ms-1">Nuevo Cliente</span></a>
@@ -118,8 +118,8 @@
                                             <div class="dropdown-menu dropdown-menu-end border py-2"
                                                 aria-labelledby="dropdown0">
                                                 <a class="dropdown-item" href="{% url 'clients_app:customer_detail' customer.id %}">Detalle</a>
-                                                {% if user.role == 'ADMINISTRADOR' %}
-                                                    <a class="dropdown-item" href="{% url 'clients_app:customer_update' customer.id %}">Editar</a>
+                                                {% if request.user.is_staff %}
+                                                <a class="dropdown-item" href="{% url 'clients_app:customer_update' customer.id %}">Editar</a>
                                                     <a class=" dropdown-item text-danger" href="{% url 'clients_app:customer_delete' customer.id %}">Eliminar</a>
                                                 {% endif %}
                                             </div>
@@ -172,7 +172,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    {% if user.role == 'ADMINISTRADOR' %}
+                    {% if request.user.is_staff %}
                     <div class="d-flex py-3 justify-content-start">
                         <a href="{% url 'clients_app:customer_new' %}" class="btn btn-primary me-2" type="submit">Nuevo
                             Cliente</a>

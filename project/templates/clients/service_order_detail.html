@@ -14,10 +14,10 @@
                 class="fa-inverse fa-stack-1x text-primary fas fa-flask"></i></span>
         <div class="col">
             <h5 class="mb-0 text-primary position-relative"><span
-                    class="bg-200 dark__bg-1100 pe-3">Laboratorio</span><span
+                    class="bg-200 dark__bg-1100 pe-3">Orden de servicio</span><span
                     class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-            <p class="mb-0">Laboratorio del cliente <a class="link-600 fw-semi-bold" href="{% url 'clients_app:customer_detail' laboratory_orders.client.id %}"><span
-                class="text-warning">{{laboratory_orders.client}}</span></a> realizado el {{laboratory_orders.created_at | date:"j \d\e F \d\e\l Y"}}</p>
+            <p class="mb-0">Orden de servicio del cliente <a class="link-600 fw-semi-bold" href="{% url 'clients_app:customer_detail' service_order.customer.id %}"><span
+                class="text-warning">{{service_order.customer}}</span></a> realizado el {{service_order.created_at | date:"j \d\e F \d\e\l Y"}}</p>
         </div>
     </div>
 
@@ -52,17 +52,17 @@
                                     <td>
                                         <p><strong>Derecho</strong></p>
                                     </td>
-                                    <td>{{ laboratory_orders.correction.lej_od_esferico }}</td>
-                                    <td>{{ laboratory_orders.correction.lej_od_cilindrico }}</td>
-                                    <td>{{ laboratory_orders.correction.lej_od_eje }}</td>
+                                    <td>{{ service_order.correction.lej_od_esferico }}</td>
+                                    <td>{{ service_order.correction.lej_od_cilindrico }}</td>
+                                    <td>{{ service_order.correction.lej_od_eje }}</td>
                                 </tr>
                                 <tr class="btn-reveal-trigger">
                                     <td>
                                         <p><strong>Izquierdo</strong></p>
                                     </td>
-                                    <td>{{ laboratory_orders.correction.lej_oi_esferico }}</td>
-                                    <td>{{ laboratory_orders.correction.lej_oi_cilindrico }}</td>
-                                    <td>{{ laboratory_orders.correction.lej_oi_eje }}</td>
+                                    <td>{{ service_order.correction.lej_oi_esferico }}</td>
+                                    <td>{{ service_order.correction.lej_oi_cilindrico }}</td>
+                                    <td>{{ service_order.correction.lej_oi_eje }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -93,17 +93,17 @@
                                     <td>
                                         <p><strong>Derecho</strong></p>
                                     </td>
-                                    <td>{{ laboratory_orders.correction.cer_od_esferico }}</td>
-                                    <td>{{ laboratory_orders.correction.cer_od_cilindrico }}</td>
-                                    <td>{{ laboratory_orders.correction.cer_od_eje }}</td>
+                                    <td>{{ service_order.correction.cer_od_esferico }}</td>
+                                    <td>{{ service_order.correction.cer_od_cilindrico }}</td>
+                                    <td>{{ service_order.correction.cer_od_eje }}</td>
                                 </tr>
                                 <tr class="btn-reveal-trigger">
                                     <td>
                                         <p><strong>Izquierdo</strong></p>
                                     </td>
-                                    <td>{{ laboratory_orders.correction.cer_oi_esferico }}</td>
-                                    <td>{{ laboratory_orders.correction.cer_oi_cilindrico }}</td>
-                                    <td>{{ laboratory_orders.correction.cer_oi_eje }}</td>
+                                    <td>{{ service_order.correction.cer_oi_esferico }}</td>
+                                    <td>{{ service_order.correction.cer_oi_cilindrico }}</td>
+                                    <td>{{ service_order.correction.cer_oi_eje }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -134,21 +134,21 @@
                             <td scope="row">
                                 <p><strong>Nanopupilar</strong></p>
                             </td>
-                            <td>{{ laboratory_orders.interpupillary.lej_oi_nanopupilar }}</td>
-                            <td>{{ laboratory_orders.interpupillary.lej_od_nanopupilar }}</td>
+                            <td>{{ service_order.interpupillary.lej_oi_nanopupilar }}</td>
+                            <td>{{ service_order.interpupillary.lej_od_nanopupilar }}</td>
                         </tr>
                         <tr>
                             <td scope="row">
                                 <p><strong>Pelicula</strong></p>
                             </td>
-                            <td>{{ laboratory_orders.interpupillary.lej_oi_pelicula }}</td>
-                            <td>{{ laboratory_orders.interpupillary.lej_od_pelicula }}</td>
+                            <td>{{ service_order.interpupillary.lej_oi_pelicula }}</td>
+                            <td>{{ service_order.interpupillary.lej_od_pelicula }}</td>
                         </tr>
                         <tr>
                             <td scope="row">
                                 <p><strong>Total</strong>
                             </td>
-                            <td colspan="2">{{ laboratory_orders.interpupillary.lej_total }}</td>
+                            <td colspan="2">{{ service_order.interpupillary.lej_total }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -170,21 +170,21 @@
                             <td scope="row">
                                 <p><strong>Nanopupilar</strong></p>
                             </td>
-                            <td>{{ laboratory_orders.interpupillary.cer_oi_nanopupilar }}</td>
-                            <td>{{ laboratory_orders.interpupillary.cer_od_nanopupilar }}</td>
+                            <td>{{ service_order.interpupillary.cer_oi_nanopupilar }}</td>
+                            <td>{{ service_order.interpupillary.cer_od_nanopupilar }}</td>
                         </tr>
                         <tr>
                             <td scope="row">
                                 <p><strong>Pelicula</strong></p>
                             </td>
-                            <td>{{ laboratory_orders.interpupillary.cer_oi_pelicula }}</td>
-                            <td>{{ laboratory_orders.interpupillary.cer_od_pelicula }}</td>
+                            <td>{{ service_order.interpupillary.cer_oi_pelicula }}</td>
+                            <td>{{ service_order.interpupillary.cer_od_pelicula }}</td>
                         </tr>
                         <tr>
                             <td scope="row">
                                 <p><strong>Total</strong></p>
                             </td>
-                            <td colspan="2">{{ laboratory_orders.interpupillary.cer_total }}</td>
+                            <td colspan="2">{{ service_order.interpupillary.cer_total }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -210,7 +210,7 @@
                         <tr>
                             <td>Antireflex</td>
                             <td>
-                                {% if laboratory_orders.tratamient.antireflex %}
+                                {% if service_order.tratamient.antireflex %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -220,7 +220,7 @@
                         <tr>
                             <td>Filtro Azul</td>
                             <td>
-                                {% if laboratory_orders.tratamient.filtro_azul %}
+                                {% if service_order.tratamient.filtro_azul %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -230,7 +230,7 @@
                         <tr>
                             <td>Fotocromático</td>
                             <td>
-                                {% if laboratory_orders.tratamient.fotocromatico %}
+                                {% if service_order.tratamient.fotocromatico %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -240,7 +240,7 @@
                         <tr>
                             <td>Ultravex</td>
                             <td>
-                                {% if laboratory_orders.tratamient.ultravex %}
+                                {% if service_order.tratamient.ultravex %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -250,7 +250,7 @@
                         <tr>
                             <td>Polarizado</td>
                             <td>
-                                {% if laboratory_orders.tratamient.polarizado %}
+                                {% if service_order.tratamient.polarizado %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -260,7 +260,7 @@
                         <tr>
                             <td>Neutrosolar</td>
                             <td>
-                                {% if laboratory_orders.tratamient.neutrosolar %}
+                                {% if service_order.tratamient.neutrosolar %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -286,7 +286,7 @@
                         <tr>
                             <td>Policarbonato</td>
                             <td>
-                                {% if laboratory_orders.material.policarbonato %}
+                                {% if service_order.material.policarbonato %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -296,7 +296,7 @@
                         <tr>
                             <td>Organic</td>
                             <td>
-                                {% if laboratory_orders.material.organic %}
+                                {% if service_order.material.organic %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -306,7 +306,7 @@
                         <tr>
                             <td>Mineral</td>
                             <td>
-                                {% if laboratory_orders.material.mineral %}
+                                {% if service_order.material.mineral %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -316,7 +316,7 @@
                         <tr>
                             <td>M R8</td>
                             <td>
-                                {% if laboratory_orders.material.m_r8 %}
+                                {% if service_order.material.m_r8 %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -344,7 +344,7 @@
                         <tr>
                             <td>White</td>
                             <td>
-                                {% if laboratory_orders.color.white %}
+                                {% if service_order.color.white %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -354,7 +354,7 @@
                         <tr>
                             <td>Full Gray</td>
                             <td>
-                                {% if laboratory_orders.color.full_gray %}
+                                {% if service_order.color.full_gray %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -364,7 +364,7 @@
                         <tr>
                             <td>Gray Gradient</td>
                             <td>
-                                {% if laboratory_orders.color.gray_gradient %}
+                                {% if service_order.color.gray_gradient %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -374,7 +374,7 @@
                         <tr>
                             <td>Flat Sepia</td>
                             <td>
-                                {% if laboratory_orders.color.flat_sepia %}
+                                {% if service_order.color.flat_sepia %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -400,7 +400,7 @@
                         <tr>
                             <td>Monofocal</td>
                             <td>
-                                {% if laboratory_orders.type_cristal.monofocal %}
+                                {% if service_order.type_cristal.monofocal %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -410,7 +410,7 @@
                         <tr>
                             <td>Bifocal FV</td>
                             <td>
-                                {% if laboratory_orders.type_cristal.bifocal_fv %}
+                                {% if service_order.type_cristal.bifocal_fv %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -420,7 +420,7 @@
                         <tr>
                             <td>Bifocal K</td>
                             <td>
-                                {% if laboratory_orders.type_cristal.bifocal_k %}
+                                {% if service_order.type_cristal.bifocal_k %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -430,7 +430,7 @@
                         <tr>
                             <td>Bifocal PI</td>
                             <td>
-                                {% if laboratory_orders.type_cristal.bifocal_pi %}
+                                {% if service_order.type_cristal.bifocal_pi %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -440,7 +440,7 @@
                         <tr>
                             <td>Progressive</td>
                             <td>
-                                {% if laboratory_orders.type_cristal.progressive %}
+                                {% if service_order.type_cristal.progressive %}
                                 <p class="badge badge-success custom-badge h3 text-dark">Si</p>
                                 {% else %}
                                 <p class="badge badge-success custom-badge h3 text-dark">No</p>
@@ -461,7 +461,7 @@
                 </div>
                 <div class="container justify-content-center">
                     <textarea id="diagnostic" name="diagnostic" class="form-control" rows="3"
-                        readonly>{{ laboratory_orders.diagnostic }}</textarea>
+                        readonly>{{ service_order.diagnostic }}</textarea>
                 </div>
             </div>
         </div>
@@ -474,7 +474,7 @@
                 </div>
                 <div class="container justify-content-center">
                     <textarea id="diagnostic" name="diagnostic" class="form-control" rows="3"
-                        readonly>{{ laboratory_orders.armazon }}</textarea>
+                        readonly>{{ service_order.armazon }}</textarea>
                 </div>
             </div>
         </div>
@@ -487,12 +487,12 @@
                 </div>
                 <div class="container justify-content-center">
                     <textarea id="diagnostic" name="diagnostic" class="form-control" rows="3"
-                        readonly>{{ laboratory_orders.observations }}</textarea>
+                        readonly>{{ service_order.observations }}</textarea>
                 </div>
             </div>
         </div>
     </div>
-    <a href="{% url 'clients_app:customer_detail' laboratory_orders.client.id %}" class="btn btn-primary">Volver al Cliente</a>
+    <a href="{% url 'clients_app:customer_detail' service_order.customer.id %}" class="btn btn-primary">Volver al Cliente</a>
 
 
 

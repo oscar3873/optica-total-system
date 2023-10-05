@@ -21,13 +21,13 @@ urlpatterns = [
     ),
     path(
         'lab/new/',  # PARA CREAR PERDIDO DE LAB "FANTASMA" (SIN CLIENTE)
-        CalibrationOrderCreateView.as_view(), 
-        name='only_laboratory_new'
+        ServiceOrderCreateView.as_view(), 
+        name='only_service_order_new'
     ),
     path(
         '<pk>/lab/new/',  # ASIGNA EL PEDIDO DE LAB POR CREAR AL CLIENTE EN EL QUE ESTÁ
-        CalibrationOrderCreateView.as_view(), 
-        name='laboratory_new'
+        ServiceOrderCreateView.as_view(), 
+        name='service_order_new'
     ),
 
     ####  UPDATE  ####
@@ -38,8 +38,8 @@ urlpatterns = [
     ),
     path(
         '<pk_c>/lab/<pk>/update/',  # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
-        CalibrationOrderUpdateView.as_view(), 
-        name='laboratory_update'
+        ServiceOrderUpdateView.as_view(), 
+        name='service_order_update'
     ),
     path(
         '<pk_c>/health_insurance/<pk>/update/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
@@ -65,8 +65,8 @@ urlpatterns = [
     ),
     path(
         'labs/',
-        CalibrationOrderListView.as_view(),
-        name='lab_view'
+        ServiceOrderListView.as_view(),
+        name='service_order_view'
     ),
     path(
         'health_insurances/',
@@ -82,8 +82,8 @@ urlpatterns = [
     ),
     path(
         '<pk_c>/lab/<pk>/detail/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase DetailView tomara como pk para matcheat con un objeto
-        CalibrationOrderDetailView.as_view(),
-        name='laboratory_detail'
+        ServiceOrderDetailView.as_view(),
+        name='service_order_detail'
     ),
     path(
         'insurance/<pk>/detail/',
@@ -99,18 +99,25 @@ urlpatterns = [
     ),
     path(
         'lab/<pk>/delete/',
-        CalibrationOrderDeleteView.as_view(),
-        name='laboratory_delete'
+        ServiceOrderDeleteView.as_view(),
+        name='service_order_delete'
     ),
     path(
         '<pk_c>/lab/<pk>/delete/',
-        CalibrationOrderDeleteView.as_view(),
-        name='laboratory_delete'
+        ServiceOrderDeleteView.as_view(),
+        name='service_order_delete'
     ),
 
     path(
         'insurance/<pk>/delete/',
         HealthInsuranceDeleteView.as_view(),
         name='hi_delete'
+    ),
+
+    ########## EXCEL ##########
+    path(
+        '<pk>/export',
+        export_order_service_list_to_excel,
+        name='export_service_orders'
     )
 ]

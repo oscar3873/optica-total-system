@@ -9,7 +9,7 @@ class CustomerManager(BaseManager):
         return self.filter(deleted_at=None)
 
     def history(self, customer):
-        history = customer.calibration_order_set.all().order_by('-created_at').select_related('user_made')
+        history = customer.serviceorders.all().order_by('-created_at')
         return history
 
     def all_insurance(self, customer):
@@ -23,9 +23,9 @@ class CustomerManager(BaseManager):
     def get_absolute_url(self):
         return reverse('clients_app:detail', kwargs={'pk': self.pk})
 
-class LabManager(BaseManager):
+class ServiceOrderManager(BaseManager):
     """
-    Manager para el Pedido de laboratorio (Calibration order)
+    Manager para el Pedido de laboratorio (Orden de Servicio)
     """
     def all(self):
         return self.filter(deleted_at=None)
@@ -59,9 +59,8 @@ class LabManager(BaseManager):
         pupilar.user_made = user_made
         pupilar.save()
 
-        calibration_order = self.model(
-            client = customer,
-            is_done = form.cleaned_data['is_done'],
+        service_order = self.model(
+            customer = customer,
             correction = correction,
             material = material,
             type_cristal = cristal,
@@ -73,7 +72,7 @@ class LabManager(BaseManager):
             observations = form.cleaned_data['observations'],
             user_made = user_made,
         )
-        # Set any other fields of the calibration_order as needed
-        calibration_order.save()
+        # Set any other fields of the service_order as needed
+        service_order.save()
 
-        return calibration_order
+        return service_order

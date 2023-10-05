@@ -231,12 +231,6 @@ class MaterialForm(forms.ModelForm):
             if getattr(material_instance, choice_value):
                 self.fields['material_choice'].initial = choice_value
 
-    def clean(self):
-        cleaned_data = super().clean()
-        material_choice = cleaned_data.get('material_choice')
-    
-        cleaned_data[material_choice] = True
-        return cleaned_data
 
 class ColorForm(forms.ModelForm):
     COLOR_CHOICES = [
@@ -271,12 +265,6 @@ class ColorForm(forms.ModelForm):
             if getattr(material_instance, choice_value):
                 self.fields['color_choice'].initial = choice_value
 
-    def clean(self):
-        cleaned_data = super().clean()
-        color_choice = cleaned_data.get('color_choice')
-
-        cleaned_data[color_choice] = True
-        return cleaned_data
 
 class CristalForm(forms.ModelForm):
     CRISTAL_CHOICES = [
@@ -311,13 +299,6 @@ class CristalForm(forms.ModelForm):
         for choice_value, choice_label in self.fields['cristal_choice'].choices:
             if getattr(material_instance, choice_value):
                 self.fields['cristal_choice'].initial = choice_value
-
-    def clean(self):
-        cleaned_data = super().clean()
-        cristal_choice = cleaned_data.get('cristal_choice')
-
-        cleaned_data[cristal_choice] = True
-        return cleaned_data
 
 class TratamientForm(forms.ModelForm):
     TRATAMIENT_CHOICES = [
@@ -354,12 +335,6 @@ class TratamientForm(forms.ModelForm):
             if getattr(material_instance, choice_value):
                 self.fields['tratamient_choice'].initial = choice_value
 
-    def clean(self):
-        cleaned_data = super().clean()
-        tratamient_choice = cleaned_data.get('tratamient_choice')
-
-        cleaned_data[tratamient_choice] = True
-        return cleaned_data
 
 class InterpupillaryForm(forms.ModelForm):
     cer_od_nanopupilar = forms.CharField(
@@ -457,17 +432,7 @@ class InterpupillaryForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
 
-class Calibration_OrderForm(forms.ModelForm):
-
-    is_done = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(
-            attrs={
-                'class': 'form-check-input'
-                }
-            )
-    )
-
+class ServiceOrderForm(forms.ModelForm):
     armazon = forms.CharField(
         #required=False,
         widget = forms.Textarea(
@@ -503,6 +468,5 @@ class Calibration_OrderForm(forms.ModelForm):
     )
 
     class Meta:
-        model = Calibration_Order
-        fields = ['is_done','diagnostic', 'armazon', 'observations']
-
+        model = ServiceOrder
+        fields = ['diagnostic', 'armazon', 'observations']

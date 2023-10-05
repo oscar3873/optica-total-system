@@ -2,7 +2,7 @@ from django.db import models
 from applications.core.models import Person
 from applications.core.models import BaseAbstractWithUser
 
-from .managers import CustomerManager, LabManager
+from .managers import CustomerManager, ServiceOrderManager
 
 
 # Create your models here.
@@ -29,10 +29,7 @@ class Customer(Person, BaseAbstractWithUser):
         se guardan datos para almacenar clientes
     """
     objects = CustomerManager()
-    # Campo para indicar si el cliente tiene una cuenta corriente
-    has_credit_account = models.BooleanField(default=False, verbose_name="Cuenta corriente", null=True, blank=True)
-    # Saldo de la cuenta corriente (solo relevante si has_credit_account es True)
-    credit_balance = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, default=0, verbose_name="Saldo de Cuenta")
+
     class Meta:
         verbose_name = "Cliente"
         verbose_name_plural = "Clientes"
@@ -41,23 +38,7 @@ class Customer(Person, BaseAbstractWithUser):
     def __str__(self) -> str:
         return f'{self.last_name}, {self.first_name}'
 
-
-class CreditTransaction(models.Model):
-    """
-    Modelo para registrar transacciones de cuenta corriente
-    """
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="credit_transactions", verbose_name="Cliente")
-    date = models.DateTimeField(auto_now_add=True, verbose_name="Fecha y Hora")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
-    description = models.TextField(blank=True, null=True, verbose_name="Descripción")
-
-    class Meta:
-        verbose_name = "Transacción de Cuenta Corriente"
-        verbose_name_plural = "Transacciones de Cuenta Corriente"
-
-    def __str__(self) -> str:
-        return f'Transacción por {self.amount} de {self.customer}: {self.date}'
-
+    
 
 class Customer_HealthInsurance(BaseAbstractWithUser):
     """
@@ -130,17 +111,17 @@ class Interpupillary(BaseAbstractWithUser):
     
 ###############################################################
 
-class Calibration_Order(BaseAbstractWithUser):
-    client = models.ForeignKey(Customer, null=True, on_delete=models.PROTECT, verbose_name='client')
-    is_done = models.BooleanField(default=False, null=True, blank=True)
+class ServiceOrder(BaseAbstractWithUser):
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.CASCADE, related_name='serviceorders', verbose_name='Cliente')
     correction = models.ForeignKey(Correction, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     material = models.ForeignKey(Material, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     type_cristal = models.ForeignKey(Cristal, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     color = models.ForeignKey(Color, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     tratamient = models.ForeignKey(Tratamient, on_delete=models.PROTECT, related_name='laboratory', null=True, blank=True)
     interpupillary = models.ForeignKey(Interpupillary, on_delete=models.PROTECT, related_name='laboratory', null = True, blank=True)
-    diagnostic = models.CharField(max_length=200, null=True, blank=True)
-    armazon = models.CharField(max_length=100, null=True, blank=True)
-    observations = models.CharField(max_length=200, null=True, blank=True)
+    diagnostic = models.CharField(max_length=200, null=True, blank=True, verbose_name='Diagnostico')
+    armazon = models.CharField(max_length=100, null=True, blank=True, verbose_name='Armazon')
+    observations = models.CharField(max_length=200, null=True, blank=True, verbose_name='Observacion')
+    is_done = models.BooleanField(default=False, null=True, blank=True, verbose_name='Estado')
 
-    objects = LabManager()
+    objects = ServiceOrderManager()

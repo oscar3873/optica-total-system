@@ -35,7 +35,7 @@
             </div>
             <div class="row mt-2">
                 <div class="col">
-                    {% if user.role == 'ADMINISTRADOR' %}
+                    {% if request.user.is_staff %}
                     <a class="btn btn-primary btn-sm" href="{% url 'clients_app:customer_new' %}">
                         <span class="fas fa-plus fs--2 me-1"></span>
                         Nuevo Cliente
@@ -122,7 +122,7 @@
                     <div class="row">
                         <div class="col-6 mt-4 col-sm-4">
                             <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
-                                {% if user.role == 'ADMINISTRADOR' %}
+                                {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}">
                                 {% else %}
                                 <a href="{% url 'clients_app:customer_update_for_employees' customer.id %}">
@@ -198,11 +198,11 @@
                             </div>
                         </div>
                         <div id="table-purchases-replace-element">
-                            {% if user.role == 'ADMINISTRADOR' %}
-                            <a href="{% url 'clients_app:laboratory_new' customer.pk %}"
+                            {% if request.user.is_staff %}
+                            <a href="{% url 'clients_app:service_order_new' customer.pk %}"
                                 class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus"
                                     data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Nuevo Laboratorio</span></a>
+                                    class="d-none d-sm-inline-block ms-1">Nuevo Orden de sercicio</span></a>
                             {% endif %}
                             <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
                                     data-fa-transform="shrink-3 down-2"></span><span
@@ -219,7 +219,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="text-center">
-                            {% if calibration_orders %}
+                            {% if service_orders %}
                             <div class="table-responsive scrollbar">
                                 <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                                     <thead class="bg-200 text-900">
@@ -259,7 +259,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="list" id="table-purchase-body">
-                                        {% for calibration_order in calibration_orders %}
+                                        {% for service_order in service_orders %}
                                         <tr class="btn-reveal-trigger">
                                             <td class="align-middle" style="width: 28px;">
                                                 <div class="form-check mb-0">
@@ -267,15 +267,15 @@
                                                         data-bulk-select-row="data-bulk-select-row" />
                                                 </div>
                                             </td>
-                                            <th class="align-start user_made ">{{ calibration_order.user_made }}</th>
-                                            <th class="align-start created_at">{{ calibration_order.created_at | date:"d-m-Y" }}</th>
-                                            <th class="align-start diagnostic">{{ calibration_order.diagnostic }}</th>
-                                            <td class="align-start armazon">{{ calibration_order.armazon }}</td>
-                                            <td class="align-start observation">{{ calibration_order.observations }}
+                                            <th class="align-start user_made ">{{ service_order.user_made }}</th>
+                                            <th class="align-start created_at">{{ service_order.created_at | date:"d-m-Y" }}</th>
+                                            <th class="align-start diagnostic">{{ service_order.diagnostic }}</th>
+                                            <td class="align-start armazon">{{ service_order.armazon }}</td>
+                                            <td class="align-start observation">{{ service_order.observations }}
                                             </td>
                                             <td class="align-start is_done">
                                                 <p class="h6">
-                                                    {% if calibration_order.is_done %}
+                                                    {% if service_order.is_done %}
                                                     Completado
                                                     {% else %}
                                                     No Completado
@@ -293,12 +293,12 @@
                                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                                         aria-labelledby="dropdown0">
                                                         <a class="dropdown-item"
-                                                            href="{% url 'clients_app:laboratory_detail' pk_c=customer.id pk=calibration_order.id %}">Detalle</a>
-                                                            {% if user.role == 'ADMINISTRADOR' %}
+                                                            href="{% url 'clients_app:service_order_detail' pk_c=customer.id pk=service_order.id %}">Detalle</a>
+                                                            {% if request.user.is_staff %}
                                                             <a class="dropdown-item"
-                                                            href="{% url 'clients_app:laboratory_update' pk_c=customer.id pk=calibration_order.id %}">Editar</a>
+                                                            href="{% url 'clients_app:service_order_update' pk_c=customer.id pk=service_order.id %}">Editar</a>
                                                         <a class=" dropdown-item text-danger"
-                                                        href="{% url 'clients_app:laboratory_delete' pk_c=customer.id pk=calibration_order.id %}">Eliminar</a>
+                                                        href="{% url 'clients_app:service_order_delete' pk_c=customer.id pk=service_order.id %}">Eliminar</a>
                                                         {% endif %}
                                                     </div>
                                                 </div>
