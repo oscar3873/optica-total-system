@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     cuit_modal.textContent = '';
 
                 } else {
-                    var errorField = document.getElementById("form-to-new-checks"); // Reemplaza "id_name" con el ID de tu campo
+                    var errorField = document.getElementById("        ID DE DONDE VALLA EL ERROR A MOSTRAR          "); // Reemplaza "id_name" con el ID de tu campo
                     var errorMessage = document.createElement("div");
                     errorMessage.className = "text-danger text-center";
                     errorMessage.style.fontSize = "0.8rem";

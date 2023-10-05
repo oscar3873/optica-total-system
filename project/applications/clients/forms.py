@@ -16,8 +16,20 @@ class CustomerForm(PersonForm):
         })
     )
 
+    has_credit_account = forms.BooleanField(
+        widget= forms.CheckboxInput(
+            attrs={
+                'class': 'form-check-input',
+            }
+        )
+    )
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for index, field in self.fields.items():
+            field.required = True
+        self.fields['email'].required = False
+        
         if self.instance.pk:
             insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)
             self.fields['h_insurance'].initial = insurances
@@ -27,10 +39,7 @@ class CustomerForm(PersonForm):
         fields = '__all__'
         exclude = ['user_made','deleted_at', 'branch']
 
-    def clean_birth_date(self):
-        birth_date = self.cleaned_data['birth_date']
-        self.validate_birth_date(birth_date)
-        return birth_date      
+
     
 class HealthInsuranceForm(ValidationFormMixin):
 

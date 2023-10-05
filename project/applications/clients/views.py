@@ -9,6 +9,7 @@ from django.contrib import messages
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
 from applications.cashregister.utils import obtener_nombres_de_campos
+from project.settings.base import DATE_NOW
 
 from .models import *
 from .forms import *
@@ -133,26 +134,27 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         insurance.save()
         
         try:
-            customer = Customer.objects.get(pk=self.kwargs.get('pk')) # pk corresponde a como se le pasa por la url.py <pk>
+            customer = Customer.objects.get(pk=self.kwargs.get('pk')) # AGREGA A UN CLINETE LA NUEVA OBRA SOCIAL
             Customer_HealthInsurance.objects.create(h_insurance=insurance, customer=customer)
-
             return redirect('clients_app:customer_detail', pk=customer.pk)
+        
         except Customer.DoesNotExist:
-            if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # AGREGA NUEVA OBRA SOCIAL DURANTE CREACION DE CLIENTE (PETICION FETCH)
                 new_insurance_data = {
                     'id': insurance.id,
                     'name': insurance.name
                 }
-                # Si es una solicitud AJAX, devuelve una respuesta JSON
                 return JsonResponse({'status': 'success', 'new_insurance': new_insurance_data})
             else:
                 messages.success(self.request, 'Se ha registrado una obra social con exito.')
-                # Si no es una solicitud AJAX, llama al mÃ©todo form_valid del padre para el comportamiento predeterminado
                 return super().form_valid(form)
     
     def form_invalid(self, form):
-        messages.error(self.request, 'Por favor, verifique los campos.')
-        return super().form_invalid(form)
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # ERROR DE NUEVA OBRA SOCIAL DURANTE CREACION DE CLIENTE (PETICION FETCH)
+            return JsonResponse({'status': 'error'})
+        else:
+            messages.error(self.request, 'Por favor, verifique los campos.')
+            return super().form_invalid(form)
 
 
 ########################### UPDATE  #########################
@@ -475,3 +477,43 @@ def export_order_service_list_to_excel(request, pk):
     workbook.save(response)
 
     return response
+
+
+class CreditTransactionDetailView(LoginRequiredMixin, DetailView):
+    model = CreditTransaction
+    template_name = 'clients/credit_transactions.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # context[''] = ''
+        return context
+    
+
+
+
+def pay_credits(request, pk):
+    user = request.user
+    customer = Customer.objects.get(pk=pk)
+    total = 0
+
+    transactions = customer.transactions.all().filter(sale__state = 'PENDIENTE') 
+    for transaction in transactions:      
+        transaction.sale.state = 'COMPLETADO'
+        total += transaction.sale.amount
+        transaction.sale.save()
+
+
+    # Movement.objects.create(
+    #     amount = total,
+    #     date_movement = DATE_NOW.date(),
+    #     cash_register = user.branch.cash_register_set.filter(is_close = False).last(),
+    #     description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
+    #     currency = Currency.objects.first(),
+    #     type_operation = 'in',
+    #     payment_method = PaymentType.objects.first(),
+    #     ...
+    # )
+
+    customer.credit_balance = 0
+    customer.save()
+    return redirect('clients_app:customer_detail', pk=customer.pk)
