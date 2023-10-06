@@ -123,9 +123,8 @@
                         <div class="col-6 mt-4 col-sm-4">
                             <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
                                 {% if request.user.is_staff %}
-                                <a href="{% url 'clients_app:customer_update' customer.id %}">
+                                <a href="{% url 'clients_app:customer_update' customer.id %}"></a>
                                 {% endif %}
-                                </a>
                             </p>
                         </div>
                         <div class="col mt-4 text-800 fw-bold">
