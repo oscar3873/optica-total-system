@@ -414,6 +414,9 @@ def export_order_service_list_to_excel(request, pk):
     customer = Customer.objects.get(id=pk)
     queryset = customer.serviceorders.all()
 
+    if not queryset:
+        raise ValueError('El cliente no cuenta con Ordenes de Servicio.')
+    
     # Crear un libro de trabajo de Excel
     workbook = Workbook()
     worksheet = workbook.active
