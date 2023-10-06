@@ -117,12 +117,12 @@
                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                         aria-labelledby="dropdown0">
                                         <a class="dropdown-item"
-                                            href="{% url 'clients_app:hi_detail' pk=h_insurance.pk %}">Detalle</a>
+                                            href="{% url 'clients_app:hi_detail' h_insurance.pk %}">Detalle</a>
                                             {% if request.user.is_staff %}
                                             <a class="dropdown-item"
-                                            href="{% url 'clients_app:insurance_update' pk=h_insurance.pk %}">Editar</a> <!--  url 'clients_app:insurance_update' pk=h_insurance.pk -->
+                                            href="{% url 'clients_app:insurance_update' h_insurance.pk %}">Editar</a>
                                         <a class=" dropdown-item text-danger"
-                                            href="{% url 'clients_app:hi_delete' pk=h_insurance.pk %}">Eliminar</a>
+                                            href="{% url 'clients_app:hi_delete' h_insurance.pk %}">Eliminar</a>
                                         {% endif %}
                                     </div>
                                 </div>

@@ -1,7 +1,7 @@
 #
 from django.urls import path
 # Views basadas en clases
-from .views import HomePageView, TestPDFView
+from .views import HomePageView
 
 app_name = 'core_app'
 
@@ -11,10 +11,4 @@ urlpatterns = [
         name='home'
     ),
 
-
-    #TEST PDF
-    path('pdf/', 
-        TestPDFView.as_view(), 
-        name='gen_pdf'
-    ),
 ] 

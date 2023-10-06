@@ -27,7 +27,6 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['form'] = ServiceOrderForm()
         context['customer'] =  Customer.objects.get(pk=self.kwargs['pk'])
-        print('\n\n\n\n',context['customer'])
         context['named_formsets'] = {
             'pupilar': InterpupillaryForm,
             'correction': CorrectionForm,
@@ -120,7 +119,6 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         messages.error(self.request, 'Por favor, verifique los campos.')
-        print(form.errors)
         return super().form_invalid(form)
 
 
@@ -133,22 +131,16 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
         insurance = form.save(commit=False)
         insurance.user_made = self.request.user
         insurance.save()
-        
-        try:
-            customer = Customer.objects.get(pk=self.kwargs.get('pk')) # AGREGA A UN CLINETE LA NUEVA OBRA SOCIAL
-            Customer_HealthInsurance.objects.create(h_insurance=insurance, customer=customer)
-            return redirect('clients_app:customer_detail', pk=customer.pk)
-        
-        except Customer.DoesNotExist:
-            if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # AGREGA NUEVA OBRA SOCIAL DURANTE CREACION DE CLIENTE (PETICION FETCH)
-                new_insurance_data = {
-                    'id': insurance.id,
-                    'name': insurance.name
-                }
-                return JsonResponse({'status': 'success', 'new_insurance': new_insurance_data})
-            else:
-                messages.success(self.request, 'Se ha registrado una obra social con exito.')
-                return super().form_valid(form)
+
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # AGREGA NUEVA OBRA SOCIAL DURANTE CREACION DE CLIENTE (PETICION FETCH)
+            new_insurance_data = {
+                'id': insurance.id,
+                'name': insurance.name
+            }
+            return JsonResponse({'status': 'success', 'new_insurance': new_insurance_data})
+        else:
+            messages.success(self.request, 'Se ha registrado una obra social con exito.')
+            return super().form_valid(form)
     
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # ERROR DE NUEVA OBRA SOCIAL DURANTE CREACION DE CLIENTE (PETICION FETCH)
@@ -168,7 +160,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['customer'] =  Customer.objects.get(pk=self.kwargs['pk'])
+        context['customer'] =  self.get_object().customer
         context['named_formsets'] = {
             'correction': CorrectionForm(instance=self.object.correction),
             'material': MaterialForm(instance=self.object.material),
@@ -181,7 +173,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
     
     def form_valid(self, form):
         try:
-            customer = Customer.objects.get(pk=self.kwargs.get('pk_c'))
+            customer = self.get_object().customer
         except Customer.DoesNotExist:
             raise ValueError('El ID del cliente con nuestro registro')
         
@@ -371,17 +363,17 @@ class ServiceOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            customer = Customer.objects.get(pk=self.kwargs.get('pk_c'))
+            customer = self.get_object().customer
             context['customer'] = customer
             return context
-        except Customer.DoesNotExist:
+        except:
             return context
 
     def get_success_url(self):
         try:
-            customer = Customer.objects.get(pk=self.kwargs['pk_c'])
+            customer = self.get_object().customer
             return reverse_lazy('clients_app:customer_detail', kwargs={'pk': customer.pk}) # en caso de tener pk de customer, entonces entre al delete por la vista de un cliente especifico
-        except Customer.DoesNotExist:
+        except:
             return super().get_success_url() # Si entre al delete desde la lista general de pedidos de lab
         
 
@@ -478,6 +470,7 @@ def export_order_service_list_to_excel(request, pk):
     workbook.save(response)
 
     return response
+
 
 
 class CreditTransactionDetailView(LoginRequiredMixin, DetailView):

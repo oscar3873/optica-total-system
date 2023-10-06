@@ -1,5 +1,6 @@
 from django.urls import reverse
 from applications.core.managers import BaseManager
+from project.settings.base import DATE_NOW
 
 class CustomerManager(BaseManager):
     """
@@ -76,3 +77,19 @@ class ServiceOrderManager(BaseManager):
         service_order.save()
 
         return service_order
+    
+
+class CreditTransactionManager(BaseManager):
+    def all(self, customer):
+        credits = customer.credit_transactions.filter(deleted_at=None, sale__state="PENDIENTE")
+        return credits
+    
+    def create_credit_transaction(self, customer, sale):
+        credit = self.model(
+            customer = customer,
+            sale = sale,
+            amount = sale.amount,
+            description = sale.description,
+            date = DATE_NOW
+        )
+        return credit

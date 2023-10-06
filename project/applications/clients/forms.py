@@ -1,4 +1,3 @@
-from typing import Any
 from django import forms
 
 from .models import *
@@ -448,7 +447,7 @@ class InterpupillaryForm(forms.ModelForm):
 
 class ServiceOrderForm(forms.ModelForm):
     armazon = forms.CharField(
-        #required=False,
+        required=False,
         widget = forms.Textarea(
             attrs={
             'class' : 'form-control',
