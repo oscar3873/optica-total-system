@@ -34,7 +34,6 @@ class CustomerForm(PersonForm):
         self.fields['h_insurance'].required = False
         self.fields['email'].required = False
 
-        
         if self.instance.pk:
             insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)
             self.fields['h_insurance'].initial = insurances
@@ -44,8 +43,13 @@ class CustomerForm(PersonForm):
         fields = '__all__'
         exclude = ['user_made','deleted_at', 'branch', 'credit_balance']
 
+    def clean_email(self):
+        email = super().clean_email()
+        if not email:
+            email = None
+        return email
 
-    
+
 class HealthInsuranceForm(ValidationFormMixin):
 
     name = forms.CharField( 
@@ -448,7 +452,7 @@ class InterpupillaryForm(forms.ModelForm):
 
 class ServiceOrderForm(forms.ModelForm):
     armazon = forms.CharField(
-        #required=False,
+        required=False,
         widget = forms.Textarea(
             attrs={
             'class' : 'form-control',

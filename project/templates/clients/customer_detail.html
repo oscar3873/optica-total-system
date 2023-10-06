@@ -124,8 +124,6 @@
                             <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
                                 {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}">
-                                {% else %}
-                                <a href="{% url 'clients_app:customer_update_for_employees' customer.id %}">
                                 {% endif %}
                                     <button class="btn p-0" type="button" data-bs-toggle="tooltip"
                                         data-bs-placement="top" title="Agregar Obra Social">
@@ -293,12 +291,12 @@
                                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                                         aria-labelledby="dropdown0">
                                                         <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_detail' pk_c=customer.id pk=service_order.id %}">Detalle</a>
+                                                            href="{% url 'clients_app:service_order_detail' pk=service_order.id %}">Detalle</a>
                                                             {% if request.user.is_staff %}
                                                             <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_update' pk_c=customer.id pk=service_order.id %}">Editar</a>
+                                                            href="{% url 'clients_app:service_order_update' pk=service_order.id %}">Editar</a>
                                                         <a class=" dropdown-item text-danger"
-                                                        href="{% url 'clients_app:service_order_delete' pk_c=customer.id pk=service_order.id %}">Eliminar</a>
+                                                        href="{% url 'clients_app:service_order_delete' pk=service_order.id %}">Eliminar</a>
                                                         {% endif %}
                                                     </div>
                                                 </div>
