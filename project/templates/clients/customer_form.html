@@ -8,6 +8,7 @@
 {% block main %}
 
 <div class="container py-4">
+    {% include 'core/components/messages.html' %}
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
@@ -42,85 +43,115 @@
                         <form method="post" class="row g-3 needs-validation align-items-center" novalidate="">
                             {% csrf_token %}
                             <div class="row justify-content-sm-center pb-2">
-                                <div class="col-12 col-sm">
-                                    <label for="id_first_name"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Nombre</span>
-                                    </label>
+                                <div class="col-sm-6 pt-3">
+                                    <label for="{{ form.first_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
                                     {{ form.first_name }}
-                                    <div class="valid-feedback">Perfecto!</div>
+                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                                    <div class="valid-feedback"></div>
                                     <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
-                                </div>
-                                <div class="col-12 col-sm">
-                                    <label for="id_last_name"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Apellido</span>
-                                    </label>
-                                    {{ form.last_name }}
-                                    <div class="valid-feedback">Perfecto!</div>
-                                    <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
-                                </div>
-                            </div>
-                            <div class="row justify-content-sm-center pb-2">
-                                <div class="col">
-                                    <label for="{{ form.phone_code.id_for_label }}" class="form-label">Código:</label>
-                                    {{ form.phone_code }}
-                                    {% if form.phone_code.errors %}
-                                        <div class="text-danger fs--2">
-                                            {{ form.phone_code.errors.0 }}
-                                        </div>
+                                    {% if form.first_name.errors %}
+                                        {% for error in form.first_name.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}
                                     {% endif %}
                                 </div>
-                                <div class="col-12 col-sm">
-                                    <label for="id_phone_number"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Telefono</span>
-                                    </label>
-                                    {{ form.phone_number }}
-                                    <div class="valid-feedback">Perfecto!</div>
-                                    <div class="invalid-feedback">Ingrese solo números.</div>
+                                <div class="col-sm-6 pt-3">
+                                    <label for="{{ form.last_name.id_for_label }}" class="form-label col-form-label">Apellido:</label>
+                                    {{ form.last_name }}
+                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>                                    
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
+                                    {% if form.last_name.errors %}
+                                        {% for error in form.last_name.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
-                                <div class="col-12 col-sm">
-                                    <label for="id_dni"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>DNI</span>
-                                    </label>
+                                <div class="col-md-3 pt-3">
+                                    <label for="{{ form.dni.id_for_label }}" class="form-label col-form-label">DNI:</label>
                                     {{ form.dni }}
-                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="valid-feedback"></div>
                                     <div class="invalid-feedback">Ingrese solo números.</div>
+                                    {% if form.dni.errors %}
+                                        {% for error in form.dni.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
-                                <div class="col-12 col-sm">
-                                    <label for="id_birth_date"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Fecha de Nacimiento</span>
-                                    </label>
+                                <div class="col-5 col-sm-3 col-md-2 pt-3">
+                                    <label for="{{ form.phone_code.id_for_label }}" class="form-label col-form-label">Código:</label>
+                                    {{ form.phone_code }}
+                                    {% if form.phone_code.errors %}                                    
+                                        {% for error in form.phone_code.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}                                        
+                                    {% endif %}
+                                </div>
+                                <div class="col-7 col-sm-4 col-md-4 pt-3">
+                                    <label for="{{ form.phone_number.id_for_label }}" class="form-label col-form-label">Celular:</label>
+                                    {{ form.phone_number }}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Ingrese solo números.</div>
+                                    {% if form.phone_number.errors %}
+                                        {% for error in form.phone_number.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}  
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-5 col-md-3 pt-3">
+                                    <label for="{{ form.birth_date.id_for_label }}" class="form-label col-form-label">Fecha de nacimiento:</label>
                                     {{ form.birth_date }}
-                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="valid-feedback"></div>
                                     <div class="invalid-feedback">Ingrese una fecha válida</div>
+                                    {% if form.birth_date.errors %}
+                                        {% for error in form.birth_date.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %} 
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row justify-content-sm-center pb-2">
-                                <div class="col-12 col-sm">
-                                    <label for="id_address"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Direccion</span>
-                                    </label>
-                                    {{ form.address }}
-                                    <div class="valid-feedback">Perfecto!</div>
-                                    <div class="invalid-feedback">Ingrese una direccion válida</div>
-                                </div>
-                                <div class="col-12 col-sm">
-                                    <label for="id_email"
-                                        class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Email</span>
-                                    </label>
+                                <div class="col-sm-6 pt-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label col-form-label">Correo:</label>
                                     {{ form.email }}
-                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="valid-feedback"></div>
                                     <div class="invalid-feedback">Ingrese un email válido.</div>
                                     <p class="text-600 fs--2">Ej: email@company.com</p>
+                                    {% if form.email.errors %}
+                                        {% for error in form.email.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %} 
+                                    {% endif %}
+                                </div>
+                                <div class="col-sm-6 pt-3">
+                                    <label for="{{ form.address.id_for_label }}" class="form-label col-form-label">Domicilio:</label>
+                                    {{ form.address }}
+                                    <div class="valid-feedback"></div>
+                                    <div class="invalid-feedback">Ingrese una dirección válida</div>
+                                    {% if form.address.errors %}
+                                        {% for error in form.address.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %} 
+                                    {% endif %}
                                 </div>
                             </div>
-                            <div class="row justify-content-sm-center">
+                            <div class="row justify-content-sm-center pt-3 pt-md-2 pb-4">
                                 <div class="col-12 col-sm">
                                     <div class="row align-items-center">
                                         <label for="id_h_insurance"
