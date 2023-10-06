@@ -17,6 +17,8 @@ class CustomerForm(PersonForm):
     )
 
     has_credit_account = forms.BooleanField(
+        label='¿Tiene una cuenta corriente?',
+        required=False,
         widget= forms.CheckboxInput(
             attrs={
                 'class': 'form-check-input',
@@ -28,7 +30,10 @@ class CustomerForm(PersonForm):
         super().__init__(*args, **kwargs)
         for index, field in self.fields.items():
             field.required = True
+        self.fields['has_credit_account'].required = False
+        self.fields['h_insurance'].required = False
         self.fields['email'].required = False
+
         
         if self.instance.pk:
             insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)
@@ -37,7 +42,7 @@ class CustomerForm(PersonForm):
     class Meta:
         model = Customer
         fields = '__all__'
-        exclude = ['user_made','deleted_at', 'branch']
+        exclude = ['user_made','deleted_at', 'branch', 'credit_balance']
 
 
     

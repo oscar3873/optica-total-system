@@ -120,6 +120,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
 
     def form_invalid(self, form):
         messages.error(self.request, 'Por favor, verifique los campos.')
+        print(form.errors)
         return super().form_invalid(form)
 
 
