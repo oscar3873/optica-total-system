@@ -415,7 +415,7 @@ def export_order_service_list_to_excel(request, pk):
     queryset = customer.serviceorders.all()
 
     if not queryset:
-        raise ValueError('El cliente no cuenta con Ordenes de Servicio.')
+        raise ValueError('El cliente no cuenta con Ordenes de Servicio.') # modificar error
     
     # Crear un libro de trabajo de Excel
     workbook = Workbook()
@@ -430,7 +430,7 @@ def export_order_service_list_to_excel(request, pk):
 
 
     # Definir los encabezados de las columnas
-    exclude_fields_user = ["deleted_at", "updated_at", "correction", "material", "type_cristal", "color", "tratamient", "interpupillary", "client"]
+    exclude_fields_user = ["deleted_at", "updated_at", "correction", "material", "type_cristal", "color", "tratamient", "interpupillary", "customer"]
     headers = [campo[1] for campo in obtener_nombres_de_campos(ServiceOrder, *exclude_fields_user)]
 
     if 'created at' in headers:
@@ -468,7 +468,7 @@ def export_order_service_list_to_excel(request, pk):
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=employee_data.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=%s_%s Orden de servicio.xlsx' %(customer.last_name, customer.first_name)
 
     workbook.save(response)
 
