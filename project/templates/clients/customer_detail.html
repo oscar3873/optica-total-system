@@ -51,10 +51,10 @@
                         <span class="fas fa-ellipsis-h"></span>
                     </button>
                     <div class="dropdown-menu"><a class="dropdown-item"
-                            href="{% url 'clients_app:customer_update' pk=customer.pk %}">Editar</a>
+                            href="{% url 'clients_app:customer_update' customer.pk %}">Editar</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-danger"
-                            href="{% url 'clients_app:customer_delete' pk=customer.pk %}">Borrar</a>
+                            href="{% url 'clients_app:customer_delete' customer.pk %}">Borrar</a>
                     </div>
                     {% endif %}
                 </div>
@@ -98,7 +98,7 @@
                                 {% if customer.customer_insurance.all %}
                                 {% for insurance in customer.customer_insurance.all %}
                                 <p class="ms-3 text-900 fw-bold fs-1 d-inline">
-                                    <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}"
+                                    <a href="{% url 'clients_app:hi_detail' insurance.h_insurance.pk %}"
                                         class="text-decoration-none">
                                         {{ insurance.h_insurance.name }}
                                     </a>
@@ -161,7 +161,7 @@
                         </div>
                         {% if service_orders %}
                         <div id="table-purchases-replace-element">
-                            <a class="btn btn-falcon-default btn-sm" href="#" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
+                            <a class="btn btn-falcon-default btn-sm" href="{% url 'clients_app:export_service_orders' customer.id %}" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
                         </div>
                         {% endif %}
                     </div>
@@ -246,12 +246,12 @@
                                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                                         aria-labelledby="dropdown0">
                                                         <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_detail' pk=service_order.id %}">Detalle</a>
+                                                            href="{% url 'clients_app:service_order_detail' service_order.id %}">Detalle</a>
                                                             {% if request.user.is_staff %}
                                                             <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_update' pk=service_order.id %}">Editar</a>
+                                                            href="{% url 'clients_app:service_order_update' service_order.id %}">Editar</a>
                                                         <a class=" dropdown-item text-danger"
-                                                        href="{% url 'clients_app:service_order_delete' pk=service_order.id %}">Eliminar</a>
+                                                        href="{% url 'clients_app:service_order_delete' service_order.id %}">Eliminar</a>
                                                         {% endif %}
                                                     </div>
                                                 </div>
