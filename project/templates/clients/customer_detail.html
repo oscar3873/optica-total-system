@@ -13,7 +13,7 @@
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
                 class="fa-inverse fa-stack-1x text-primary fas fa-eye"></i></span>
         <div class="col">
-            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Cliente</span><span
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Detalle del Cliente</span><span
                     class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
             <p class="mb-0">Aquí puede visualizar el detalle completo del cliente</p>
         </div>
@@ -21,28 +21,20 @@
 
     <div class="card mb-3">
         <div class="card-header">
-            <div class="row pb-4 pb-md-0">
+            <div class="row pb-md-0">
                 <div class="col-12 col-sm-6">
-                    <h3 class="mb-2">{{ customer.last_name }}, {{ customer.first_name }}</h3>
+                    <h5 class="mb-2">{{ customer.last_name }}, {{ customer.first_name }}</h5>
                     <p class="text-700 fs--2">
                         Cliente registrado por
                         <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
                         <span class="">el {{ customer.created_at }}</span>
                     </p>
                 </div>
-                <div class="col-12 col-sm-6">
-                    <h3 class="mb-2">Deuda Total: $1560.00</h3>
-                    <a class="btn btn-primary btn-sm" href="#">
-                        <span class="fs--2 me-1"></span>
-                        PAGAR
-                    </a>
-                </div>
-
             </div>
             <div class="row mt-2">
                 <div class="col">
                     {% if request.user.is_staff %}
-                    <a class="btn btn-primary btn-sm" href="{% url 'clients_app:customer_new' %}">
+                    <a class="btn btn-falcon-default btn-sm" href="{% url 'clients_app:customer_new' %}">
                         <span class="fas fa-plus fs--2 me-1"></span>
                         Nuevo Cliente
                     </a>
@@ -61,53 +53,65 @@
             </div>
         </div>
         <div class="card-body border-top">
+            <div class="row pb-2">
+                <div class="row">
+                    <div class="col-12 col-sm-6">
+                        <h5 class="mb-3 m-0 pe-2 pe-md-0">Cuenta corriente <span class="fw-semi-bold fs-3 text-success">$1560.00</span></h5>
+                        <a class="btn btn-falcon-default btn-sm" href="#">
+                            Registrar pago
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <hr class="">
             <div class="row">
                 <div class="col-lg-8">
                     <div class="row">
-                        <div class="col-12 pt-2 d-flex justify-content-start">
+                        <div class="col-12">
+                            <h5 class="mb-3">Datos basicos</h5>
+                        </div>
+                        <div class="col-12 pt-1 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">DNI:</p>
                             <span class="ms-3 text-800 fw-bold">{{customer.dni}} </span>
                         </div>
-                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento:</p>
                             <!-- <span class="ms-3 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}</span> -->
                             <span class="ms-3 text-800 fw-bold">{{ customer.birth_date}}</span>
                         </div>
-                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">Teléfono:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.phone_number }}</span>
                         </div>
-                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">Domicilio:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.address }}</span>
                         </div>
-                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">Correo:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.email }}</span>
                         </div>
                         
                     </div>
                     <div class="row">
-                        <div class="col mt-4 d-flex flex-column flex-sm-row  ">
-                            <p class="fw-normal fw-semi-bold mb-0">Obras Sociales:
+                        <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center ">
+                            <h5 class="fw-bold">Obras Sociales:&nbsp;
                                 {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}"></a>
                                 {% endif %}
+                            </h5>
+                            {% if customer.customer_insurance.all %}
+                            {% for insurance in customer.customer_insurance.all %}
+                            <p class="text-900 fw-bold d-inline">
+                                <a href="{% url 'clients_app:hi_detail' insurance.h_insurance.pk %}"
+                                    class="text-decoration-none">
+                                    {{ insurance.h_insurance.name }}
+                                </a>
                             </p>
-                            <div class="col text-800 fw-bold d-flex flex-column flex-sm-row pt-2 pt-sm-0">
-                                {% if customer.customer_insurance.all %}
-                                {% for insurance in customer.customer_insurance.all %}
-                                <p class="ms-3 text-900 fw-bold fs-1 d-inline">
-                                    <a href="{% url 'clients_app:hi_detail' insurance.h_insurance.pk %}"
-                                        class="text-decoration-none">
-                                        {{ insurance.h_insurance.name }}
-                                    </a>
-                                </p>
-                                {% endfor %}
-                                {% else %}
-                                <p class="fs--1 fw-lighter fst-italic">No hay obras sociales registradas</p>
-                                {% endif %}
-                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <p class="fw-lighter fst-italic">No hay obras sociales registradas</p>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="row my-0">
@@ -126,13 +130,8 @@
                 <div class="row flex-between-center">
                     <div class="row">
                         <div class="col">
-                            <h5 class="mb-2">Tratamientos</h5>
+                            <h5 class="mb-2">Ordenes de servicio</h5>
                         </div>
-                    </div>
-                    <div class="row">
-                        <p class="text-700 fs--2">
-                            Del cliente {{ customer.last_name }}, {{ customer.first_name }}
-                        </p>
                     </div>
                     {% if service_orders %}
                     <div class="col-6 col-sm-auto d-flex align-items-center pe-0 ">
@@ -263,7 +262,7 @@
                             </div>
                             {% else %}
                             <div class="text-center py-5">
-                                <p class="h4">No tiene tratamientos</p>
+                                <p class="h4">No tiene ordenes de servicio</p>
                             </div>
                             {% endif %}
                         </div>
@@ -272,18 +271,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <div class="row align-items-center">
+                <div class="row align-items-center justify-content-end">
                     <div class="pagination d-none"></div>
-                    <div class="col">
-                        <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info">
-                            </span><span class="d-none d-sm-inline-block me-2">&mdash; </span><a class="fw-semi-bold"
-                                href="#!" data-list-view="*">Mostrar todo<span class="fas fa-angle-right ms-1"
-                                    data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!"
-                                data-list-view="less">Mostrar menos<span class="fas fa-angle-right ms-1"
-                                    data-fa-transform="down-1"></span></a>
-                        </p>
-                    </div>
-                    <div class="col-auto d-flex">
+                    <div class="col-auto d-flex ">
                         <button class="btn btn-sm btn-primary" type="button"
                             data-list-pagination="prev"><span>Anterior</span></button>
                         <button class="btn btn-sm btn-primary px-4 ms-2" type="button"
