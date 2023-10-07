@@ -152,15 +152,6 @@
                             </div>
                         </div>
                         <div id="table-purchases-replace-element">
-                            {% if request.user.is_staff %}
-                            <a href="{% url 'clients_app:service_order_new' customer.pk %}"
-                                class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus"
-                                    data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Nuevo Orden de sercicio</span></a>
-                            {% endif %}
-                            <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
-                                    data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Filtros</span></button>
                             <button class="btn btn-falcon-default btn-sm" type="button"><span
                                     class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
                                     class="d-none d-sm-inline-block ms-1">Exportar</span></button>
