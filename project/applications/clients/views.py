@@ -62,7 +62,7 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
             ):
 
             print(material_form.cleaned_data['material_choice'], color_form.cleaned_data['color_choice'],
-                  cristal_form.cleaned_data['cristal_choice'], tratamiento_form.cleaned_data['tratamient_choice'])
+                cristal_form.cleaned_data['cristal_choice'], tratamiento_form.cleaned_data['tratamient_choice'])
 
             # Create the main form instance
             ServiceOrder.objects.create_lab(
@@ -330,7 +330,8 @@ class CustomerListView(LoginRequiredMixin, ListView):
             "branch",
             "birth_date",
             "address",
-            "email"
+            "email",
+            "credit_balance",
             )
         return context
 

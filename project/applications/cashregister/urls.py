@@ -74,7 +74,7 @@ urlpatterns = [
     path(
         'currency/create',
         CurrencyCreateView.as_view(),
-        name = 'movements_create_view'
+        name = 'currency_create_view'
     ),
     path(
         'currency/',
