@@ -56,96 +56,57 @@
         </div>
         <div class="card-body border-top">
             <div class="row">
-                <div class="col-lg col-xxl-5">
+                <div class="col-lg-8">
                     <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
+                        <div class="col-12 pt-2 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">DNI:</p>
+                            <span class="ms-3 text-800 fw-bold">{{customer.dni}} </span>
                         </div>
-                        <div class="col mt-4 text-800 fw-bold">{{customer.dni}} </div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600"><span class="text-warning">Documento Nacional de
-                                Identidad</span> con el que se registro el cliente.</p>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento:</p>
+                            <!-- <span class="ms-3 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}</span> -->
+                            <span class="ms-3 text-800 fw-bold">{{ customer.birth_date}}</span>
+                        </div>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Teléfono:</p>
+                            <span class="ms-3 text-800 fw-bold">{{ customer.phone_number }}</span>
+                        </div>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Domicilio:</p>
+                            <span class="ms-3 text-800 fw-bold">{{ customer.address }}</span>
+                        </div>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Correo:</p>
+                            <span class="ms-3 text-800 fw-bold">{{ customer.email }}</span>
+                        </div>
+                        
                     </div>
                     <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span class="text-warning">fecha de
-                                nacimiento</span> con la que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Telefono</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.phone_number }}</div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">telefono de
-                                contacto</span> que registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span class="text-warning">fecha de
-                                nacimiento</span> con la que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Direccion</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.address }}</div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span
-                                class="text-warning">direccion</span> con la que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Correo Electronico</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.email }}</div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">correo
-                                electronico</span> de contacto con el que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
+                        <div class="col mt-4 d-flex flex-column flex-sm-row  ">
+                            <p class="fw-normal fw-semi-bold mb-0">Obras Sociales:
                                 {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}"></a>
                                 {% endif %}
                             </p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">
-                            {% if customer.customer_insurance.all %}
-                            {% for insurance in customer.customer_insurance.all %}
-                            <p class="text-900 fw-bold fs-1 d-inline">
-                                <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}"
-                                    class="text-decoration-none">
-                                    {{ insurance.h_insurance.name }}
-                                </a>
-                            </p>
-                            {% endfor %}
-                            {% else %}
-                            <p class="fs--1 fw-lighter fst-italic">No hay obras sociales registradas</p>
-                            {% endif %}
-
+                            <div class="col text-800 fw-bold d-flex flex-column flex-sm-row pt-2 pt-sm-0">
+                                {% if customer.customer_insurance.all %}
+                                {% for insurance in customer.customer_insurance.all %}
+                                <p class="ms-3 text-900 fw-bold fs-1 d-inline">
+                                    <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}"
+                                        class="text-decoration-none">
+                                        {{ insurance.h_insurance.name }}
+                                    </a>
+                                </p>
+                                {% endfor %}
+                                {% else %}
+                                <p class="fs--1 fw-lighter fst-italic">No hay obras sociales registradas</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Obras sociales del cliente.<span
-                                class="text-warning"> Puede tener mas de una.</span></p>
+                        <small class="fs--2 py-0 my-0">Obras sociales del cliente.<span
+                                class="text-warning"> Puede tener más de una.</span></small>
                     </div>
                 </div>
             </div>
