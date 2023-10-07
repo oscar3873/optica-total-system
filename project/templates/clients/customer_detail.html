@@ -128,6 +128,7 @@
                             Del cliente {{ customer.last_name }}, {{ customer.first_name }}
                         </p>
                     </div>
+                    {% if service_orders %}
                     <div class="col-6 col-sm-auto d-flex align-items-center pe-0 ">
                         <div>
                             <form>
@@ -141,6 +142,7 @@
                             </form>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="col-6 col-sm-auto ms-auto text-end ps-0">
                         <div class="d-none" id="table-purchases-actions">
                             <div class="d-flex">
@@ -151,11 +153,13 @@
                                 <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
                             </div>
                         </div>
+                        {% if service_orders %}
                         <div id="table-purchases-replace-element">
                             <button class="btn btn-falcon-default btn-sm" type="button"><span
                                     class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
                                     class="d-none d-sm-inline-block ms-1">Exportar</span></button>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
