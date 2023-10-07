@@ -13,25 +13,31 @@
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
                 class="fa-inverse fa-stack-1x text-primary fas fa-eye"></i></span>
         <div class="col">
-            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Clientes</span><span
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Cliente</span><span
                     class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-            <p class="mb-0">Aqui se puede visualizar el detalle completo de un cliente</p>
+            <p class="mb-0">Aquí puede visualizar el detalle completo del cliente</p>
         </div>
     </div>
 
     <div class="card mb-3">
         <div class="card-header">
-            <div class="row">
-                <div class="col">
+            <div class="row pb-4 pb-md-0">
+                <div class="col-12 col-sm-6">
                     <h3 class="mb-2">{{ customer.last_name }}, {{ customer.first_name }}</h3>
+                    <p class="text-700 fs--2">
+                        Cliente registrado por
+                        <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
+                        <span class="">el {{ customer.created_at }}</span>
+                    </p>
                 </div>
-            </div>
-            <div class="row">
-                <p class="text-700 fs--2">
-                    Cliente registrado por
-                    <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
-                    <span class="">el {{ customer.created_at|date:"l j \d\e F \d\e\l Y" }}</span>
-                </p>
+                <div class="col-12 col-sm-6">
+                    <h3 class="mb-2">Deuda Total: $1560.00</h3>
+                    <a class="btn btn-primary btn-sm" href="#">
+                        <span class="fs--2 me-1"></span>
+                        PAGAR
+                    </a>
+                </div>
+
             </div>
             <div class="row mt-2">
                 <div class="col">
@@ -45,10 +51,10 @@
                         <span class="fas fa-ellipsis-h"></span>
                     </button>
                     <div class="dropdown-menu"><a class="dropdown-item"
-                            href="{% url 'clients_app:customer_update' pk=customer.pk %}">Editar</a>
+                            href="{% url 'clients_app:customer_update' customer.pk %}">Editar</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-danger"
-                            href="{% url 'clients_app:customer_delete' pk=customer.pk %}">Borrar</a>
+                            href="{% url 'clients_app:customer_delete' customer.pk %}">Borrar</a>
                     </div>
                     {% endif %}
                 </div>
@@ -56,103 +62,57 @@
         </div>
         <div class="card-body border-top">
             <div class="row">
-                <div class="col-lg col-xxl-5">
+                <div class="col-lg-8">
                     <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
+                        <div class="col-12 pt-2 d-flex justify-content-start">
                             <p class="fw-normal fw-semi-bold mb-1">DNI:</p>
+                            <span class="ms-3 text-800 fw-bold">{{customer.dni}} </span>
                         </div>
-                        <div class="col mt-4 text-800 fw-bold">{{customer.dni}} </div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600"><span class="text-warning">Documento Nacional de
-                                Identidad</span> con el que se registro el cliente.</p>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento:</p>
+                            <!-- <span class="ms-3 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}</span> -->
+                            <span class="ms-3 text-800 fw-bold">{{ customer.birth_date}}</span>
+                        </div>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Teléfono:</p>
+                            <span class="ms-3 text-800 fw-bold">{{ customer.phone_number }}</span>
+                        </div>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Domicilio:</p>
+                            <span class="ms-3 text-800 fw-bold">{{ customer.address }}</span>
+                        </div>
+                        <div class="col-12 pt-2 pt-sm-0 d-flex justify-content-start">
+                            <p class="fw-normal fw-semi-bold mb-1">Correo:</p>
+                            <span class="ms-3 text-800 fw-bold">{{ customer.email }}</span>
+                        </div>
+                        
                     </div>
                     <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span class="text-warning">fecha de
-                                nacimiento</span> con la que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Telefono</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.phone_number }}</div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">telefono de
-                                contacto</span> que registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}
-                        </div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span class="text-warning">fecha de
-                                nacimiento</span> con la que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Direccion</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.address }}</div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Esta es la <span
-                                class="text-warning">direccion</span> con la que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Correo Electronico</p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">{{ customer.email }}</div>
-                    </div>
-                    <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">correo
-                                electronico</span> de contacto con el que se registro el cliente.</p>
-                    </div>
-                    <div class="row">
-                        <div class="col-6 mt-4 col-sm-4">
-                            <p class="fw-normal fw-semi-bold mb-1">Obras Sociales
+                        <div class="col mt-4 d-flex flex-column flex-sm-row  ">
+                            <p class="fw-normal fw-semi-bold mb-0">Obras Sociales:
                                 {% if request.user.is_staff %}
-                                <a href="{% url 'clients_app:customer_update' customer.id %}">
-                                {% else %}
-                                <a href="{% url 'clients_app:customer_update_for_employees' customer.id %}">
+                                <a href="{% url 'clients_app:customer_update' customer.id %}"></a>
                                 {% endif %}
-                                    <button class="btn p-0" type="button" data-bs-toggle="tooltip"
-                                        data-bs-placement="top" title="Agregar Obra Social">
-                                        <span class="text-1000 far fa-plus-square"></span>
-                                    </button>
-                                </a>
                             </p>
-                        </div>
-                        <div class="col mt-4 text-800 fw-bold">
-                            {% if customer.customer_insurance.all %}
-                            {% for insurance in customer.customer_insurance.all %}
-                            <p class="text-900 fw-bold fs-1 d-inline">
-                                <a href="{% url 'clients_app:hi_detail' pk=insurance.h_insurance.pk %}"
-                                    class="text-decoration-none">
-                                    {{ insurance.h_insurance.name }}
-                                </a>
-                            </p>
-                            {% endfor %}
-                            {% else %}
-                            <p class="fs--1 fw-lighter fst-italic">No hay obras sociales registradas</p>
-                            {% endif %}
-
+                            <div class="col text-800 fw-bold d-flex flex-column flex-sm-row pt-2 pt-sm-0">
+                                {% if customer.customer_insurance.all %}
+                                {% for insurance in customer.customer_insurance.all %}
+                                <p class="ms-3 text-900 fw-bold fs-1 d-inline">
+                                    <a href="{% url 'clients_app:hi_detail' insurance.h_insurance.pk %}"
+                                        class="text-decoration-none">
+                                        {{ insurance.h_insurance.name }}
+                                    </a>
+                                </p>
+                                {% endfor %}
+                                {% else %}
+                                <p class="fs--1 fw-lighter fst-italic">No hay obras sociales registradas</p>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                     <div class="row my-0">
-                        <p class="fs--2 py-0 my-0 fw-lighter text-600">Obras sociales del cliente.<span
-                                class="text-warning"> Puede tener mas de una.</span></p>
+                        <small class="fs--2 py-0 my-0">Obras sociales del cliente.<span
+                                class="text-warning"> Puede tener más de una.</span></small>
                     </div>
                 </div>
             </div>
@@ -174,6 +134,7 @@
                             Del cliente {{ customer.last_name }}, {{ customer.first_name }}
                         </p>
                     </div>
+                    {% if service_orders %}
                     <div class="col-6 col-sm-auto d-flex align-items-center pe-0 ">
                         <div>
                             <form>
@@ -187,6 +148,7 @@
                             </form>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="col-6 col-sm-auto ms-auto text-end ps-0">
                         <div class="d-none" id="table-purchases-actions">
                             <div class="d-flex">
@@ -197,20 +159,11 @@
                                 <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
                             </div>
                         </div>
+                        {% if service_orders %}
                         <div id="table-purchases-replace-element">
-                            {% if request.user.is_staff %}
-                            <a href="{% url 'clients_app:service_order_new' customer.pk %}"
-                                class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus"
-                                    data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Nuevo Orden de sercicio</span></a>
-                            {% endif %}
-                            <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
-                                    data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Filtros</span></button>
-                            <button class="btn btn-falcon-default btn-sm" type="button"><span
-                                    class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Exportar</span></button>
+                            <a class="btn btn-falcon-default btn-sm" href="{% url 'clients_app:export_service_orders' customer.id %}" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -293,12 +246,12 @@
                                                     <div class="dropdown-menu dropdown-menu-end border py-2"
                                                         aria-labelledby="dropdown0">
                                                         <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_detail' pk_c=customer.id pk=service_order.id %}">Detalle</a>
+                                                            href="{% url 'clients_app:service_order_detail' service_order.id %}">Detalle</a>
                                                             {% if request.user.is_staff %}
                                                             <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_update' pk_c=customer.id pk=service_order.id %}">Editar</a>
+                                                            href="{% url 'clients_app:service_order_update' service_order.id %}">Editar</a>
                                                         <a class=" dropdown-item text-danger"
-                                                        href="{% url 'clients_app:service_order_delete' pk_c=customer.id pk=service_order.id %}">Eliminar</a>
+                                                        href="{% url 'clients_app:service_order_delete' service_order.id %}">Eliminar</a>
                                                         {% endif %}
                                                     </div>
                                                 </div>

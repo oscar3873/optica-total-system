@@ -92,12 +92,11 @@ class PersonForm(ValidationFormMixin):
         )
     )
 
-    email = forms.CharField(
+    email = forms.EmailField(
         required=False,
-        widget=forms.TextInput(attrs={
+        widget=forms.EmailInput(attrs={
             'placeholder' : 'Correo electrónico',
             'class': 'form-control',
-            'type' : 'email',
             }
         )
     )
@@ -152,7 +151,6 @@ class PersonForm(ValidationFormMixin):
                 email_validator(email)
             except forms.ValidationError:
                 raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
-
         return email
 
 class ObjetiveForm(forms.ModelForm):
