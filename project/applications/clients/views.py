@@ -406,6 +406,26 @@ class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 
 
+    
+
+####################### OPEN CREDIT ACCOUNT #######################
+
+def open_credit_account(request, pk): # usar con   --->   <form method='post' acction="{% url 'clients_app:open_credit_account' customer.pk %}"> </form>
+    customer = Customer.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        if not customer.has_credit_account:
+            customer.has_credit_account = True
+            customer.credit_balance = 0
+            customer.save()
+            messages.success(request, "Se ha abierto una cuenta Corriente con exito.")
+        else:
+            messages.error(request, "Este cliente ya tiene una Cuenta corriente abierta.")
+    return redirect('clients_app:customer_detail', pk=customer.pk)
+
+
+################ EXPORT SERVICE ORDERS #####################
+
 def export_order_service_list_to_excel(request, pk):
     # Para la generacion de excel
     from openpyxl import Workbook
