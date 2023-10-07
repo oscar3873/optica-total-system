@@ -95,4 +95,10 @@ urlpatterns = [
         name='export_service_orders'
     ),
 
+    ########### OPEN CREDIT ACCOUNT ############
+    path(
+        'detail/<pk>/open_credit_account',
+        open_credit_account,
+        name='open_credit_account'
+    )
 ]
