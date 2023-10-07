@@ -8,6 +8,7 @@
 {% block main %}
 
 <div class="container py-4">
+    {% include 'core/components/messages.html' %}
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
@@ -143,10 +144,11 @@
                                         <label for="id_h_insurance"
                                             class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                             <span>Obra Social</span>
-                                            <button class="btn" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#HI-modal" title="Cargar una Obra Social">
-                                                <span class="text-1000 far fa-plus-square"></span>
-                                            </button>
+                                            <span class="fa-stack me-2 ms-2" data-bs-toggle="modal"
+                                            data-bs-target="#HI-modal" title="Cargar una Obra Social" style="cursor: pointer">
+                                                <svg class="svg-inline--fa fa-circle fa-w-16 fa-stack-2x text-primary" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg>
+                                                <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>
+                                            </span>
                                         </label>
                                     </div>
                                     <div class="mb-2" id="checkboxes_form">
