@@ -69,18 +69,13 @@
                                     </td>
                                     <td class="align-middle white-space-nowrap text-center">
                                         <div class="dropstart font-sans-serif position-static d-inline-block">
-                                            <button
-                                                class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                                type="button" id="dropdown0" data-bs-toggle="dropdown"
-                                                data-boundary="window" aria-haspopup="true" aria-expanded="false"
-                                                data-bs-reference="parent">
-                                                <span class="fas fa-ellipsis-h fs--1"></span></button>
-                                            <div class="dropdown-menu dropdown-menu-end border py-2"
-                                                aria-labelledby="dropdown0">
+                                            <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                <span class="fas fa-ellipsis-h fs--1"></span>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
                                                 <a class="dropdown-item" href="#!">View</a>
-                                                <a class="dropdown-item"
-                                                    href="{% url 'branches_app:update_branch' pk=branch.pk %}"">Editar</a>
-                                                    <a class=" dropdown-item text-danger" href="">Eliminar</a>
+                                                <a class="dropdown-item" href="{% url 'branches_app:update_branch' pk=branch.pk %}">Editar</a>
+                                                <a class=" dropdown-item text-danger" href="">Eliminar</a>
                                             </div>
                                         </div>
                                     </td>
@@ -129,12 +124,6 @@
         </div>
     </div>
 </div>
-</div>
-
-
-
-
-
 
 {% endblock main %}
 
