@@ -21,17 +21,23 @@
 
     <div class="card mb-3">
         <div class="card-header">
-            <div class="row">
-                <div class="col">
+            <div class="row pb-4 pb-md-0">
+                <div class="col-12 col-sm-6">
                     <h3 class="mb-2">{{ customer.last_name }}, {{ customer.first_name }}</h3>
+                    <p class="text-700 fs--2">
+                        Cliente registrado por
+                        <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
+                        <span class="">el {{ customer.created_at }}</span>
+                    </p>
                 </div>
-            </div>
-            <div class="row">
-                <p class="text-700 fs--2">
-                    Cliente registrado por
-                    <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
-                    <span class="">el {{ customer.created_at|date:"l j \d\e F \d\e\l Y" }}</span>
-                </p>
+                <div class="col-12 col-sm-6">
+                    <h3 class="mb-2">Deuda Total: $1560.00</h3>
+                    <a class="btn btn-primary btn-sm" href="#">
+                        <span class="fs--2 me-1"></span>
+                        PAGAR
+                    </a>
+                </div>
+
             </div>
             <div class="row mt-2">
                 <div class="col">
