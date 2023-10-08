@@ -123,14 +123,14 @@
                     </div>
                     <div class="row">
                         <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center ">
-                            <h5 class="mb-3">Obras Sociales:&nbsp;
+                            <h5 class="mb-3">Obra Social:&nbsp;
                                 {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}"></a>
                                 {% endif %}
                             </h5>
                             {% if customer.customer_insurance.all %}
                             {% for insurance in customer.customer_insurance.all %}
-                            <p class="text-900 fw-bold d-inline">
+                            <p class="ms-sm-2 text-900 fw-bold d-inline">
                                 <a href="{% url 'clients_app:hi_detail' insurance.h_insurance.pk %}"
                                     class="text-decoration-none">
                                     {{ insurance.h_insurance.name }}
@@ -143,8 +143,8 @@
                         </div>
                     </div>
                     <div class="row my-0">
-                        <small class="fs--2 py-0 my-0">Obras sociales del cliente.<span
-                                class="text-warning"> Puede tener más de una.</span></small>
+                        <small class="fs--2 py-0 my-0">El cliente puede tener<span
+                                class="text-warning"> más de una obra social.</span></small>
                     </div>
                 </div>
             </div>
