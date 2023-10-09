@@ -204,12 +204,14 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             else:
                 branch = user.branch
             
-            product = form.save(commit=False)
-            product.suggested_price = Decimal((product.cost_price * 1.26) * 3)
 
-            new_price = math.ceil(new_price / 50) * 50
-            product.sale_price = new_price
-            
+            product = form.save(commit=False)
+            product.suggested_price = Decimal((float(product.cost_price) * 1.26) * 3)
+
+            suggested_price = product.suggested_price
+            sale_price = math.ceil(suggested_price / 50) * 50
+            product.sale_price = sale_price
+
             product.user_made = self.request.user
             product.branch = branch
             product.save()
