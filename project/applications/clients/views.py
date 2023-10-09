@@ -559,8 +559,8 @@ def export_customer_list_to_excel(request):
         branch = branch_actualy
     else:
         branch = request.user.branch
-
-    list_customer = Customer.objects.filter(branch=branch)
+    
+    list_customer = Customer.objects.get_customers_branch(branch)
 
     if not list_customer:
         raise ValueError('No hay clientes para exportar.') # modificar error

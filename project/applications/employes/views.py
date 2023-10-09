@@ -245,7 +245,7 @@ def ajax_search_employee(request):
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = EmployeeListView().paginate_by
-            employees = Employee.objects.get_employees_branch(branch).filter(deleted_at=None)[:paginate_by]
+            employees = Employee.objects.get_employees_branch(branch)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
             employees = Employee.objects.get_employees_branch(branch).filter(
