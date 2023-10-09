@@ -41,22 +41,22 @@
                 <!-- Modal para confirmar apertura caja corriente-->
                 <div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-modalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                    <div class="modal-content">
-                        <form method="post" action="{% url 'clients_app:open_credit_account' customer.pk %}">
-                            {% csrf_token %}
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Confirmar apertura</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                <p>¿Estas seguro de abrir una cuenta corriente a <span class="text-warning">{{customer.get_full_name}}</span>?</p>
-                                </div>
-                                <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                <button type="submit" class="btn btn-primary">Confirmar</button>
-                                </div>
-                        </form>
-                    </div>
+                        <div class="modal-content">
+                            <form method="post" action="{% url 'clients_app:open_credit_account' customer.pk %}">
+                                {% csrf_token %}
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Confirmar apertura</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                    <p>¿Estas seguro de abrir una cuenta corriente a <span class="text-warning">{{customer.get_full_name}}</span>?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                                    </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,14 +87,63 @@
                         <div class="col-12 col-sm-6">
                             <h5 class="mb-3 pe-2 pe-md-0">Cuenta corriente <span class="fw-semi-bold fs-3 text-success d-block d-md-inline">$ {{customer.credit_balance}}</span></h5>
                             <div class = "d-flex flex-column flex-md-row justify-content-start align-items-start align-items-md-center">
-                                <a class="btn btn-falcon-default btn-sm me-md-1 " href="{% url 'clients_app:pay_credits' customer.pk %}">
+                                <button type="button" class="btn btn-falcon-default btn-sm me-md-1" data-bs-toggle="modal" data-bs-target="#confirm-modal-registrar">
+                                    <span class="fas fa-wallet"></span>
                                     Registrar pago
-                                </a>
+                                </button>
+                                <!-- Modal para confirmar apertura caja corriente-->
+                                <div class="modal fade" id="confirm-modal-registrar" tabindex="-1" aria-labelledby="confirm-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="post" action="{% url 'clients_app:pay_credits' customer.pk %}">
+                                                {% csrf_token %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmar pago</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <p>¿Estas seguro de confirmar el pago de <span class="text-warning">{{customer.get_full_name}}</span>?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<a class="btn btn-falcon-default btn-sm me-md-1 " href="{% url 'clients_app:pay_credits' customer.pk %}">
+                                    Registrar pago
+                                </a>-->
                                 
                                 {% if request.user.is_staff %}
-                                <a class="btn btn-warning mt-2 mt-md-0 btn-sm ms-md-1" href="{% url 'clients_app:close_credit_account' customer.pk %}">
+                                <button type="button" class="btn btn-warning mt-2 mt-md-0 btn-sm ms-md-1" data-bs-toggle="modal" data-bs-target="#confirm-modal-cerrar">
+                                    <span class="fas fa-wallet"></span>
                                     Cerrar cuenta
-                                </a>
+                                </button>
+                                <div class="modal fade" id="confirm-modal-cerrar" tabindex="-1" aria-labelledby="confirm-modalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="post" action="{% url 'clients_app:close_credit_account' customer.pk %}">
+                                                {% csrf_token %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Cerrar cuenta</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                    <p>¿Estas seguro de cerrar la cuenta de <span class="text-warning">{{customer.get_full_name}}</span>?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                                                    </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<a class="btn btn-warning mt-2 mt-md-0 btn-sm ms-md-1" href="{% url 'clients_app:close_credit_account' customer.pk %}">
+                                    Cerrar cuenta
+                                </a>-->
                                 {% endif %}
                             </div>
                                 
@@ -120,7 +169,7 @@
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Teléfono:</p>
-                            <span class="ms-3 text-800 fw-bold">{{ customer.phone_number }}</span>
+                            <span class="ms-3 text-800 fw-bold"><a href="https://wa.me/{{customer.phone_code}}{{ customer.phone_number }}">{{customer.phone_code}}{{ customer.phone_number }}</a></span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Domicilio:</p>
