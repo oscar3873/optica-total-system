@@ -556,7 +556,7 @@ def export_customer_list_to_excel(request):
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Lista de clientes.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=Lista de clientes - Sucursal %s.xlsx' %(branch)
 
     workbook.save(response)
 
