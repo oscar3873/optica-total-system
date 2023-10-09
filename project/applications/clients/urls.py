@@ -88,24 +88,31 @@ urlpatterns = [
         name='hi_delete'
     ),
 
-    ########## EXCEL ##########
+    ########## SERVICE ORDER OF CUSTOMER EXCEL ##########
     path(
         'detail/<pk>/export_service_orders',
         export_order_service_list_to_excel,
         name='export_service_orders'
     ),
 
-    ########### OPEN CREDIT ACCOUNT ############
+    ########### OPEN CREDIT ACCOUNT EXCEL ############
     path(
         'open_credit_account/<pk>',
         open_credit_account,
         name='open_credit_account'
     ),
 
-    ########## PAY CREDITS #########
+    ########## PAY CREDITS EXCEL #########
     path(
         'pay_credits/<pk>',
         pay_credits,
         name='pay_credits'
-    )
+    ),
+
+    ########## CUSTOMER LIST EXCEL ##########
+    path(
+        'export_customer_list',
+        export_customer_list_to_excel,
+        name='export_customer_list'
+    ),
 ]

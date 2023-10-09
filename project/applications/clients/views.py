@@ -433,9 +433,9 @@ def export_order_service_list_to_excel(request, pk):
     from django.http import HttpResponse
     
     customer = Customer.objects.get(id=pk)
-    queryset = customer.serviceorders.all()
+    service_order_of_customer = customer.serviceorders.all()
 
-    if not queryset:
+    if not service_order_of_customer:
         raise ValueError('El cliente no cuenta con Ordenes de Servicio.') # modificar error
     
     # Crear un libro de trabajo de Excel
@@ -476,7 +476,7 @@ def export_order_service_list_to_excel(request, pk):
         worksheet.column_dimensions[col_letter].width = 25
 
     # Agregar los datos de los empleados a la hoja de cÃ¡lculo
-    for row_num, serviceorder in enumerate(queryset, 2):
+    for row_num, serviceorder in enumerate(service_order_of_customer, 2):
         worksheet.cell(row=row_num, column=1, value=str(serviceorder.id))
         worksheet.cell(row=row_num, column=2, value=str(serviceorder.created_at.date()))
         worksheet.cell(row=row_num, column=3, value=str(serviceorder.user_made))
@@ -494,6 +494,74 @@ def export_order_service_list_to_excel(request, pk):
     workbook.save(response)
 
     return response
+
+
+####################### EXPORT CLIENTS LIST #########################
+
+def export_customer_list_to_excel(request):
+    # Para la generacion de excel
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    from django.http import HttpResponse
+    
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+        branch = branch_actualy
+    else:
+        branch = request.user.branch
+
+    list_customer = Customer.objects.filter(branch=branch)
+
+    if not list_customer:
+        raise ValueError('No hay clientes para exportar.') # modificar error
+    
+    # Crear un libro de trabajo de Excel
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    # Definir estilos personalizados para los encabezados
+    header_style = Font(name='Arial', size=14, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
+
+    # Definir los encabezados de las columnas
+    headers = ['Fecha de registro', 'Por', 'Nombre', 'Apellido', 'Teléfono', 'DNI', 'Cuenta Corriente']
+
+    # Aplicar estilos a los encabezados y escribir los encabezados
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num, value=header)
+        cell.font = header_style
+        cell.fill = header_fill
+
+    # Modificar el ancho de la columna (ajustar segÃºn tus necesidades)
+    #################################################
+    try: 
+        from openpyxl.cell import get_column_letter
+    except ImportError:
+        from openpyxl.utils import get_column_letter
+    #################################################
+    for col_num, _ in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 25
+
+    # Agregar los datos de los empleados a la hoja de cÃ¡lculo
+    for row_num, customer in enumerate(list_customer, 2):
+        worksheet.cell(row=row_num, column=1, value=str(customer.created_at.date()))
+        worksheet.cell(row=row_num, column=2, value=str(customer.user_made))
+        worksheet.cell(row=row_num, column=3, value=customer.first_name)
+        worksheet.cell(row=row_num, column=4, value=customer.last_name)
+        worksheet.cell(row=row_num, column=5, value=((str(customer.phone_code) + str(customer.phone_number)) if customer.phone_number else "Sin Teléfono"))
+        worksheet.cell(row=row_num, column=6, value=customer.dni)
+        worksheet.cell(row=row_num, column=7, value= ("Cuanta abierta" if customer.has_credit_account else "Sin cuenta"))
+
+    # Crear una respuesta HTTP con el archivo Excel adjunto
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Lista de clientes.xlsx'
+
+    workbook.save(response)
+
+    return response
+
 
 
 
