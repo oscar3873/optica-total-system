@@ -116,13 +116,21 @@
                                             <hr class="mb-0 navbar-vertical-divider" />
                                         </div>
                                     </div>
-                                    <select name="branch_id" id="branch_id" class="form-select fs--1">
-                                        {% for branch in branches %}
-                                        <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
-                                            {{ branch.name }}
-                                        </option>
-                                        {% endfor %}
-                                    </select>
+                                    <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
+                                        {% csrf_token %}
+                                        <!-- SUCURSAL DEL USUARIO -->
+                                        {{ branch_user.name }}
+                                        
+                                        <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
+                                        <select name="branch_id" id="branch_id" class="form-select fs--1">
+                                            {% for branch in branches %}
+                                            <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
+                                                {{ branch.name }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" style="display: none;"></button>
+                                    </form>
                                 </li>
                             {% endif %}
 
