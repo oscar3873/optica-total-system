@@ -85,8 +85,8 @@
                 <div class="row pb-2">
                     <div class="row">
                         <div class="col-12 col-sm-6">
-                            <h5 class="mb-3 pe-2 pe-md-0">Cuenta corriente <span class="fw-semi-bold fs-3 text-success">$1560.00</span></h5>
-                            <a class="btn btn-falcon-default btn-sm" href="#">
+                            <h5 class="mb-3 pe-2 pe-md-0">Cuenta corriente <span class="fw-semi-bold fs-3 text-success">$ {{customer.credit_balance}}</span></h5>
+                            <a class="btn btn-falcon-default btn-sm" href="{% url 'clients_app:pay_credits' customer.pk %}">
                                 Registrar pago
                             </a>
                         </div>

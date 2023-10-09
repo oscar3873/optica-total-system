@@ -534,4 +534,5 @@ def pay_credits(request, pk):
 
     customer.credit_balance = 0
     customer.save()
+    messages.success(request, "Se recibio el pago.")
     return redirect('clients_app:customer_detail', pk=customer.pk)
