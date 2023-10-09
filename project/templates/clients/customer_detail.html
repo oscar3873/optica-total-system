@@ -26,7 +26,7 @@
                     <h5 class="mb-2">{{ customer.last_name }}, {{ customer.first_name }}</h5>
                     <p class="text-700 fs--2">
                         Cliente registrado por
-                        <a href="">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
+                        <a href="{% url 'users_app:profile' customer.user_made.pk %}">{{customer.user_made.last_name}}, {{customer.user_made.first_name}}</a>
                         <span class="">el {{ customer.created_at }}</span>
                     </p>
                 </div>
