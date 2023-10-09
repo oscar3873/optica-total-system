@@ -408,11 +408,11 @@ class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
 
     
 
-####################### OPEN CREDIT ACCOUNT #######################
+####################### CREDIT ACCOUNT #######################
 
 def open_credit_account(request, pk): # usar con   --->   <form method='post' acction="{% url 'clients_app:open_credit_account' customer.pk %}"> </form>
     customer = Customer.objects.get(pk=pk)
-
+    
     if request.method == 'POST':
         if not customer.has_credit_account:
             customer.has_credit_account = True
@@ -421,6 +421,55 @@ def open_credit_account(request, pk): # usar con   --->   <form method='post' ac
             messages.success(request, "Se ha abierto una cuenta Corriente con exito.")
         else:
             messages.error(request, "Este cliente ya tiene una Cuenta corriente abierta.")
+    return redirect('clients_app:customer_detail', pk=customer.pk)
+
+
+
+def pay_credits(request, pk):
+    user = request.user
+    customer = Customer.objects.get(pk=pk)
+    total = 0
+
+    # transactions = customer.transactions.all().filter(sale__state = 'PENDIENTE') 
+    # for transaction in transactions:      
+    #     transaction.sale.state = 'COMPLETADO'
+    #     total += transaction.sale.amount
+    #     transaction.sale.save()
+
+
+    # Movement.objects.create(
+    #     amount = total,
+    #     date_movement = DATE_NOW.date(),
+    #     cash_register = user.branch.cash_register_set.filter(is_close = False).last(),
+    #     description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
+    #     currency = Currency.objects.first(),
+    #     type_operation = 'in',
+    #     payment_method = PaymentType.objects.first(),
+    #     ...
+    # )
+
+    customer.credit_balance = 0
+    customer.user_made = user
+    customer.save()
+
+    messages.success(request, "Se recibio el pago.")
+    return redirect('clients_app:customer_detail', pk=customer.pk)
+
+
+
+def close_credit_account(request, pk):
+    user = request.user
+    customer = Customer.objects.get(pk=pk)
+
+    if not user.is_staff:
+        messages.warning(request, "Solo administradores pueden cerrar cuenta corriente.")
+        return redirect('clients_app:customer_detail', pk=customer.pk)
+
+    customer.has_credit_account = False
+    customer.user_made = user
+    customer.save()
+
+    messages.warning(request, "Se cerró Cuenta Corriente del cliente.")
     return redirect('clients_app:customer_detail', pk=customer.pk)
 
 
@@ -573,48 +622,3 @@ class CreditTransactionDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         # context[''] = ''
         return context
-    
-
-
-
-def pay_credits(request, pk):
-    user = request.user
-    customer = Customer.objects.get(pk=pk)
-    total = 0
-
-    # transactions = customer.transactions.all().filter(sale__state = 'PENDIENTE') 
-    # for transaction in transactions:      
-    #     transaction.sale.state = 'COMPLETADO'
-    #     total += transaction.sale.amount
-    #     transaction.sale.save()
-
-
-    # Movement.objects.create(
-    #     amount = total,
-    #     date_movement = DATE_NOW.date(),
-    #     cash_register = user.branch.cash_register_set.filter(is_close = False).last(),
-    #     description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
-    #     currency = Currency.objects.first(),
-    #     type_operation = 'in',
-    #     payment_method = PaymentType.objects.first(),
-    #     ...
-    # )
-
-    customer.credit_balance = 0
-    customer.user_made = user
-    customer.save()
-
-    messages.success(request, "Se recibio el pago.")
-    return redirect('clients_app:customer_detail', pk=customer.pk)
-
-
-def close_credit_account(request, pk):
-    user = request.user
-    customer = Customer.objects.get(pk=pk)
-
-    customer.has_credit_account = False
-    customer.user_made = user
-    customer.save()
-
-    messages.warning(request, "Se cerró Cuenta Corriente del cliente.")
-    return redirect('clients_app:customer_detail', pk=customer.pk)
