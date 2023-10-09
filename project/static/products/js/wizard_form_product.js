@@ -274,6 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function roundToNearest50(value) {
-        return Math.ceil(value/50) * 50;        
+        return Math.ceil(value/50) * 50;
     }
 });
