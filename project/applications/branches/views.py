@@ -38,7 +38,7 @@ class BranchUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Branch
     form_class = BranchForm
     template_name = 'branches/branch_update.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('branches_app:branch_list')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -57,6 +57,11 @@ class BranchDetailView(CustomUserPassesTestMixin, DetailView):
         context['objectives'] = Branch_Objetives.objects.filter(branch_id=branch_pk)
         #context['features'] = self.model.objects.get_features(self.get_object())
         return context
+
+    def get_object(self, queryset=None):
+        # Obtener el objeto Branch basado en el pk proporcionado en la URL
+        pk = self.kwargs.get('pk')
+        return Branch.objects.get(pk=pk)
 
 ####################### DELETE #####################
 

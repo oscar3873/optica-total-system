@@ -16,9 +16,9 @@
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg" style="color: #000000;"></i></span>
           <div class="col">
-            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Sucursales</span><span
+            <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Sucursal</span><span
                 class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-            <p class="mb-0">Nueva Sucursal</p>
+            <p class="mb-0">Editar Sucursal</p>
           </div>
         </div>
       </div>
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                             <div class="row justify-content-md-center">
-                                <div class="col-md-3 my-2">
+                                <div class="col">
                                     {{ form.open_hs.label }}
                                     <div class="mb-3">
                                         {{ form.open_hs}}
@@ -73,7 +73,7 @@
                                     </div>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-3 my-2">
+                                <div class="col">
                                     {{ form.close_hs.label }}
                                     <div class="mb-3">
                                         {{ form.close_hs}}
@@ -88,8 +88,8 @@
                                 </div>
                             </div>
                             <div class="">
-                                <div class="col-12">
-                                    <button type="submit" class="btn btn-primary" name="submit">Registrar</button>
+                                <div class="col-12 mt-3">
+                                    <button type="submit" class="btn btn-primary" name="submit">Guardar</button>
                                 </div>
                             </div>
                         </form>
