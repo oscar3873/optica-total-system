@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             row.appendChild(lastNameCell);
 
                             const phoneNumberCell = document.createElement('td');
-                            phoneNumberCell.className = 'align-start phone_number d-none d-sm-table-cell';
+                            phoneNumberCell.className = 'align-start phone_number d-none d-md-table-cell';
                             const phoneNumberLink = document.createElement('a');
                             phoneNumberLink.href = `https://wa.me/${customer.phone_code}${customer.phone_number}`;
                             phoneNumberLink.textContent = `${customer.phone_code}${customer.phone_number}`;
@@ -46,19 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             row.appendChild(phoneNumberCell);
 
                             const dniCell = document.createElement('td');
-                            dniCell.className = 'align-start dni d-none d-sm-table-cell';
+                            dniCell.className = 'align-start dni d-none d-md-table-cell';
                             const dniText = document.createTextNode(customer.dni);
                             dniCell.appendChild(dniText);
                             row.appendChild(dniCell);
 
                             const userMadeCell = document.createElement('td');
-                            userMadeCell.className = 'align-start user_made d-none d-sm-table-cell';
+                            userMadeCell.className = 'align-start user_made d-none d-md-table-cell';
                             const userMadeText = document.createTextNode(customer.user_made);
                             userMadeCell.appendChild(userMadeText);
                             row.appendChild(userMadeCell);
 
                             const creditAccountCell = document.createElement('td');
-                            creditAccountCell.className = 'align-start dni d-none d-sm-table-cell';
+                            creditAccountCell.className = 'align-start dni d-none d-md-table-cell';
 
                             const creditAccountText = document.createElement("span");
                                 creditAccountText.className = 'badge rounded-pill badge-soft-secondary';

@@ -309,7 +309,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'clients/customer_page.html'
     context_object_name = 'customers'
-    paginate_by = 8
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
