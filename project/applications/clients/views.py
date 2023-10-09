@@ -601,6 +601,20 @@ def pay_credits(request, pk):
     # )
 
     customer.credit_balance = 0
+    customer.user_made = user
     customer.save()
+
     messages.success(request, "Se recibio el pago.")
+    return redirect('clients_app:customer_detail', pk=customer.pk)
+
+
+def close_credit_account(request, pk):
+    user = request.user
+    customer = Customer.objects.get(pk=pk)
+
+    customer.has_credit_account = False
+    customer.user_made = user
+    customer.save()
+
+    messages.warning(request, "Se cerró Cuenta Corriente del cliente.")
     return redirect('clients_app:customer_detail', pk=customer.pk)

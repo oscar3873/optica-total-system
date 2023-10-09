@@ -95,11 +95,18 @@ urlpatterns = [
         name='export_service_orders'
     ),
 
-    ########### OPEN CREDIT ACCOUNT EXCEL ############
+    ########### OPEN CREDIT ACCOUNT ############
     path(
         'open_credit_account/<pk>',
         open_credit_account,
         name='open_credit_account'
+    ),
+
+    ########### CLOSE CREDIT ACCOUNT ############
+    path(
+        'close_credit_account/<pk>',
+        close_credit_account,
+        name='close_credit_account'
     ),
 
     ########## PAY CREDITS EXCEL #########
