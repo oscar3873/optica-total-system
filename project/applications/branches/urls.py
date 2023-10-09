@@ -36,4 +36,12 @@ urlpatterns = [
         BranchChangeView.as_view(),
         name='branch_change'
         ),
+
+    #DETAIL
+    
+    path(
+        'detail/branch/<pk>/',
+        BranchDetailView.as_view(),
+        name='branch_detail'
+    ),
 ]
