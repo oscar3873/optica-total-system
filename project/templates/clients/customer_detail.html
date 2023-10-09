@@ -49,7 +49,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                <p>¿Estas  una cuenta corriente a <span class="text-warning">{{customer.get_full_name}}</span>?</p>
+                                <p>¿Estas seguro de abrir una cuenta corriente a <span class="text-warning">{{customer.get_full_name}}</span>?</p>
                                 </div>
                                 <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -115,7 +115,8 @@
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Fecha de Nacimiento:</p>
-                            <span class="ms-3 text-800 fw-bold">{{ customer.birth_date}}</span>
+                            <span class="ms-3 text-800 fw-bold d-none d-sm-block">{{ customer.birth_date}}</span>
+                            <span class="ms-3 text-800 fw-bold d-sm-none">{{ customer.birth_date|date:"d/m/Y" }}</span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Teléfono:</p>
