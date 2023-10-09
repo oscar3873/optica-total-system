@@ -203,8 +203,13 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
                 branch = branch_actualy
             else:
                 branch = user.branch
-
+            
             product = form.save(commit=False)
+            product.suggested_price = Decimal((product.cost_price * 1.26) * 3)
+
+            new_price = math.ceil(new_price / 50) * 50
+            product.sale_price = new_price
+            
             product.user_made = self.request.user
             product.branch = branch
             product.save()
@@ -519,13 +524,9 @@ class ProductSearchView(ListView):
 
         return JsonResponse({'products': data})
 
-#################### Actualizar Precio ###############
-from django.shortcuts import render
 
-from django.http import JsonResponse
-from django.shortcuts import render
-from django.views import View
-from .models import Brand, Category, Product
+#################### Actualizar Precio ###############
+
 from django.views.decorators.http import require_GET
 
 class UpdatePriceView(View):
