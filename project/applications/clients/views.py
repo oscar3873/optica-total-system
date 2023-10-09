@@ -514,11 +514,11 @@ def pay_credits(request, pk):
     customer = Customer.objects.get(pk=pk)
     total = 0
 
-    transactions = customer.transactions.all().filter(sale__state = 'PENDIENTE') 
-    for transaction in transactions:      
-        transaction.sale.state = 'COMPLETADO'
-        total += transaction.sale.amount
-        transaction.sale.save()
+    # transactions = customer.transactions.all().filter(sale__state = 'PENDIENTE') 
+    # for transaction in transactions:      
+    #     transaction.sale.state = 'COMPLETADO'
+    #     total += transaction.sale.amount
+    #     transaction.sale.save()
 
 
     # Movement.objects.create(

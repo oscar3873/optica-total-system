@@ -98,41 +98,40 @@
                 <div class="col-lg-8">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mb-3">Datos basicos</h5>
+                            <h5 class="mb-3">Datos personales</h5>
                         </div>
-                        <div class="col-12 pt-1 d-flex justify-content-start">
-                            <p class="fw-normal fw-semi-bold mb-1">DNI:</p>
+                        <div class="col-12 pt-1 d-flex justify-content-sm-start justify-content-between">
+                            <p class="col-sm-3 fw-normal fw-semi-bold mb-1">DNI:</p>
                             <span class="ms-3 text-800 fw-bold">{{customer.dni}} </span>
                         </div>
-                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
-                            <p class="fw-normal fw-semi-bold mb-1">Fecha de Nacimiento:</p>
-                            <!-- <span class="ms-3 text-800 fw-bold">{{ customer.birth_date | date:"j \d\e F \d\e\l Y" }}</span> -->
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                            <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Fecha de Nacimiento:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.birth_date}}</span>
                         </div>
-                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
-                            <p class="fw-normal fw-semi-bold mb-1">Teléfono:</p>
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                            <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Teléfono:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.phone_number }}</span>
                         </div>
-                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
-                            <p class="fw-normal fw-semi-bold mb-1">Domicilio:</p>
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                            <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Domicilio:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.address }}</span>
                         </div>
-                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-start">
-                            <p class="fw-normal fw-semi-bold mb-1">Correo:</p>
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                            <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Correo:</p>
                             <span class="ms-3 text-800 fw-bold">{{ customer.email }}</span>
                         </div>
                         
                     </div>
                     <div class="row">
                         <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center ">
-                            <h5 class="mb-3">Obras Sociales:&nbsp;
+                            <h5 class="mb-3">Obra Social:&nbsp;
                                 {% if request.user.is_staff %}
                                 <a href="{% url 'clients_app:customer_update' customer.id %}"></a>
                                 {% endif %}
                             </h5>
                             {% if customer.customer_insurance.all %}
                             {% for insurance in customer.customer_insurance.all %}
-                            <p class="text-900 fw-bold d-inline">
+                            <p class="ms-sm-2 text-900 fw-bold d-inline">
                                 <a href="{% url 'clients_app:hi_detail' insurance.h_insurance.pk %}"
                                     class="text-decoration-none">
                                     {{ insurance.h_insurance.name }}
@@ -145,8 +144,8 @@
                         </div>
                     </div>
                     <div class="row my-0">
-                        <small class="fs--2 py-0 my-0">Obras sociales del cliente.<span
-                                class="text-warning"> Puede tener más de una.</span></small>
+                        <small class="fs--2 py-0 my-0">El cliente puede tener<span
+                                class="text-warning"> más de una obra social.</span></small>
                     </div>
                 </div>
             </div>

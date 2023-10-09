@@ -97,8 +97,15 @@ urlpatterns = [
 
     ########### OPEN CREDIT ACCOUNT ############
     path(
-        'detail/<pk>/open_credit_account',
+        'open_credit_account/<pk>',
         open_credit_account,
         name='open_credit_account'
+    ),
+
+    ########## PAY CREDITS #########
+    path(
+        'pay_credits/<pk>',
+        pay_credits,
+        name='pay_credits'
     )
 ]
