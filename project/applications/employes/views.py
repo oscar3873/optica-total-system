@@ -221,7 +221,7 @@ def export_employee_list_to_excel(request):
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=employee_data.xlsx'
+    response['Content-Disposition'] = 'attachment; filename=Lista de empelados - Sucursal %s.xlsx' %(branch.name)
 
     workbook.save(response)
 

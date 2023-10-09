@@ -122,4 +122,12 @@ urlpatterns = [
         export_customer_list_to_excel,
         name='export_customer_list'
     ),
+
+    ####################### AJAX SEARCH ###################
+    
+    path(
+        'ajax-search-customers/',
+        ajax_search_customers,
+        name='ajax_search_customers'
+    )
 ]

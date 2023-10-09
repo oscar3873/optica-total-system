@@ -6,6 +6,9 @@ class CustomerManager(BaseManager):
     """
     Manager para Clientes
     """
+    def get_customers_branch(self, branch):
+        return self.filter(branch=branch, deleted_at=None)
+
     def all(self):
         return self.filter(deleted_at=None)
 
