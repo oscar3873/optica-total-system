@@ -32,10 +32,10 @@ class Product(BaseAbstractWithUser):
             
     """
     name = models.CharField(max_length=50, blank=False, null=False, verbose_name="Nombre")
-    barcode = models.PositiveBigIntegerField(verbose_name='Codigo de barra', null=True)
+    barcode = models.PositiveBigIntegerField(verbose_name='Codigo', null=True)
     cost_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de costo")
     suggested_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio sugerido")
-    sale_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de venta")
+    sale_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio")
     description = models.CharField(max_length=250,verbose_name="Descripción")
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category',verbose_name="Categoria")
