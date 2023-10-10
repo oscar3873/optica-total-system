@@ -45,7 +45,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isModalOpen) {
                 // Actualiza el título del modal con el tipo correspondiente
                 let modal = $('#Feature-unit-modal');
-                modal.find('.modal-title').text('Añade un nuevo valor para ' + type);
+                // modal.find('.modal-title').text('Añade un nuevo valor para ' + type);
+                modal.find('.modal-title').text('Agregar uno nuevo a ' + type);
 
                 modal.modal('show');
 

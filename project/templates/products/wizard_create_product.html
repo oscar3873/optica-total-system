@@ -366,7 +366,7 @@
             <form id="Feature-unit-form" method="post">
               {% csrf_token %}
               {{ feature_form.type }}
-              {{ feature_form.value.label }}{{ feature_form.value }}
+              {{ feature_form.value }}
               <button class="btn btn-primary mt-4" type="button" id="save-feature-unit">Guardar</button>
             </form>
           </div>
