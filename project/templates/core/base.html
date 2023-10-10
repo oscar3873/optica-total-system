@@ -106,7 +106,7 @@
                     <div class="navbar-vertical-content scrollbar">
                         <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
                             {% if  request.user.is_staff %}
-                                <li class="nav-item d-md-none">
+                                <li class="nav-item">
                                     <div class="row navbar-vertical-label-wrapper mt-0 mb-2">
                                         <div class="col-auto navbar-vertical-label">
                                             <span class="fas fa-store"></span>
@@ -784,14 +784,14 @@
                         </li>
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
-                        {% if request.user.is_staff %}
+                        <!--{% if request.user.is_staff %}
                             <li class="nav-item d-none d-md-block">
                                 <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
                                     {% csrf_token %}
-                                    <!-- SUCURSAL DEL USUARIO -->
-                                    {{ branch_user.name }}
+                                     SUCURSAL DEL USUARIO 
+                                    {{ branch_user.name }}-->
                                     
-                                    <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
+                                    <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL
                                     <select name="branch_id" id="branch_id" class="form-select fs--1">
                                         {% for branch in branches %}
                                         <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
@@ -802,7 +802,7 @@
                                     <button type="submit" style="display: none;"></button>
                                 </form>
                             </li>
-                        {% endif %}
+                        {% endif %}-->
                         <script>
                             // Escucha el evento 'change' del select
                             document.getElementById('branch_id').addEventListener('change', function () {
@@ -872,15 +872,22 @@
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
-                    
-                                    <a class="dropdown-item" href="{% url 'users_app:profile' request.user.id %}">
-                                        <span class="fas fa-user"></span>
-                                        Perfil
-                                    </a>
+                                    {% if request.user.is_staff %}
+                                        <a class="dropdown-item" href="{% url 'users_app:profile' request.user.id %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{% url 'employees_app:profile_employee' request.user.employee_type.id %}">
+                                            <span class="fas fa-user"></span>
+                                            Perfil
+                                        </a>
+                                    {%endif%}
                                     <a class="dropdown-item" href="{% url 'users_app:account' request.user.id %}">
                                         <span class="fas fa-user-circle"></span>
                                         Cuenta
                                     </a>
+                                    
                                     
 
                                     <div class="dropdown-divider"></div>
