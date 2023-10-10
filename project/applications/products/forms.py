@@ -1,3 +1,4 @@
+from typing import Any
 from django import forms
 
 from .models import *
@@ -391,7 +392,7 @@ class AdvancedSearchForm(forms.Form):
     )
 
 class UpdatePriceForm(forms.Form):
-    search_type = forms.ChoiceField(
+    choice_type = forms.ChoiceField(
         label='Tipo de Búsqueda',
         choices=(('brand', 'Marca'), ('category', 'Categoría')),
         widget=forms.RadioSelect,
@@ -403,17 +404,30 @@ class UpdatePriceForm(forms.Form):
         min_value=0,
         max_value=100,
         decimal_places=2,
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
     )
-    brand = forms.ModelChoiceField(
+    brand = forms.ModelMultipleChoiceField(
         queryset=Brand.objects.all(),
         required=False,
-        widget=forms.RadioSelect,
-        empty_label='Todas las Marcas',
+        widget=forms.CheckboxSelectMultiple,
     )
-    category = forms.ModelChoiceField(
+    category = forms.ModelMultipleChoiceField(
         queryset=Category.objects.all(),
         required=False,
-        widget=forms.RadioSelect,
-        empty_label='Todas las Categorías',
+        widget=forms.CheckboxSelectMultiple,
     )
 
+    def clean_percentage(self):
+        percentage = self.cleaned_data['percentage']
+        if not percentage > 0:
+            raise forms.ValidationError('El porcentaje debe ser positivo')
+        return percentage
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+        return super().clean()

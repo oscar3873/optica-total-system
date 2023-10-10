@@ -532,43 +532,41 @@ class ProductSearchView(ListView):
 
 from django.views.decorators.http import require_GET
 
-class UpdatePriceView(View):
+class UpdatePriceView(CustomUserPassesTestMixin, FormView):
     template_name = 'products/update_price_advanced.html'
+    form_class = UpdatePriceForm
+    success_url = reverse_lazy('products_app:product_list')
 
-    def get(self, request, *args, **kwargs):
-        # Renderizar el formulario y el HTML existente
-        return render(request, self.template_name)
-
-    def post(self, request, *args, **kwargs):
-        # Procesar el formulario y realizar la validación
-        form = UpdatePriceForm(request.POST)
-        
+    def form_valid(self, form, *args, **kwargs):
         if form.is_valid():
             # Obtener datos del formulario
-            search_type = form.cleaned_data['search_type']
+            search_type = form.cleaned_data['choice_type']
             #me devuelve el objeto de categoria
             selected_value = form.cleaned_data['brand' if search_type == 'brand' else 'category']
-            value= form.cleaned_data['brand']
             percentage = form.cleaned_data['percentage']
 
             # Obtener los productos relacionados con la marca o categoría seleccionada
             if search_type == "brand":
-                related_products = Product.objects.filter(brand=selected_value)
+                related_products = Product.objects.filter(brand__name=search_type)
             elif search_type == "category":
-                related_products = Product.objects.filter(category=selected_value)
-
+                related_products = Product.objects.filter(category__name=search_type)
+            else:
+                messages.error(self.request, "El dato ingresado no corresponde a Marca o Categoria.")
+                return super().form_invalid(form)
+            
             # Actualizar los precios de los productos
             for product in related_products:
-                new_price = product.sale_price + product.sale_price*(percentage/100)
+                new_price = product.sale_price *(1+(percentage/100))
                 # Redondear al múltiplo de 50 más cercano siempre para arriba
                 new_price = math.ceil(new_price / 50) * 50
-                product.sale_price = new_price
+                product.sale_price = Decimal(new_price)
                 product.save()
+        return super().form_valid(form)
 
-            return redirect('products_app:product_list')
-
-        # Si el formulario no es válido, renderizar el HTML existente con el formulario y errores
-        return render(request, self.template_name, {'form': form})
+    def form_invalid(self, form):
+        print('\n\n\n\n', form.errors)
+        return super().form_invalid(form)
+    
 
 @require_GET
 def search_categories_or_brands(request):
@@ -578,10 +576,10 @@ def search_categories_or_brands(request):
     results = []
 
     if option == 'category':
-        categories = Category.objects.filter(name__icontains=search_term)
+        categories = Category.objects.filter(name__icontains=search_term)[:5]
         results = [{'id': category.id, 'name': category.name} for category in categories]
     elif option == 'brand':
-        brands = Brand.objects.filter(name__icontains=search_term)
+        brands = Brand.objects.filter(name__icontains=search_term)[:5]
         results = [{'id': brand.id, 'name': brand.name} for brand in brands]
 
     return JsonResponse(results, safe=False)

@@ -40,8 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             const priceCell = document.createElement('td');
                             priceCell.className = 'align-start sell_price d-none d-md-table-cell';
-                            const priceText = document.createTextNode(product.sale_price);
-                            priceCell.appendChild(priceText);
+                            const pricespan = document.createElement('span');
+                            pricespan.className = 'badge badge-soft-success rounded-pill';
+                            const priceText = document.createTextNode(`$${product.sale_price}`);
+                            pricespan.appendChild(priceText);
+                            priceCell.appendChild(pricespan);
                             row.appendChild(priceCell);
 
                             const descriptionCell = document.createElement('td');
