@@ -23,7 +23,7 @@ from applications.core.mixins import CustomUserPassesTestMixin
 
 
 # Create your views here.
-class AdminProfileView(LoginRequiredMixin, DetailView):
+class AdminProfileView(CustomUserPassesTestMixin, DetailView):
     model = User
     template_name = 'users/profile_admin.html'
     context_object_name = 'admin'
@@ -112,26 +112,26 @@ class LogoutView( View):
         return render(request, template_name='users/logout.html', context={})
     
 
-class UpdatePasswordView(LoginRequiredMixin, FormView):
-    template_name = "users/update_password.html"
-    form_class = UpdatePasswordForm
-    success_url = reverse_lazy('users_app:login')
-    login_url = reverse_lazy('users_app:login')
+# class UpdatePasswordView(LoginRequiredMixin, FormView):
+#     template_name = "users/update_password.html"
+#     form_class = UpdatePasswordForm
+#     success_url = reverse_lazy('users_app:login')
+#     login_url = reverse_lazy('users_app:login')
     
-    def form_valid(self, form):
-        usuario = self.request.user
-        user = authenticate(
-            username=usuario.email,
-            password=form.cleaned_data['passwordCurrent']
-        )
+#     def form_valid(self, form):
+#         usuario = self.request.user
+#         user = authenticate(
+#             username=usuario.email,
+#             password=form.cleaned_data['passwordCurrent']
+#         )
         
-        if user:
-            new_password = form.cleaned_data['password2']
-            usuario.set_password(new_password)
-            usuario.save()
+#         if user:
+#             new_password = form.cleaned_data['password2']
+#             usuario.set_password(new_password)
+#             usuario.save()
         
-        logout(self.request)
-        return super().form_valid(form)
+#         logout(self.request)
+#         return super().form_valid(form)
     
     
 class AccountView(LoginRequiredMixin, UpdateView):

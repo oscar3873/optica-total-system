@@ -619,6 +619,10 @@ def export_products_list_to_excel(request):
     exclude_fields_user = ["deleted_at", "updated_at", "id", "branch"]
     headers = [campo[1] for campo in obtener_nombres_de_campos(Product, *exclude_fields_user)]
 
+    if 'created at' in headers:
+        index = headers.index('created at')
+        headers[index] = "Fecha de registro"
+
     # Aplicar estilos a los encabezados y escribir los encabezados
     for col_num, header in enumerate(headers, 1):
         cell = worksheet.cell(row=1, column=col_num, value=header)
@@ -659,7 +663,7 @@ def export_products_list_to_excel(request):
     return response
 
 
-
+################ SEARCH PRODUCTS AJAX ################
 
 def ajax_search_products(request):
     from django.db.models import Q
@@ -680,13 +684,13 @@ def ajax_search_products(request):
             paginate_by = ProductListView().paginate_by
             products = Product.objects.get_products_branch(branch)[:paginate_by]
         else:
-            # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
+            # Usando Q por todos los campos existentes en la tabla
             products = Product.objects.get_products_branch(branch).filter(
-                Q(first_name__icontains=search_term) |
-                Q(last_name__icontains=search_term) |
-                Q(phone_number__icontains=search_term) |
-                Q(phone_code__icontains=search_term) |
-                Q(email__icontains=search_term)
+                Q(name__icontains=search_term) |
+                Q(barcode__icontains=search_term) |
+                Q(description__icontains=search_term) |
+                Q(category__name__icontains=search_term) |
+                Q(brand__name__icontains=search_term)
             )
 
         # Crear una lista de diccionarios con los datos de los empleados
@@ -695,6 +699,7 @@ def ajax_search_products(request):
             'name': product.name,
             'barcode': product.barcode,
             'sale_price': product.sale_price,
+            'description': product.description,
             'stock': product.stock,
             'category': product.category.name,
             'brand': product.brand.name,
