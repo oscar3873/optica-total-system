@@ -322,6 +322,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
+    paginate_by = 5
 
     def get_queryset(self):
         user = self.request.user
@@ -338,7 +339,7 @@ class ProductListView(LoginRequiredMixin, ListView):
         pk=self.request.user.pk
         context = super().get_context_data(**kwargs)
         
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price"]
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price", "user_made", "branch"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
         context['features']=Product_feature.objects.filter(product_id=pk)
         return context
@@ -584,3 +585,119 @@ def search_categories_or_brands(request):
         results = [{'id': brand.id, 'name': brand.name} for brand in brands]
 
     return JsonResponse(results, safe=False)
+
+
+###################### EXPORT PRODUCTS LIST ########################
+
+def export_products_list_to_excel(request):
+    # Para la generacion de excel
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    from django.http import HttpResponse
+    
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+        branch = branch_actualy
+    else:
+        branch = request.user.branch
+    
+    list_products = Product.objects.get_products_branch(branch)
+
+    if not list_products:
+        raise ValueError('No hay productos para exportar.') # modificar error
+    
+    # Crear un libro de trabajo de Excel
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    # Definir estilos personalizados para los encabezados
+    header_style = Font(name='Arial', size=14, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
+
+    # Definir los encabezados de las columnas
+    exclude_fields_user = ["deleted_at", "updated_at", "id", "branch"]
+    headers = [campo[1] for campo in obtener_nombres_de_campos(Product, *exclude_fields_user)]
+
+    # Aplicar estilos a los encabezados y escribir los encabezados
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num, value=header)
+        cell.font = header_style
+        cell.fill = header_fill
+
+    # Modificar el ancho de la columna (ajustar segÃºn tus necesidades)
+    #################################################
+    try: 
+        from openpyxl.cell import get_column_letter
+    except ImportError:
+        from openpyxl.utils import get_column_letter
+    #################################################
+    for col_num, _ in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 25
+
+    # Agregar los datos de los empleados a la hoja de cÃ¡lculo
+    for row_num, product in enumerate(list_products, 2):
+        worksheet.cell(row=row_num, column=1, value=str(product.created_at.date()))
+        worksheet.cell(row=row_num, column=2, value=str(product.user_made))
+        worksheet.cell(row=row_num, column=3, value=product.name)
+        worksheet.cell(row=row_num, column=4, value=str(product.barcode))
+        worksheet.cell(row=row_num, column=5, value=str(product.cost_price))
+        worksheet.cell(row=row_num, column=6, value=str(product.suggested_price))
+        worksheet.cell(row=row_num, column=7, value=str(product.sale_price))
+        worksheet.cell(row=row_num, column=8, value=product.description)
+        worksheet.cell(row=row_num, column=9, value=str(product.stock))
+        worksheet.cell(row=row_num, column=10, value=product.category.name)
+        worksheet.cell(row=row_num, column=11, value=product.brand.name)
+
+    # Crear una respuesta HTTP con el archivo Excel adjunto
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Lista de productos - Sucursal %s.xlsx' %(branch.name)
+
+    workbook.save(response)
+
+    return response
+
+
+
+
+def ajax_search_products(request):
+    from django.db.models import Q
+
+    branch = request.user.branch
+
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+
+        # Obtener el valor de search_term de la solicitud
+        search_term = request.GET.get('search_term', '')
+
+        if not search_term:
+            # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
+            paginate_by = ProductListView().paginate_by
+            products = Product.objects.get_products_branch(branch)[:paginate_by]
+        else:
+            # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
+            products = Product.objects.get_products_branch(branch).filter(
+                Q(first_name__icontains=search_term) |
+                Q(last_name__icontains=search_term) |
+                Q(phone_number__icontains=search_term) |
+                Q(phone_code__icontains=search_term) |
+                Q(email__icontains=search_term)
+            )
+
+        # Crear una lista de diccionarios con los datos de los empleados
+        data = [{
+            'id': product.id,
+            'name': product.name,
+            'barcode': product.barcode,
+            'sale_price': product.sale_price,
+            'stock': product.stock,
+            'category': product.category.name,
+            'brand': product.brand.name,
+            'is_staff': 1 if request.user.is_staff else 0
+        } for product in products]
+        return JsonResponse({'data': data})

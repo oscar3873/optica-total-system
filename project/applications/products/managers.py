@@ -2,6 +2,9 @@ from applications.core.managers import BaseManager
 
 class ProductManager(BaseManager):
 
+    def get_products_branch(self, branch):
+        return self.filter(branch=branch, deleted_at=None)
+
     def get_features(self, product):
         """
         Obtiene todas caractefristicas relacionadas a un producto (argumento)
