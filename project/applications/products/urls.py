@@ -151,4 +151,17 @@ urlpatterns = [
         name='search_categories_or_brands'
     ), 
 
+    ######### EXPORT TO EXCEL ##########
+    path(
+        'export_list_products/', 
+        export_products_list_to_excel, 
+        name='export_list_products'
+    ), 
+
+    ########## SEARCH PRODUCTS LIST #########
+    path(
+        'ajax_search_products/',
+        ajax_search_products,
+        name='ajax_search_products'
+    )
 ]
