@@ -106,7 +106,7 @@
                     <div class="navbar-vertical-content scrollbar">
                         <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
                             {% if  request.user.is_staff %}
-                                <li class="nav-item">
+                                <li class="nav-item d-md-none">
                                     <div class="row navbar-vertical-label-wrapper mt-0 mb-2">
                                         <div class="col-auto navbar-vertical-label">
                                             <span class="fas fa-store"></span>
@@ -325,7 +325,6 @@
                                             productos</span>
                                     </div>
                                 </a>
-                                
                                 {% if request.user.is_staff %}
                                     <!-- parent pages--><a class="nav-link" href="{% url 'products_app:new_product' %}" role="button"
                                         aria-expanded="false" id="products_new">
@@ -334,7 +333,13 @@
                                                 class="nav-link-text ps-1">Añadir producto</span>
                                         </div>
                                     </a>
-                                    
+                                    <!-- parent pages--><a class="nav-link" href="{% url 'products_app:update_price_advanced' %}" role="button"
+                                    aria-expanded="false" id="products_new">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-money-check"></span></span><span
+                                            class="nav-link-text ps-1">Actualizar precios</span>
+                                    </div>
+                                </a>
                                 {% endif %}
                                     
                                 <!-- parent pages--><a class="nav-link dropdown-indicator" href="#customization"

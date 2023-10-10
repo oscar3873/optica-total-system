@@ -21,55 +21,52 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Limpia los resultados anteriores
                     if (data.data.length > 0) {
                         searchResults.innerHTML = '';
-                        data.data.forEach(function (customer) {
+                        data.data.forEach(function (product) {
+                            console.log(product);
                             const row = document.createElement('tr');
                             row.className = 'btn-reveal-trigger';
 
-                            const firstNameCell = document.createElement('td');
-                            firstNameCell.className = 'align-start first_name';
-                            const firstNameText = document.createTextNode(customer.first_name);
-                            firstNameCell.appendChild(firstNameText);
-                            row.appendChild(firstNameCell);
+                            const nameCell = document.createElement('td');
+                            nameCell.className = 'align-start name';
+                            const nameText = document.createTextNode(product.name);
+                            nameCell.appendChild(nameText);
+                            row.appendChild(nameCell);
 
-                            const lastNameCell = document.createElement('td');
-                            lastNameCell.className = 'align-start last_name';
-                            const lastNameText = document.createTextNode(customer.last_name);
-                            lastNameCell.appendChild(lastNameText);
-                            row.appendChild(lastNameCell);
+                            const barcodeCell = document.createElement('td');
+                            barcodeCell.className = 'align-start barcode';
+                            const barcodeText = document.createTextNode(product.barcode);
+                            barcodeCell.appendChild(barcodeText);
+                            row.appendChild(barcodeCell);
 
-                            const phoneNumberCell = document.createElement('td');
-                            phoneNumberCell.className = 'align-start phone_number d-none d-md-table-cell';
-                            const phoneNumberLink = document.createElement('a');
-                            phoneNumberLink.href = `https://wa.me/${customer.phone_code}${customer.phone_number}`;
-                            phoneNumberLink.textContent = `${customer.phone_code}${customer.phone_number}`;
-                            phoneNumberCell.appendChild(phoneNumberLink);
-                            row.appendChild(phoneNumberCell);
+                            const priceCell = document.createElement('td');
+                            priceCell.className = 'align-start sell_price d-none d-md-table-cell';
+                            const priceText = document.createTextNode(product.sale_price);
+                            priceCell.appendChild(priceText);
+                            row.appendChild(priceCell);
 
-                            const dniCell = document.createElement('td');
-                            dniCell.className = 'align-start dni d-none d-md-table-cell';
-                            const dniText = document.createTextNode(customer.dni);
-                            dniCell.appendChild(dniText);
-                            row.appendChild(dniCell);
+                            const descriptionCell = document.createElement('td');
+                            descriptionCell.className = 'align-start description d-none d-md-table-cell';
+                            const descriptionText = document.createTextNode(product.description);
+                            descriptionCell.appendChild(descriptionText);
+                            row.appendChild(descriptionCell);
 
-                            const userMadeCell = document.createElement('td');
-                            userMadeCell.className = 'align-start user_made d-none d-md-table-cell';
-                            const userMadeText = document.createTextNode(customer.user_made);
-                            userMadeCell.appendChild(userMadeText);
-                            row.appendChild(userMadeCell);
+                            const stockCell = document.createElement('td');
+                            stockCell.className = 'align-start stock d-none d-md-table-cell';
+                            const stockText = document.createTextNode(product.stock);
+                            stockCell.appendChild(stockText);
+                            row.appendChild(stockCell);
 
-                            const creditAccountCell = document.createElement('td');
-                            creditAccountCell.className = 'align-start dni d-none d-md-table-cell';
+                            const categoryCell = document.createElement('td');
+                            categoryCell.className = 'align-start category d-none d-md-table-cell';
+                            const categoryText = document.createTextNode(product.category);
+                            categoryCell.appendChild(categoryText);
+                            row.appendChild(categoryCell);
 
-                            const creditAccountText = document.createElement("span");
-                                creditAccountText.className = 'badge rounded-pill badge-soft-secondary';
-                                creditAccountText.textContent = "Sin cuenta"; 
-
-                            if (customer.has_credit_account) {
-                                creditAccountText.className = 'badge rounded-pill badge-soft-success';
-                                creditAccountText.textContent = "Cuenta abierta"; 
-                            }
-                            creditAccountCell.appendChild(creditAccountText);
-                            row.appendChild(creditAccountCell);
+                            const brandCell = document.createElement('td');
+                            brandCell.className = 'align-start brand d-none d-md-table-cell';
+                            const brandText = document.createTextNode(product.brand);
+                            brandCell.appendChild(brandText);
+                            row.appendChild(brandCell);
 
                             const actionsCell = document.createElement('td');
                             actionsCell.className = 'align-middle white-space-nowrap text-start';
@@ -96,14 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             const detailLink = document.createElement('a');
                             detailLink.className = 'dropdown-item';
-                            detailLink.href = `/products/detail/product/${customer.id}`;
+                            detailLink.href = `/products/detail/product/${product.id}`;
                             detailLink.textContent = 'Detalle';
                             dropdownMenu.appendChild(detailLink);
-                            console.log(`Es staff ${customer.is_staff}`)
-                            if (customer.is_staff) {
+                            console.log(`Es staff ${product.is_staff}`)
+                            if (product.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.className = 'dropdown-item';
-                                editLink.href = `/customers/update/${customer.id}`;
+                                editLink.href = `/products/update/${product.id}`;
                                 editLink.textContent = 'Editar';
                                 dropdownMenu.appendChild(editLink);
 
@@ -113,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 const deleteLink = document.createElement('a');
                                 deleteLink.className = 'dropdown-item text-danger';
-                                deleteLink.href = `/products/delete/product/${customer.id}`;
+                                deleteLink.href = `/products/delete/product/${product.id}`;
                                 deleteLink.textContent = 'Borrar';
                                 dropdownMenu.appendChild(deleteLink);
                             }

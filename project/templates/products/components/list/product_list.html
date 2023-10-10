@@ -53,28 +53,11 @@
             </div>
           </div>
           <div class="col-12 text-center mt-2 col-sm-auto ms-auto sm-text-end ps-0">
-            <div class="d-none" id="table-purchases-actions">
-              <div class="d-flex">
-                <select class="form-select form-select-sm" aria-label="Bulk actions">
-                  <option selected="">Accion masiva</option>
-                  <option value="Delete">Borrar</option>
-                </select>
-                <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
-              </div>
-            </div>
             <div id="table-purchases-replace-element">
               
               {% if request.user.is_staff %}
                 <a href="{% url 'products_app:new_product' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo Producto</span></a>
-                
-                <a href="{% url 'products_app:update_price_advanced' %}" class="btn btn-falcon-default btn-sm" type="button">
-                  <span class="d-none d-sm-inline-block ms-1">Actualizar Precio</span>
-                </a>
-                {% endif %}
-            
-              
-              
-                
+              {% endif %}
               <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filtros</span></button>
               <a href="{% url 'products_app:export_list_products' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
             </div>
@@ -88,15 +71,10 @@
             <!-- HEAD TABLA -->
             <thead class="bg-200 text-900">
               <tr>
-                <th class="white-space-nowrap">
-                  <div class="form-check mb-0 d-flex align-items-center">
-                    <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox" data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
-                  </div>
-                </th>
-              {% for column in table_column %}
-                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
-              {% endfor %}
-                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+                {% for column in table_column %}
+                  <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Precio' %}d-none d-md-table-cell{% endif %}" data-sort="{{column.0}}">{{column.1}}</th>
+                {% endfor %}
+                <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -104,11 +82,6 @@
               
               {% for product in products %}
               <tr class="btn-reveal-trigger">
-                <td class="align-middle" style="width: 28px;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="recent-purchase-0" data-bulk-select-row="data-bulk-select-row" />
-                  </div>
-                </td>
                 <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
                 <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
                 <!-- <td class="align-middle white-space-nowrap product">Slick - Drag &amp;</td> -->
@@ -116,12 +89,12 @@
                 </td> -->
                 <!-- <td class="align-start user_made">{{product.user_made}}</td> -->
                 <td class="align-start name">{{product.name}}</td>
-                <td class="align-start barcode">{{product.barcode}}</td>
-                <td class="align-start sale_price">{{product.sale_price}}</td>
-                <td class="align-start description">{{product.description}}</td>
-                <td class="align-start stock">{{product.stock}}</td>
-                <td class="align-start category">{{product.category.name}}</td>
-                <td class="align-start brand">{{product.brand.name}}</td>
+                <td class="align-start d-none d-md-table-cell barcode">{{product.barcode}}</td>
+                <td class="align-start sale_price"><span class="badge badge-soft-success rounded-pill">${{product.sale_price}}</span></td>
+                <td class="align-start d-none d-md-table-cell description">{{product.description}}</td>
+                <td class="align-start d-none d-md-table-cell stock">{{product.stock}}</td>
+                <td class="align-start d-none d-md-table-cell category">{{product.category.name}}</td>
+                <td class="align-start d-none d-md-table-cell brand">{{product.brand.name}}</td>
                 <!-- <td class="align-start branch">{{product.branch.name}}</td> -->
                 <td class="align-middle white-space-nowrap text-end">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
@@ -143,19 +116,6 @@
               {% endfor %}
             </tbody>
           </table>
-        </div>
-      </div>
-      <div class="card-footer">
-        <div class="row align-items-center">
-          <div class="pagination d-none"></div>
-          <div class="col">
-            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
-            </p>
-          </div>
-          <div class="col-auto d-flex">
-            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button>
-            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button>
-          </div>
         </div>
       </div>
     </div>

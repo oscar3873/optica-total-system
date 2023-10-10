@@ -1,5 +1,32 @@
+{% load static %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
 <div class="container mt-4">
-	<h2>Actualizar Precio Avanzado</h2>
+	<!-- ===============================================-->
+	<!--    Errores de Sistema (Backend)-->
+	<!-- ===============================================-->
+
+	{% include 'core/components/messages.html' %}
+	
+	<!-- ===============================================-->
+	<!--    Fin Errores de Sistema (Backend)-->
+	<!-- ===============================================-->
+
+	<div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+		<!-- Titulo del formulario wizard -->
+		<div class="d-flex mb-4">
+			<span class="fa-stack me-2 ms-n1">
+				<i class="fas fa-circle fa-stack-2x text-300"></i>
+				<i class="fa-inverse fa-stack-1x text-primary fas fa-money-check"></i>
+			</span>
+			<div class="col">
+				<h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Actualizar precios</span><span
+				class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+				<p class="mb-0">Aquí puede actualizar el precio de los productos por marca o por categoria</p>          
+			</div>
+		</div>
+	</div>
 	<form id="update-price-form" method="post">
 			{% csrf_token %}
 
@@ -14,9 +41,9 @@
 						<label for="id_search_type_category">Categoría</label>
 				</div>
 			</div>
-		
 			
-
+			
+			
 			<!-- Buscador en tiempo real -->
 
 			<div id="search-container" data-url="{% url 'products_app:search_categories_or_brands' %}">
