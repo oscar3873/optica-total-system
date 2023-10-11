@@ -34,14 +34,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         typeContainer.appendChild(textButtonContainer_unit);
 
-        // Agregar botón "+" y manejar su evento
-        let addButton = document.createElement('button');
-        addButton.setAttribute('title','Agregar uno nuevo');
-        addButton.textContent = '+';
-        addButton.type = 'button';
-        addButton.classList.add('btn', 'btn-sm', 'ms-1', 'px-1');
 
-        addButton.addEventListener('click', function() {
+        // Creacion del btn para agregar más caracteristicas (valores)
+        let btnAdd = document.createElement('span');
+        btnAdd.setAttribute('title','Agregar uno nuevo');
+        btnAdd.classList.add('fa-stack','fa-xs','ms-1','ms-sm-3');
+        btnAdd.style.cursor = 'pointer';
+        btnAdd.innerHTML = `<svg class="svg-inline--fa fa-circle fa-w-14 fa-stack-2x text-primary" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg>
+        <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>`;
+        
+        btnAdd.addEventListener('click', function() {
             if (!isModalOpen) {
                 // Actualiza el título del modal con el tipo correspondiente
                 let modal = $('#Feature-unit-modal');
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Agrega el botón "+" al título del Tipo de Característica
-        textButtonContainer_unit.appendChild(addButton);
+        textButtonContainer_unit.appendChild(btnAdd);
 
         for (let checkbox of checkboxes) {
             let labelElement = checkbox.parentElement;
