@@ -29,7 +29,7 @@
       <div class="card-header">
           <div class="row pb-md-0">
               <div class="col-12 col-sm-6">
-                <h4 class="mb-1"> {{product.name}}</h4>
+                <h5 class="mb-2"> {{product.name}}</h5>
                 <h6>{{product.description}}</h6>
               </div>
           </div>
@@ -73,10 +73,6 @@
                           <span class="ms-3 text-800 fw-bold">${{product.cost_price}}</span>
                       </div>
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio sugerido:</p>
-                          <span class="ms-3 text-800 fw-bold">${{product.suggested_price}}</span>
-                      </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                           <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio de venta:</p>
                           <span class="ms-3 text-800 fw-bold">${{product.sale_price}}</span>
                       </div>
@@ -101,17 +97,21 @@
                   <div class="col-12">
                       <h5 class="mb-3">Caracteristicas</h5>
                   </div>
+                  {% if features.items %}
                   <div class="col-12 sm-text-start sm-ps-2">
                     <div class="row">
-                      {% for feature in features %}
+                      {% for feature, objects in features.items %}
                       <div class="col-6 col-sm-5 py-sm-2 d-flex">
-                        <p class="fw-normal fw-semi-bold mb-1">{{feature.type.name}}:</p>
-                        <span class="ms-3 text-800 fw-bold">{{feature.value}}</span> 
+                        <p class="fw-normal fw-semi-bold mb-1">{{feature}}:</p>
+                        <span class="ms-3 text-800 fw-bold">{% for object in objects %}{{object}} {% endfor %}</span>
+                        
                       </div>
                       {% endfor %}
                     </div>
                   </div>
-                  
+                  {% else %}
+                  <h6 class="mb-2">Este producto aún no tiene caracteristicas.</h6>
+                  {% endif %}
                 </div>
               </div>
           </div>
