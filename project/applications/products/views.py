@@ -539,28 +539,30 @@ class UpdatePriceView(CustomUserPassesTestMixin, FormView):
 
     def form_valid(self, form, *args, **kwargs):
         if form.is_valid():
-            # Obtener datos del formulario
-            search_type = form.cleaned_data['choice_type']
             #me devuelve el objeto de categoria
-            selected_value = form.cleaned_data['brand' if search_type == 'brand' else 'category']
+            brands_up = form.cleaned_data['brand']
+            categories_up = form.cleaned_data['category']
             percentage = form.cleaned_data['percentage']
 
-            # Obtener los productos relacionados con la marca o categoría seleccionada
-            if search_type == "brand":
-                related_products = Product.objects.filter(brand__name=search_type)
-            elif search_type == "category":
-                related_products = Product.objects.filter(category__name=search_type)
-            else:
-                messages.error(self.request, "El dato ingresado no corresponde a Marca o Categoria.")
-                return super().form_invalid(form)
-            
-            # Actualizar los precios de los productos
-            for product in related_products:
-                new_price = product.sale_price *(1+(percentage/100))
-                # Redondear al múltiplo de 50 más cercano siempre para arriba
+            # Crear conjuntos para las marcas y las categorías
+            product_brand = set()
+            product_category = set()
+
+            for brand in brands_up:
+                product_brand.update(brand.product_brand.all())
+
+            for category in categories_up:
+                product_category.update(category.product_category.all())
+
+            # Ahora, product_brand y product_category contienen objetos únicos sin duplicados
+            products = product_category | product_brand
+
+            for product in products:
+                new_price = product.sale_price * (1 + (percentage / 100))
                 new_price = math.ceil(new_price / 50) * 50
                 product.sale_price = Decimal(new_price)
                 product.save()
+
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -571,16 +573,14 @@ class UpdatePriceView(CustomUserPassesTestMixin, FormView):
 @require_GET
 def search_categories_or_brands(request):
     search_term = request.GET.get('search_term', '')
-    option = request.GET.get('option', '')
 
     results = []
 
-    if option == 'category':
-        categories = Category.objects.filter(name__icontains=search_term)[:5]
-        results = [{'id': category.id, 'name': category.name} for category in categories]
-    elif option == 'brand':
-        brands = Brand.objects.filter(name__icontains=search_term)[:5]
-        results = [{'id': brand.id, 'name': brand.name} for brand in brands]
+    categories = Category.objects.filter(name__icontains=search_term)[:5]
+    brands = Brand.objects.filter(name__icontains=search_term)[:5]
+
+    combined_results = list(categories) + list(brands)
+    results = [{'id': item.id, 'name': item.name, 'form_name': 'brand' if item.__class__ is Brand else 'category'} for item in combined_results]
 
     return JsonResponse(results, safe=False)
 

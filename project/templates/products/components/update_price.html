@@ -30,19 +30,7 @@
     <form id="update-price-form" method="post">
         {% csrf_token %}
 
-        <!-- Opciones de selección -->
-        <div>
-            <div class="radio-group">
-                <input type="radio" name="choice_type" value="brand" id="choice_type_0" required>
-                <label for="choice_type_0">Marca</label>
-            </div>
-            <div class="radio-group">
-                <input type="radio" name="choice_type" value="category" id="choice_type_1" required>
-                <label for="choice_type_1">Categoría</label>
-            </div>
-        </div>
-
-        <div id="search-contains" data-url="{% url 'products_app:search_categories_or_brands' %}" hidden>
+        <div id="search-contains" data-url="{% url 'products_app:search_categories_or_brands' %}">
             <label for="search_term">Buscar:</label>
             <input class="form-control" type="text" name="search_term" id="search_term">
         </div>
@@ -59,13 +47,13 @@
             </ul>
         </div>
 		
-		<div id="percentage-container" hidden>
-			{{form.percentage.label}}{{form.percentage}}
+		<div id="percentage-container">
+			<input disabled type="number" name="percentage" class="form-control" min="0" max="100" step="0.01" required="" id="id_percentage">
 		</div>
 
         <!-- Botón para actualizar precios -->
         <div class="mt-3">
-            <button type="submit" class="btn btn-primary" id="update-price-btn" disabled>
+            <button type="submit" class="btn btn-primary" id="update-price-btn">
                 Actualizar Precios
             </button>
         </div>

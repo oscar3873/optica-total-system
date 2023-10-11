@@ -36,7 +36,7 @@ class Product(BaseAbstractWithUser):
     cost_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio de costo")
     suggested_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio sugerido")
     sale_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio")
-    description = models.CharField(max_length=250,verbose_name="Descripción")
+    description = models.CharField(max_length=250,verbose_name="Descripción", null=True, blank=True)
     stock = models.PositiveSmallIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category',verbose_name="Categoria")
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand',verbose_name="Marca")

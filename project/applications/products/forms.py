@@ -151,6 +151,7 @@ class ProductForm(ValidationFormMixin):
     description = forms.CharField(
         max_length=100,
         label='Descripción',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'placeholder': 'Descripcion del producto',
@@ -392,13 +393,6 @@ class AdvancedSearchForm(forms.Form):
     )
 
 class UpdatePriceForm(forms.Form):
-    choice_type = forms.ChoiceField(
-        label='Tipo de Búsqueda',
-        choices=(('brand', 'Marca'), ('category', 'Categoría')),
-        widget=forms.RadioSelect,
-        required=True,
-        initial='brand',  # Marca seleccionada por defecto
-    )
     percentage = forms.DecimalField(
         label='Porcentaje de Aumento',
         min_value=0,
@@ -426,8 +420,3 @@ class UpdatePriceForm(forms.Form):
         if not percentage > 0:
             raise forms.ValidationError('El porcentaje debe ser positivo')
         return percentage
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        print(cleaned_data)
-        return super().clean()
