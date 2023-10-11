@@ -402,20 +402,18 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
     def get(self, request, *args, **kwargs):
         user = request.user
         branch = user.branch
-
-        # Obtener el objeto Product actual utilizando self.get_object()
         object = self.get_object()
 
         if not user.is_staff and not object.branch == branch: 
             # El usuario no tiene permiso para ver este producto
             messages.error(request, 'Lo sentimos, no puedes ver este producto.')
             return redirect('products_app:product_list')  # Reemplaza 'nombre_de_tu_vista_product_list' por el nombre correcto de la vista de lista de productos
-        
         return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['features'] = self.model.objects.get_features(self.get_object())
+        features_list = Product.objects.get_feature_types_and_values(self.get_object())
+        context['features'] = features_list
         return context
     
     
