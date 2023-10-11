@@ -57,14 +57,11 @@
                     </div>
                     <div id="table-purchases-replace-element">
                         {% if request.user.is_staff %}
-                        <a href="{% url 'clients_app:hi_new' %}" class="btn btn-falcon-default btn-sm"
+                        <a href="{% url 'clients_app:hi_new' %}" class="btn btn-falcon-default btn-sm me-1"
                             type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Nueva Obra Social</span></a>
                         {% endif %}
-                        <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
-                                data-fa-transform="shrink-3 down-2"></span><span
-                                class="d-none d-sm-inline-block ms-1">Filtros</span></button>
-                        <button class="btn btn-falcon-default btn-sm" type="button"><span
+                        <button class="btn btn-falcon-default btn-sm ms-1" type="button"><span
                                 class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Exportar</span></button>
                     </div>
@@ -77,12 +74,6 @@
                 <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                     <thead class="bg-200 text-900">
                         <tr>
-                            <th class="white-space-nowrap">
-                                <div class="form-check mb-0 d-flex align-items-center">
-                                    <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox"
-                                        data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
-                                </div>
-                            </th>
                             <th class="sort pe-1 align-middle white-space-nowrap" data-sort="user_made">Por
                             </th>
                             <th class="sort pe-1 align-middle white-space-nowrap" data-sort="first_name">Nombre
@@ -91,24 +82,17 @@
                             </th>
                             <th class="sort pe-1 align-middle white-space-nowrap" data-sort="dni">Telefono
                             </th>
-
                             <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
                         </tr>
                     </thead>
                     <tbody class="list" id="table-purchase-body">
                         {% for h_insurance in h_insurances %}
                         <tr class="btn-reveal-trigger">
-                            <td class="align-middle" style="width: 28px;">
-                                <div class="form-check mb-0">
-                                    <input class="form-check-input" type="checkbox" id="recent-purchase-0"
-                                        data-bulk-select-row="data-bulk-select-row" />
-                                </div>
-                            </td>
                             <th class="align-middle white-space-nowrap name">{{ h_insurance.user_made }}</th>
                             <th class="align-middle white-space-nowrap name">{{ h_insurance.name }}</th>
-                            <td class="align-middle white-space-nowrap address">{{ h_insurance.cuit }}</td>
-                            <td class="align-middle white-space-nowrap open_hs">{{ h_insurance.phone_number }}</td>
-                            <td class="align-middle white-space-nowrap text-center">
+                            <td class="align-middle white-space-nowrap cuit">{{ h_insurance.cuit }}</td>
+                            <td class="align-middle white-space-nowrap phone">{{ h_insurance.phone_number }}</td>
+                            <td class="align-middle white-space-nowrap acciones">
                                 <div class="dropstart font-sans-serif position-static d-inline-block">
                                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
                                         type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window"
@@ -137,13 +121,6 @@
             <div class="row align-items-center">
                 <div class="pagination d-none"></div>
                 <div class="col">
-                    <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info">
-                        </span><span class="d-none d-sm-inline-block me-2">&mdash; </span><a class="fw-semi-bold"
-                            href="#!" data-list-view="*">Mostrar todo<span class="fas fa-angle-right ms-1"
-                                data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!"
-                            data-list-view="less">Mostrar menos<span class="fas fa-angle-right ms-1"
-                                data-fa-transform="down-1"></span></a>
-                    </p>
                 </div>
                 <div class="col-auto d-flex">
                     <button class="btn btn-sm btn-primary" type="button"
