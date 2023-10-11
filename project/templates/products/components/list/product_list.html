@@ -56,9 +56,9 @@
             <div id="table-purchases-replace-element">
               
               {% if request.user.is_staff %}
-                <a href="{% url 'products_app:new_product' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo Producto</span></a>
-              {% endif %}             
-              <a href="{% url 'products_app:export_list_products' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
+                <a href="{% url 'products_app:new_product' %}" class="btn btn-falcon-default btn-sm me-1" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo Producto</span></a>
+                <a href="{% url 'products_app:export_list_products' %}" class="btn btn-falcon-default btn-sm ms-1" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
+              {% endif %}
             </div>
           </div>
         </div>
