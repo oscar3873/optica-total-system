@@ -1,161 +1,149 @@
 {% load static %}
 {% load humanize %}
-<!-- ===============================================-->
-<!--    Contentenedor del block main-->
-<!-- ===============================================-->
+
+
+
 
 <div class="container py-4">
-
-  <!-- ===============================================-->
-  <!--    Errores de Sistema (Backend)-->
-  <!-- ===============================================-->
-
   {% include 'core/components/messages.html' %}
 
-  <!-- ===============================================-->
-  <!--    Fin Errores de Sistema (Backend)-->
-  <!-- ===============================================-->
-
-
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!-- Titulo del formulario wizard -->
-    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
-          class="fa-inverse fa-stack-1x text-primary fas fa-box"></i></span>
-      <div class="col">
-        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Producto</span><span
-            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-        <p class="mb-0">Aqui puede vizualizar un producto</p>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ===============================================-->
-  <!--    Card con la presentacion de la caja-->
-  <!-- ===============================================-->
-
-  {% if product %}
-<div class="card mb-3">
-  <div class="row mb-3">
-      <div class="col-12 col-sm-2 ps-sm-4 pt-sm-4 ">
-        <div class="w-100 h-100">
-          <img src="" alt="foto del producto ">
+      <!-- Titulo del formulario wizard -->
+      <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-box"></i></span>
+        <div class="col">
+          <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Detalle del
+              producto</span><span
+              class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+          <p class="mb-0">Aquí puede visualizar el detalle completo del producto.</p>
         </div>
       </div>
-      <div class="col-12 col-sm-10 pt-2">
-        <div class="row">
-          <div class="col-12 mb-2 text-start">
-            <div class="ms-5">
-              <h4 class="mb-1"> {{product.name}}<span data-bs-toggle="tooltip" data-bs-placement="right" title="Verified"><small class="fa fa-check-circle text-primary" data-fa-transform="shrink-4 down-2"></small></span>
-              </h4>
-              <h5 class="fs-0 fw-normal">{{product.description}}</h5>
-            </div>
-          </div>
-          <div class=" col-12">
-            <div class="row">
-              <div class="col-sm-5">
-                <div class="row">
-                  <div class="col-12">
-                    <h5>Detalles del producto</h5>
-                  </div>
-                  <div class="col-12 sm-text-start sm-ps-2">
-                    <div class="row py-sm-2">
-                      <div class="col-12 col-sm-6 px-sm-0">
-                        cantida: 50
-                      </div>
-                      <div class="col-12 col-sm-6 px-sm-0">
-                        codigo de barra: 230912309
-                      </div>
-                    </div>
-                    <div class="row py-sm-2">
-                      <div class="col-12 col-sm-6 px-sm-0">
-                        descripcion: {{product.description}}
-                      </div>
-                      <div class="col-12 col-sm-6 px-sm-0">
-                        Proveedor:
-                      </div>
-                    </div>
-                  </div>
-                  
-                </div>
+  </div>
+
+    <!-- ===============================================-->
+    <!--    Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+  {% if product %}
+    <div class="card mb-3">
+      <div class="card-header">
+          <div class="row pb-md-0">
+              <div class="col-12 col-sm-6">
+                <h4 class="mb-1"> {{product.name}}</h4>
+                <h6>{{product.description}}</h6>
               </div>
-              <div class="col-sm-7">
+          </div>
+          <!-- <div class="row mt-2">
+              <div class="col">
+                  {% if request.user.is_staff %}
+                  <a class="btn btn-falcon-default btn-sm" href="#">
+                      <span class="fas fa-plus fs--2 me-1"></span>
+                      Nuevo Producto
+                  </a>
+                  <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
+                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="fas fa-ellipsis-h"></span>
+                  </button>
+                  <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Editar</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item text-danger" href="#">Borrar</a>
+                  </div>
+                  {% endif %}
+              </div>
+          </div> -->
+      </div>
+      <div class="card-body border-top">            
+          <div class="row">
+              <div class="col-lg-6">
+                  <div class="row">
+                      <div class="col-12">
+                          <h5 class="mb-3">Datos del producto</h5>
+                      </div>
+                      <div class="col-12 d-flex justify-content-sm-start justify-content-between">
+                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Código de barras:</p>
+                          <span class="ms-3 text-800 fw-bold">{{product.barcode}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Stock:</p>
+                          <span class="ms-3 text-800 fw-bold">{{product.stock}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio de compra:</p>
+                          <span class="ms-3 text-800 fw-bold">${{product.cost_price}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio sugerido:</p>
+                          <span class="ms-3 text-800 fw-bold">${{product.suggested_price}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio de venta:</p>
+                          <span class="ms-3 text-800 fw-bold">${{product.sale_price}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                        <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Categoría:</p>
+                        <span class="ms-3 text-800 fw-bold">{{product.category}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                        <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Marca:</p>
+                        <span class="ms-3 text-800 fw-bold">{{product.brand}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
+                        <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Proveedor:</p>
+                        <span class="ms-3 text-800 fw-bold">El drogao de la esquina</span>
+                      </div>
+                      
+                  </div>
+              </div>
+              <div class="col-lg-6">
                 <div class="row">
+
                   <div class="col-12">
-                    <h5>Caracteristicas</h5>
+                      <h5 class="mb-3">Caracteristicas</h5>
                   </div>
                   <div class="col-12 sm-text-start sm-ps-2">
                     <div class="row">
-                      {% for feature in features  %}
-                        <div class="col-12 col-sm-5 py-sm-2">
-                          {{feature.type.name}}: {{feature.value}}
-                        </div>
+                      {% for feature in features %}
+                      <div class="col-6 col-sm-5 py-sm-2 d-flex">
+                        <p class="fw-normal fw-semi-bold mb-1">{{feature.type.name}}:</p>
+                        <span class="ms-3 text-800 fw-bold">{{feature.value}}</span> 
+                      </div>
                       {% endfor %}
-                      
                     </div>
                   </div>
                   
                 </div>
               </div>
+          </div>
+      </div>
+  </div>
+    
+
+    {% else %}
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+      <!--Card-->
+      <div class="card bg-transparent-50 overflow-hidden">
+        <div class="card-header position-relative">
+          <div class="bg-holder d-none d-md-block bg-card z-index-1"
+            style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+          </div>
+          <!--/.bg-holder-->
+          <div class="position-relative z-index-2">
+            <div>
+              <h3 class="text-primary mb-1">No hay un producto</h3>
+            </div>
+            <div class="d-flex py-3">
             </div>
           </div>
         </div>
-      </div>
-
-  </div>
-  <div class="row g-0">
-    <div class="col-12">
-      <div class="card mb-3">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">Ultimas ventas del producto</h5>
+        <div class="card-footer">
+          <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:new_product' %}">Nuevo
+            Producto</a>
         </div>
-        <div class="card-body text-justify">
-          
-        </div>
-        <div class="card-footer bg-light p-0 border-top">
-          <button class="btn btn-link d-block w-100 btn-intro-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#profile-intro" aria-expanded="true" aria-controls="profile-intro">Show <span class="less">less<span class="fas fa-chevron-up ms-2 fs--2"></span></span><span class="full">full<span class="fas fa-chevron-down ms-2 fs--2"></span></span></button>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-    
-</div>
-
-  {% else %}
-  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!--Card-->
-    <div class="card bg-transparent-50 overflow-hidden">
-      <div class="card-header position-relative">
-        <div class="bg-holder d-none d-md-block bg-card z-index-1"
-          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-        </div>
-        <!--/.bg-holder-->
-
-        <div class="position-relative z-index-2">
-          <div>
-            <h3 class="text-primary mb-1">No hay un producto</h3>
-          </div>
-          <div class="d-flex py-3">
-          </div>
-        </div>
-      </div>
-      <div class="card-footer">
-        <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:new_product' %}">Nuevo Producto</a>
-      </div>
       </div>
     </div>
-  </div>
-</div>
-{% endif %}
-
-
-<!-- ===============================================-->
-<!--   Fin Card con la presentacion de la caja-->
-<!-- ===============================================-->
+  {% endif %}
 
 </div>
 
-<!-- ===============================================-->
-<!--    Fin Contentenedor del block main-->
-<!-- ===============================================-->
+
