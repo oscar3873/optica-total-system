@@ -270,9 +270,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     cost_price.addEventListener("input", () => {
         const costValue = parseFloat(cost_price.value);
-        suggested_price.value = (((costValue*1.26)*3).toFixed(2)); // Muestra dos decimales en suggested_price
+        let cost = (((costValue*1.26)*3).toFixed(2));
+        suggested_price.textContent = cost; // Muestra dos decimales en suggested_price
 
-        const roundedSaleValue = roundToNearest50(suggested_price.value);
+        const roundedSaleValue = roundToNearest50(cost);
         sale_price.value = roundedSaleValue.toFixed(2); // Muestra dos decimales en sale_price
     });
 

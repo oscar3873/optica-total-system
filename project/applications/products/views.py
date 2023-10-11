@@ -204,11 +204,9 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             else:
                 branch = user.branch
             
-
             product = form.save(commit=False)
-            product.suggested_price = Decimal((float(product.cost_price) * 1.26) * 3)
+            suggested_price = Decimal((float(product.cost_price) * 1.26) * 3)
 
-            suggested_price = product.suggested_price
             sale_price = math.ceil(suggested_price / 50) * 50
             product.sale_price = sale_price
 
@@ -256,6 +254,7 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
         context['category_form'] = CategoryForm(instance=self.object.category)
         context['brand_form'] = BrandForm(instance=self.object.brand)
         context['feature_form'] = FeatureForm_toWizard
+        context['update'] = 1
         return context
 
     @transaction.atomic
@@ -612,13 +611,11 @@ def export_products_list_to_excel(request):
     header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
 
     # Definir los encabezados de las columnas
-    exclude_fields_user = ["deleted_at", "updated_at", "id", "branch"]
+    exclude_fields_user = ["deleted_at", "updated_at", "id", "branch", "user_made"]
     headers = [campo[1] for campo in obtener_nombres_de_campos(Product, *exclude_fields_user)]
 
     if 'created at' in headers:
         index = headers.index('created at')
-        headers[index] = "Fecha de registro"
-
     # Aplicar estilos a los encabezados y escribir los encabezados
     for col_num, header in enumerate(headers, 1):
         cell = worksheet.cell(row=1, column=col_num, value=header)
@@ -639,16 +636,15 @@ def export_products_list_to_excel(request):
     # Agregar los datos de los empleados a la hoja de cÃ¡lculo
     for row_num, product in enumerate(list_products, 2):
         worksheet.cell(row=row_num, column=1, value=str(product.created_at.date()))
-        worksheet.cell(row=row_num, column=2, value=str(product.user_made))
-        worksheet.cell(row=row_num, column=3, value=product.name)
-        worksheet.cell(row=row_num, column=4, value=str(product.barcode))
-        worksheet.cell(row=row_num, column=5, value=str(product.cost_price))
-        worksheet.cell(row=row_num, column=6, value=str(product.suggested_price))
-        worksheet.cell(row=row_num, column=7, value=str(product.sale_price))
-        worksheet.cell(row=row_num, column=8, value=product.description)
-        worksheet.cell(row=row_num, column=9, value=str(product.stock))
-        worksheet.cell(row=row_num, column=10, value=product.category.name)
-        worksheet.cell(row=row_num, column=11, value=product.brand.name)
+        worksheet.cell(row=row_num, column=2, value=product.name)
+        worksheet.cell(row=row_num, column=3, value=str(product.barcode))
+        worksheet.cell(row=row_num, column=4, value=str(product.cost_price))
+        worksheet.cell(row=row_num, column=5, value=str(product.suggested_price))
+        worksheet.cell(row=row_num, column=6, value=str(product.sale_price))
+        worksheet.cell(row=row_num, column=7, value=product.description)
+        worksheet.cell(row=row_num, column=8, value=str(product.stock))
+        worksheet.cell(row=row_num, column=9, value=product.category.name)
+        worksheet.cell(row=row_num, column=10, value=product.brand.name)
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')

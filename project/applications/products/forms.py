@@ -96,18 +96,6 @@ class ProductForm(ValidationFormMixin):
             )
         ]
     )
-    suggested_price = forms.DecimalField(
-        label='Precio sugerido',
-        max_digits=10,
-        decimal_places=2,
-        widget=forms.NumberInput(
-            attrs={
-                'class': 'form-control price-suggested-price',
-                'placeholder' : '0.00',
-                'readonly' : True
-                }
-        )
-    )
     cost_price = forms.DecimalField(
         label='Precio de costo',
         max_digits=10,
@@ -197,7 +185,7 @@ class ProductForm(ValidationFormMixin):
     class Meta:
         model = Product
         #necesario para el front 
-        fields = ('name', 'barcode', 'cost_price', 'suggested_price', 'sale_price', 'description', 'stock', 'category', 'brand')
+        fields = ('name', 'barcode', 'cost_price', 'sale_price', 'description', 'stock', 'category', 'brand')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
