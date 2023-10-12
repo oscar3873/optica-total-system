@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    
     let typesContainer = document.getElementById('types-container');
     typesContainer.classList.add('row');
     let checkboxes = document.getElementsByName("features");
@@ -267,20 +268,45 @@ document.addEventListener('DOMContentLoaded', function() {
           }
     });
     
+    const is_armazon = document.getElementById('id_is_armazon');
     const cost_price = document.getElementById("id_cost_price");
     const suggested_price = document.getElementById("id_suggested_price");
     const sale_price = document.getElementById("id_sale_price");
 
-    cost_price.addEventListener("input", () => {
-        const costValue = parseFloat(cost_price.value);
-        let cost = (((costValue*1.26)*3).toFixed(2));
-        suggested_price.textContent = cost; // Muestra dos decimales en suggested_price
+    let packaging = 580;
+    let percentage_gral = parseFloat(1.26);
+    let multiplicador = 3;
 
-        const roundedSaleValue = roundToNearest50(cost);
-        sale_price.value = roundedSaleValue.toFixed(2); // Muestra dos decimales en sale_price
+    is_armazon.addEventListener("change", function() {
+        updatePrices();
     });
 
-    function roundToNearest50(value) {
-        return Math.ceil(value/50) * 50;
+    cost_price.addEventListener("input", function() {
+        updatePrices();
+    });
+
+    function updatePrices() {
+        const costValue = parseFloat(cost_price.value);
+
+        if (is_armazon.checked) {
+            const final_price = parseFloat(suggested_price.textContent);
+            const costWithExtra = parseFloat(final_price + packaging).toFixed(2);
+            displaySuggestedPrice(costWithExtra);
+            roundToNearest50(costWithExtra);
+        } else {
+            const cost = ((costValue * percentage_gral) * multiplicador).toFixed(2);
+            displaySuggestedPrice(cost);
+            roundToNearest50(cost);
+        }
     }
+
+    function displaySuggestedPrice(cost) {
+        suggested_price.textContent = cost;
+    }
+
+    function roundToNearest50(cost) {
+        const roundedSaleValue = Math.ceil(cost / 50) * 50;
+        sale_price.value = roundedSaleValue.toFixed(2);
+    }
+
 });

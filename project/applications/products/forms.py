@@ -176,12 +176,23 @@ class ProductForm(ValidationFormMixin):
     features = forms.ModelMultipleChoiceField(
         queryset=Feature.objects.all().order_by('type'),
         widget=forms.CheckboxSelectMultiple(
-            attrs={'class':'form-check-input',
-                'type' : 'checkbox'
+            attrs={
+                'class':'form-check-input',
                 }
         ),
         required=False,
     )
+
+    is_armazon = forms.BooleanField(
+        label="¿Armazon?",
+        required=False,
+        widget= forms.CheckboxInput(
+            attrs={
+                'class':'form-check-input form-label',
+            }
+        )
+    )
+
     class Meta:
         model = Product
         #necesario para el front 

@@ -218,8 +218,16 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             else:
                 branch = user.branch
             
+            is_armazon = form.cleaned_data.pop('is_armazon')
+            percentage = 1.26
+            multiplicador = 3
+            packaging = 580
+
             product = form.save(commit=False)
-            suggested_price = Decimal((float(product.cost_price) * 1.26) * 3)
+            suggested_price = Decimal((float(product.cost_price) * percentage) * multiplicador)
+
+            if is_armazon:
+                suggested_price = suggested_price + Decimal(packaging)
 
             sale_price = math.ceil(suggested_price / 50) * 50
             product.sale_price = sale_price
