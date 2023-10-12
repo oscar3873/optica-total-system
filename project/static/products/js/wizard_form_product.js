@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
         let typeContainer = document.createElement('div');
         typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
 
-        let typeTitle = document.createElement('h5');
-        typeTitle.classList.add('mb-0');
+        let typeTitle = document.createElement('span');
+        typeTitle.classList.add('mb-0', 'text-800', 'fw-bold');
         typeTitle.textContent = `${type}`;
 
-        // Contenedor que alinea horizontalmente el h5 y el botón
+        // Contenedor que alinea horizontalmente el span y el botón
         let textButtonContainer_unit = document.createElement('div');
         textButtonContainer_unit.classList.add('d-flex', 'align-items-center');
 
@@ -220,8 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
                         let typeContainer = document.createElement('div');
                         typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
-                        let typeTittle = document.createElement('h5');  
-                        typeTittle.classList.add('mb-0');
+                        let typeTittle = document.createElement('span');  
+                        typeTittle.classList.add('mb-0', 'text-800', 'fw-bold');
                         
                         let checkboxContainer = document.createElement('div');
                         checkboxContainer.classList.add('col-md-12', 'mx-4', 'pt-1');
