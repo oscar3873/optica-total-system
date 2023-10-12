@@ -17,11 +17,11 @@ document.addEventListener('DOMContentLoaded', function() {
         let typeContainer = document.createElement('div');
         typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
 
-        let typeTitle = document.createElement('h5');
-        typeTitle.classList.add('mb-0');
+        let typeTitle = document.createElement('label');
+        typeTitle.classList.add('mb-0','fw-bold');
         typeTitle.textContent = `${type}`;
 
-        // Contenedor que alinea horizontalmente el h5 y el botón
+        // Contenedor que alinea horizontalmente el label y el botón
         let textButtonContainer_unit = document.createElement('div');
         textButtonContainer_unit.classList.add('d-flex', 'align-items-center');
 
@@ -38,10 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Creacion del btn para agregar más caracteristicas (valores)
         let btnAdd = document.createElement('span');
         btnAdd.setAttribute('title','Agregar uno nuevo');
-        btnAdd.classList.add('fa-stack','fa-xs','ms-1','ms-sm-3');
+        btnAdd.classList.add('fa-stack','ms-1','ms-sm-0');
+        btnAdd.style.fontSize = '.6em';
         btnAdd.style.cursor = 'pointer';
-        btnAdd.innerHTML = `<svg class="svg-inline--fa fa-circle fa-w-14 fa-stack-2x text-primary" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg>
-        <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>`;
+        btnAdd.innerHTML = `<i class="fas fa-circle fa-stack-2x text-primary"></i>
+        <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>`;
         
         btnAdd.addEventListener('click', function() {
             if (!isModalOpen) {
@@ -164,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Mostrar un mensaje de error o realizar alguna acción
             var errorElement = document.getElementById("error_feature");
             errorElement.textContent = "Ambos campos deben completarse.";
-          } else {
+        } else {
             // Envía el formulario si los campos no están vacíos
             // Obtener el formulario dentro del modal personalizado
             var formData = new FormData(document.getElementById("Feature-form"));
@@ -196,10 +197,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
                         let addButton_new = document.createElement('span');
                         addButton_new.setAttribute('title','Agregar uno nuevo');
-                        addButton_new.classList.add('fa-stack','fa-xs','ms-1','ms-sm-3');
+                        btnAdd.classList.add('fa-stack','ms-1','ms-sm-0');
+                        btnAdd.style.fontSize = '.6em';
                         addButton_new.style.cursor = 'pointer';
-                        addButton_new.innerHTML = `<svg class="svg-inline--fa fa-circle fa-w-14 fa-stack-2x text-primary" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg>
-                        <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>`;
+                        addButton_new.innerHTML = `<i class="fas fa-circle fa-stack-2x text-primary"></i>
+                        <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>`;
     
                         addButton_new.addEventListener('click', function() {
                             // Actualiza el título del modal con el tipo correspondiente
@@ -223,8 +225,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
                         let typeContainer = document.createElement('div');
                         typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
-                        let typeTittle = document.createElement('h5');  
-                        typeTittle.classList.add('mb-0');
+                        let typeTittle = document.createElement('label');  
+                        typeTittle.classList.add('mb-0','fw-bold');
                         
                         let checkboxContainer = document.createElement('div');
                         checkboxContainer.classList.add('col-md-12', 'mx-4', 'pt-1');
