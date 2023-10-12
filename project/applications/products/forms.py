@@ -187,19 +187,23 @@ class ProductForm(ValidationFormMixin):
         #necesario para el front 
         fields = ('name', 'barcode', 'cost_price', 'sale_price', 'description', 'stock', 'category', 'brand')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, branch=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.branch = branch
         
         if self.instance.pk:
             related_features = self.instance.product_feature.values_list('feature__id', flat=True)
             self.fields['features'].initial = related_features
     
-    def clean_suggested_price(self):
-        price = self.cleaned_data.get('suggested_price')
-        if price is not None and price < Decimal('0.00'):
-            raise forms.ValidationError('El precio no puede ser un número negativo.')
-        return price
-    
+    def clean_barcode(self):
+        barcode = self.cleaned_data['barcode']
+        try:
+            Product.objects.get(barcode=barcode, branch=self.branch)
+            raise forms.ValidationError('El codigo ingresado ya existe en la surcursal.')
+        except Product.DoesNotExist:
+            pass
+        return barcode
+
     def clean_sale_price(self):
         price = self.cleaned_data.get('sale_price')
         if price is not None and price < Decimal('0.00'):

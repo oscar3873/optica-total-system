@@ -1,9 +1,8 @@
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
-from django.views import View
 from django.views.decorators.http import require_GET
 from django.views.generic import (
     FormView,
@@ -180,6 +179,9 @@ class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARA
 
 #################### FORMULARIO WIZARD #####################
 class ProductCreateView(CustomUserPassesTestMixin, FormView):
+    """
+    Vista para crear un producto completo, con caracteristicas.
+    """
     form_class = ProductForm
     template_name = 'products/wizard_create_product.html'
     success_url = reverse_lazy('products_app:product_list')
@@ -189,9 +191,21 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         context['category_form'] = CategoryForm
         context['brand_form'] = BrandForm
         context['feature_form'] = FeatureForm_toWizard
-        # context['named_formsets'] = FeatureFormSet(prefix='variants')
         return context
     
+    def get_form_kwargs(self):
+        user = self.request.user
+        branch_actualy = self.request.session.get('branch_actualy')
+        if user.is_staff and branch_actualy:
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            branch = branch_actualy
+        else:
+            branch = user.branch
+
+        kwargs = super().get_form_kwargs()
+        kwargs['branch'] = branch
+        return kwargs
+
     @transaction.atomic
     def form_valid(self, form):
         user = self.request.user
@@ -242,7 +256,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
 
 class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
     """
-    Crear o actualizar un producto
+    Vista para Actualizar un producto.
     """
     model = Product
     form_class = ProductForm
@@ -250,7 +264,6 @@ class ProductUpdateView(CustomUserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['named_formsets'] = FeatureFormSet(prefix='variants')
         context['category_form'] = CategoryForm(instance=self.object.category)
         context['brand_form'] = BrandForm(instance=self.object.brand)
         context['feature_form'] = FeatureForm_toWizard
@@ -484,8 +497,8 @@ class ProductSearchView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy')
+        if user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             branch = branch_actualy
         else:
@@ -526,8 +539,6 @@ class ProductSearchView(ListView):
 
 
 #################### Actualizar Precio ###############
-
-from django.views.decorators.http import require_GET
 
 class UpdatePriceView(CustomUserPassesTestMixin, FormView):
     template_name = 'products/update_price_advanced.html'
@@ -639,12 +650,11 @@ def export_products_list_to_excel(request):
         worksheet.cell(row=row_num, column=2, value=product.name)
         worksheet.cell(row=row_num, column=3, value=str(product.barcode))
         worksheet.cell(row=row_num, column=4, value=str(product.cost_price))
-        worksheet.cell(row=row_num, column=5, value=str(product.suggested_price))
-        worksheet.cell(row=row_num, column=6, value=str(product.sale_price))
-        worksheet.cell(row=row_num, column=7, value=product.description)
-        worksheet.cell(row=row_num, column=8, value=str(product.stock))
-        worksheet.cell(row=row_num, column=9, value=product.category.name)
-        worksheet.cell(row=row_num, column=10, value=product.brand.name)
+        worksheet.cell(row=row_num, column=5, value=str(product.sale_price))
+        worksheet.cell(row=row_num, column=6, value=product.description)
+        worksheet.cell(row=row_num, column=7, value=str(product.stock))
+        worksheet.cell(row=row_num, column=8, value=product.category.name)
+        worksheet.cell(row=row_num, column=9, value=product.brand.name)
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -658,8 +668,6 @@ def export_products_list_to_excel(request):
 ################ SEARCH PRODUCTS AJAX ################
 
 def ajax_search_products(request):
-    from django.db.models import Q
-
     branch = request.user.branch
 
     branch_actualy = request.session.get('branch_actualy')
