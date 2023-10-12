@@ -30,7 +30,7 @@
           <div class="row pb-md-0">
               <div class="col-12 col-sm-6">
                 <h5 class="mb-2"> {{product.name}}</h5>
-                <h6>{{product.description}}</h6>
+                <p class="text-700 fs--2">{{product.description}}</p>
               </div>
           </div>
           <div class="row mt-2">
@@ -61,21 +61,21 @@
                           <h5 class="mb-3">Datos del producto</h5>
                       </div>
                       <div class="col-12 d-flex justify-content-between">
-                          <p class="fw-normal fw-semi-bold mb-1">Código de barras:</p>
-                          <span class="ms-3 text-800 fw-bold">{{product.barcode}}</span>
+                          <p class="fw-normal fw-semi-bold mb-1">Código:</p>
+                          <span class="ms-3 text-900 fw-bold">{{product.barcode}}</span>
                       </div>
                       {% if request.user.is_staff %}
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                           <p class="fw-normal fw-semi-bold mb-1">Precio de compra:</p>
-                          <span class="ms-3 text-800 fw-bold">${{product.cost_price}}</span>
+                          <span class="ms-3 text-900 fw-bold">${{product.cost_price}}</span>
                       </div>
                       {% endif %}
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                           <p class="fw-normal fw-semi-bold mb-1">Precio de venta:</p>
-                          <span class="ms-3 text-800 fw-bold">${{product.sale_price}}</span>
+                          <span class="ms-3 text-primary fw-bold">${{product.sale_price}}</span>
                       </div>
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
-                        <p class="fw-normal fw-semi-bold mb-1">Stock:</p>
+                        <p class="fw-normal fw-semi-bold mb-1">Cantidad:</p>
                         <span class="ms-3 text-800 fw-bold">{{product.stock}}</span>
                       </div>
                       {% if request.user.is_staff %}
@@ -108,7 +108,7 @@
                         <p class="fw-normal fw-semi-bold mb-1">{{feature}}:</p>
                           {% for object in objects %}
                           <div class="col-12">
-                            <span class="ms-1 text-800 fw-bold d-inline-block">• {{object}}</span>
+                            <span class="ms-1 text-800 fw-bold d-inline-block"><span class="text-primary">•</span> {{object}}</span>
                           </div>
                           {% endfor %}
                       </div>
