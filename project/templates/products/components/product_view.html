@@ -33,10 +33,10 @@
                 <h6>{{product.description}}</h6>
               </div>
           </div>
-          <!-- <div class="row mt-2">
+          <div class="row mt-2">
               <div class="col">
                   {% if request.user.is_staff %}
-                  <a class="btn btn-falcon-default btn-sm" href="#">
+                  <a class="btn btn-falcon-default btn-sm" href="{% url 'products_app:new_product' %}">
                       <span class="fas fa-plus fs--2 me-1"></span>
                       Nuevo Producto
                   </a>
@@ -45,13 +45,13 @@
                       <span class="fas fa-ellipsis-h"></span>
                   </button>
                   <div class="dropdown-menu">
-                      <a class="dropdown-item" href="#">Editar</a>
+                      <a class="dropdown-item" href="{% url 'products_app:update_product' product.id %}">Editar</a>
                       <div class="dropdown-divider"></div>
-                      <a class="dropdown-item text-danger" href="#">Borrar</a>
+                      <a class="dropdown-item text-danger" href="{% url 'products_app:product_delete' product.id %}">Eliminar</a>
                   </div>
                   {% endif %}
               </div>
-          </div> -->
+          </div>
       </div>
       <div class="card-body border-top">            
           <div class="row">
