@@ -1,10 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
     const searchContainer = document.getElementById('search-contains');
-
+    
     const searchInput = document.getElementById('search_term');
     const findResults = document.getElementById("search-results");
     const percentageContainer = document.getElementById('id_percentage');
     const selectedItemsList = []; 
+    const containerSelected = document.getElementById('selected-items-container');
+    const containerSentData = document.getElementById('sentdata-container');
 
     searchInput.addEventListener('input', () => {
         const searchTerm = searchInput.value;
@@ -28,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     checkBtn.data = `${result.name}`;
                     checkBtn.value = result.id;
                     checkBtn.name = result.form_name;
+                    checkBtn.classList.add('form-check-input');
 
                     const isSelected = selectedItemsList.some(item => item.data === checkBtn.data);
                     checkBtn.checked = isSelected;
@@ -53,6 +56,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             });
 
                             if (selectedItemsList.length === 0) {
+                                containerSelected.classList.add('d-none');
+                                containerSentData.classList.add('d-none');
                                 percentageContainer.disabled = true;
                                 percentageContainer.value = '';
                             }
@@ -62,12 +67,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     var label = document.createElement("label");
                     label.textContent = result.name;
                     label.htmlFor = result.name;
+                    label.classList.add('d-block');
 
                     var searchResults = document.getElementById("search-results");
-
-                    searchResults.appendChild(checkBtn);
+                    label.appendChild(checkBtn);
                     searchResults.appendChild(label);
-                    searchResults.appendChild(document.createElement("br"));
                 });
 
             },
@@ -78,7 +82,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function updateSelectedItemsList() {
+        containerSelected.classList.remove('d-none');
+        containerSentData.classList.remove('d-none');
         const selectedItemsContainer = document.getElementById('selected-items-list');
+        
         selectedItemsContainer.innerHTML = ""; 
 
         selectedItemsList.forEach((item) => {
@@ -88,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
             checkBtn.value = item.value;
             checkBtn.data = item.data;
             checkBtn.name = item.name;
+            checkBtn.classList.add('form-check-input');
 
             checkBtn.addEventListener('change', (event) => {
                 const check = event.target;
@@ -109,16 +117,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
 
                     if (selectedItemsList.length === 0) {
+                        containerSelected.classList.add('d-none');
+                        containerSentData.classList.add('d-none');
                         percentageContainer.disabled = true;
                         percentageContainer.value = '';
                     }
                 }
             });
 
-            selectedItemsContainer.appendChild(checkBtn);
 
             const label = document.createElement('label');
             label.textContent = item.data;
+            label.classList.add('d-block');
+            label.appendChild(checkBtn);
             selectedItemsContainer.appendChild(label);
         });
     }
