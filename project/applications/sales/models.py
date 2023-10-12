@@ -5,6 +5,7 @@ from django_timestamps.timestamps import TimestampsModel
 from applications.clients.models import Customer
 from applications.products.models import Product
 from applications.core.models import BaseAbstractWithUser
+from applications.branches.models import Branch
 
 # Create your models here.
 
@@ -83,6 +84,7 @@ class OrderDetail(BaseAbstractWithUser):
     sell = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='order_detaill', null=True, verbose_name='Venta')
     quantity = models.IntegerField(blank=False, null=False, verbose_name='Cantidad')
     price = models.FloatField(null=False, blank=False, verbose_name='Subtotal')
+    discount = models.FloatField(verbose_name='Descuento', blank=True, null=True)
 
     def __str__(self) -> str:
         return (f'Orden de venta: {self.sell}\n' +
@@ -90,3 +92,20 @@ class OrderDetail(BaseAbstractWithUser):
                 f'Cantidad: {self.quantity}\n' +
                 f'Total: $ {self.product.sale_price * self.quantity}'
                 )
+        
+class Promotion(BaseAbstractWithUser):
+    """
+    Clase para Promociones
+        guarda datos generales de una promocion
+    """
+    name = models.CharField(max_length=100, verbose_name='Nombre')
+    description = models.TextField(verbose_name='Descripcion')
+    start_date = models.DateField(verbose_name='Inicio')
+    end_date = models.DateField(verbose_name='Fin')
+    discount = models.PositiveIntegerField(verbose_name='Descuento')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Producto')
+    is_active = models.BooleanField(default=True, blank=True, verbose_name='Activo')
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
+
+    def __str__(self) -> str:
+        return f'{self.name}\n{self.description}\nDescuento: {self.discount}%'
