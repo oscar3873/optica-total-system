@@ -25,7 +25,7 @@
     <!-- ===============================================-->
 
   {% if product %}
-    <div class="card mb-3">
+    <div class="card mb-3 col-sm-10 col-lg-8">
       <div class="card-header">
           <div class="row pb-md-0">
               <div class="col-12 col-sm-6">
@@ -55,56 +55,62 @@
       </div>
       <div class="card-body border-top">            
           <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-6 mb-3 mb-sm-0">
                   <div class="row">
                       <div class="col-12">
                           <h5 class="mb-3">Datos del producto</h5>
                       </div>
-                      <div class="col-12 d-flex justify-content-sm-start justify-content-between">
-                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Código de barras:</p>
+                      <div class="col-12 d-flex justify-content-between">
+                          <p class="fw-normal fw-semi-bold mb-1">Código de barras:</p>
                           <span class="ms-3 text-800 fw-bold">{{product.barcode}}</span>
                       </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Stock:</p>
-                          <span class="ms-3 text-800 fw-bold">{{product.stock}}</span>
-                      </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio de compra:</p>
+                      {% if request.user.is_staff %}
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                          <p class="fw-normal fw-semi-bold mb-1">Precio de compra:</p>
                           <span class="ms-3 text-800 fw-bold">${{product.cost_price}}</span>
                       </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                          <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Precio de venta:</p>
+                      {% endif %}
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                          <p class="fw-normal fw-semi-bold mb-1">Precio de venta:</p>
                           <span class="ms-3 text-800 fw-bold">${{product.sale_price}}</span>
                       </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                        <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Categoría:</p>
-                        <span class="ms-3 text-800 fw-bold">{{product.category}}</span>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                        <p class="fw-normal fw-semi-bold mb-1">Stock:</p>
+                        <span class="ms-3 text-800 fw-bold">{{product.stock}}</span>
                       </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                        <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Marca:</p>
+                      {% if request.user.is_staff %}
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                        <p class="fw-normal fw-semi-bold mb-1">Marca:</p>
                         <span class="ms-3 text-800 fw-bold">{{product.brand}}</span>
                       </div>
-                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
-                        <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Proveedor:</p>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                        <p class="fw-normal fw-semi-bold mb-1">Categoría:</p>
+                        <span class="ms-3 text-800 fw-bold">{{product.category}}</span>
+                      </div>
+                      <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                        <p class="fw-normal fw-semi-bold mb-1">Proveedor:</p>
                         <span class="ms-3 text-800 fw-bold">El drogao de la esquina</span>
                       </div>
-                      
+                      {% endif %}
+
                   </div>
               </div>
-              <div class="col-lg-6">
-                <div class="row">
-
+              <div class="col-lg-6 ps-sm-4 pt-2 pt-sm-0 border-top border-sm-0">
+                <div class="row mt-3 mt-sm-0">
                   <div class="col-12">
-                      <h5 class="mb-3">Caracteristicas</h5>
+                      <h5 class="mb-0">Caracteristicas</h5>
                   </div>
                   {% if features.items %}
-                  <div class="col-12 sm-text-start sm-ps-2">
+                  <div class="col-12 sm-text-start">
                     <div class="row">
                       {% for feature, objects in features.items %}
-                      <div class="col-6 col-sm-5 py-sm-2 d-flex">
+                      <div class="col-6 d-inline pt-3">
                         <p class="fw-normal fw-semi-bold mb-1">{{feature}}:</p>
-                        <span class="ms-3 text-800 fw-bold">{% for object in objects %}{{object}} {% endfor %}</span>
-                        
+                          {% for object in objects %}
+                          <div class="col-12">
+                            <span class="ms-1 text-800 fw-bold d-inline-block">• {{object}}</span>
+                          </div>
+                          {% endfor %}
                       </div>
                       {% endfor %}
                     </div>
@@ -127,7 +133,6 @@
           <div class="bg-holder d-none d-md-block bg-card z-index-1"
             style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
           </div>
-          <!--/.bg-holder-->
           <div class="position-relative z-index-2">
             <div>
               <h3 class="text-primary mb-1">No hay un producto</h3>
