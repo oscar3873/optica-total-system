@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     for (let type of typeSet) {
         // Contenedor del tipo
         let typeContainer = document.createElement('div');
-        typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
+        typeContainer.classList.add('col-12','col-sm-6', 'col-md-3', 'pt-2');
 
         let typeTitle = document.createElement('label');
         typeTitle.classList.add('mb-0','fw-bold');
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
     
                         let typeContainer = document.createElement('div');
-                        typeContainer.classList.add('col-6', 'col-md-3', 'pt-2');
+                        typeContainer.classList.add('col-12','col-sm-6', 'col-md-3', 'pt-2');
                         let typeTittle = document.createElement('label');  
                         typeTittle.classList.add('mb-0','fw-bold');
                         
