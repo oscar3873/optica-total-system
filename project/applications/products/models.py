@@ -29,7 +29,7 @@ class Product(BaseAbstractWithUser):
     """
     Clase para Productos
         almacena datos necesarios para el manejo de productos
-            
+        
     """
     name = models.CharField(max_length=50, blank=False, null=False, verbose_name="Nombre")
     barcode = models.PositiveBigIntegerField(verbose_name='Codigo', null=True)
@@ -92,7 +92,7 @@ class Product_feature(BaseAbstractWithUser):
     Clase Intermedia para las caracteristicas nuevas del producto
     """
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Producto')
-    feature = models.ForeignKey(Feature, on_delete=models.PROTECT, related_name='product_feature', verbose_name='Caracteristica')
+    feature = models.ForeignKey(Feature, on_delete=models.PROTECT, related_name='features_of_product', verbose_name='Caracteristica')
 
     def __str__(self) -> str:
         return f'Producto: {self.product} | Caracteristica: {self.feature}'
