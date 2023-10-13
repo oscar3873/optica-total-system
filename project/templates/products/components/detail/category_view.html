@@ -1,84 +1,94 @@
 {% load static %}
 {% load humanize %}
 <!-- ===============================================-->
-<!--    Contentenedor del block main-->
+<!--    Contenedor del bloque principal-->
 <!-- ===============================================-->
 
 <div class="container py-4">
 
   <!-- ===============================================-->
-  <!--    Errores de Sistema (Backend)-->
+  <!--    Errores del sistema (Backend)-->
   <!-- ===============================================-->
 
   {% include 'core/components/messages.html' %}
 
   <!-- ===============================================-->
-  <!--    Fin Errores de Sistema (Backend)-->
+  <!--    Fin Errores del sistema (Backend)-->
   <!-- ===============================================-->
 
-
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!-- Titulo del formulario wizard -->
-    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
-          class="fa-inverse fa-stack-1x text-primary fab fa-dropbox"></i></span>
+    <!-- Título del formulario wizard -->
+    <div class="d-flex mb-4">
+      <span class="fa-stack me-2 ms-n1">
+        <i class="fas fa-circle fa-stack-2x text-300"></i>
+        <i class="fa-inverse fa-stack-1x text-primary fab fa-dropbox"></i>
+      </span>
       <div class="col">
-        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Categoria</span><span
-            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-        <p class="mb-0">Aqui puede vizualizar una categoria</p>
+        <h5 class="mb-0 text-primary position-relative">
+          <span class="bg-200 dark__bg-1100 pe-3">Categoría</span>
+          <span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span>
+        </h5>
+        <p class="mb-0">Aquí puede visualizar el detalle completo de una categoría</p>
       </div>
     </div>
   </div>
 
-
   <!-- ===============================================-->
-  <!--    Card con la presentacion de la caja-->
+  <!--    Card con la presentación de la categoría-->
   <!-- ===============================================-->
 
   {% if category %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!--Card-->
-    <div class="card bg-transparent-50 overflow-hidden">
-      <div class="card-header position-relative">
-        <div class="bg-holder d-none d-md-block bg-card z-index-1"
-          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+    <div class="card mb-3 col-sm-10 col-lg-8">
+      <div class="card-header bg-light">
+        <div class="row pb-md-0">
+          <div class="col-12 col-sm-6">
+            <h5 class="mb-2">{{category.name}}</h5>
+            <p class="text-700 fs--2">{{category.user_made}}</p>
+          </div>
         </div>
-        <!--/.bg-holder-->
-
-        <div class="position-relative z-index-2">
-          <div>
-            <p class="fs--2 mb-0">{{category.name}} </p>
-            <p class="fs--2 mb-0">{{category.user_made}} </p>
-            {% if products  %}
-                <p>Productos que usan esta categoria:</p>
-                {%for product in products%}
-                <p class="fs--2 mb-0">{{product}} </p>
-                {% endfor %}
-            {% else %}
-                
-                <p>No hay productos relacionados con esta categoria</p>
+        <div class="row mt-2">
+          <div class="col">
+            {% if category %}
+            <a class="btn btn-falcon-default btn-sm" href="{% url 'products_app:new_product' %}">
+              <span class="fas fa-plus fs--2 me-1"></span>
+              Nueva Categoría
+            </a>
+            <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="fas fa-ellipsis-h"></span>
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'products_app:update_category' pk=category.pk %}">Editar</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item text-danger" href="{% url 'products_app:category_delete' pk=category.pk %}">Eliminar</a>
+            </div>
             {% endif %}
-
-          </div>
-
-          
-
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="d-flex pb-3 justify-content-between align-items-center">
-          <div class="lottie me-3" data-options=''>
           </div>
         </div>
       </div>
-      <div class="card-footer">
-        <div class="btn-group " role="group" aria-label="Botones">
-          <a class="btn btn-primary d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:update_category' pk=category.pk %}" >Editar</a>
-          <a class="btn btn-danger d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:category_delete' pk=category.pk %}" >Eliminar</a>
+      <div class="card-body border-top">            
+        <div class="row">
+          <div class="col-lg-6 mb-3 mb-sm-0">
+            <div class="row">
+              <div class="col-12">
+                <h5 class="mb-3">Datos de la categoría</h5>
+              </div>
+              <div class="col-12 d-flex justify-content-between">
+                <p class="fw-normal fw-semi-bold mb-1">Nombre:</p>
+                <span class="ms-3 text-800 fw-bold">{{category.name}}</span>
+              </div>
+              <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                <p class="fw-normal fw-semi-bold mb-1">Creado por:</p>
+                <span class="ms-3 text-800 fw-bold">{{category.user_made}}</span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </div>      
     </div>
   </div>
-
   {% else %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!--Card-->
@@ -91,28 +101,24 @@
 
         <div class="position-relative z-index-2">
           <div>
-            <h3 class="text-primary mb-1">No hay una categoria</h3>
+            <h3 class="text-primary mb-1">No hay una categoría</h3>
           </div>
           <div class="d-flex py-3">
           </div>
         </div>
       </div>
       <div class="card-footer">
-        <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:new_category' %}">Nueva categoria</a>
-      </div>
+        <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded" href="{% url 'products_app:new_category' %}">Nueva categoría</a>
       </div>
     </div>
   </div>
-</div>
-{% endif %}
-
-
-<!-- ===============================================-->
-<!--   Fin Card con la presentacion de la caja-->
-<!-- ===============================================-->
-
+  {% endif %}
 </div>
 
 <!-- ===============================================-->
-<!--    Fin Contentenedor del block main-->
+<!--   Fin Card con la presentación de la categoría-->
+<!-- ===============================================-->
+
+<!-- ===============================================-->
+<!--    Fin Contenedor del bloque principal-->
 <!-- ===============================================-->

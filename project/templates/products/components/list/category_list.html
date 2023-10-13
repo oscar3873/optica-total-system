@@ -24,7 +24,7 @@
       <div class="col">
         <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Categorias</span><span
             class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-        <p class="mb-0">Aquí puede vizualizar todas las categorias</p>          
+        <p class="mb-0">Aquí puede visualizar todas las categorias</p>          
       </div>
     </div>
   </div>
@@ -61,8 +61,6 @@
             </div>
             <div id="table-purchases-replace-element">
               <a href="{% url 'products_app:new_category' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nueva Categoria</span></a>
-              <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filtros</span></button>
-              <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></button>
             </div>
           </div>
         </div>
@@ -74,15 +72,10 @@
             <!-- HEAD TABLA -->
             <thead class="bg-200 text-900">
               <tr>
-                <th class="white-space-nowrap">
-                  <div class="form-check mb-0 d-flex align-items-center">
-                    <input class="form-check-input" id="checkbox-bulk-purchases-select" type="checkbox" data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
-                  </div>
-                </th>
                 {% for column in table_column %}
                 <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
               {% endfor %}
-                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+                <th class="no-sort pe-1 align-middle data-table-row-action">Acciones</th>
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -90,11 +83,6 @@
               
               {% for category in categories %}
               <tr class="btn-reveal-trigger">
-                <td class="align-middle" style="width: 28px;">
-                  <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="recent-purchase-0" data-bulk-select-row="data-bulk-select-row" />
-                  </div>
-                </td>
                 <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
                 <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
                 <!-- <td class="align-middle white-space-nowrap category">Slick - Drag &amp;</td> -->
@@ -103,7 +91,7 @@
                 <td class="align-start user_made">{{category.user_made}}</td>
                 <td class="align-start name">{{category.name}}</td>
                 <td class="align-middle white-space-nowrap text-end">
-                  <div class="dropstart font-sans-serif position-static d-inline-block">
+                  <div class="dropstart font-sans-serif position-static d-inline-block d-flex">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span></button>
                     <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
 											
@@ -131,12 +119,11 @@
         <div class="row align-items-center">
           <div class="pagination d-none"></div>
           <div class="col">
-            <p class="mb-0 fs--1"><span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info"> </span><span class="d-none d-sm-inline-block me-2">&mdash;  </span><a class="fw-semi-bold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a><a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a>
-            </p>
+            
           </div>
           <div class="col-auto d-flex">
-            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Previous</span></button>
-            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Next</span></button>
+            <button class="btn btn-sm btn-primary" type="button" data-list-pagination="prev"><span>Anterior</span></button>
+            <button class="btn btn-sm btn-primary px-4 ms-2" type="button" data-list-pagination="next"><span>Siguiente</span></button>
           </div>
         </div>
       </div>
