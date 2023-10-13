@@ -183,7 +183,7 @@ class ProductForm(ValidationFormMixin):
         required=False,
     )
 
-    is_armazon = forms.BooleanField(
+    has_eyeglass_frames = forms.BooleanField(
         label="¿Armazon?",
         required=False,
         widget= forms.CheckboxInput(
@@ -196,7 +196,7 @@ class ProductForm(ValidationFormMixin):
     class Meta:
         model = Product
         #necesario para el front 
-        fields = ('name', 'barcode', 'cost_price', 'sale_price', 'description', 'stock', 'category', 'brand')
+        fields = ('name', 'barcode', 'cost_price', 'sale_price', 'description', 'stock', 'category', 'brand', 'has_eyeglass_frames')
 
     def __init__(self, branch=None, *args, **kwargs):
         super().__init__(*args, **kwargs)

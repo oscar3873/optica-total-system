@@ -56,20 +56,7 @@ class Sale(BaseAbstractWithUser):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
-
-
-# class PaymentMethod_Sale(BaseAbstractWithUser):
-#     """
-#     Clase interemedia de Metodos de pago y Ventas
-#         (-sale, -payment): almacena las PK de Metodo de pago y de la Venta
-#         -amount: monto del metodo de pago
-#     """
-#     sale = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='paymentmethod_sale')
-#     payment = models.ForeignKey(PaymentMethod, on_delete=models.PROTECT, related_name='paymentmethod_sale')
-#     amount = models.DecimalField(max_digits=10, decimal_places=2)
-
-#     def __str__(self) -> str:
-#         return f'Venta: {self.sale}\n{self.payment}\nMonto: {self.amount}'
+    discount = models.PositiveIntegerField(verbose_name='Descuento',  null=True, blank=True)
 
 
 class OrderDetail(BaseAbstractWithUser):
@@ -81,13 +68,13 @@ class OrderDetail(BaseAbstractWithUser):
         -price: costo total (precio * cantidad)
     """
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='order_detaill', null=True, verbose_name='Producto')
-    sell = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='order_detaill', null=True, verbose_name='Venta')
+    sale = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='order_detaill', null=True, verbose_name='Venta')
     quantity = models.IntegerField(blank=False, null=False, verbose_name='Cantidad')
     price = models.FloatField(null=False, blank=False, verbose_name='Subtotal')
     discount = models.FloatField(verbose_name='Descuento', blank=True, null=True)
 
     def __str__(self) -> str:
-        return (f'Orden de venta: {self.sell}\n' +
+        return (f'Orden de venta: {self.sale}\n' +
                 f'Producto: {self.product}\n' +
                 f'Cantidad: {self.quantity}\n' +
                 f'Total: $ {self.product.sale_price * self.quantity}'
@@ -103,7 +90,7 @@ class Promotion(BaseAbstractWithUser):
     start_date = models.DateField(verbose_name='Inicio')
     end_date = models.DateField(verbose_name='Fin')
     discount = models.PositiveIntegerField(verbose_name='Descuento')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Producto')
+    # product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Producto')
     is_active = models.BooleanField(default=True, blank=True, verbose_name='Activo')
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
 

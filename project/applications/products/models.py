@@ -41,6 +41,9 @@ class Product(BaseAbstractWithUser):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category',verbose_name="Categoria")
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand',verbose_name="Marca")
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch',verbose_name="Sucursal")
+    promotion = models.ForeignKey('sales.Promotion', on_delete=models.PROTECT, null=True, blank=True, related_name="product_promotion", verbose_name="Promoción")
+
+    has_eyeglass_frames = models.BooleanField(default=False, verbose_name="Armazón") 
 
     objects = ProductManager()
 

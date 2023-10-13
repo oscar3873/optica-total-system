@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
     });
     
-    const is_armazon = document.getElementById('id_is_armazon');
+    const is_armazon = document.getElementById('id_has_eyeglass_frames');
     const cost_price = document.getElementById("id_cost_price");
     const suggested_price = document.getElementById("id_suggested_price");
     const sale_price = document.getElementById("id_sale_price");
@@ -317,5 +317,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const roundedSaleValue = Math.ceil(cost / 50) * 50;
         sale_price.value = roundedSaleValue.toFixed(2);
     }
+
+    // if (cost_price){
+    //     updatePrices();
+    // }
 
 });

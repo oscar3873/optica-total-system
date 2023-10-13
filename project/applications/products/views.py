@@ -215,7 +215,6 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             else:
                 branch = user.branch
             
-            is_armazon = form.cleaned_data.pop('is_armazon')
             percentage = 1.26
             multiplicador = 3
             packaging = 580
@@ -223,7 +222,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             product = form.save(commit=False)
             suggested_price = Decimal((float(product.cost_price) * percentage) * multiplicador)
 
-            if is_armazon:
+            if product.is_armazon:
                 suggested_price = suggested_price + Decimal(packaging)
 
             sale_price = math.ceil(suggested_price / 50) * 50
@@ -356,7 +355,7 @@ class ProductListView(LoginRequiredMixin, ListView):
         pk=self.request.user.pk
         context = super().get_context_data(**kwargs)
         
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price", "user_made", "branch"]
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price", "user_made", "branch", "has_eyeglass_frames", "promotion"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
         context['features']=Product_feature.objects.filter(product_id=pk)
         return context
@@ -627,11 +626,12 @@ def export_products_list_to_excel(request):
     header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
 
     # Definir los encabezados de las columnas
-    exclude_fields_user = ["deleted_at", "updated_at", "id", "branch", "user_made"]
+    exclude_fields_user = ["deleted_at", "updated_at", "id", "branch", "user_made", "has_eyeglass_frames", "promotion"]
     headers = [campo[1] for campo in obtener_nombres_de_campos(Product, *exclude_fields_user)]
 
     if 'created at' in headers:
         index = headers.index('created at')
+        headers[index] = "Fecha de registro"
     # Aplicar estilos a los encabezados y escribir los encabezados
     for col_num, header in enumerate(headers, 1):
         cell = worksheet.cell(row=1, column=col_num, value=header)
