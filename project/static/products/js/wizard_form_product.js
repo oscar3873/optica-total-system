@@ -118,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function() {
             success: function(data) {
                 if (data.status === 'success') {
                     let idValueInput = modalForm.find('#id_value');
-                    console.log(idValueInput[0]);
                     // Obtén el tipo correspondiente
                     let type = data.new_feature_unit.type; // Asegúrate de tener este valor en los datos de la respuesta AJAX
     
@@ -263,7 +262,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         typesContainer.appendChild(typeContainer);
                         
                         closeModal(); // Cerrar el modal después de agregar el nuevo tipo
-                        console.log(typeInput);
                         typeInput.value = '';
                         valueInput.value = '';
                     } else {
@@ -297,8 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const costValue = parseFloat(cost_price.value);
         if (costValue){
             if (is_armazon.checked) {
-                const final_price = parseFloat(suggested_price.textContent);
-                const costWithExtra = parseFloat(final_price + packaging).toFixed(2);
+                const costWithExtra = parseFloat(((costValue * percentage_gral) * multiplicador) + packaging).toFixed(2);
                 displaySuggestedPrice(costWithExtra);
                 roundToNearest50(costWithExtra);
             } else {
