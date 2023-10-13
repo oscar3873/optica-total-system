@@ -26,7 +26,7 @@
 
   {% if product %}
     <div class="card mb-3 col-sm-10 col-lg-8">
-      <div class="card-header">
+      <div class="card-header bg-light">
           <div class="row pb-md-0">
               <div class="col-12 col-sm-6">
                 <h5 class="mb-2"> {{product.name}}</h5>
@@ -76,7 +76,15 @@
                       </div>
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                         <p class="fw-normal fw-semi-bold mb-1">Cantidad:</p>
-                        <span class="ms-3 text-800 fw-bold">{{product.stock}}</span>
+                        {% if product.stock > 5 %}
+                        <span class="ms-3 text-success fw-bold">{{product.stock}}</span>
+                        {% else %}
+                          {% if product.stock <= 5  and product.stock > 3 %}
+                            <span class="ms-3 text-warning fw-bold">{{product.stock}}</span>
+                          {% else %}
+                            <span class="ms-3 text-danger fw-bold">{{product.stock}}</span>                       
+                          {% endif %}
+                        {% endif %}
                       </div>
                       {% if request.user.is_staff %}
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
