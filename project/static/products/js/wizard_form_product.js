@@ -295,21 +295,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePrices() {
         const costValue = parseFloat(cost_price.value);
-
-        if (is_armazon.checked) {
-            const final_price = parseFloat(suggested_price.textContent);
-            const costWithExtra = parseFloat(final_price + packaging).toFixed(2);
-            displaySuggestedPrice(costWithExtra);
-            roundToNearest50(costWithExtra);
-        } else {
-            const cost = ((costValue * percentage_gral) * multiplicador).toFixed(2);
-            displaySuggestedPrice(cost);
-            roundToNearest50(cost);
+        if (costValue){
+            if (is_armazon.checked) {
+                const final_price = parseFloat(suggested_price.textContent);
+                const costWithExtra = parseFloat(final_price + packaging).toFixed(2);
+                displaySuggestedPrice(costWithExtra);
+                roundToNearest50(costWithExtra);
+            } else {
+                const cost = ((costValue * percentage_gral) * multiplicador).toFixed(2);
+                displaySuggestedPrice(cost);
+                roundToNearest50(cost);
+            }
+        } else{
+            suggested_price.textContent = "$ 0.00";
+            sale_price.value = '';
         }
     }
 
     function displaySuggestedPrice(cost) {
-        suggested_price.textContent = cost;
+        suggested_price.textContent = `$ ${cost}`;
     }
 
     function roundToNearest50(cost) {
