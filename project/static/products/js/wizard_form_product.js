@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var cantidad_unit = uniqueCheckboxIDs.size;
         // Obtener el formulario dentro del modal
         let modalForm = $('#Feature-unit-form');
-    
+
         // Obtener los datos del formulario
         let formData = new FormData(modalForm[0]);
     
@@ -117,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
             contentType: false,
             success: function(data) {
                 if (data.status === 'success') {
+                    let idValueInput = modalForm.find('#id_value');
+                    console.log(idValueInput[0]);
                     // Obtén el tipo correspondiente
                     let type = data.new_feature_unit.type; // Asegúrate de tener este valor en los datos de la respuesta AJAX
     
@@ -143,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Cierra el modal
                     $('#Feature-unit-modal').modal('hide');
+                    idValueInput[0].value= '';
                 } else {
                     // Manejar errores si es necesario
                 }
@@ -198,8 +201,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
                         let addButton_new = document.createElement('span');
                         addButton_new.setAttribute('title','Agregar uno nuevo');
-                        btnAdd.classList.add('fa-stack','ms-1','ms-sm-0');
-                        btnAdd.style.fontSize = '.6em';
+                        addButton_new.classList.add('fa-stack','ms-1','ms-sm-0');
+                        addButton_new.style.fontSize = '.6em';
                         addButton_new.style.cursor = 'pointer';
                         addButton_new.innerHTML = `<i class="fas fa-circle fa-stack-2x text-primary"></i>
                         <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>`;
@@ -258,8 +261,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         typeContainer.appendChild(textButtonContainer);
                         typeContainer.appendChild(checkboxContainer);
                         typesContainer.appendChild(typeContainer);
-            
+                        
                         closeModal(); // Cerrar el modal después de agregar el nuevo tipo
+                        console.log(typeInput);
+                        typeInput.value = '';
+                        valueInput.value = '';
                     } else {
                         errorMessage.className = "text-danger text-center";
                         errorMessage.style.fontSize = "0.8rem";

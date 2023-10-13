@@ -104,13 +104,10 @@ class FeatureFullCreateView(FormView):
 
     def form_valid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
-            feature, created_ft, created_f = validate_exists_feature_full(form, self.request.user)
+            feature, created_ft = validate_exists_feature_full(form, self.request.user)
             type = form.cleaned_data['type']
-
-            if not created_f: # Pregunta si ya existe la caracteristica (incluido el tipo)
-                return JsonResponse({'status': 'error', 'error_message': 'Los datos ingresados ya existen.'})
             
-            elif not created_ft: # Pregunta si ya existe el tipo solo
+            if not created_ft: # Pregunta si ya existe el tipo solo
                 return JsonResponse({'status': 'error', 'error_message': f'Por favor cree la nueva característica desde la columna "{type}".'})
 
             new_feature_data = {
