@@ -12,6 +12,7 @@ import json
 
 #Importaciones de la app
 from applications.branches.models import Branch
+from applications.clients.forms import CustomerForm
 from .models import *
 from .forms import *
 
@@ -29,8 +30,11 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = Branch.objects.get(id=branch_actualy)
         except Branch.DoesNotExist:
             branch = self.request.user.branch
-    
+
+        context['sale_form'] = SaleForm
+
         context['branch_selected'] = branch.name
+        context['customer_form'] = CustomerForm
         return context
 
     def form_valid(self, form):
@@ -38,7 +42,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         # Procesa los datos del formulario aquí
         for formset in formsets:
             if formset.is_valid():
-                print('\n\n\n',formset.cleaned_data) 
+                print('\n\n\n',formset.cleaned_data)
             else:
                 print('\n\n\n',formset.errors) 
         

@@ -654,6 +654,41 @@ def ajax_search_customers(request):
             'dni': customer.dni,
             'user_made': str(customer.user_made),
             'has_credit_account': 1 if customer.has_credit_account else 0,
+            'credit_balance': customer.credit_balance,
             'is_staff': 1 if request.user.is_staff else 0
         } for customer in customers]
+        print(data)
         return JsonResponse({'data': data})
+    
+
+################## NEW CUSTOMER AJAX #####################
+
+def ajax_new_customers(request):
+    if request.method == 'POST':
+        customer_form = CustomerForm(request.POST)
+
+        if customer_form.is_valid():
+            # Guarda el objeto Customer en la base de datos
+            customer = customer_form.save(commit=False)
+            customer.user_made = request.user  # Asigna el usuario que realizó la acción (ajusta esto según tus necesidades)
+            customer.branch = request.user.branch
+            customer.save()
+
+            data = {
+                'id': customer.id,
+                'first_name': customer.first_name,
+                'last_name': customer.last_name,
+                'phone_number': customer.phone_number,
+                'phone_code': customer.phone_code,
+                'dni': customer.dni,
+                'has_credit_account': '$ %s' % customer.credit_balance if customer.has_credit_account else 0,
+            }
+            return JsonResponse({'customer': data})
+        else:
+            data = {
+                'error': 'Error en la carga de Cliente',
+            }
+            return JsonResponse(data)  # Devuelve un código de estado 400 para indicar un error de validación
+
+    return JsonResponse({'error': 'Método no permitido'}, status=405)  # Devuelve un código de estado 405 para indicar un método no permitido
+

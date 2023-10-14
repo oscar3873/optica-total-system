@@ -129,5 +129,13 @@ urlpatterns = [
         'ajax-search-customers/',
         ajax_search_customers,
         name='ajax_search_customers'
+    ),
+
+    ###################### AJAX CREATE ###################
+    
+    path(
+        'ajax-new-customers/',
+        ajax_new_customers,
+        name='ajax-new-customers'
     )
 ]
