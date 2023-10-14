@@ -129,8 +129,9 @@
               <div class="tab-pane preview-tab-pane active" role="tabpanel"
                 aria-labelledby="tab-dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d"
                 id="dom-64e2439d-d2d3-4678-a795-9c194e5dbf1d">
+
                 <div class="row">
-                  <div class="col-12, col-md-6">
+                  <div class="col-12 col-md-6">
                     <label for="{{ form.name.id_for_label }}" class="form-label">Nombre del producto:</label>
                     {{form.name}}
                     <small>El nombre del producto debe tener <span class="text-warning">al menos 3 caracteres.</span></small>
@@ -141,7 +142,7 @@
                     {% endif %}
                   </div>
 
-                  <div class="col-12, col-md-6">
+                  <div class="col-12 col-md-6 pt-3 pt-sm-0">
                     <label for="{{ form.barcode.id_for_label }}" class="form-label">Código de barras:</label>
                     {{form.barcode}}
                     <small>Solo se permiten <span class="text-warning">numeros positivos.</span></small>
@@ -154,7 +155,7 @@
                 </div>
 
                 <div class="row pt-3">
-                  <div class="col-12, col-md-3">
+                  <div class="col-12 col-md-3">
                     <label for="{{ form.stock.id_for_label }}" class="form-label">Stock:</label>
                     {{form.stock}}
                     <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
@@ -164,7 +165,7 @@
                       </div>
                     {% endif %}
                   </div>
-                  <div class="col-12, col-md-3">
+                  <div class="col-12 col-md-3 pt-3 pt-sm-0">
                     <label for="{{ form.cost_price.id_for_label }}" class="form-label">Precio de compra:</label>
                     {{form.cost_price}}
                     <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
@@ -175,16 +176,12 @@
                     {% endif %}
                   </div>
 
-                  <div class="col-12, col-md-3">
-                    <label class="form-label">Precio sugerido:</label>
-
-                    {{form.has_eyeglass_frames.label}}
-                    {{form.has_eyeglass_frames}}
-
+                  <div class="col-12 col-md-3 pt-3 pt-sm-0">
+                    <label class="form-label mb-0 mb-sm-2">Precio sugerido:</label>
                     <span class="d-block fw-semi-bold fs-2" id="id_suggested_price">$ 0.00</span>
                   </div>
                   
-                  <div class="col-12, col-md-3">
+                  <div class="col-12 col-md-3 pt-3 pt-sm-0">
                     <label for="{{ form.sale_price.id_for_label }}" class="form-label">Precio de venta:</label>
                     {{form.sale_price}}
                     <small>Solo se permiten números <span class="text-warning">positivos o cero.</span></small>
@@ -195,16 +192,30 @@
                     {% endif %}
                   </div>
                 </div>
+
+                <div class="row pt-3">
+                  <div class="d-flex align-items-center pt-3 pt-sm-3">
+                    <label for="{{ form.has_eyeglass_frames.id_for_label }}" class="form-label col-form-label pt-2 me-3">Es un armazón:</label>
+                    {{form.has_eyeglass_frames}}
+                    
+                  </div>
+                  <small>Marcar la casilla <span class="text-warning">si el producto es un armazón.</span></small>
+                </div>
+
+                <div class="pt-3">
+                  <label for="{{ form.description.id_for_label }}" class="form-label pt-3">Descripción:</label>
+                  {{form.description}}
+                  {% if form.description.errors %}
+                  <div class="text-danger fs--2">
+                    {{form.description.errors}}
+                  </div>
+                  {% endif %}
+                </div>
+
               </div>
             </div>
-
-            <label for="{{ form.description.id_for_label }}" class="form-label pt-3">Descripción:</label>
-            {{form.description}}
-            {% if form.description.errors %}
-            <div class="text-danger fs--2">
-              {{form.description.errors}}
-            </div>
-            {% endif %}
+            
+            
           </div>
 
           <!-- Tab 4 -->
@@ -420,3 +431,7 @@
 <script src="{% static 'products/js/dinamic_create_brand.js' %}"></script>
 
 {% endblock extra_js %}
+
+
+{{form.has_eyeglass_frames.label}}
+{{form.has_eyeglass_frames}}
