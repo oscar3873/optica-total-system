@@ -188,7 +188,7 @@ class ProductForm(ValidationFormMixin):
         required=False,
         widget= forms.CheckboxInput(
             attrs={
-                'class':'form-check-input',
+                'class':'form-check-input mb-2',
             }
         )
     )
