@@ -1,0 +1,50 @@
+{% load static %}
+
+<div class="container mt-4">
+
+    {% include 'core/components/messages.html' %}
+
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Título del formulario wizard -->
+        <div class="d-flex mb-4">
+            <span class="fa-stack me-2 ms-n1">
+                <i class="fas fa-circle fa-stack-2x text-300"></i>
+                <i class="fa-inverse fa-stack-1x text-primary fas fa-money-check"></i>
+            </span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Nueva promoción</span><span
+                    class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Aquí puede crear una nueva promoción</p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="card mb-3 col-sm-10 col-lg-8">
+        <!-- HEADER DE LA CARD -->
+        <div class="card-header bg-light pt-3 pb-2">
+            <div class="row pb-md-0">
+                <div class="col-12 col-sm-6">
+                    <h5 class="mb-2">Nueva promoción</h5>
+                </div>
+            </div>
+        </div>
+        <!-- BODY DE LA CARD -->
+        <div class="card-body border-top">            
+            <div class="row">
+                <div class="col-lg-6 mb-3 mb-sm-0">
+                    <div class="row">
+                        <form id="#" method="post">
+                            {% csrf_token %}
+                    
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

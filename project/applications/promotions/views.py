@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.views.generic import TemplateView
+
+
 
 # Create your views here.
 class PromotionCreateView(TemplateView):
-    template_name = 'promotions/promotion_create_form.html'
+    template_name = 'promotions/promotions_page.html'
