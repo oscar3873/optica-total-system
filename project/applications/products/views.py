@@ -222,7 +222,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             product = form.save(commit=False)
             suggested_price = Decimal((float(product.cost_price) * percentage) * multiplicador)
 
-            if product.is_armazon:
+            if product.has_eyeglass_frames:
                 suggested_price = suggested_price + Decimal(packaging)
 
             sale_price = math.ceil(suggested_price / 50) * 50

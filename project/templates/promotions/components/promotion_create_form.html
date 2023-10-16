@@ -201,6 +201,84 @@
     </div>
     {% endif %}
 
+
+
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div id="formset-forms">
+            <div class="visible-form">
+                <!-- Renderizar el primer formulario -->
+                {{ form }}
+            </div>
+          <!-- Renderizar formularios adicionales aquí usando JavaScript -->
+        </div>
+      
+        <button id="add-form" type="button">Agregar más</button>
+        <input type="submit" value="Guardar">
+      </form>
+    
+
 </div>
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const addFormButton = document.getElementById("add-form");
+        const formsetForms = document.getElementById("formset-forms");
+        
+        const emptyForm = `{{ form.empty_form }}`; // Dejo aqui es script porque de esta forma toma facil los datos de la
+
+        addFormButton.addEventListener("click", function () {
+            // Clonar los formularios visibles
+            const visibleForms = formsetForms.querySelectorAll(".visible-form");
+            const count = visibleForms.length;
+            const tmplMarkup = emptyForm.replace(/__prefix__/g, count);
+
+            // Agregar el nuevo formulario clonado
+            const newForm = document.createElement('div');
+            newForm.className = 'visible-form';
+            newForm.id = `id_form-${count}`;
+            newForm.innerHTML = tmplMarkup;
+            formsetForms.appendChild(newForm);
+
+            if (count > 0) {
+                const deleteButton = document.createElement('button');
+                deleteButton.type = "button";
+                deleteButton.className = "delete-form";
+                deleteButton.textContent = "Eliminar";
+                deleteButton.addEventListener('click', function(){
+                    newForm.remove();
+                    // Actualizar el contador de formularios después de la eliminación
+                    const totalFormsInput = document.querySelector("#id_form-TOTAL_FORMS");
+                    totalFormsInput.value = formsetForms.querySelectorAll(".visible-form").length;
+
+                    // Reordenar los IDs y los nombres de los campos de los formularios restantes
+                    formsetForms.querySelectorAll(".visible-form").forEach(function (form, index) {
+                        const formId = `id_form-${index}`;
+                        form.id = formId;
+
+                        // Actualizar los nombres de los campos dentro del formulario
+                        const fields = form.querySelectorAll('[name^="form-"]');
+                        fields.forEach(function (field) {
+                            const fieldName = field.getAttribute("name");
+                            const newFieldName = fieldName.replace(/form-\d+-/, `form-${index}-`);
+                            field.setAttribute("name", newFieldName);
+                            
+                            // Actualizar los IDs de los campos
+                            const fieldId = field.getAttribute("id");
+                            const newFieldId = fieldId.replace(/id_form-\d+-/, `id_form-${index}-`);
+                            field.setAttribute("id", newFieldId);
+                        });
+                    });
+                });
+                newForm.appendChild(deleteButton);
+            }
+            // Actualizar el contador de formularios
+            const totalFormsInput = document.querySelector("#id_form-TOTAL_FORMS");
+            totalFormsInput.value = count + 1;
+        });
+
+    });
+  </script>

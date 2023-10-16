@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', function() {
         var count = form.length;
         var itemVariants = document.getElementById('selected-products-list');
         
-        const rowProduct = document.createElement('tr');
+        const rowProduct = document.createElement('div');
         rowProduct.id = `order_detaill-formset-${product.id}`
-        rowProduct.classList.add('border-bottom');
+        rowProduct.classList.add('border-bottom', 'd-flex', 'justify-content-between');
     
         const headerrow = document.createElement('th');
         headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
@@ -28,8 +28,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
         const pricerow = document.createElement('th');
         pricerow.classList.add('fs-1', 'px-0', 'text-end', 'pt-0');
-        var pricewithno = product.price.replace(/\$/g, "");
-        pricerow.textContent = `$ ${parseFloat(pricewithno).toFixed(2)}`;
+        var priceSelected = product.price.replace(/\$/g, "");
+        pricerow.textContent = `$ ${parseFloat(priceSelected).toFixed(2)}`;
+        pricerow.id = `price-${product.id}`;
 
         const checkbox_form = document.createElement('input');
         checkbox_form.type = 'checkbox';
@@ -39,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox_form.hidden = true;
 
         const quantityRowcontainer = document.createElement('div');
-        quantityRowcontainer.classList.add('my-3', 'col-8', 'col-sm-6', 'col-md-5', 'col-xl-8');
+        quantityRowcontainer.classList.add('my-3', 'col-9', 'col-sm-6', 'col-md-5', 'col-xl-8', 'col-xxl-6');
     
         const quantityRow = document.createElement('div');
         quantityRow.classList.add('input-group', 'input-group-sm', 'flex-nowrap');
@@ -103,14 +104,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const selectproductsContainer = document.getElementById('selected-products-list'); 
     const subtotalElement = document.getElementById('subtotal');
 
+    const totalOfForms = document.getElementById('id_total');
     const totalElement = document.getElementById('total');
     const discountElement = document.getElementById('discount');
     const TotalSuccess = document.getElementById('total-success');
 
     const ButtonDelete = document.getElementById("button-delete-all");
     ButtonDelete.addEventListener('click', function() {
-        const productIds = [...selectproductsContainer.querySelectorAll('tr')]
-            .map(tr => tr.getAttribute('data-product-id'))
+        const productIds = [...selectproductsContainer.querySelectorAll('div[id^="order_detaill-formset"]')]
+            .map(selected => selected.getAttribute('data-product-id'))
             .filter(productId => productId);
         // Llama a removeProduto con cada id
         productIds.forEach(productId => removeProduct(productId));
@@ -189,7 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 addFormset(product);
 
                 // Agregar el producto a la lista de productos seleccionados
-                selectedProducts.push(productDiv);
+                var productDiv_toPush = document.querySelector('div[data-product-id="' + inputElement.value + '"]');
+                selectedProducts.push(productDiv_toPush);
             } else {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
@@ -338,14 +341,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function CalculateSubtotal() {
-        const checkboxes = document.querySelectorAll('#product-container input[type="checkbox"]');
-
+        const checkboxes = document.querySelectorAll('#selected-products-list input[type="checkbox"]');
+        console.log(checkboxes);
         let subtotalValue = 0.00;
       
         checkboxes.forEach(checkbox => {
           if (checkbox.checked) {
+            console.log(checkbox.value);
             // Si el checkbox está marcado, obtén el precio y la cantidad del producto relacionado
-            const productId = checkbox.id;
+            const productId = checkbox.value;
             const precio = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
             const cantidad = parseFloat(document.getElementById(`id_order_detaill-${productId}-quantity`).value);
             
@@ -368,6 +372,9 @@ document.addEventListener('DOMContentLoaded', function() {
         total = parseFloat(subtotal - discount).toFixed(2);
         totalElement.textContent = `$ ${total}`;
         TotalSuccess.textContent = `$ ${total}`;
+
+        totalOfForms.value = total;
+
     }
 
 });
