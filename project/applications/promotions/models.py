@@ -22,7 +22,6 @@ class Promotion(BaseAbstractWithUser): # promocion de 2 products
     description = models.TextField(verbose_name='Descripcion', null=True, blank=True)
     start_date = models.DateField(verbose_name='Inicio', null=True, blank=True)
     end_date = models.DateField(verbose_name='Fin', null=True, blank=True)
-    #discount = models.PositiveIntegerField(verbose_name='Descuento')
     discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Descuento")
     productA = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="promotion_product_A", null=True, blank=True, verbose_name='Producto')
     productB = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="promotion_product_B", null=True, blank=True, verbose_name='Producto')
