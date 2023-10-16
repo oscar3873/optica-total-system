@@ -6,8 +6,8 @@ app_name = 'promotions_app'
 
 urlpatterns = [
     path(
-        'new/promotion',
+        'new/combo',
         PromotionCreateView.as_view(),
-        name='new_promotion'
+        name = 'promotion_new'
     ),
 ]
