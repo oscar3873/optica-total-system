@@ -19,7 +19,7 @@ class Promotion(BaseAbstractWithUser): # promocion de 2 products
 
     name = models.CharField(max_length=100, verbose_name='Nombre', null=True, blank=True) # Promo "Verano", "Friday", "Hotsale"
     type_discount = models.CharField(max_length=15, choices=PROMOTION, default=PROMOTION[2], verbose_name='Tipo de promocion', null=True, blank=True)
-    # description = models.TextField(verbose_name='Descripcion', null=True, blank=True)
+    description = models.TextField(verbose_name='Descripcion', null=True, blank=True)
     start_date = models.DateField(verbose_name='Inicio', null=True, blank=True)
     end_date = models.DateField(verbose_name='Fin', null=True, blank=True)
     #discount = models.PositiveIntegerField(verbose_name='Descuento')
