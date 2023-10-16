@@ -60,7 +60,9 @@
               </div>
             </div>
             <div id="table-purchases-replace-element">
-              <a href="{% url 'products_app:new_category' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nueva Categoria</span></a>
+              {% if  request.user.is_staff %}
+                <a href="{% url 'products_app:new_category' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nueva Categoria</span></a>
+              {% endif %}
             </div>
           </div>
         </div>
