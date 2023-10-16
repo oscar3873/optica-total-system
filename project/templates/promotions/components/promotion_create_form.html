@@ -210,16 +210,31 @@
         <div id="formset-forms">
             <div class="visible-form">
                 <!-- Renderizar el primer formulario -->
+                <script type="text/html" id="form-template">  // id="inlineformsetname-template"
+                    // id='inlineformsetname-__prefix__' 
+                    <tr id="form-__prefix__" class= hide_all>
+                        {% for fields in form.empty_form.hidden_fields %}
+                            {{ fields }}
+                        {% endfor %}
+                    
+                        {% for fields in form.empty_form.visible_fields %}
+                            <td>{{fields}}</td>
+                        {% endfor %}
+                    </tr>
+                </script>
+
                 {{ form }}
             </div>
-          <!-- Renderizar formularios adicionales aquí usando JavaScript -->
         </div>
       
         <button id="add-form" type="button">Agregar más</button>
         <input type="submit" value="Guardar">
-      </form>
-    
+    </form>
 
+    <div class="form-group">
+        <input required type="text" id="search-products-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar por Nombre, Apellido o DNI">
+        <ul id="search-products-results" class="list-group text-dark mt-3"></ul>
+    </div>
 </div>
 
 
