@@ -10,11 +10,4 @@ urlpatterns = [
         PointOfSaleView.as_view(),
         name = 'point_of_sale_view'
     ),
-
-    ########## PROMOTIONS ##########
-    path(
-        'promotions/new',
-        PromotionCreateView.as_view(),
-        name = 'promotion_new'
-    ),
 ]

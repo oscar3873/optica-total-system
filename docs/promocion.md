@@ -9,3 +9,25 @@
 Descuento fijo % o $
     - P1 = $1000 - 30% --> valor de venta $700
     - P1 = $100 - $50 --> valor de venta $50 
+
+
+
+logica del 2x1 y 50% off 
+    (BACKEND):
+    - Desde un producto inicial P1:
+        -> acceder a la tabla Promotions (fila asociada a P1)
+        -> De la tabla Promotions de ese P1 saber que otro producto está relacionado (P2)
+        -> Verificar si P1 y P2 fueron seleccionados durante la venta para aplicar promocion
+    
+    (FRONTEND):
+    - Por el momento se podria mandar una lista de tuplas donde cada una de ellas estariam los id del "combo":
+        Ej.: { '2x1': [
+                        (1,3), (2,4), (11, 13)
+                ],
+                '50%': [
+                    (23, 55), (7, 6)
+                ],
+                'descuento': [12, 14, 16]
+            }
+        con ello corroborar si los productos seleccionados pertenecen a una de esas tuplas y buscar si "alguna tupla se completa" (si estan los 2 productos seleccionados para aplicar promocion)
+        o sino deberia consultar si tiene descuento unitario (PENSARLO BIEN)
