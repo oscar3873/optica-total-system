@@ -309,7 +309,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'clients/customer_page.html'
     context_object_name = 'customers'
-    paginate_by = 5
+    paginate_by = 25
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -343,14 +343,14 @@ class ServiceOrderListView(LoginRequiredMixin, ListView):
     model = ServiceOrder
     template_name = 'clients/service_order_page.html'
     context_object_name = 'laboratory_orders'
-    paginate_by = 8
+    paginate_by = 25
 
 
 class HealthInsuranceListView(LoginRequiredMixin, ListView):
     model = HealthInsurance
     template_name = 'clients/hinsuranse_page.html'
     context_object_name = 'h_insurances'
-    paginate_by = 8
+    paginate_by = 25
 
 
 ########################### DELETE ####################################
