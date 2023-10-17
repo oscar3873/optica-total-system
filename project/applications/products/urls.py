@@ -133,11 +133,11 @@ urlpatterns = [
     ),
 
     ################ SEARCH
-    path(
-        'search/',
-        ProductSearchView.as_view(),
-        name='product_search'
-    ),
+    #path(
+    #    'search/',
+    #    ProductSearchView.as_view(),
+    #    name='product_search'
+    #),
 
     ################# actualizacion de precio
     path(
