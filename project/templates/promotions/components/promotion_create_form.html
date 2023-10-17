@@ -211,13 +211,15 @@
         <div id="form-hidden" hidden data-form='{{ form.empty_form }}'></div>
 
         <div id="formset-forms">
-            <div class="visible-form" id="id_form-__prefix__">
+            <div class="visible-form" id="id_form-0">
                 <!-- Renderizar el primer formulario -->
-                {% for field in form %}
-                    <tr>
-                        <td>{{ field }}</td>
-                    </tr>
-                {% endfor %}
+                <div>
+                    {% for field in form %}
+                        <tr>
+                            <td>{{ field }}</td>
+                        </tr>
+                    {% endfor %}
+                </div>
                 <div class="form-group">
                     <input required type="text" id="id_form-0-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
                     <ul id="id_form-0-search-productA-results" class="list-group text-dark mt-3"></ul>
