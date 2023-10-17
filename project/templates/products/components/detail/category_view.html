@@ -51,19 +51,21 @@
         <div class="row mt-2">
           <div class="col">
             {% if category %}
-            <a class="btn btn-falcon-default btn-sm" href="{% url 'products_app:new_product' %}">
-              <span class="fas fa-plus fs--2 me-1"></span>
-              Nueva Categoría
-            </a>
-            <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
-              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="fas fa-ellipsis-h"></span>
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="{% url 'products_app:update_category' pk=category.pk %}">Editar</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item text-danger" href="{% url 'products_app:category_delete' pk=category.pk %}">Eliminar</a>
-            </div>
+              {% if  request.user.is_staff %}
+                <a class="btn btn-falcon-default btn-sm" href="{% url 'products_app:new_product' %}">
+                  <span class="fas fa-plus fs--2 me-1"></span>
+                  Nueva Categoría
+                </a>
+                <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="fas fa-ellipsis-h"></span>
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="{% url 'products_app:update_category' pk=category.pk %}">Editar</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item text-danger" href="{% url 'products_app:category_delete' pk=category.pk %}">Eliminar</a>
+                </div>
+                {% endif %}
             {% endif %}
           </div>
         </div>
