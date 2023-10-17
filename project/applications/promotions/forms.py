@@ -4,7 +4,7 @@ from applications.products.models import Product
 from .models import Promotion
 
 
-class PromotionForm(forms.ModelForm):
+class PromotionComboForm(forms.ModelForm):
     PROMOTION = [
         ('A', '2x1'),
         ('B', '-50% 2da unidad'),
@@ -27,16 +27,16 @@ class PromotionForm(forms.ModelForm):
 
     productA = forms.ModelChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.Select(),
+        widget=forms.CheckboxSelectMultiple(),
     )
 
     productB = forms.ModelChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.Select(),
+        widget=forms.CheckboxSelectMultiple(),
     )
     class Meta:
         model = Promotion
-        fields = ['name', 'start_date', 'end_date', 'discount', 'productA', 'productB']
+        fields = ['name', 'description', 'start_date', 'end_date', 'discount', 'productA', 'productB']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -46,6 +46,7 @@ class PromotionForm(forms.ModelForm):
             field.widget.attrs['required'] = ''
         
 PromotionFormSet = forms.formset_factory(
-    PromotionForm,
+    PromotionComboForm,
     extra=1,
     )
+
