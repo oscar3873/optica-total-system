@@ -1,6 +1,4 @@
-    const searchInput = document.getElementById('search-products-input');
-    const searchResults = document.getElementById('search-products-results');
-
+function configureSearch(searchInput, searchResults, fieldIdentifier) {
     searchInput.addEventListener('input', (event) => {
         const searchTerm = event.target.value.trim().toLowerCase();
 
@@ -17,10 +15,10 @@
             dataType: 'json',
             success: function(data) {
                 const products = data.data;
-        
+
                 // Mostrar los resultados de búsqueda
                 searchResults.innerHTML = ''; // Limpia los resultados anteriores
-        
+
                 products.forEach(product => {
                     const item = document.createElement('li');
                     item.style.zIndex = "9999";
@@ -39,7 +37,7 @@
             error: function(error) {
                 console.error('Error en la solicitud AJAX', error);
             }
-        });        
+        });
     });
 
     searchResults.addEventListener('click', (event) => {
@@ -55,10 +53,19 @@
         searchInput.value = productName;
         searchResults.innerHTML = '';
         // Añadir el id del product al formulario
-        const productIdInput = document.createElement('input');
-        productIdInput.type = 'hidden';
-        productIdInput.name = 'selected_product_id';
-        productIdInput.value = productId;
-        searchInput.closest('form').appendChild(clientIdInput);
+        const productIdCheck = document.createElement('checkbox');
+        productIdCheck.type = 'hidden';
+        productIdCheck.value = productId;
+        searchInput.closest('form').appendChild(productIdCheck);
     });
+}
 
+// Configurar el buscador A
+const searchInputA = document.getElementById('id_form-0-search-productA-input');
+const searchResultsA = document.getElementById('id_form-0-search-productA-results');
+configureSearch(searchInputA, searchResultsA, 'productA');
+
+// Configurar el buscador B
+const searchInputB = document.getElementById('id_form-0-search-productB-input');
+const searchResultsB = document.getElementById('id_form-0-search-productB-results');
+configureSearch(searchInputB, searchResultsB, 'productB');
