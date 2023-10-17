@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
+    
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.trim().toLowerCase();
@@ -64,6 +65,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function addForm() {
+        const name_0 = document.getElementById('id_form-0-name');
+        const description_0 = document.getElementById('id_form-0-description');
+        const start_date_0 = document.getElementById('id_form-0-start_date');
+        const end_date_0 = document.getElementById('id_form-0-end_date');
+
         const visibleForms = formsetForms.querySelectorAll(".visible-form");
         const count = visibleForms.length;
         const tmplMarkup = emptyForm.replace(/__prefix__/g, count);
@@ -74,6 +80,16 @@ document.addEventListener("DOMContentLoaded", function () {
         newForm.id = `id_form-${count}`;
         newForm.innerHTML = tmplMarkup;
         formsetForms.appendChild(newForm);
+
+        const newName = newForm.querySelector(`#${newForm.id}-name`);
+        const newDescription = newForm.querySelector(`#${newForm.id}-description`);
+        const newStart_date = newForm.querySelector(`#${newForm.id}-start_date`);
+        const newEnd_date = newForm.querySelector(`#${newForm.id}-end_date`);
+
+        newName.value = name_0.value;
+        newDescription.value = description_0.value;
+        newStart_date.value = start_date_0.value;
+        newEnd_date.value = end_date_0.value;
 
         // Configurar los buscadores A y B en el nuevo formulario
         configureSearchInputs(newForm, count);
@@ -114,28 +130,41 @@ document.addEventListener("DOMContentLoaded", function () {
         forms.forEach((form, index) => {
             const fieldPrefix = `id_form-${index}`;
             form.id = fieldPrefix;
-
-            const fields = form.querySelectorAll('[name^="form-"]');
-            fields.forEach(field => {
-                const fieldName = field.getAttribute("name");
-                const newFieldName = fieldName.replace(/form-\d+-/, `form-${index}-`);
-                field.setAttribute("name", newFieldName);
-
-                const fieldId = field.getAttribute("id");
-                const newFieldId = fieldId.replace(/id_form-\d+-/, `id_form-${index}-`);
-                field.setAttribute("id", newFieldId);
+    
+            console.log(form);
+    
+            const formChildren = Array.from(form.children);
+    
+            formChildren.forEach(child => {
+                if (child.tagName === "DIV") {
+                    const fields = child.querySelectorAll('[name^="form-"]');
+                    fields.forEach(field => {
+                        const fieldName = field.getAttribute("name");
+                        const newFieldName = fieldName.replace(/form-\d+-/, `form-${index}-`);
+                        field.setAttribute("name", newFieldName);
+    
+                        const fieldId = field.getAttribute("id");
+                        const newFieldId = fieldId.replace(/id_form-\d+-/, `id_form-${index}-`);
+                        field.setAttribute("id", newFieldId);
+                    });
+                }
             });
         });
-
+    
         updateFormsetFormCount(forms.length);
     }
+    
 
     const addFormButton = document.getElementById("add-form");
     const formsetForms = document.getElementById("formset-forms");
-    const formulario = document.getElementById("form-hidden");
+    const formulario = document.getElementById("form-hidden").getAttribute("data-form");
+
+    const new_hidden_form = document.createElement("div");
+    new_hidden_form.innerHTML = formulario;
+    new_hidden_form.hidden = true;
 
     const emptyForm = `
-        ${formulario.getAttribute("data-form")}
+        ${new_hidden_form.outerHTML}
         <div class="form-group">
             <input required type="text" id="id_form-__prefix__-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
             <ul id="id_form-__prefix__-search-productA-results" class="list-group text-dark mt-3"></ul>
@@ -147,4 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </div>`;
 
     addFormButton.addEventListener("click", addForm);
+
+    const form_0 = document.getElementById('id_form-0');
+    configureSearchInputs(form_0, 0);
 });
