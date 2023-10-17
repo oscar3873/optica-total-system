@@ -208,6 +208,8 @@
         {% csrf_token %}
         {{ form.management_form }}
 
+        <div id="form-hidden" hidden data-form='{{ form.empty_form }}'></div>
+
         <div id="formset-forms">
             <div class="visible-form" id="id_form-__prefix__">
                 <!-- Renderizar el primer formulario -->
@@ -233,91 +235,3 @@
     </form>
 
 </div>
-
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const addFormButton = document.getElementById("add-form");
-        const formsetForms = document.getElementById("formset-forms");
-        
-        const emptyForm = `
-                {{ form.empty_form }}
-                <div class="form-group">
-                    <input required type="text" id="id_form-__prefix__-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
-                    <ul id="id_form-__prefix__-search-productA-results" class="list-group text-dark mt-3"></ul>
-                </div>
-
-                <div class="form-group">
-                    <input required type="text" id="id_form-__prefix__-search-productB-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto B">
-                    <ul id="id_form-__prefix__-search-productB-results" class="list-group text-dark mt-3"></ul>
-                </div>`;
-
-        addFormButton.addEventListener("click", function () {
-            // Clonar los formularios visibles
-            const visibleForms = formsetForms.querySelectorAll(".visible-form");
-            const count = visibleForms.length;
-            const tmplMarkup = emptyForm.replace(/__prefix__/g, count);
-
-            // Agregar el nuevo formulario clonado
-            const newForm = document.createElement('div');
-            newForm.className = 'visible-form';
-            newForm.id = `id_form-${count}`;
-            newForm.innerHTML = tmplMarkup;
-
-            // Buscar los elementos input y ul dentro del formulario clonado
-            const searchInputA = newForm.querySelector(`#id_form-${count}-search-productA-input`);
-            const searchResultsA = newForm.querySelector(`#id_form-${count}-search-productA-results`);
-            const searchInputB = newForm.querySelector(`#id_form-${count}-search-productB-input`);
-            const searchResultsB = newForm.querySelector(`#id_form-${count}-search-productB-results`);
-
-            // Agregar los listeners de click a los elementos input
-            searchInputA.addEventListener('input', function () {
-                console.log('YES');
-                configureSearch(searchInputA, searchResultsA, 'productA');
-            });
-
-            searchInputB.addEventListener('input', function () {
-                configureSearch(searchInputB, searchResultsB, 'productB');
-            });
-
-            formsetForms.appendChild(newForm);
-
-            if (count > 0) {
-                const deleteButton = document.createElement('button');
-                deleteButton.type = "button";
-                deleteButton.className = "delete-form";
-                deleteButton.textContent = "Eliminar";
-                deleteButton.addEventListener('click', function(){
-                    newForm.remove();
-                    // Actualizar el contador de formularios después de la eliminación
-                    const totalFormsInput = document.querySelector("#id_form-TOTAL_FORMS");
-                    totalFormsInput.value = formsetForms.querySelectorAll(".visible-form").length;
-
-                    // Reordenar los IDs y los nombres de los campos de los formularios restantes
-                    formsetForms.querySelectorAll(".visible-form").forEach(function (form, index) {
-                        const formId = `id_form-${index}`;
-                        form.id = formId;
-
-                        // Actualizar los nombres de los campos dentro del formulario
-                        const fields = form.querySelectorAll('[name^="form-"]');
-                        fields.forEach(function (field) {
-                            const fieldName = field.getAttribute("name");
-                            const newFieldName = fieldName.replace(/form-\d+-/, `form-${index}-`);
-                            field.setAttribute("name", newFieldName);
-                            
-                            // Actualizar los IDs de los campos
-                            const fieldId = field.getAttribute("id");
-                            const newFieldId = fieldId.replace(/id_form-\d+-/, `id_form-${index}-`);
-                            field.setAttribute("id", newFieldId);
-                        });
-                    });
-                });
-                newForm.appendChild(deleteButton);
-            }
-            // Actualizar el contador de formularios
-            const totalFormsInput = document.querySelector("#id_form-TOTAL_FORMS");
-            totalFormsInput.value = count + 1;
-        });
-
-    });
-  </script>
