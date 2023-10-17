@@ -1,0 +1,147 @@
+{% load static %}
+
+<div class="container mt-4">
+    {% include 'core/components/messages.html' %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Título -->
+        <div class="d-flex mb-4">
+            <span class="fa-stack me-2 ms-n1">
+                <i class="fas fa-circle fa-stack-2x text-300"></i>
+                <i class="fa-inverse fa-stack-1x text-primary fas fa-money-check"></i>
+            </span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span
+                        class="bg-200 dark__bg-1100 pe-3">Promociones</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Aquí puede vizualizar todas las promociones</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+        <!--Card-->
+        <div class="card z-index-1 mb-3" id="recentPurchaseTable"
+            data-list='{"valueNames":["first_name","last_name","phone_number","date_employee","user_made","email"],"page":8,"pagination":true}'>
+            <div class="card-header">
+                <div class="row flex-between-center">
+                    <div class="col-12 col-sm-auto d-flex align-items-center pe-0">
+                        <div>
+                            <form id="searchForm" action="{% url 'employees_app:ajax_search_employee' %}" method="GET"
+                                data-ajax-search-url="{% url 'employees_app:ajax_search_employee' %}">
+                                <div class="input-group">
+                                    <input maxlength="50" class="form-control form-control-sm shadow-none search"
+                                        id="searchInput" type="search" placeholder="Buscar" aria-label="search" />
+                                    <div class="input-group-text bg-transparent"><span
+                                            class="fa fa-search fs--1 text-600"></span></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-12 mt-2 text-center col-sm-auto ms-auto sm-text-end ps-0">
+                        <div id="table-purchases-replace-element">
+                            {% if request.user.is_staff %}
+                            <a href="{% url 'employees_app:new_employee' %}" class="btn btn-falcon-default btn-sm me-1"
+                                type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Nueva promoción</span></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0 py-0">
+                <div class="table-responsive scrollbar">
+                    <!-- TABLA -->
+                    <table class="table table-sm fs--1 mb-0 overflow-hidden">
+                        <!-- HEAD TABLA -->
+                        <thead class="bg-200 text-900">
+                            <tr>
+                                {% for column in table_column %}
+                                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Apellido'%}d-none d-sm-table-cell{% endif %}"
+                                    data-sort="{{column.0}}">{{column.1}}</th>
+                                {% endfor %}
+                                {% for column in table_column_user %}
+                                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">
+                                    {{column.1}}</th>
+                                {% endfor %}
+                                <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
+                            </tr>
+                        </thead>
+                        <!-- BODY TABLA -->
+                        <tbody class="list" id="table-purchase-body">
+
+                            {% for employee in employees %}
+                            <tr class="btn-reveal-trigger">
+                                <td class="align-start first_name">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-s me-1">
+                                            <img class="rounded-circle" src="{{employee.user.imagen.url}}" alt="" />
+                                        </div>
+                                        {{employee.user.first_name}}
+                                    </div>
+                                </td>
+                                <td class="align-start last_name">{{employee.user.last_name}}</td>
+                                <td class="align-start phone_number d-none d-sm-table-cell"><a
+                                        href="https://wa.me/{{employee.user.phone_code}}{{employee.user.phone_number}}">{{employee.user.phone_code}}{{employee.user.phone_number}}</a>
+                                </td>
+                                <td class="align-start email d-none d-sm-table-cell"><a
+                                        href="mailto:{{employee.user.email}}">{{employee.user.email}}</a></td>
+                                <td class="align-middle white-space-nowrap text-start">
+                                    <div class="dropstart font-sans-serif position-static d-inline-block">
+                                        <button
+                                            class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                            type="button" id="dropdown0" data-bs-toggle="dropdown"
+                                            data-boundary="window" aria-haspopup="true" aria-expanded="false"
+                                            data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end border py-2"
+                                            aria-labelledby="dropdown0">
+                                            <a class="dropdown-item"
+                                                href="{% url 'employees_app:profile_employee' employee.id %}">Detalle</a>
+
+                                            {% if request.user.is_staff %}
+                                            <a class="dropdown-item"
+                                                href="{% url 'employees_app:update_employee' employee.id %}">Editar</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item text-danger"
+                                                href="{% url 'employees_app:employee_delete' employee.id %}">Borrar</a>
+                                            {% else %}
+
+                                            {% endif %}
+
+                                            {% comment %} <button class="dropdown-item text-danger" type="button"
+                                                data-bs-toggle="modal" data-id="{{ employee.id }}"
+                                                data-url="{% url 'employees_app:employee_delete' employee.id %}"
+                                                data-bs-target="#delete-employee-modal">Borrar</button> {% endcomment %}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row align-items-center">
+                    <div class="pagination d-none"></div>
+                    <div class="col">
+                        <p class="mb-0 fs--1">
+                            {% comment %} <span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info">
+                            </span> {% endcomment %}
+                            <!-- <a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a> -->
+                        </p>
+                    </div>
+                    {% comment %} <div class="col-auto d-flex">
+                        <button id="prevPage" class="btn btn-sm btn-primary" type="button"
+                            data-list-pagination="prev"><span>Anterior</span></button>
+                        <button id="nextPage" class="btn btn-sm btn-primary px-4 ms-2" type="button"
+                            data-list-pagination="next"><span>Siguiente</span></button>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
