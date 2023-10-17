@@ -206,24 +206,25 @@
 
     <form method="post">
         {% csrf_token %}
-        
-        <div id="formset-forms">
-            <div class="visible-form">
-                <!-- Renderizar el primer formulario -->
-                <script type="text/html" id="form-template">  // id="inlineformsetname-template"
-                    // id='inlineformsetname-__prefix__' 
-                    <tr id="form-__prefix__" class= hide_all>
-                        {% for fields in form.empty_form.hidden_fields %}
-                            {{ fields }}
-                        {% endfor %}
-                    
-                        {% for fields in form.empty_form.visible_fields %}
-                            <td>{{fields}}</td>
-                        {% endfor %}
-                    </tr>
-                </script>
+        {{ form.management_form }}
 
-                {{ form }}
+        <div id="formset-forms">
+            <div class="visible-form" id="id_form-__prefix__">
+                <!-- Renderizar el primer formulario -->
+                {% for field in form %}
+                    <tr>
+                        <td>{{ field }}</td>
+                    </tr>
+                {% endfor %}
+                <div class="form-group">
+                    <input required type="text" id="id_form-0-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
+                    <ul id="id_form-0-search-productA-results" class="list-group text-dark mt-3"></ul>
+                </div>
+
+                <div class="form-group">
+                    <input required type="text" id="id_form-0-search-productB-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto B">
+                    <ul id="id_form-0-search-productB-results" class="list-group text-dark mt-3"></ul>
+                </div>
             </div>
         </div>
       
@@ -231,10 +232,6 @@
         <input type="submit" value="Guardar">
     </form>
 
-    <div class="form-group">
-        <input required type="text" id="search-products-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar por Nombre, Apellido o DNI">
-        <ul id="search-products-results" class="list-group text-dark mt-3"></ul>
-    </div>
 </div>
 
 
@@ -243,7 +240,17 @@
         const addFormButton = document.getElementById("add-form");
         const formsetForms = document.getElementById("formset-forms");
         
-        const emptyForm = `{{ form.empty_form }}`; // Dejo aqui es script porque de esta forma toma facil los datos de la
+        const emptyForm = `
+                {{ form.empty_form }}
+                <div class="form-group">
+                    <input required type="text" id="id_form-__prefix__-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
+                    <ul id="id_form-__prefix__-search-productA-results" class="list-group text-dark mt-3"></ul>
+                </div>
+
+                <div class="form-group">
+                    <input required type="text" id="id_form-__prefix__-search-productB-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto B">
+                    <ul id="id_form-__prefix__-search-productB-results" class="list-group text-dark mt-3"></ul>
+                </div>`;
 
         addFormButton.addEventListener("click", function () {
             // Clonar los formularios visibles
@@ -256,6 +263,23 @@
             newForm.className = 'visible-form';
             newForm.id = `id_form-${count}`;
             newForm.innerHTML = tmplMarkup;
+
+            // Buscar los elementos input y ul dentro del formulario clonado
+            const searchInputA = newForm.querySelector(`#id_form-${count}-search-productA-input`);
+            const searchResultsA = newForm.querySelector(`#id_form-${count}-search-productA-results`);
+            const searchInputB = newForm.querySelector(`#id_form-${count}-search-productB-input`);
+            const searchResultsB = newForm.querySelector(`#id_form-${count}-search-productB-results`);
+
+            // Agregar los listeners de click a los elementos input
+            searchInputA.addEventListener('input', function () {
+                console.log('YES');
+                configureSearch(searchInputA, searchResultsA, 'productA');
+            });
+
+            searchInputB.addEventListener('input', function () {
+                configureSearch(searchInputB, searchResultsB, 'productB');
+            });
+
             formsetForms.appendChild(newForm);
 
             if (count > 0) {
