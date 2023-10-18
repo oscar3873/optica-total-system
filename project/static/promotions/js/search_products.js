@@ -1,3 +1,6 @@
+let idProductGlobal;
+let countGlobal = 0;
+let list=[];
 document.addEventListener("DOMContentLoaded", function () {
     
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
@@ -43,17 +46,37 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         searchResults.addEventListener('click', (event) => {
+
             const item = event.target.closest('.products');
             if (!item) {
                 return;
             }
 
             const productId = item.dataset.productId;
+            console.log('ID del prod seleccionado: ',productId);
+            idProductGlobal=productId;
             const productName = item.querySelector('h6').textContent;
 
             // Rellenar el campo del producto seleccionado y ocultar los resultados de búsqueda
             searchInput.value = productName;
             searchResults.innerHTML = '';
+
+
+            if(fieldIdentifier == 'productA'){
+                const radioProdA = document.getElementById(`radio-productA-${countGlobal}`);
+                radioProdA.value = productId;
+                radioProdA.name = `form-${countGlobal}-product`;
+                console.log(radioProdA);
+            }
+            else if(fieldIdentifier == 'productB'){
+                const radioProdB = document.getElementById(`radio-productB-${countGlobal}`);
+                radioProdB.value = productId;
+                console.log(radioProdB);
+            }
+
+
+
+
 
             // Añadir el ID del producto al formulario
             const productIdCheck = document.createElement('input');
@@ -72,11 +95,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const visibleForms = formsetForms.querySelectorAll(".visible-form");
         const count = visibleForms.length;
+        countGlobal = count;
+        console.log(countGlobal);
         const tmplMarkup = emptyForm.replace(/__prefix__/g, count);
 
         // Crear un nuevo formulario clonado
         const newForm = document.createElement('div');
         newForm.className = 'visible-form';
+        newForm.classList.add('border-top','pb-4');
         newForm.id = `id_form-${count}`;
         newForm.innerHTML = tmplMarkup;
         formsetForms.appendChild(newForm);
@@ -104,6 +130,20 @@ document.addEventListener("DOMContentLoaded", function () {
         const searchInputB = form.querySelector(`#${fieldPrefix}-search-productB-input`);
         const searchResultsB = form.querySelector(`#${fieldPrefix}-search-productB-results`);
 
+        let radioProductA = document.createElement('input');
+        radioProductA.type = 'radio';
+        console.log(radioProductA);
+        radioProductA.id = `radio-productA-${count}`;
+        radioProductA.hidden = true;
+        form.appendChild(radioProductA);
+
+        let radioProductB = document.createElement('input');
+        radioProductB.type = 'radio';
+        radioProductB.id = `radio-productB-${count}`;
+        radioProductB.hidden = true;
+        form.appendChild(radioProductB);
+
+
         configureSearch(searchInputA, searchResultsA, 'productA');
         configureSearch(searchInputB, searchResultsB, 'productB');
     }
@@ -111,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function configureDeleteButton(form) {
         const deleteButton = document.createElement('button');
         deleteButton.type = "button";
-        deleteButton.className = "delete-form";
+        deleteButton.className = "delete-form btn btn-warning";
         deleteButton.textContent = "Eliminar";
         deleteButton.addEventListener('click', function() {
             form.remove();
@@ -132,23 +172,68 @@ document.addEventListener("DOMContentLoaded", function () {
             form.id = fieldPrefix;
     
             console.log(form);
-    
-            const formChildren = Array.from(form.children);
-    
-            formChildren.forEach(child => {
-                if (child.tagName === "DIV") {
-                    const fields = child.querySelectorAll('[name^="form-"]');
-                    fields.forEach(field => {
-                        const fieldName = field.getAttribute("name");
-                        const newFieldName = fieldName.replace(/form-\d+-/, `form-${index}-`);
-                        field.setAttribute("name", newFieldName);
-    
-                        const fieldId = field.getAttribute("id");
-                        const newFieldId = fieldId.replace(/id_form-\d+-/, `id_form-${index}-`);
-                        field.setAttribute("id", newFieldId);
-                    });
-                }
+
+            const childrensByName = Array.from(form.querySelectorAll('[name^="form-"]'));
+            childrensByName.forEach(element => {
+                const elementName = element.getAttribute('name');
+                const currentNum = elementName.match(/\d+/)[0];
+                const newElementName = elementName.replace(currentNum, index);
+                element.setAttribute('name', newElementName);
+
+                const elementId = element.getAttribute("id");
+                const currentIdNum = elementId.match(/\d+/)[0];
+                const newElementId = elementId.replace(currentIdNum, index);
+                element.setAttribute('id', newElementId);
             });
+
+            const childrensById = Array.from(form.querySelectorAll('[id^="id_form"]'));
+            childrensById.forEach(element => {
+                const elementId = element.getAttribute('id');
+                const currentIdNum = elementId.match(/\d+/)[0];
+                const newElementId = elementId.replace(currentIdNum, index);
+                element.setAttribute('id', newElementId);
+            });
+
+            const radioChildrens = Array.from(form.querySelectorAll('[id^="radio-product"]'));
+            radioChildrens.forEach(element => {
+                const elementId = element.getAttribute('id');
+                const currentIdNum = elementId.match(/\d+/)[0];
+                const newElementId = elementId.replace(currentIdNum, index);
+                element.setAttribute('id', newElementId);
+            });
+
+    
+            // const formChildren = Array.from(form.children);
+            // formChildren.forEach(child => {
+            //     const elements = child.querySelectorAll('[name^="form-"]');
+            //     elements.forEach(element => {
+            //         const elementName = element.getAttribute('name');
+            //         const currentNum = elementName.match(/\d+/)[0];
+            //         const newElementName = elementName.replace(currentNum, index);
+            //         element.setAttribute("name", newElementName);
+
+            //         const elementId = element.getAttribute("id");
+            //         const currentIdNum = elementId.match(/\d+/)[0];
+            //         const newElementId = elementId.replace(currentIdNum, index);
+            //         element.setAttribute("id", newElementId);
+            //     });
+            // });
+    
+            // formChildren.forEach(child => {
+            //     console.log('HIJO: ',child);
+            //     if (child.tagName === "DIV") {
+            //         const fields = child.querySelectorAll('[name^="form-"]');
+            //         fields.forEach(field => {
+            //             const fieldName = field.getAttribute("name");
+            //             const newFieldName = fieldName.replace(/form-\d+-/, `form-${index}-`);
+            //             field.setAttribute("name", newFieldName);
+    
+            //             const fieldId = field.getAttribute("id");
+            //             const newFieldId = fieldId.replace(/id_form-\d+-/, `id_form-${index}-`);
+            //             field.setAttribute("id", newFieldId);
+            //         });
+            //     }
+            // });
         });
     
         updateFormsetFormCount(forms.length);
@@ -165,14 +250,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const emptyForm = `
         ${new_hidden_form.outerHTML}
-        <div class="form-group">
-            <input required type="text" id="id_form-__prefix__-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
-            <ul id="id_form-__prefix__-search-productA-results" class="list-group text-dark mt-3"></ul>
-        </div>
+        <div class="row pt-3">
+            <h4>Combo</h4>
+            <div class="row">
+                <div class="col-12 col-sm-4 form-group">
+                    <input required type="text" id="id_form-__prefix__-search-productA-input" class="form-control form-control-sm shadow-none search" placeholder="Buscar producto A">
+                    <ul id="id_form-__prefix__-search-productA-results" class="list-group text-dark mt-3"></ul>
+                </div>
 
-        <div class="form-group">
-            <input required type="text" id="id_form-__prefix__-search-productB-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto B">
-            <ul id="id_form-__prefix__-search-productB-results" class="list-group text-dark mt-3"></ul>
+                <div class="col-12 col-sm-4 form-group">
+                    <input required type="text" id="id_form-__prefix__-search-productB-input" class="form-control form-control-sm shadow-none search" placeholder="Buscar producto B">
+                    <ul id="id_form-__prefix__-search-productB-results" class="list-group text-dark mt-3"></ul>
+                </div>
+            </div>
         </div>`;
 
     addFormButton.addEventListener("click", addForm);

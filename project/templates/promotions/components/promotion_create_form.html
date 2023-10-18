@@ -13,8 +13,9 @@
                 <i class="fa-inverse fa-stack-1x text-primary fas fa-money-check"></i>
             </span>
             <div class="col">
-                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Nueva promoción</span><span
-                    class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Nueva
+                        promoción</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
                 <p class="mb-0">Aquí puede crear una nueva promoción</p>
             </div>
         </div>
@@ -26,88 +27,122 @@
         <div class="card-header bg-light pt-3 pb-2">
             <div class="row pb-md-0">
                 <div class="col-12 col-sm-6">
-                    <h5 class="mb-2">Nueva promoción</h5>
+                    <h5 class="mb-2"></h5>
                 </div>
             </div>
         </div>
         <!-- BODY DE LA CARD -->
-        <div class="card-body border-top">            
+        <div class="card-body border-top">
             <div class="row">
-                <div class="col-lg-6 mb-3 mb-sm-0">
+                <div class="col-lg-12 mb-3 mb-sm-0">
                     <div class="row">
                         <form id="#" method="post">
                             {% csrf_token %}
-                            <div class="row">
-                                {% for f in form %}
-                                <div class="col-12 col-md-12">
-                                    <label for="{{ f.name.id_for_label }}" class="form-label">Nombre de la promoción:</label>
-                                        {{f.name}}
-                                    <small>El nombre de la promoción debe tener <span class="text-warning">al menos 3 caracteres.</span></small>
-                                    {% if f.name.errors %}
-                                    <div class="text-danger fs--2">
-                                        {{f.name.errors}}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                <div class="row pt-sm-3">
-                                    <div class="col-12 col-md-6 pt-3 pt-sm-0">
-                                        <label for="{{ f.type_discount.id_for_label }}" class="form-label">Promoción:</label>
-                                        {{f.type_discount}}
-                                        <small> <span class="text-warning"></span></small>
-                                        {% if f.type_discount.errors %}
-                                        <div class="text-danger fs--2">
-                                            {{f.type_discount.errors}}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-    
-                                    <div class="col-12 col-md-6 pt-3 pt-sm-0">
-                                        <label for="{{ f.discount.id_for_label }}" class="form-label">Descuento:</label>
-                                        {{f.discount}}
-                                        <small> <span class="text-warning"></span></small>
-                                        {% if f.discount.errors %}
-                                        <div class="text-danger fs--2">
-                                            {{f.discount.errors}}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                
-                                <div class="row pt-sm-3">
-                                    <div class="col-12 col-md-6 pt-3 pt-sm-0">
-                                        <label for="{{f.start_date.id_for_label}}" class="form-label">Fecha de inicio:</label>
-                                        {{f.start_date}}
-                                        <small> <span class="text-warning"></span></small>
-                                        {% if f.start_date.errors %}
-                                        <div class="text-danger fs--2">
-                                            {{f.start_date.errors}}
-                                        </div>
-                                        {% endif %}
-                                    </div>
+                            {{form.management_form}}
 
-                                    <div class="col-12 col-md-6 pt-3 pt-sm-0">
-                                        <label for="" class="form-label">Fecha de finalización:</label>
-                                        {{f.end_date}}
-                                        <small> <span class="text-warning"></span></small>
-                                        {% if f.end_date.errors %}
-                                        <div class="text-danger fs--2">
-                                            {{f.end_date.errors}}
+                            <div id="form-hidden" hidden data-form='{{ form.empty_form }}'></div>
+
+                            <div id="formset-forms">
+                                <div class="visible-form" id="id_form-0">
+                                    <div class="row">
+                                        {% for f in form %}
+                                        <div class="col-12 col-md-8 col-lg-6">
+                                            <label for="{{ f.name.id_for_label }}" class="form-label">Nombre de la
+                                                promoción:</label>
+                                            {{f.name}}
+                                            <small>El nombre de la promoción debe tener <span class="text-warning">al
+                                                    menos 3
+                                                    caracteres.</span></small>
+                                            {% if f.name.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{f.name.errors}}
+                                            </div>
+                                            {% endif %}
                                         </div>
-                                        {% endif %}
+                                        
+
+                                        <div class="row pt-sm-3">
+
+                                            <div class="col-12 col-md-3 pt-3 pt-sm-0">
+                                                <label for="{{ f.type_discount.id_for_label }}"
+                                                    class="form-label">Promoción:</label>
+                                                {{f.type_discount}}
+                                                <small> <span class="text-warning"></span></small>
+                                                {% if f.type_discount.errors %}
+                                                <div class="text-danger fs--2">
+                                                    {{f.type_discount.errors}}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-12 col-md-3 pt-3 pt-sm-0">
+                                                <label for="{{f.start_date.id_for_label}}" class="form-label">Fecha de
+                                                    inicio:</label>
+                                                {{f.start_date}}
+                                                <small> <span class="text-warning"></span></small>
+                                                {% if f.start_date.errors %}
+                                                <div class="text-danger fs--2">
+                                                    {{f.start_date.errors}}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="col-12 col-md-3 pt-3 pt-sm-0">
+                                                <label for="" class="form-label">Fecha de finalización:</label>
+                                                {{f.end_date}}
+                                                <small> <span class="text-warning"></span></small>
+                                                {% if f.end_date.errors %}
+                                                <div class="text-danger fs--2">
+                                                    {{f.end_date.errors}}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-md-12 pt-3">
+                                                <label for="{{f.description.id_for_label}}"
+                                                    class="form-label">Descripción:</label>
+                                                {{f.description}}
+                                                <small><span class="text-warning"></span></small>
+                                                {% if f.description.errors %}
+                                                <div class="text-danger fs--2">
+                                                    {{f.description.errors}}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        {% endfor %}
+
+                                        <div class="row pt-5 pt-sm-4 pb-3">
+                                            <h4>Combo</h4>
+                                            <div class="col-12 col-sm-4 form-group">
+                                                <input required type="text" id="id_form-0-search-productA-input"
+                                                    class="form-control form-control-sm shadow-none search"
+                                                    placeholder="Buscar producto A">
+                                                <ul id="id_form-0-search-productA-results"
+                                                    class="list-group text-dark mt-3"></ul>
+                                                    <input type="radio" id="radio-productA-0" name="" value="opcion1" hidden>
+                                            </div>
+
+                                            <div class="col-12 col-sm-4 form-group">
+                                                <input required type="text" id="id_form-0-search-productB-input"
+                                                    class="form-control form-control-sm shadow-none search"
+                                                    placeholder="Buscar producto B">
+                                                <ul id="id_form-0-search-productB-results"
+                                                    class="list-group text-dark mt-3"></ul>
+                                                    <input type="radio" id="radio-productB-0" name="" value="opcion1" hidden>
+                                            </div>
+                                        </div>
+                                        
+
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-6 pt-3">
-                                    <label for="{{f.description.id_for_label}}" class="form-label">Descripción:</label>
-                                    {{f.description}}
-                                    <small><span class="text-warning"></span></small>
-                                    {% if f.description.errors %}
-                                    <div class="text-danger fs--2">
-                                        {{f.description.errors}}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                                {% endfor %}
                             </div>
+                            <button id="add-form" type="button" class="btn btn-primary">Agregar otro</button>
+                            <button type="submit" class="btn btn-primary">Cargar</button>
+
+                            <!-- <input type="submit" value="Guardar"> -->
                         </form>
                     </div>
 
@@ -115,44 +150,10 @@
             </div>
         </div>
     </div>
-    
-</div>
-
-
-
-
-
-<div class="container">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.management_form }}
-
-        <div id="form-hidden" hidden data-form='{{ form.empty_form }}'></div>
-
-        <div id="formset-forms">
-            <div class="visible-form" id="id_form-0">
-                <!-- Renderizar el primer formulario -->
-                <div>
-                    {% for field in form %}
-                        <tr>
-                            <td>{{ field }}</td>
-                        </tr>
-                    {% endfor %}
-                </div>
-                <div class="form-group">
-                    <input required type="text" id="id_form-0-search-productA-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto A">
-                    <ul id="id_form-0-search-productA-results" class="list-group text-dark mt-3"></ul>
-                </div>
-
-                <div class="form-group">
-                    <input required type="text" id="id_form-0-search-productB-input" class="form-control rounded p-3 box-shadow" placeholder="Buscar producto B">
-                    <ul id="id_form-0-search-productB-results" class="list-group text-dark mt-3"></ul>
-                </div>
-            </div>
-        </div>
-      
-        <button id="add-form" type="button">Agregar más</button>
-        <input type="submit" value="Guardar">
-    </form>
 
 </div>
+
+
+
+
+
