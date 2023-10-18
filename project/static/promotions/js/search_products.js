@@ -1,6 +1,6 @@
 let idProductGlobal;
 let countGlobal = 0;
-let list=[];
+let setProductIds = new Set();
 document.addEventListener("DOMContentLoaded", function () {
     
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
@@ -25,18 +25,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
 
                     products.forEach(product => {
-                        const item = document.createElement('li');
-                        item.style.zIndex = "9999";
-                        item.style.cursor = 'pointer';
-                        item.classList.add('list-group-item', 'products');
-                        item.dataset.productId = product.id;
-                        item.innerHTML = `
+                        console.log(product.id);
+                        console.log(setProductIds.has(product.id));
+                        if(!setProductIds.has(product.id)){
+                            console.log(`El producto id=${product.id} ya fue seleccionado.`);
+                            const item = document.createElement('li');
+                            item.style.zIndex = "9999";
+                            item.style.cursor = 'pointer';
+                            item.classList.add('list-group-item', 'products');
+                            item.dataset.productId = product.id;
+                            item.innerHTML = `
                             <div class="d-flex justify-content-between">
                                 <h6>${product.name}</h6>
                                 <h6 class="font-weight-bold">&nbsp${product.barcode}</h6>
                             </div>
                         `;
                         searchResults.appendChild(item);
+                        };
+                        
                     });
                 },
                 error: function(error) {
@@ -64,6 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if(fieldIdentifier == 'productA'){
                 const radioProdA = document.getElementById(`radio-productA-${countGlobal}`);
+                setProductIds.delete(parseInt(radioProdA.value));
                 radioProdA.value = productId;
                 radioProdA.name = `form-${countGlobal}-product`;
                 console.log(radioProdA);
@@ -73,6 +80,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 radioProdB.value = productId;
                 console.log(radioProdB);
             }
+            setProductIds.add(parseInt(productId));
+            console.log('conjunto: ',setProductIds);
 
 
 
@@ -247,7 +256,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const new_hidden_form = document.createElement("div");
     new_hidden_form.innerHTML = formulario;
     new_hidden_form.hidden = true;
-
     const emptyForm = `
         ${new_hidden_form.outerHTML}
         <div class="row pt-3">
@@ -257,7 +265,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     <input required type="text" id="id_form-__prefix__-search-productA-input" class="form-control form-control-sm shadow-none search" placeholder="Buscar producto A">
                     <ul id="id_form-__prefix__-search-productA-results" class="list-group text-dark mt-3"></ul>
                 </div>
-
+                <div class="col-1 text-center">
+                    <span class="fw-bold mb-1">+</span>
+                </div>
                 <div class="col-12 col-sm-4 form-group">
                     <input required type="text" id="id_form-__prefix__-search-productB-input" class="form-control form-control-sm shadow-none search" placeholder="Buscar producto B">
                     <ul id="id_form-__prefix__-search-productB-results" class="list-group text-dark mt-3"></ul>
