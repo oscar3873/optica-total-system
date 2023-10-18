@@ -1,7 +1,7 @@
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib import messages
-
+from django.views.generic import TemplateView
 from applications.core.mixins import CustomUserPassesTestMixin
 from .models import *
 from .forms import *
@@ -36,3 +36,7 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class PromotionDetailView(TemplateView):
+    template_name = 'promotions/promotions_detail_page.html'
