@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function configureDeleteButton(form) {
         const deleteButton = document.createElement('button');
         deleteButton.type = "button";
-        deleteButton.className = "delete-form btn btn-warning";
+        deleteButton.className = "delete-form btn btn-danger";
         deleteButton.textContent = "Eliminar";
         deleteButton.addEventListener('click', function() {
             form.remove();
