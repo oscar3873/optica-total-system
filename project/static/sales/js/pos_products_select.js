@@ -132,7 +132,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener para el campo de búsqueda
     searchInput.addEventListener('input', handleSearch);
 
-    const promotions = [];
+    let promotions = [];
+
+    let promotionA = [];
+    let promotionB = [];
+    let promotionC = [];
 
     function handleSearch() {
         const query = searchInput.value;
@@ -142,12 +146,11 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Realiza la solicitud AJAX y obtiene los datos de los productos
             $.ajax({
-                url: `/products/ajax_search_products/?search_term=${query}`,
+                url: `/promotions/ajax_promotional_products`,
                 type: 'GET',
                 dataType: 'json',
-                success : function (data) {
-                    promotions = data.promotions;
-                    console.log(promotions);
+                success : function (allPromotions) {
+                    promotions = allPromotions
                 }
             });
 
@@ -196,49 +199,29 @@ document.addEventListener('DOMContentLoaded', function() {
         const formCheckDiv = document.createElement('div');
         formCheckDiv.classList.add('form-check', 'mb-0', 'custom-radio', 'radio-select', 'ps-0');
     
-        // Checkboxes de los productos encontrados
-        const inputElement = document.createElement('input');
-        inputElement.classList.add('form-check-input');
-        inputElement.id = product.id;
-        inputElement.type = 'checkbox';
-        inputElement.name = 'products';
-        inputElement.value = product.id;
-        inputElement.addEventListener('change', function () {
-            const isChecked = inputElement.checked;
-            if (isChecked) {
-                addFormset(product);
-                // Agregar el producto a la lista de productos seleccionados
-                var productDiv_toPush = document.querySelector('div[data-product-id="' + inputElement.value + '"]');
-                selectedProducts.push(productDiv_toPush);
-            } else {
-                // Elimina el formset generado con la id del producto
-                removeProduct(product.id);
-            }
-            CalculateSubtotal();
-        });
-    
+        
         const labelElement = document.createElement('label');
         labelElement.classList.add('form-check-label', 'mb-0', 'fw-bold', 'd-block');
         labelElement.htmlFor = product.id;
-    
+        
         const labelText = document.createTextNode(`${product.category} - ${product.brand}`);
         labelElement.appendChild(labelText);
-    
+        
         const radioSelectContent = document.createElement('span');
         radioSelectContent.classList.add('radio-select-content');
     
         const innerRow = document.createElement('div');
         innerRow.classList.add('row', 'gx-card', 'mx-0', 'bg-200', 'fs--1', 'fw-semi-bold');
-    
+        
         const leftColumn = document.createElement('div');
         leftColumn.classList.add('col-8', 'py-3', 'ps-1');
-    
+        
         const dFlexContainer = document.createElement('div');
         dFlexContainer.classList.add('d-flex', 'align-items-center');
 
         const productNameLink = document.createElement('h5');
         productNameLink.classList.add('fs-0');
-
+        
         const barcode = document.createElement('div');
         barcode.classList.add('fs--1', 'text-500');
         barcode.textContent = 'COD: '+ product.barcode;
@@ -255,19 +238,56 @@ document.addEventListener('DOMContentLoaded', function() {
         productNameLink.appendChild(productLink);
         productpatternH5.appendChild(productNameLink);
         productpatternH5.appendChild(barcode);
-        dFlexContainer.appendChild(productpatternH5);
-        leftColumn.appendChild(dFlexContainer);
-    
+        
         const rightColumn = document.createElement('div');
         rightColumn.classList.add('col-4', 'py-3', 'ps-1');
-
+        
         const colMd4 = document.createElement('div');
         colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
         colMd4.id = `price-${product.id}`;
         colMd4.textContent = `$ ${product.sale_price}`;
-
+        
         rightColumn.appendChild(colMd4);
-   
+        
+        // Checkboxes de los productos encontrados
+        const inputElement = document.createElement('input');
+        inputElement.classList.add('form-check-input');
+        inputElement.id = product.id;
+        inputElement.type = 'checkbox';
+        inputElement.name = 'products';
+        inputElement.value = product.id;
+        inputElement.addEventListener('change', function () {
+            const isChecked = inputElement.checked;
+            if (isChecked) {
+                addFormset(product);
+                // Agregar el producto a la lista de productos seleccionados
+                var productDiv_toPush = document.querySelector('div[data-product-id="' + inputElement.value + '"]');
+                selectedProducts.push(productDiv_toPush);
+    
+                console.log(promotions, inputElement.value);
+                var in_promotion = searchKeyPromotions(promotions, inputElement.value);
+                console.log(in_promotion);
+                if (in_promotion !== false) {
+                    if (promotions[in_promotion].length > 1){
+                        const show_promotion = document.createElement('div');
+                        show_promotion.classList.add('fs-2', 'text-success');
+                        console.log(in_promotion);
+                        show_promotion.textContent = in_promotion === 'A' ? '2x1' :
+                                                     in_promotion === 'B' ? '50% off' :
+                                                     '-%';
+                        productpatternH5.appendChild(show_promotion);
+                    }
+                }
+            } else {
+                // Elimina el formset generado con la id del producto
+                removeProduct(product.id);
+            }
+            CalculateSubtotal();
+        });
+
+        dFlexContainer.appendChild(productpatternH5);
+        leftColumn.appendChild(dFlexContainer);
+
         innerRow.appendChild(leftColumn);
         innerRow.appendChild(rightColumn);
         radioSelectContent.appendChild(innerRow);
@@ -277,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function() {
         productDiv.appendChild(formCheckDiv);
 
         productDiv.dataset.productId = product.id;
-    
+        
         return productDiv;
     } 
 
@@ -357,7 +377,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function CalculateSubtotal() {
         const checkboxes = document.querySelectorAll('#selected-products-list input[type="checkbox"]');
-        console.log(checkboxes);
         let subtotalValue = 0.00;
       
         checkboxes.forEach(checkbox => {
@@ -388,5 +407,24 @@ document.addEventListener('DOMContentLoaded', function() {
         TotalSuccess.textContent = `$ ${total}`;
 
         totalOfForms.value = total;
+    }
+
+    function searchKeyPromotions(promotions, id) {
+        for (var key in promotions) {
+            if (promotions.hasOwnProperty(key)) {
+                if (promotions[key].includes(id)) {
+                    console.log(promotions[key]);
+                    if (promotions[key] === 'A'){ //            2x1
+                        promotionA.appendChild(promotions[key]);
+                    }else if (promotions[key] === 'B'){ //      -% en 2da unidad
+                        promotionB.appendChild(promotions[key]);
+                    }else { //                                  % 
+                        promotionC.appendChild(promotions[key]);
+                    }
+                    return key;
+                }
+            }
+        }
+        return false;
     }
 });

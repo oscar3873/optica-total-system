@@ -52,10 +52,20 @@ def ajax_promotional_products(request):
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
+        # promotions = Promotion.objects.all()
+        # data = {}
+
+        # for promotion in promotions:
+        #     type_discount = promotion.type_discount
+        #     products = PromotionProduct.objects.filter(promotion=promotion)
+        #     product_ids = [product.product.id for product in products]
+        #     data[type_discount] = product_ids
+
+        # print(data)
+
         list_promotion = { # Lista de promociones con sus respectivos productos asociados
-            'A' : ['1', '2', '3'], # 2x1
+            'A' : ['15', '14', '3'], # 2x1
             'B' : ['4', '5'],      # 50% off
             'C' : [''],            # descuento %
         }
-        # Crear una lista de diccionarios con los datos de los empleados
-        return JsonResponse({'promotions': list_promotion})
+        return JsonResponse(list_promotion)
