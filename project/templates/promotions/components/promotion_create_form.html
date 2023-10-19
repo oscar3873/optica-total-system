@@ -113,28 +113,15 @@
 
                                         {% endfor %}
 
-                                        <div class="row pt-5 pt-sm-4 pb-3">
-                                            <div class="col-12 col-sm-4 form-group">
+                                        <div class="row pt-5 pb-3">
+                                            <div class="col-12 col-sm-6 form-group">
                                                 <div class="input-group">
                                                     <input required type="search" id="id_form-0-search-productA-input"
                                                     class="form-control form-control-sm shadow-none search"
-                                                    placeholder="Buscar producto A">
+                                                    placeholder="Buscar producto">
                                                     <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                                                     <ul id="id_form-0-search-productA-results"
                                                     class="list-group text-dark mt-3"></ul>
-                                                </div>
-                                            </div>
-                                            <div class="col-1 text-center">
-                                                <span class="fw-bold mb-1">+</span>
-                                            </div>
-                                            <div class="col-12 col-sm-4 form-group">
-                                                <div class="input-group">
-                                                    <input required type="search" id="id_form-0-search-productB-input"
-                                                        class="form-control form-control-sm shadow-none search"
-                                                        placeholder="Buscar producto B">
-                                                        <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
-                                                        <ul id="id_form-0-search-productB-results"
-                                                        class="list-group text-dark mt-3"></ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -143,9 +130,12 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="add-form" type="button" class="btn btn-primary">Agregar otro</button>
+                            <!-- <button id="add-form" type="button" class="btn btn-primary">Agregar otro</button> -->
                             <button type="submit" class="btn btn-primary">Cargar</button>
-
+                            <div class="pt-4 pb-2">
+                                <h5>Productos seleccionados:</h5>
+                                <div id="products-selected" class="form-check d-flex flex-column" hidden></div>
+                            </div>
                             <!-- <input type="submit" value="Guardar"> -->
                         </form>
                     </div>
