@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -40,3 +41,21 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
 
 class PromotionDetailView(TemplateView):
     template_name = 'promotions/promotions_detail_page.html'
+
+
+def ajax_promotional_products(request):
+    branch = request.user.branch
+
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+
+        list_promotion = { # Lista de promociones con sus respectivos productos asociados
+            'A' : ['1', '2', '3'], # 2x1
+            'B' : ['4', '5'],      # 50% off
+            'C' : [''],            # descuento %
+        }
+        # Crear una lista de diccionarios con los datos de los empleados
+        return JsonResponse({'promotions': list_promotion})
