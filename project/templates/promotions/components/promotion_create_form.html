@@ -76,8 +76,7 @@
                                             </div>
 
                                             <div class="col-12 col-md-3 pt-3 pt-sm-0">
-                                                <label for="{{f.start_date.id_for_label}}" class="form-label">Fecha de
-                                                    inicio:</label>
+                                                <label for="{{f.start_date.id_for_label}}" class="form-label">Inicio:</label>
                                                 {{f.start_date}}
                                                 <small> <span class="text-warning"></span></small>
                                                 {% if f.start_date.errors %}
@@ -88,7 +87,7 @@
                                             </div>
 
                                             <div class="col-12 col-md-3 pt-3 pt-sm-0">
-                                                <label for="" class="form-label">Fecha de finalización:</label>
+                                                <label for="" class="form-label">Finalización:</label>
                                                 {{f.end_date}}
                                                 <small> <span class="text-warning"></span></small>
                                                 {% if f.end_date.errors %}
@@ -115,8 +114,6 @@
                                         {% endfor %}
 
                                         <div class="row pt-5 pt-sm-4 pb-3">
-                                            <h4>Combo</h4>
-                                            
                                             <div class="col-12 col-sm-4 form-group">
                                                 <div class="input-group">
                                                     <input required type="search" id="id_form-0-search-productA-input"
@@ -125,7 +122,6 @@
                                                     <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                                                     <ul id="id_form-0-search-productA-results"
                                                     class="list-group text-dark mt-3"></ul>
-                                                    <input type="radio" id="radio-productA-0" name="" value="opcion1" hidden>
                                                 </div>
                                             </div>
                                             <div class="col-1 text-center">
@@ -139,7 +135,6 @@
                                                         <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                                                         <ul id="id_form-0-search-productB-results"
                                                         class="list-group text-dark mt-3"></ul>
-                                                        <input type="radio" id="radio-productB-0" name="" value="opcion1" hidden>
                                                 </div>
                                             </div>
                                         </div>
