@@ -65,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         quantity_variant.id = `id_order_detaill-${product.id}-quantity`;
         quantity_variant.name = `order_detaill-${count}-quantity`;
         
-        
         const plusButton = document.createElement('button');
         plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size');
         plusButton.setAttribute('data-type', 'plus');
@@ -73,6 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
         plusButton.textContent = '+';
         plusButton.type = 'button';
         plusButton.addEventListener('click', handleQuantityButtonClick);
+
+        const discount = document.createElement('input');
+        discount.classList.add('form-control');
+        discount.style.width = '6rem';
+        discount.setAttribute('placeholder', 'Ej: 25');
+        discount.id = `id_order_detaill-${product.id}-discount`;
+        discount.name = `order_detaill-${count}-discount`
+        discount.type = 'number';
+        
+        const discountLabel = document.createElement('label');
+        discountLabel.setAttribute('for', discount.id );
+        discountLabel.textContent = 'Descuento:';
         
         quantityRow.appendChild(minusButton);
         quantityRow.appendChild(quantity_variant);
@@ -83,13 +94,14 @@ document.addEventListener('DOMContentLoaded', function() {
         headerrow.appendChild(divdetail);
         headerrow.appendChild(checkbox_form);
         headerrow.appendChild(quantityRowcontainer);
+        headerrow.appendChild(discountLabel);
+        headerrow.appendChild(discount);
         headerrow.appendChild(buttonRemove);
 
         rowProduct.appendChild(headerrow);
         rowProduct.appendChild(pricerow);
     
         rowProduct.dataset.productId = product.id;
-
 
         itemVariants.appendChild(rowProduct);
 
@@ -137,6 +149,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let promotionA = [];
     let promotionB = [];
     let promotionC = [];
+
+    let priceA = [];
+    let priceB = [];
+    let priceC = [];
 
     function handleSearch() {
         const query = searchInput.value;
@@ -259,25 +275,54 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.addEventListener('change', function () {
             const isChecked = inputElement.checked;
             if (isChecked) {
-                addFormset(product);
-                // Agregar el producto a la lista de productos seleccionados
-                var productDiv_toPush = document.querySelector('div[data-product-id="' + inputElement.value + '"]');
-                selectedProducts.push(productDiv_toPush);
-    
-                console.log(promotions, inputElement.value);
-                var in_promotion = searchKeyPromotions(promotions, inputElement.value);
-                console.log(in_promotion);
-                if (in_promotion !== false) {
-                    if (promotions[in_promotion].length > 1){
-                        const show_promotion = document.createElement('div');
-                        show_promotion.classList.add('fs-2', 'text-success');
-                        console.log(in_promotion);
-                        show_promotion.textContent = in_promotion === 'A' ? '2x1' :
-                                                     in_promotion === 'B' ? '50% off' :
-                                                     '-%';
-                        productpatternH5.appendChild(show_promotion);
+                let formset = addFormset(product);
+                selectedProducts.push(formset);
+
+                var lista_promocion = searchKeyPromotions(inputElement.value, parseFloat(product.sale_price));
+                if (lista_promocion !== false) {
+                    if (lista_promocion[1].length > 1) {
+                        const productsSelects = [...selectproductsContainer.querySelectorAll(`div[id^="order_detaill-formset-"]`)];
+                       
+                        let promotion = 'promocion';
+                        if (lista_promocion[0] === 'A'){
+                            let quantity = priceA.length;
+                            if (quantity % 2 === 1){
+                                quantity = quantity/2 - 1
+                            }else{
+                                quantity = quantity/2
+                            }
+                            let restar_total = sumFirst_N_minors_Elements(priceA, quantity);
+                            console.log('restar al total cuando: 2x1 ',restar_total);
+                            promotion = '2x1';
+
+                        }else if (lista_promocion[0] === 'B'){
+                            let quantity = priceA.length;
+                            if (quantity % 2 === 1){
+                                quantity = quantity/2 - 1
+                            }else{
+                                quantity = quantity/2
+                            }
+                            let restar_total = parseFloat(sumFirst_N_minors_Elements(priceB, quantity) / 2);
+                            console.log('restar al total cuando: 5% off ',restar_total);
+                            promotion = '50% off 2da unidad';
+
+                        }else{
+                            console.log('Se esta pensando we');
+                            promotion = '% Descuento'
+                        }
+                        
+                        productsSelects.forEach(product_promo => {
+                            const inputElement = product_promo.querySelector('input');
+                            if (inputElement && lista_promocion[1].includes(inputElement.value)) {
+                                const show_promotion = document.createElement('div');
+                                show_promotion.classList.add('fs-1', 'text-success');
+                                show_promotion.textContent = promotion;
+                                product_promo.lastChild.appendChild(show_promotion);
+                            }
+                        });
                     }
                 }
+
             } else {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
@@ -302,18 +347,21 @@ document.addEventListener('DOMContentLoaded', function() {
     } 
 
     function reorderFormNames() {
-        var forms = $('#selected-products-list').children();
-
-        forms.each(function(i) {
-            $(this).find('input').each(function() {
-                const [, number, fieldName] = $(this).attr('name').match(/^order_detaill-(\d+)-(product|quantity)$/);
+        const forms = document.querySelectorAll('#selected-products-list > div');
+    
+        forms.forEach((form, i) => {
+            const inputs = form.querySelectorAll('input');
+    
+            inputs.forEach(input => {
+                const [, number, fieldName] = input.getAttribute('name').match(/^order_detaill-(\d+)-(product|quantity|discount)$/);
+    
                 if (number && fieldName) {
-                    $(this).attr('name', `order_detaill-${i}-${fieldName}`);
+                    input.setAttribute('name', `order_detaill-${i}-${fieldName}`);
                 }
             });
         });
-    }    
-
+    }
+    
     function removeProduct(productId) {
         if (!productId) {
             return; // Salir de la función si el elemento no existe
@@ -409,22 +457,36 @@ document.addEventListener('DOMContentLoaded', function() {
         totalOfForms.value = total;
     }
 
-    function searchKeyPromotions(promotions, id) {
+    function searchKeyPromotions(id, price) {
         for (var key in promotions) {
             if (promotions.hasOwnProperty(key)) {
                 if (promotions[key].includes(id)) {
-                    console.log(promotions[key]);
-                    if (promotions[key] === 'A'){ //            2x1
-                        promotionA.appendChild(promotions[key]);
-                    }else if (promotions[key] === 'B'){ //      -% en 2da unidad
-                        promotionB.appendChild(promotions[key]);
-                    }else { //                                  % 
-                        promotionC.appendChild(promotions[key]);
+                    if (key === 'A'){               // 2x1
+                        promotionA.push(id);
+                        priceA.push(price);
+                        priceA.sort((a, b) => a - b);
+
+                        return ['A', promotionA];
+
+                    }else if (key === 'B'){         // -50% en 2da unidad
+                        promotionB.push(id);
+                        priceB.push(price);
+                        priceB.sort((a, b) => a - b);
+                        
+                        return ['B', promotionB];
+
+                    }else if (key === 'C'){         // % 
+                        promotionC.push(id);
+
+                        return ['C', promotionC];
                     }
-                    return key;
                 }
             }
         }
         return false;
     }
+
+    function sumFirst_N_minors_Elements(list, n) {
+        return list.slice(0, n).reduce((acumulador, elemento) => acumulador + elemento, 0);
+      }
 });

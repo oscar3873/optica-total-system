@@ -64,8 +64,8 @@ def ajax_promotional_products(request):
         # print(data)
 
         list_promotion = { # Lista de promociones con sus respectivos productos asociados
-            'A' : ['15', '14', '3'], # 2x1
-            'B' : ['4', '5'],      # 50% off
+            'A' : ['1', '4'], # 2x1
+            'B' : ['3', '2'],      # 50% off
             'C' : [''],            # descuento %
         }
         return JsonResponse(list_promotion)
