@@ -1,7 +1,8 @@
+from django.http import JsonResponse
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib import messages
-
+from django.views.generic import TemplateView
 from applications.core.mixins import CustomUserPassesTestMixin
 from .models import *
 from .forms import *
@@ -19,7 +20,52 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
             for extra_form in formset:
                 if extra_form.is_valid():
                     print('FORMSET UNIT',extra_form.cleaned_data)
+                    promotion = extra_form.save(commit=False)
+                    if promotion.name: # En teoria si tiene name, description, start_date, end_date es porque el formulario es el original (form-0)
+                        name = promotion.name
+                        description = promotion.description
+                        start_date = promotion.start_date
+                        end_date = promotion.end_date
+                    else:
+                        promotion.name = name
+                        promotion.description = description
+                        promotion.start_date = start_date
+                        promotion.end_date = end_date
+                    print(promotion)
+                    # promotion.save()
 
             return super().form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class PromotionDetailView(TemplateView):
+    template_name = 'promotions/promotions_detail_page.html'
+
+
+def ajax_promotional_products(request):
+    branch = request.user.branch
+
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+
+        # promotions = Promotion.objects.all()
+        # data = {}
+
+        # for promotion in promotions:
+        #     type_discount = promotion.type_discount
+        #     products = PromotionProduct.objects.filter(promotion=promotion)
+        #     product_ids = [product.product.id for product in products]
+        #     data[type_discount] = product_ids
+
+        # print(data)
+
+        list_promotion = { # Lista de promociones con sus respectivos productos asociados
+            'A' : ['1', '4'], # 2x1
+            'B' : ['3', '2'],      # 50% off
+            'C' : [''],            # descuento %
+        }
+        return JsonResponse(list_promotion)

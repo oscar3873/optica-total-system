@@ -27,16 +27,16 @@ class PromotionComboForm(forms.ModelForm):
 
     productA = forms.ModelChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.CheckboxSelectMultiple(),
+        widget=forms.RadioSelect(),
     )
 
     productB = forms.ModelChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.CheckboxSelectMultiple(),
+        widget=forms.RadioSelect(),
     )
     class Meta:
         model = Promotion
-        fields = ['name', 'description', 'start_date', 'end_date', 'discount', 'productA', 'productB']
+        fields = ['name', 'description', 'start_date', 'end_date', 'productA', 'productB']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

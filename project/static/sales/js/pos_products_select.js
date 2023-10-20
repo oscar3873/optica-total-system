@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
+
     // cuando el usuario hace clic en el botón "add more" de las variantes
     function addFormset(product) {
         const form = $('#selected-products-list').children()
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         const pricerow = document.createElement('th');
         pricerow.classList.add('fs-1', 'px-0', 'text-end', 'pt-0');
-        var priceSelected = product.price.replace(/\$/g, "");
+        var priceSelected = product.sale_price.replace(/\$/g, "");
         pricerow.textContent = `$ ${parseFloat(priceSelected).toFixed(2)}`;
         pricerow.id = `price-${product.id}`;
 
@@ -64,7 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
         quantity_variant.id = `id_order_detaill-${product.id}-quantity`;
         quantity_variant.name = `order_detaill-${count}-quantity`;
         
-        
         const plusButton = document.createElement('button');
         plusButton.classList.add('btn', 'btn-sm', 'btn-outline-secondary', 'border-300','px-3', 'py-2', 'btn-fixed-size');
         plusButton.setAttribute('data-type', 'plus');
@@ -72,6 +72,18 @@ document.addEventListener('DOMContentLoaded', function() {
         plusButton.textContent = '+';
         plusButton.type = 'button';
         plusButton.addEventListener('click', handleQuantityButtonClick);
+
+        const discount = document.createElement('input');
+        discount.classList.add('form-control');
+        discount.style.width = '6rem';
+        discount.setAttribute('placeholder', 'Ej: 25');
+        discount.id = `id_order_detaill-${product.id}-discount`;
+        discount.name = `order_detaill-${count}-discount`
+        discount.type = 'number';
+        
+        const discountLabel = document.createElement('label');
+        discountLabel.setAttribute('for', discount.id );
+        discountLabel.textContent = 'Descuento:';
         
         quantityRow.appendChild(minusButton);
         quantityRow.appendChild(quantity_variant);
@@ -82,13 +94,14 @@ document.addEventListener('DOMContentLoaded', function() {
         headerrow.appendChild(divdetail);
         headerrow.appendChild(checkbox_form);
         headerrow.appendChild(quantityRowcontainer);
+        headerrow.appendChild(discountLabel);
+        headerrow.appendChild(discount);
         headerrow.appendChild(buttonRemove);
 
         rowProduct.appendChild(headerrow);
         rowProduct.appendChild(pricerow);
     
         rowProduct.dataset.productId = product.id;
-
 
         itemVariants.appendChild(rowProduct);
 
@@ -131,6 +144,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener para el campo de búsqueda
     searchInput.addEventListener('input', handleSearch);
 
+    let promotions = [];
+
+    let promotionA = [];
+    let promotionB = [];
+    let promotionC = [];
+
+    let priceA = [];
+    let priceB = [];
+    let priceC = [];
+
     function handleSearch() {
         const query = searchInput.value;
     
@@ -138,17 +161,28 @@ document.addEventListener('DOMContentLoaded', function() {
             findsProductsContainer.innerHTML = 'Aqui veras los productos de la busqueda.';
         } else {
             // Realiza la solicitud AJAX y obtiene los datos de los productos
-            fetch(`/products/search/?q=${query}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.products.length === 0) {
+            $.ajax({
+                url: `/promotions/ajax_promotional_products`,
+                type: 'GET',
+                dataType: 'json',
+                success : function (allPromotions) {
+                    promotions = allPromotions
+                }
+            });
+
+            $.ajax({
+                url: `/products/ajax_search_products/?search_term=${query}`,
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.data.length === 0) {
                         findsProductsContainer.innerHTML = 'No se ha encontrado coincidencias.';
                     } else {
                         // Limpia los resultados anteriores
                         findsProductsContainer.innerHTML = '';
         
                         // Para cada producto en los resultados
-                        data.products.forEach(product => {
+                        data.data.forEach(product => {
                             // Crea un elemento HTML para el producto utilizando la función createProductElement
                             const productElement = createProductElement(product);
         
@@ -166,8 +200,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             findsProductsContainer.appendChild(productElement);
                         });
                     }
-                })
-                .catch(error => console.error(error));
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
         }
     }
 
@@ -178,6 +215,56 @@ document.addEventListener('DOMContentLoaded', function() {
         const formCheckDiv = document.createElement('div');
         formCheckDiv.classList.add('form-check', 'mb-0', 'custom-radio', 'radio-select', 'ps-0');
     
+        
+        const labelElement = document.createElement('label');
+        labelElement.classList.add('form-check-label', 'mb-0', 'fw-bold', 'd-block');
+        labelElement.htmlFor = product.id;
+        
+        const labelText = document.createTextNode(`${product.category} - ${product.brand}`);
+        labelElement.appendChild(labelText);
+        
+        const radioSelectContent = document.createElement('span');
+        radioSelectContent.classList.add('radio-select-content');
+    
+        const innerRow = document.createElement('div');
+        innerRow.classList.add('row', 'gx-card', 'mx-0', 'bg-200', 'fs--1', 'fw-semi-bold');
+        
+        const leftColumn = document.createElement('div');
+        leftColumn.classList.add('col-8', 'py-3', 'ps-1');
+        
+        const dFlexContainer = document.createElement('div');
+        dFlexContainer.classList.add('d-flex', 'align-items-center');
+
+        const productNameLink = document.createElement('h5');
+        productNameLink.classList.add('fs-0');
+        
+        const barcode = document.createElement('div');
+        barcode.classList.add('fs--1', 'text-500');
+        barcode.textContent = 'COD: '+ product.barcode;
+    
+        const productpatternH5 = document.createElement('div');
+        productpatternH5.classList.add('flex-1');
+        
+        const productLink = document.createElement('a');
+        productLink.classList.add('text-900');
+        productLink.href = `/products/detail/product/${product.id}/`;
+        const truncatedProductName = truncateString(product.name, 20);
+        productLink.textContent = truncatedProductName;
+    
+        productNameLink.appendChild(productLink);
+        productpatternH5.appendChild(productNameLink);
+        productpatternH5.appendChild(barcode);
+        
+        const rightColumn = document.createElement('div');
+        rightColumn.classList.add('col-4', 'py-3', 'ps-1');
+        
+        const colMd4 = document.createElement('div');
+        colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
+        colMd4.id = `price-${product.id}`;
+        colMd4.textContent = `$ ${product.sale_price}`;
+        
+        rightColumn.appendChild(colMd4);
+        
         // Checkboxes de los productos encontrados
         const inputElement = document.createElement('input');
         inputElement.classList.add('form-check-input');
@@ -188,70 +275,64 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.addEventListener('change', function () {
             const isChecked = inputElement.checked;
             if (isChecked) {
-                addFormset(product);
+                let formset = addFormset(product);
+                selectedProducts.push(formset);
 
-                // Agregar el producto a la lista de productos seleccionados
-                var productDiv_toPush = document.querySelector('div[data-product-id="' + inputElement.value + '"]');
-                selectedProducts.push(productDiv_toPush);
+                var lista_promocion = searchKeyPromotions(inputElement.value, parseFloat(product.sale_price));
+                if (lista_promocion !== false) {
+                    if (lista_promocion[1].length > 1) {
+                        const productsSelects = [...selectproductsContainer.querySelectorAll(`div[id^="order_detaill-formset-"]`)];
+                       
+                        let promotion = 'promocion';
+                        if (lista_promocion[0] === 'A'){
+                            let quantity = priceA.length;
+                            if (quantity % 2 === 1){
+                                quantity = quantity/2 - 1
+                            }else{
+                                quantity = quantity/2
+                            }
+                            let restar_total = sumFirst_N_minors_Elements(priceA, quantity);
+                            console.log('restar al total cuando: 2x1 ',restar_total);
+                            promotion = '2x1';
+
+                        }else if (lista_promocion[0] === 'B'){
+                            let quantity = priceA.length;
+                            if (quantity % 2 === 1){
+                                quantity = quantity/2 - 1
+                            }else{
+                                quantity = quantity/2
+                            }
+                            let restar_total = parseFloat(sumFirst_N_minors_Elements(priceB, quantity) / 2);
+                            console.log('restar al total cuando: 5% off ',restar_total);
+                            promotion = '50% off 2da unidad';
+
+                        }else{
+                            console.log('Se esta pensando we');
+                            promotion = '% Descuento'
+                        }
+                        
+                        productsSelects.forEach(product_promo => {
+                            const inputElement = product_promo.querySelector('input');
+                            if (inputElement && lista_promocion[1].includes(inputElement.value)) {
+                                const show_promotion = document.createElement('div');
+                                show_promotion.classList.add('fs-1', 'text-success');
+                                show_promotion.textContent = promotion;
+                                product_promo.lastChild.appendChild(show_promotion);
+                            }
+                        });
+                    }
+                }
+
             } else {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
             }
             CalculateSubtotal();
         });
-    
-        const labelElement = document.createElement('label');
-        labelElement.classList.add('form-check-label', 'mb-0', 'fw-bold', 'd-block');
-        labelElement.htmlFor = product.id;
-    
-        const labelText = document.createTextNode(`${product.category} - ${product.brand}`);
-        labelElement.appendChild(labelText);
-    
-        const radioSelectContent = document.createElement('span');
-        radioSelectContent.classList.add('radio-select-content');
-    
-        const innerRow = document.createElement('div');
-        innerRow.classList.add('row', 'gx-card', 'mx-0', 'bg-200', 'fs--1', 'fw-semi-bold');
-    
-        const leftColumn = document.createElement('div');
-        leftColumn.classList.add('col-8', 'py-3', 'ps-1');
-    
-        const dFlexContainer = document.createElement('div');
-        dFlexContainer.classList.add('d-flex', 'align-items-center');
 
-        const productNameLink = document.createElement('h5');
-        productNameLink.classList.add('fs-0');
-
-        const barcode = document.createElement('div');
-        barcode.classList.add('fs--1', 'text-500');
-        barcode.textContent = 'COD: '+ product.barcode;
-    
-        const productpatternH5 = document.createElement('div');
-        productpatternH5.classList.add('flex-1');
-        
-    
-        const productLink = document.createElement('a');
-        productLink.classList.add('text-900');
-        productLink.href = `/products/detail/product/${product.id}/`;
-        const truncatedProductName = truncateString(product.name, 20);
-        productLink.textContent = truncatedProductName;
-    
-        productNameLink.appendChild(productLink);
-        productpatternH5.appendChild(productNameLink);
-        productpatternH5.appendChild(barcode);
         dFlexContainer.appendChild(productpatternH5);
         leftColumn.appendChild(dFlexContainer);
-    
-        const rightColumn = document.createElement('div');
-        rightColumn.classList.add('col-4', 'py-3', 'ps-1');
 
-        const colMd4 = document.createElement('div');
-        colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
-        colMd4.id = `price-${product.id}`;
-        colMd4.textContent = `$ ${product.price}`;
-
-        rightColumn.appendChild(colMd4);
-   
         innerRow.appendChild(leftColumn);
         innerRow.appendChild(rightColumn);
         radioSelectContent.appendChild(innerRow);
@@ -261,23 +342,26 @@ document.addEventListener('DOMContentLoaded', function() {
         productDiv.appendChild(formCheckDiv);
 
         productDiv.dataset.productId = product.id;
-    
+        
         return productDiv;
     } 
 
     function reorderFormNames() {
-        var forms = $('#selected-products-list').children();
-
-        forms.each(function(i) {
-            $(this).find('input').each(function() {
-                const [, number, fieldName] = $(this).attr('name').match(/^order_detaill-(\d+)-(product|quantity)$/);
+        const forms = document.querySelectorAll('#selected-products-list > div');
+    
+        forms.forEach((form, i) => {
+            const inputs = form.querySelectorAll('input');
+    
+            inputs.forEach(input => {
+                const [, number, fieldName] = input.getAttribute('name').match(/^order_detaill-(\d+)-(product|quantity|discount)$/);
+    
                 if (number && fieldName) {
-                    $(this).attr('name', `order_detaill-${i}-${fieldName}`);
+                    input.setAttribute('name', `order_detaill-${i}-${fieldName}`);
                 }
             });
         });
-    }    
-
+    }
+    
     function removeProduct(productId) {
         if (!productId) {
             return; // Salir de la función si el elemento no existe
@@ -307,7 +391,6 @@ document.addEventListener('DOMContentLoaded', function() {
         totalForms.value = parseInt(totalForms.value) - 1;
 
         reorderFormNames();
-
         CalculateSubtotal();
     }
     
@@ -342,12 +425,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function CalculateSubtotal() {
         const checkboxes = document.querySelectorAll('#selected-products-list input[type="checkbox"]');
-        console.log(checkboxes);
         let subtotalValue = 0.00;
       
         checkboxes.forEach(checkbox => {
           if (checkbox.checked) {
-            console.log(checkbox.value);
             // Si el checkbox está marcado, obtén el precio y la cantidad del producto relacionado
             const productId = checkbox.value;
             const precio = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
@@ -374,7 +455,38 @@ document.addEventListener('DOMContentLoaded', function() {
         TotalSuccess.textContent = `$ ${total}`;
 
         totalOfForms.value = total;
-
     }
 
+    function searchKeyPromotions(id, price) {
+        for (var key in promotions) {
+            if (promotions.hasOwnProperty(key)) {
+                if (promotions[key].includes(id)) {
+                    if (key === 'A'){               // 2x1
+                        promotionA.push(id);
+                        priceA.push(price);
+                        priceA.sort((a, b) => a - b);
+
+                        return ['A', promotionA];
+
+                    }else if (key === 'B'){         // -50% en 2da unidad
+                        promotionB.push(id);
+                        priceB.push(price);
+                        priceB.sort((a, b) => a - b);
+                        
+                        return ['B', promotionB];
+
+                    }else if (key === 'C'){         // % 
+                        promotionC.push(id);
+
+                        return ['C', promotionC];
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    function sumFirst_N_minors_Elements(list, n) {
+        return list.slice(0, n).reduce((acumulador, elemento) => acumulador + elemento, 0);
+      }
 });

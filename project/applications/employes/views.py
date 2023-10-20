@@ -119,7 +119,7 @@ class EmployeeListView(LoginRequiredMixin, ListView):
     model = Employee
     template_name = 'employes/employee_list_page.html'
     context_object_name = 'employees'
-    paginate_by = 5
+    paginate_by = 25
 
     def get_queryset(self):
         branch = self.request.user.branch
