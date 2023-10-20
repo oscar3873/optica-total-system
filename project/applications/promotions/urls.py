@@ -20,5 +20,10 @@ urlpatterns = [
         'ajax_promotional_products',
         ajax_promotional_products,
         name = 'ajax_promotional_products'
+    ),
+    path(
+        'list',
+        PromotionListView.as_view(),
+        name = 'promotion_list'
     )
 ]
