@@ -28,7 +28,7 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
 
 #################################### DETAILS ####################################
 class PromotionDetailView(LoginRequiredMixin, DetailView):
-    template_name = 'promotions/promotion_detail.html'
+    template_name = 'promotions/promotion_detail_page.html'
     model = Promotion
     
     def get(self, request, *args, **kwargs):
@@ -56,7 +56,7 @@ class PromotionDetailView(LoginRequiredMixin, DetailView):
 class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Promotion  # Especifica el modelo a actualizar
     form_class = PromotionProductForm  # Utiliza el mismo formulario que la vista de creación
-    template_name = 'promotions/promotion_update.html'  # La plantilla para la página de actualización
+    template_name = 'promotions/promotion_update_page.html'  # La plantilla para la página de actualización
     success_url = reverse_lazy('core_app:home')  # URL de redirección exitosa
 
     def get_context_data(self, **kwargs):
@@ -76,7 +76,7 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
 #################################### LIST ####################################
 class PromotionListView(LoginRequiredMixin, ListView):
     model = Promotion
-    template_name = 'promotions/promotion_list.html'
+    template_name = 'promotions/promotion_list_page.html'
     context_object_name = 'promotions'
     paginate_by = 25
 
@@ -101,20 +101,9 @@ class PromotionListView(LoginRequiredMixin, ListView):
 # def ajax_promotional_products(request):
 #     branch = request.user.branch
 
-#     branch_actualy = request.session.get('branch_actualy')
-#     if request.user.is_staff and branch_actualy:
-#         branch = Branch.objects.get(id=branch_actualy)
 
-#     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-
-#         list_promotion = { # Lista de promociones con sus respectivos productos asociados
-#             'A' : ['1', '2', '3'], # 2x1
-#             'B' : ['4', '5'],      # 50% off
-#             'C' : [''],            # descuento %
-#         }
-#         # Crear una lista de diccionarios con los datos de los empleados
-#         return JsonResponse({'promotions': list_promotion})
-# comentado ajax viejo
+class PromotionDeleteView(DeleteView):
+    template_name = 'promotions/promotions_delete_page.html'
 
 def ajax_promotional_products(request):
     branch = request.user.branch
