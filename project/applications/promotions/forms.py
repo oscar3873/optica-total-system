@@ -1,42 +1,38 @@
 from django import forms
+from django import forms
 
 from applications.products.models import Product
-from .models import Promotion
+from .models import Promotion, TypePromotion
 
 
-class PromotionComboForm(forms.ModelForm):
-    PROMOTION = [
-        ('A', '2x1'),
-        ('B', '-50% 2da unidad'),
-    ]
-
+class PromotionProductForm(forms.ModelForm):
+    type_promotions = TypePromotion.objects.all().values_list('id', 'name')
+    
     type_discount = forms.ChoiceField(
-        choices = PROMOTION,
-        initial = PROMOTION[0]
+        choices=type_promotions,
+        initial = type_promotions[0] if type_promotions else None
     )
 
     start_date = forms.DateField(
         widget=forms.DateInput(
-            attrs={ 'type': 'date'}),
+            attrs={'type': 'date'},
+        ),
     )
 
     end_date = forms.DateField(
         widget=forms.DateInput(
-            attrs={ 'type': 'date'}),
+            attrs={'type': 'date'},
+        ),
     )
 
-    productA = forms.ModelChoiceField(
+    products = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.RadioSelect(),
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'product-checkboxes'}),
     )
 
-    productB = forms.ModelChoiceField(
-        queryset=Product.objects.all(),
-        widget=forms.RadioSelect(),
-    )
     class Meta:
         model = Promotion
-        fields = ['name', 'description', 'start_date', 'end_date', 'productA', 'productB']
+        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'products']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,9 +40,3 @@ class PromotionComboForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
-        
-PromotionFormSet = forms.formset_factory(
-    PromotionComboForm,
-    extra=1,
-    )
-
