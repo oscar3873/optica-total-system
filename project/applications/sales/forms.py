@@ -9,6 +9,15 @@ class SaleForm(ValidationFormMixin):
         required=False,
         initial= 0
     )
+
+    customer = forms.ModelChoiceField(
+        queryset = Customer.objects.all(),
+        widget = forms.RadioSelect()
+    )
+
+    def __init__(self, branch, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['customer'].queryset = Customer.objects.filter(branch)
     class Meta:
         model = Sale
         fields = ['total', 'customer']
