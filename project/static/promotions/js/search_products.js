@@ -29,7 +29,9 @@ document.addEventListener("DOMContentLoaded", function () {
                         if(!setProductIds.has(product.id)){
                             console.log(`El producto id=${product.id} ya fue seleccionado.`);
                             const item = document.createElement('li');
-                            item.style.zIndex = "9999";
+                            item.style.zIndex = "3";
+                            item.style.backgroundColor = '#675e5e';
+                            
                             item.style.cursor = 'pointer';
                             item.classList.add('list-group-item', 'products');
                             item.dataset.productId = product.id;
