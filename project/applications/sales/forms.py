@@ -21,23 +21,25 @@ class OrderDetailForm(forms.ModelForm):
         widget=forms.RadioSelect()  # Usamos RadioSelect para una selección única
     )
 
+    quantity = forms.IntegerField(
+        required = False,
+        initial = 1,
+        min_value = 1
+    )
+
     discount = forms.DecimalField( # Descuento unitario por producto (opcional para cada producto)
         required = False,
         initial = 0,
+        min_value = 0
     )
 
     class Meta:
         model = OrderDetail
-        fields = ['product', 'quantity']
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Agregar un campo de cantidad para cada producto seleccionado
-        self.fields['quantity'].required = False
+        fields = ['product', 'quantity', 'discount']
 
 OrderDetailFormset = forms.inlineformset_factory(
     Sale,
     OrderDetail,
     form=OrderDetailForm,
-    extra = 0,
+    extra = 1,
 )
