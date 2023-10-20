@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.http import HttpResponseRedirect
 from django.views.generic import *
 from django.urls import reverse_lazy
@@ -7,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 #Importaciones de la app
 from applications.branches.models import Branch
 from applications.clients.forms import CustomerForm
+from applications.promotions.models import Promotion
 from .models import *
 from .forms import *
 
@@ -25,7 +27,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         except Branch.DoesNotExist:
             branch = self.request.user.branch
 
-        context['sale_form'] = SaleForm
+        context['sale_form'] = SaleForm(branch = branch)
 
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
@@ -33,17 +35,26 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         saleform = SaleForm(self.request.POST)
-        if saleform.is_valid():
-            # sale = saleform.save(commit=False)
-            print(saleform.cleaned_data)
+
+        promotions_active = Promotion.objects.filter(is_active=True)
+
+        promotional_products = {promotion: [] for promotion in promotions_active}
 
         formsets = form
         # Procesa los datos del formulario aquí
         for formset in formsets:
             if formset.is_valid():
-                print('\n\n\n',formset.cleaned_data)
-            else:
-                print('\n\n\n',formset.errors) 
+                product = formset.cleaned_data['product']
+                quantity = formset.cleaned_data['quantity']
+                discount = 0 if not formset.cleaned_data['discount'] else formset.cleaned_data['discount']
+
+                promotion = product.in_promotion.last().filter(is_active=True) # in_promotion related name
+                if promotion:
+                    promotional_products[promotion].append((product, discount, quantity))
+
+
+
+
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
