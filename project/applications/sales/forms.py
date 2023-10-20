@@ -17,7 +17,7 @@ class SaleForm(ValidationFormMixin):
 
     def __init__(self, branch, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['customer'].queryset = Customer.objects.filter(branch)
+
     class Meta:
         model = Sale
         fields = ['total', 'customer']

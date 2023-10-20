@@ -48,13 +48,27 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 quantity = formset.cleaned_data['quantity']
                 discount = 0 if not formset.cleaned_data['discount'] else formset.cleaned_data['discount']
 
-                promotion = product.in_promotion.last().filter(is_active=True) # in_promotion related name
+                promotion = product.promotions.last().promotion
                 if promotion:
-                    promotional_products[promotion].append((product, discount, quantity))
+                    while quantity != 0:
+                        promotional_products[promotion].append((product, discount))
+                        quantity = quantity - 1
 
+        # Ordena los productos en cada promoción por precio
+        for promotion, products in promotional_products.items():
+            products = sorted(products, key=lambda product: product[0].sale_price)
+            discounted_prices = []
+            print(products)
 
+            for _, discount in products:
+                original_price = products[0][0].sale_price
+                discounted_price = original_price * Decimal(1 - (discount / 100))
+                discounted_prices.append(discounted_price)
 
-
+            # Actualiza la lista de productos en el diccionario con los precios finales
+            promotional_products[promotion] = discounted_prices
+        
+        print('\n\n',promotional_products)
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
