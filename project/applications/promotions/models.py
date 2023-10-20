@@ -25,15 +25,13 @@ class Promotion(models.Model):
     start_date = models.DateField(verbose_name='Inicio', null=True, blank=True)
     end_date = models.DateField(verbose_name='Fin', null=True, blank=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0, verbose_name="Descuento")
-    #is_active = models.BooleanField(default=True, verbose_name='Activo')
+    is_active = models.BooleanField(default=True, verbose_name='Activo')
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
 
     def str(self):
         return f'{self.name}\n{self.description}\nDescuento: {self.discount}%'
 
-    def is_active(self):
-        current_date = timezone.now().date()
-        return self.start_date <= current_date <= self.end_date
+    
 
 class PromotionProduct(BaseAbstractWithUser):
     promotion = models.ForeignKey(Promotion, on_delete=models.CASCADE, related_name='promotion_products', null=True, blank=True)
