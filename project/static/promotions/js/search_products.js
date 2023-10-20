@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             console.log(`El producto id=${product.id} ya fue seleccionado.`);
                             const item = document.createElement('li');
                             item.style.zIndex = "3";
-                            item.style.backgroundColor = '#675e5e';
+                            item.style.backgroundColor = '#748194';
                             
                             item.style.cursor = 'pointer';
                             item.classList.add('list-group-item', 'products');
