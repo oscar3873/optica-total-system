@@ -20,5 +20,22 @@ urlpatterns = [
         'ajax_promotional_products',
         ajax_promotional_products,
         name = 'ajax_promotional_products'
+    ),
+    
+    path(
+        'update',
+        PromotionUpdateView.as_view(),
+        name = 'promotion_update'
+    ),
+    
+    path(
+        'list',
+        PromotionListView.as_view(),
+        name = 'promotion_list'
+    ),
+    path(
+        'delete',
+        PromotionDeleteView.as_view(),
+        name = 'promotion_delete'
     )
 ]
