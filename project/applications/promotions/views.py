@@ -42,8 +42,11 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
 class PromotionDetailView(TemplateView):
     template_name = 'promotions/promotions_detail_page.html'
 
-class PromotionListView(TemplateView):
+class PromotionListView(ListView):
     template_name = 'promotions/promotions_list_page.html'
+
+class PromotionDeleteView(DeleteView):
+    template_name = 'promotions/promotions_delete_page.html'
 
 def ajax_promotional_products(request):
     branch = request.user.branch

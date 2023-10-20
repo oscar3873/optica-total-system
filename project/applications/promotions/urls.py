@@ -25,5 +25,10 @@ urlpatterns = [
         'list',
         PromotionListView.as_view(),
         name = 'promotion_list'
+    ),
+    path(
+        'list',
+        PromotionDeleteView.as_view(),
+        name = 'promotion_delete'
     )
 ]

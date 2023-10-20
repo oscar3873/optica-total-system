@@ -20,16 +20,17 @@
     </div>
 
 
+    {% if products %}
     <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
         <!--Card-->
         <div class="card z-index-1 mb-3" id="recentPurchaseTable"
-            data-list='{"valueNames":["first_name","last_name","phone_number","date_employee","user_made","email"],"page":8,"pagination":true}'>
+            data-list='{"valueNames":["user_made", "name","barcode","sale_price","description","stock","category","brand","branch"],"page":25,"pagination":true}'>
             <div class="card-header">
                 <div class="row flex-between-center">
-                    <div class="col-12 col-sm-auto d-flex align-items-center pe-0">
+                    <div class="col-12 text-center col-sm-auto d-flex align-items-center pe-0">
                         <div>
-                            <form id="searchForm" action="{% url 'employees_app:ajax_search_employee' %}" method="GET"
-                                data-ajax-search-url="{% url 'employees_app:ajax_search_employee' %}">
+                            <form id="searchForm" method="GET"
+                                data-ajax-search-url="{% url 'products_app:ajax_search_products' %}">
                                 <div class="input-group">
                                     <input maxlength="50" class="form-control form-control-sm shadow-none search"
                                         id="searchInput" type="search" placeholder="Buscar" aria-label="search" />
@@ -39,13 +40,17 @@
                             </form>
                         </div>
                     </div>
-                    <div class="col-12 mt-2 text-center col-sm-auto ms-auto sm-text-end ps-0">
+                    <div class="col-12 text-center col-sm-auto ms-auto sm-text-end ps-0">
                         <div id="table-purchases-replace-element">
-                            {% if request.user.is_staff %}
-                            <a href="{% url 'employees_app:new_employee' %}" class="btn btn-falcon-default btn-sm me-1"
+
+                            <a href="{% url 'promotions_app:promotion_new' %}" class="btn btn-falcon-default btn-sm me-1"
                                 type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                     class="d-none d-sm-inline-block ms-1">Nueva promoción</span></a>
-                            {% endif %}
+                            <a href="{% url 'products_app:export_list_products' %}"
+                                class="btn btn-falcon-default btn-sm ms-1" type="button"><span
+                                    class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Exportar</span></a>
+
                         </div>
                     </div>
                 </div>
@@ -58,12 +63,8 @@
                         <thead class="bg-200 text-900">
                             <tr>
                                 {% for column in table_column %}
-                                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Apellido'%}d-none d-sm-table-cell{% endif %}"
+                                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Precio' %}d-none d-md-table-cell{% endif %}"
                                     data-sort="{{column.0}}">{{column.1}}</th>
-                                {% endfor %}
-                                {% for column in table_column_user %}
-                                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">
-                                    {{column.1}}</th>
                                 {% endfor %}
                                 <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
                             </tr>
@@ -71,49 +72,38 @@
                         <!-- BODY TABLA -->
                         <tbody class="list" id="table-purchase-body">
 
-                            {% for employee in employees %}
+                            {% for promotion in promotions %}
                             <tr class="btn-reveal-trigger">
-                                <td class="align-start first_name">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-s me-1">
-                                            <img class="rounded-circle" src="{{employee.user.imagen.url}}" alt="" />
-                                        </div>
-                                        {{employee.user.first_name}}
-                                    </div>
+                                <td class="align-start name">{{product.name}}</td>
+                                <td class="align-start d-none d-md-table-cell barcode">{{product.barcode}}</td>
+                                <td class="align-start sale_price"><span
+                                        class="badge badge-soft-success rounded-pill">${{product.sale_price}}</span>
                                 </td>
-                                <td class="align-start last_name">{{employee.user.last_name}}</td>
-                                <td class="align-start phone_number d-none d-sm-table-cell"><a
-                                        href="https://wa.me/{{employee.user.phone_code}}{{employee.user.phone_number}}">{{employee.user.phone_code}}{{employee.user.phone_number}}</a>
-                                </td>
-                                <td class="align-start email d-none d-sm-table-cell"><a
-                                        href="mailto:{{employee.user.email}}">{{employee.user.email}}</a></td>
-                                <td class="align-middle white-space-nowrap text-start">
+                                <td class="align-start d-none d-md-table-cell description">{{product.description}}</td>
+                                <td class="align-start d-none d-md-table-cell stock">{{product.stock}}</td>
+                                <td class="align-start d-none d-md-table-cell category">{{product.category.name}}</td>
+                                <td class="align-start d-none d-md-table-cell brand">{{product.brand.name}}</td>
+                                <!-- <td class="align-start branch">{{product.branch.name}}</td> -->
+                                <td class="align-start white-space-nowrap text-start">
                                     <div class="dropstart font-sans-serif position-static d-inline-block">
                                         <button
                                             class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
                                             type="button" id="dropdown0" data-bs-toggle="dropdown"
                                             data-boundary="window" aria-haspopup="true" aria-expanded="false"
-                                            data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span>
-                                        </button>
+                                            data-bs-reference="parent"><span
+                                                class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-2"
                                             aria-labelledby="dropdown0">
                                             <a class="dropdown-item"
-                                                href="{% url 'employees_app:profile_employee' employee.id %}">Detalle</a>
+                                                href="{% url 'products_app:product_detail' product.id %}">Detalle</a>
 
                                             {% if request.user.is_staff %}
                                             <a class="dropdown-item"
-                                                href="{% url 'employees_app:update_employee' employee.id %}">Editar</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item text-danger"
-                                                href="{% url 'employees_app:employee_delete' employee.id %}">Borrar</a>
-                                            {% else %}
-
+                                                href="{% url 'products_app:update_product' product.id %}">Editar</a>
+                                            <a class=" dropdown-item text-danger"
+                                                href="{% url 'promotions_app:promotion_delete' promotion.id %}">Eliminar</a>
                                             {% endif %}
 
-                                            {% comment %} <button class="dropdown-item text-danger" type="button"
-                                                data-bs-toggle="modal" data-id="{{ employee.id }}"
-                                                data-url="{% url 'employees_app:employee_delete' employee.id %}"
-                                                data-bs-target="#delete-employee-modal">Borrar</button> {% endcomment %}
                                         </div>
                                     </div>
                                 </td>
@@ -123,25 +113,34 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer">
-                <div class="row align-items-center">
-                    <div class="pagination d-none"></div>
-                    <div class="col">
-                        <p class="mb-0 fs--1">
-                            {% comment %} <span class="d-none d-sm-inline-block me-2" data-list-info="data-list-info">
-                            </span> {% endcomment %}
-                            <!-- <a class="fw-semi-bold d-none" href="#!" data-list-view="less">View less<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a> -->
-                        </p>
-                    </div>
-                    {% comment %} <div class="col-auto d-flex">
-                        <button id="prevPage" class="btn btn-sm btn-primary" type="button"
-                            data-list-pagination="prev"><span>Anterior</span></button>
-                        <button id="nextPage" class="btn btn-sm btn-primary px-4 ms-2" type="button"
-                            data-list-pagination="next"><span>Siguiente</span></button>
-                    </div> {% endcomment %}
-                </div>
-            </div>
         </div>
     </div>
+    {% else %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!--Card-->
+        <div class="card bg-transparent-50 overflow-hidden">
+            <div class="card-header position-relative">
+                <div class="bg-holder d-none d-md-block bg-card z-index-1"
+                    style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+                </div>
+
+                <div class="position-relative z-index-2">
+                    <div>
+                        <h3 class="text-primary mb-1">No hay promociones</h3>
+                    </div>
+                    <div class="d-flex py-3">
+                    </div>
+                </div>
+            </div>
+            {% if request.user.is_staff %}
+            <div class="card-body">
+                <a class="btn btn-primary mt-3" href="{% url 'promotions_app:promotion_new' %}">Cargar promoción</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% endif %}
 
 </div>
