@@ -6,11 +6,9 @@ from .models import Promotion, TypePromotion
 
 
 class PromotionProductForm(forms.ModelForm):
-    type_promotions = TypePromotion.objects.all().values_list('id', 'name')
     
-    type_discount = forms.ChoiceField(
-        choices=type_promotions,
-        initial = type_promotions[0] if type_promotions else None
+    type_discount = forms.ModelChoiceField(
+        queryset= TypePromotion.objects.all()
     )
 
     start_date = forms.DateField(

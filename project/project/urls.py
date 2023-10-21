@@ -9,7 +9,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("applications.core.urls")),
     path("users/", include("applications.users.urls")),
-    path("promotions/", include("applications.promotions.urls")),
     path("dashboard/", include("applications.dashboard.urls")),
     path("employees/", include("applications.employes.urls")),
     path("customers/", include("applications.clients.urls")),
@@ -20,4 +19,5 @@ urlpatterns = [
     path("cashregister/", include("applications.cashregister.urls")),
     path("notifications/", include("applications.notifications.urls")),
     path("sales/", include("applications.sales.urls")),    
+    path("promotions/", include("applications.promotions.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
