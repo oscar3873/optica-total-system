@@ -78,7 +78,7 @@
             <div class="col-lg col-xxl-5">
             <div class="row">
                 <div class="col-5 col-sm-4">
-                {% if object.type_operation == 'in' %}
+                {% if object.type_operation == 'Ingreso' %}
                 <p class="badge rounded-pill badge-soft-success fs-0 fw-semi-bold m-0">{{object.get_type_operation_display}}</p>
                 {% else %}
                 <p class="badge rounded-pill badge-soft-danger fs-0 fw-semi-bold m-0">{{object.get_type_operation_display}}</p>
@@ -186,7 +186,7 @@
             {% for movement in movements %}
                 <div class="row g-0 align-items-center border-bottom py-2 px-3">
                     <div class="col-md-auto pe-3">
-                        {%if movement.type_operation == 'in' %}
+                        {%if movement.type_operation == 'Ingreso' %}
                             <span class="badge badge-soft-success rounded-pill">{{movement.get_type_operation_display}}</span>
                         {% else %}
                             <span class="badge badge-soft-danger rounded-pill">{{movement.get_type_operation_display}}</span>

@@ -292,7 +292,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 quantity = quantity/2
                             }
                             let restar_total = sumFirst_N_minors_Elements(priceA, quantity);
-                            console.log('restar al total cuando: 2x1 ',restar_total);
                             promotion = '2x1';
 
                         }else if (lista_promocion[0] === 'B'){
@@ -303,11 +302,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 quantity = quantity/2
                             }
                             let restar_total = parseFloat(sumFirst_N_minors_Elements(priceB, quantity) / 2);
-                            console.log('restar al total cuando: 5% off ',restar_total);
                             promotion = '50% off 2da unidad';
 
                         }else{
-                            console.log('Se esta pensando we');
                             promotion = '% Descuento'
                         }
                         

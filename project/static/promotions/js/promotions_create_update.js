@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", function () {
     promotionInput.addEventListener('click', function () {
         // CAMBIAR AQUI POR EL ID DEL BTN DEL INPUT DE DESCUENTO
         const discountInput = document.getElementById('id_form-0-start_date');
-        console.log(promotionInput.value);
         if(promotionInput.value == 'A'){
             discountInput.setAttribute('disabled', 'true');
         }

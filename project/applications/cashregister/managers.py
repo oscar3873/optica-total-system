@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 
 class CashRegisterManager(models.Manager):
+    
     def create_cash_register(self, initial_balance, branch, user_made, currency, final_balance):
         cash_register = self.create(
             initial_balance = initial_balance, 
@@ -17,8 +18,8 @@ class CashRegisterManager(models.Manager):
     #Esto todavia no tenerlo en cuenta esta sin revizar
     def get_final_balance(self, cash_register):
         movements = cash_register.movements.all()
-        income = movements.filter(type_operation='in').aggregate(total=models.Sum('amount'))['total'] or 0
-        expenses = movements.filter(type_operation='out').aggregate(total=models.Sum('amount'))['total'] or 0
+        income = movements.filter(type_operation='Ingreso').aggregate(total=models.Sum('amount'))['total'] or 0
+        expenses = movements.filter(type_operation='Egreso').aggregate(total=models.Sum('amount'))['total'] or 0
         final_balance = income - expenses
         return final_balance
         
@@ -41,8 +42,8 @@ class CashRegisterDetailManager(models.Manager):
         #Se recupera el balanca inicial de la caja (Caso efectivo)
         initial_balance_cashregister = cashregister.initial_balance or 0
         #Se recupera el total de ingresos y egresos de la caja
-        total_amount_ingresos = movements.filter(type_operation='in').aggregate(total=models.Sum('amount'))['total'] or 0
-        total_amount_egresos = movements.filter(type_operation='out').aggregate(total=models.Sum('amount'))['total'] or 0
+        total_amount_ingresos = movements.filter(type_operation='Ingreso').aggregate(total=models.Sum('amount'))['total'] or 0
+        total_amount_egresos = movements.filter(type_operation='Egreso').aggregate(total=models.Sum('amount'))['total'] or 0
         #Se calcula el total de la caja
         total_amount = total_amount_ingresos - total_amount_egresos
         
@@ -54,7 +55,7 @@ class CashRegisterDetailManager(models.Manager):
 
 
 class MovementManager(models.Manager):
-
+    
     def _check_sufficient_funds(self, cash_register, amount):
         """
         Verifica si hay fondos suficientes en la caja.
@@ -68,9 +69,9 @@ class MovementManager(models.Manager):
         """
         amount = abs(amount)
         
-        if operation == 'in':
+        if operation == 'Ingreso':
             cash_register.final_balance += amount
-        elif operation == 'out':
+        elif operation == 'Egreso':
             # Antes de realizar una operación de salida, verificamos los fondos.
             self._check_sufficient_funds(cash_register, amount)
             cash_register.final_balance -= amount
@@ -88,7 +89,7 @@ class MovementManager(models.Manager):
         current_operation = current_movement.type_operation
         
         # Revierte el movimiento anterior
-        self.update_balance(cash_register, current_amount, 'in' if current_operation == 'out' else 'out')
+        self.update_balance(cash_register, current_amount, 'Ingreso' if current_operation == 'Egreso' else 'Egreso')
         
         try:
             # Aplica el nuevo movimiento

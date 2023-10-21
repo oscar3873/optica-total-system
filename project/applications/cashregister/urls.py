@@ -71,6 +71,12 @@ urlpatterns = [
         MovementsDeleteView.as_view(),
         name = 'movements_delete_view'
     ),
+        ########## SEARCH PRODUCTS LIST #########
+    path(
+        'ajax_search_products/',
+        ajax_search_movements,
+        name='ajax_search_movements'
+    ),
     path(
         'currency/create',
         CurrencyCreateView.as_view(),

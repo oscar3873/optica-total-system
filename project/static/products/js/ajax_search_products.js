@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (data.data.length > 0) {
                         searchResults.innerHTML = '';
                         data.data.forEach(function (product) {
-                            console.log(product);
                             const row = document.createElement('tr');
                             row.className = 'btn-reveal-trigger';
 
@@ -99,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             detailLink.href = `/products/detail/product/${product.id}`;
                             detailLink.textContent = 'Detalle';
                             dropdownMenu.appendChild(detailLink);
-                            console.log(`Es staff ${product.is_staff}`)
                             if (product.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.className = 'dropdown-item';

@@ -98,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             detailLink.href = `/employees/profile/${employee.id}`;
                             detailLink.textContent = 'Detalle';
                             dropdownMenu.appendChild(detailLink);
-                            console.log(`Es staff ${employee.is_staff}`)
                             if (employee.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.className = 'dropdown-item';

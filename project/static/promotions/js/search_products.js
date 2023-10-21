@@ -24,10 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
 
                     products.forEach(product => {
-                        console.log(product.id);
-                        console.log(setProductIds.has(product.id));
                         if(!setProductIds.has(product.id)){
-                            console.log(`El producto id=${product.id} ya fue seleccionado.`);
                             const item = document.createElement('li');
                             item.style.zIndex = "3";
                             item.style.backgroundColor = '#748194';
@@ -60,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const productId = item.dataset.productId;
-            console.log('ID del prod seleccionado: ',productId);
             idProductGlobal=productId;
             const productName = item.querySelector('h6').textContent;
 
@@ -95,9 +91,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
 
             setProductIds.add(parseInt(productId));
-            console.log('conjunto: ',setProductIds);
-
-
             // Añadir el ID del producto al formulario
             const productIdCheck = document.createElement('input');
             productIdCheck.type = 'hidden';

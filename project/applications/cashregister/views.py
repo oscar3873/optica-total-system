@@ -1,8 +1,10 @@
+import locale
 from typing import Any
 from django.shortcuts import redirect, render
 from django.views.generic import *
 from applications.cashregister.forms import CashRegisterForm, MovementForm, CurrencyForm
 from django.urls import reverse_lazy
+from django.db.models import Q
 from django.contrib import messages
 from django.utils import timezone
 from django.http import JsonResponse
@@ -213,6 +215,7 @@ class CashRegisterArching(View):
 
 class MovementsView(TemplateView):
     template_name = 'cashregister/movements_page.html'
+    paginate_by = 25
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -408,3 +411,44 @@ class CurrencyCreateView(FormView):
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
+
+################ SEARCH PRODUCTS AJAX ################
+
+def ajax_search_movements(request):
+    branch = request.user.branch
+
+    branch_actualy = request.session.get('branch_actualy')
+    if request.user.is_staff and branch_actualy:
+        branch = Branch.objects.get(id=branch_actualy)
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+
+        # Obtener el valor de search_term de la solicitud
+        search_term = request.GET.get('search_term', '')
+
+        if not search_term:
+            # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
+            paginate_by = MovementsView().paginate_by
+            print("####################################",paginate_by)
+            movements = Movement.objects.all().filter(deleted_at = None)[:paginate_by]
+        else:
+            # Usando Q por todos los campos existentes en la tabla
+            movements = Movement.objects.all().filter(deleted_at = None).filter(
+                Q(amount__icontains=search_term) |
+                Q(date_movement__icontains=search_term) |
+                Q(type_operation__icontains=search_term) |
+                Q(user_made__first_name__icontains=search_term) |
+                Q(user_made__last_name__icontains=search_term)
+            )[:25]
+        # Crear una lista de diccionarios con los datos de los empleados
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+        data = [{
+            'id': movement.id,
+            'amount': movement.amount,
+            'date_movement': movement.date_movement.strftime('%d %B %Y'),
+            'type_operation': movement.type_operation,
+            'user_made': str(movement.user_made),
+            'is_staff': 1 if request.user.is_staff else 0
+        } for movement in movements]
+        locale.setlocale(locale.LC_TIME, '')
+        return JsonResponse({'data': data})

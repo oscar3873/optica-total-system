@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             detailLink.href = `/customers/detail/${customer.id}`;
                             detailLink.textContent = 'Detalle';
                             dropdownMenu.appendChild(detailLink);
-                            console.log(`Es staff ${customer.is_staff}`)
                             if (customer.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.className = 'dropdown-item';

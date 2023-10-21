@@ -44,8 +44,8 @@
         <div class="col">
           <h5 class="mb-2">Movimiento</h5><a class="btn btn-falcon-default btn-sm" href="{% url 'cashregister_app:movements_create_view' %}"><span class="fas fa-plus fs--2 me-1"></span>Nuevo movimiento</a>
           <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h"></span></button>
-          <div class="dropdown-menu"><a class="dropdown-item" href="{% url 'cashregister_app:movements_update_view' movement.pk %}">Editar</a>
-            <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="{% url 'cashregister_app:movements_delete_view' movement.pk %}">Borrar</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{% url 'cashregister_app:movements_update_view' movement.pk %}">Editar</a>
           </div>
         </div>
         <div class="col-auto d-none d-sm-block">
@@ -59,7 +59,7 @@
         <div class="col-lg col-xxl-5">
           <div class="row">
             <div class="col-5 col-sm-4">
-              {% if object.type_operation == 'in' %}
+              {% if object.type_operation == 'Ingreso' %}
               <p class="badge rounded-pill badge-soft-success fs-0 fw-semi-bold m-0">{{object.get_type_operation_display}}</p>
               {% else %}
               <p class="badge rounded-pill badge-soft-danger fs-0 fw-semi-bold m-0">{{object.get_type_operation_display}}</p>
