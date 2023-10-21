@@ -56,17 +56,17 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         # Ordena los productos en cada promoción por precio
         for promotion, products in promotional_products.items():
-            products = sorted(products, key=lambda product: product[0].sale_price)
             discounted_prices = []
             print(products)
 
-            for _, discount in products:
-                original_price = products[0][0].sale_price
+            for product, discount in products:
+                original_price = product.sale_price
                 discounted_price = original_price * Decimal(1 - (discount / 100))
                 discounted_prices.append(discounted_price)
 
             # Actualiza la lista de productos en el diccionario con los precios finales
             promotional_products[promotion] = discounted_prices
+            products = sorted(products, key=lambda product: product.sale_price)
         
         print('\n\n',promotional_products)
         
