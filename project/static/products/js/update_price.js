@@ -76,7 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             },
             error: function () {
-                console.log(error);
             },
         });
     });

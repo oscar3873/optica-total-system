@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
                     // Obtén las opciones existentes en el select
                     const existingOptions = new Set([...customers_select.children].map(option => parseInt(option.value, 10)));
-                    console.log(existingOptions);
                     customer_list.forEach(customer_data => {
                         // Comprueba si el valor ya existe en las opciones existentes
                         if (!existingOptions.has(parseInt(customer_data.id, 10))) {

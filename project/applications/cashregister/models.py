@@ -105,8 +105,8 @@ class Transaction(BaseAbstractWithUser):
 
 class Movement(BaseAbstractWithUser):
     TYPE_OPERATION = [
-        ('in', 'Ingreso'),
-        ('out', 'Egreso')
+        ('Ingreso', 'Ingreso'),
+        ('Egreso', 'Egreso')
     ]
     
     amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
@@ -118,7 +118,7 @@ class Movement(BaseAbstractWithUser):
     payment_method = models.ForeignKey(PaymentType, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Metodo de pago")
     transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Transacción")
     withdrawal_reason = models.CharField(max_length=100, null=True, blank=True, help_text="Campo para ingresar el motivo de devolucion", verbose_name="Razon de devolución")
-
+    
     objects = MovementManager()
     
     def __str__(self):
