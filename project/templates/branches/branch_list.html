@@ -15,8 +15,8 @@
     
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!-- Titulo del formulario wizard -->
-        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fa-solid fa-building-flag fa-lg"
-                    style="color: #000000;"></i></span>
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+            class="fa-inverse fa-stack-1x text-primary fas fa-building"></i></span>
             <div class="col">
                 <h5 class="mb-0 text-primary position-relative"><span
                         class="bg-200 dark__bg-1100 pe-3">Sucursales</span><span
@@ -42,15 +42,11 @@
                                                 data-bulk-select='{"body":"table-purchase-body","actions":"table-purchases-actions","replacedElement":"table-purchases-replace-element"}' />
                                         </div>
                                     </th>-->
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">Nombre
-                                    </th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">Direccion
-                                    </th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="payment">Horario de
-                                        apertura
-                                    </th>
-                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="amount">Horario de
-                                        Cierre</th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">Nombre</th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="address">Direccion</th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="open_hs">Horario de apertura</th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="close_hs">Horario de Cierre</th>
+                                    <th class="sort pe-1 align-middle white-space-nowrap" data-sort="phone">Telefono</th>
                                     <th class="no-sort pe-1 align-middle data-table-row-action"> Acciones</th>
                                 </tr>
                             </thead>
@@ -63,12 +59,11 @@
                                                 data-bulk-select-row="data-bulk-select-row" />
                                         </div>
                                     </td>-->
-                                    <th class="align-middle white-space-nowrap name">{{ branch.name }}</th>
+                                    <td class="align-middle white-space-nowrap name">{{ branch.name }}</td>
                                     <td class="align-middle white-space-nowrap address">{{ branch.address }}</td>
-                                    <td class="align-middle white-space-nowrap open_hs">{{ branch.open_hs }}
-                                    </td>
-                                    <td class="align-middle white-space-nowrap close_hs">{{ branch.close_hs }}
-                                    </td>
+                                    <td class="align-middle white-space-nowrap open_hs">{{ branch.open_hs }}</td>
+                                    <td class="align-middle white-space-nowrap close_hs">{{ branch.close_hs }}</td>
+                                    <td class="align-middle white-space-nowrap phone">{{ branch.phone }}</td>
                                     <td class="align-middle white-space-nowrap text-center">
                                         <div class="dropstart font-sans-serif position-static d-inline-block">
                                             <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">

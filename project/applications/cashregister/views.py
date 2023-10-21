@@ -425,7 +425,7 @@ def ajax_search_movements(request):
 
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-
+        print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = MovementsView().paginate_by

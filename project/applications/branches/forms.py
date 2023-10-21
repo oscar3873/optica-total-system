@@ -12,25 +12,28 @@ class BranchForm(ValidationFormMixin):
     name = forms.CharField( #esto
         label='Nombre',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
+            attrs={
+                'class': 'form-control'
+            }
         )
     )
 
     address = forms.CharField( #esto
         label='Dirección',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'
-                   }
+            attrs={
+                'class': 'form-control'
+            }
         )
     )
 
     open_hs = forms.TimeField(
         label='Horario de Apetura',
         widget=forms.TimeInput(
-            attrs={'class': 'form-control',
-                   'type': 'time'
-                   },
+            attrs={
+                'class': 'form-control',
+                'type': 'time'
+            },
             format='%H:%M'
         )
     )
@@ -38,10 +41,20 @@ class BranchForm(ValidationFormMixin):
     close_hs = forms.TimeField(
         label='Horario de Cierre',
         widget=forms.TimeInput(
-            attrs={'class': 'form-control',
-                   'type': 'time'
-                   },
+            attrs={
+                'class': 'form-control',
+                'type': 'time'
+            },
             format='%H:%M'
+        )
+    )
+    
+    phone = forms.CharField(
+        label='Teléfono',
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
         )
     )
 
