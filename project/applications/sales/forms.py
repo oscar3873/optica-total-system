@@ -11,12 +11,10 @@ class SaleForm(ValidationFormMixin):
     )
 
     customer = forms.ModelChoiceField(
+        required=False,
         queryset = Customer.objects.all(),
         widget = forms.RadioSelect()
     )
-
-    def __init__(self, branch, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     class Meta:
         model = Sale
