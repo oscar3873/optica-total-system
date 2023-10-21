@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.branches.models import Branch
 from applications.clients.forms import CustomerForm
 from applications.promotions.models import Promotion
+from .utils import *
 from .models import *
 from .forms import *
 
@@ -27,49 +28,48 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         except Branch.DoesNotExist:
             branch = self.request.user.branch
 
-        context['sale_form'] = SaleForm(branch = branch)
+        context['sale_form'] = SaleForm
 
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
         return context
 
     def form_valid(self, form):
+        formsets = form
         saleform = SaleForm(self.request.POST)
 
-        promotions_active = Promotion.objects.filter(is_active=True)
+        if saleform.is_valid():
+            sale = saleform.cleaned_data
 
+        promotions_active = Promotion.objects.filter(is_active=True)
         promotional_products = {promotion: [] for promotion in promotions_active}
 
-        formsets = form
+        order_details = []
+        total = 0
+
         # Procesa los datos del formulario aquí
         for formset in formsets:
             if formset.is_valid():
                 product = formset.cleaned_data['product']
                 quantity = formset.cleaned_data['quantity']
-                discount = 0 if not formset.cleaned_data['discount'] else formset.cleaned_data['discount']
+                for _ in range(quantity):
+                    total += product.sale_price
 
-                promotion = product.promotions.last().promotion
-                if promotion:
-                    while quantity != 0:
-                        promotional_products[promotion].append((product, discount))
-                        quantity = quantity - 1
-
+                order_details.append(process_formset(formset, promotional_products))
+                
+        discount_promo = []
         # Ordena los productos en cada promoción por precio
         for promotion, products in promotional_products.items():
-            discounted_prices = []
-            print(products)
+            process_promotion(promotional_products, promotion, products, discount_promo)
+            
+        discount_promo = sum(discount_promo)
+        print('DESCUENTO TOTAL: ', discount_promo)
 
-            for product, discount in products:
-                original_price = product.sale_price
-                discounted_price = original_price * Decimal(1 - (discount / 100))
-                discounted_prices.append(discounted_price)
+        if saleform.cleaned_data['total'] == total:
+            sale = saleform.save(commit=False)
+            sale.total -= discount_promo 
+            print(sale.total)
 
-            # Actualiza la lista de productos en el diccionario con los precios finales
-            promotional_products[promotion] = discounted_prices
-            products = sorted(products, key=lambda product: product.sale_price)
-        
-        print('\n\n',promotional_products)
-        
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
 
