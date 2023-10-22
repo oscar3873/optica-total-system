@@ -4,7 +4,22 @@ from applications.core.mixins import ValidationFormMixin
 from applications.products.models import Product
 from .models import *
 
-class SaleForm(ValidationFormMixin):
+class SaleForm(forms.ModelForm):
+    MODEL_CHOICES = (
+        ('C', 'No generar'),
+        ('A', 'Factura'),
+        ('B', 'Ticket comun')
+    )
+
+    has_proof = forms.ChoiceField(
+        required= False,
+        choices = MODEL_CHOICES,
+        initial = MODEL_CHOICES[0],
+        widget = forms.Select(
+            attrs={'class': 'form-control'}
+        )
+    )
+
     total = forms.DecimalField(
         required=False,
         initial= 0
@@ -15,10 +30,9 @@ class SaleForm(ValidationFormMixin):
         queryset = Customer.objects.all(),
         widget = forms.RadioSelect()
     )
-
     class Meta:
         model = Sale
-        fields = ['total', 'customer']
+        fields = ['total', 'customer',]
 
 
 class OrderDetailForm(forms.ModelForm):
