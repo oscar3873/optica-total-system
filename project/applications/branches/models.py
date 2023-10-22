@@ -16,6 +16,7 @@ class Branch(SoftDeletionModel, TimestampsModel):
     address = models.CharField(max_length=100, verbose_name='Direccion')
     open_hs = models.TimeField(verbose_name='Horario de apertura')
     close_hs = models.TimeField(verbose_name='Horario de cierre')
+    phone = models.CharField(max_length=20, verbose_name='Telefono', null=True, blank=True)
 
     class Meta:
         verbose_name = "Sucursal"

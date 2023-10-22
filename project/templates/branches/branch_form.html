@@ -98,6 +98,22 @@
                                     </div>
                                     {% endif %}
                                 </div>
+                                <div class="col-12 col-sm-6 my-2">
+                                    <label for="id_phone"
+                                        class="col col-form-label d-flex justify-content-between align-items-center">
+                                        <span>Telefono</span>
+                                    </label>
+                                    <div class="mb-3">
+                                        {{ form.phone}}
+                                    </div>
+                                    {% if form.phone.errors %}
+                                    <div class="text-danger fs--2">
+                                        {% for error in form.phone.errors %}
+                                        {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="">
                                 <div class="col-12">

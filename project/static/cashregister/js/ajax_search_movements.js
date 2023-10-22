@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     //Para poder ponerle un pequeño delay
     let timeoutId;
 
+    //loader para los movimientos
+    // const loader = document.getElementById('loader-movements');
+
     // Obtén el formulario de búsqueda y el contenedor de resultados de la tabla
     const searchForm = document.getElementById('searchForm');
     const searchInput = document.getElementById('searchInput');
@@ -12,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         //Se borra el temporizador anterior (si es que existe)
         clearTimeout(timeoutId);
+        // loader.classList.remove('d-none');
         // Establece un nuevo temporizador para retrasar la solicitud
         timeoutId = setTimeout(function () {
             e.preventDefault();
@@ -108,15 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             // Mostrar un mensaje si no se encuentran resultados
                             searchResults.innerHTML = '<tr><td colspan="5">No se encontraron resultados</td></tr>';
                         }
-    
+                        // Ocultamos el loader despues de completar la busqueda
+                        // loader.classList.add('d-none');
                     },
                     error: function (error) {
                         console.error('Error al realizar la búsqueda:', error);
                         searchResults.innerHTML = '<tr><td colspan="5">Error al realizar la búsqueda</td></tr>';
+
+                        //Lo oculatamos tambien en caso de error
+                        // loader.classList.add('d-none');
                     },
                 });
             }
 
-        }, 500) // Establecemos el retraso de 500 milisegundos
+        }, 1500) // Establecemos el retraso de 500 milisegundos
     });
 });
