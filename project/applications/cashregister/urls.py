@@ -43,6 +43,11 @@ urlpatterns = [
         name = 'cashregister_close_view'
     ),
     path(
+        'close/ticket/<int:pk>',
+        CloseTicketCashRegister.as_view(),
+        name= 'close_ticket_view'
+    ),
+    path(
         'arching/',
         CashRegisterArching.as_view(),
         name = 'cashregister_arching_view'

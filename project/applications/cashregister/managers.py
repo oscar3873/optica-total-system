@@ -20,6 +20,9 @@ class CashRegisterManager(models.Manager):
         )
         return cash_register
 
+    def get_movements_data(self, cashregister):
+        return cashregister.movement_set.all().filter(deleted_at=None)
+    
     #Esto todavia no tenerlo en cuenta esta sin revizar
     def get_archering_data(self, cash_register):
         from applications.cashregister.models import CashRegisterDetail, PaymentType

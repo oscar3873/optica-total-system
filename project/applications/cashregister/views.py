@@ -171,7 +171,21 @@ class CashRegisterCloseView(FormView):
     
     def form_valid(self, form):
         # branch = self.request.user.branch
-        final_balance = form.cleaned_data['final_balance']
+        observations = form.cleaned_data['observations']
+        cashregister = CashRegister.objects.get(is_close=False, branch=self.request.user.branch)
+        cashregister.observations = observations
+        cashregister.is_close = True
+        cashregister.save()
+        
+        self.get_context_data()['cashregister'] = cashregister
+        
+        return render(self.request, 'cashregister/components/ticket_close_cashregister.html', self.get_context_data())
+    
+    def form_invalid(self, form):
+        print("######################################")
+        print(form.errors)
+        messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
+        return super().form_invalid(form)
 
 
 class CashRegisterArching(View):
@@ -242,6 +256,25 @@ class CashRegisterArching(View):
             messages.error(request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
             return render(request, self.template_name, {'formset': formset})
         return redirect('cashregister_app:cashregister_view')
+
+
+class CloseTicketCashRegister(View):
+    template_name = 'cashregister/components/ticket_close_cashregister.html'
+    def get(self, request, *args, **kwargs):
+        
+        context = {}
+        try:
+            #recuperamos la caja que viene por argumento en la peticion get
+            cashregister = CashRegister.objects.get(pk=kwargs['pk'])
+        except CashRegister.DoesNotExist:
+            cashregister = None
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
+        context['cashregister'] = cashregister
+        context['movements'] = CashRegister.objects.get_movements_data(cashregister)
+        print("######################################")
+        print(context)
+        
+        return render(request, self.template_name, context)
 
 
 #Falta corregir esta funcion y pasarla a una clase
