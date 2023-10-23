@@ -40,16 +40,16 @@
       <!--Card-->
       <div class="card bg-transparent-50 overflow-hidden">
         <div class="card-header">
+          <p class="mb-0"><a href="{% url 'cashregister_app:cashregister_detail_view' cashregister.pk %}">Ir a mi caja del dia</a></p>
           <div class="position-relative z-index-2">
             <div>
               <p class="fs--2 mb-0">
                 Abierta por 
                 <a class="link-600 fw-semi-bold"
-                  href="#!">{{cashregister.user_made.username}} </a>
+                  href="{% url 'users_app:profile' cashregister.user_made.pk %}">{{cashregister.user_made}} </a>
               </p>
             </div>
           </div>
-          <p class="mb-0"><a href="{% url 'cashregister_app:cashregister_detail_view' cashregister.pk %}">Mi caja del dia</a></p>
         </div>
         <div class="card-body">
           <div class="d-flex pb-3 justify-content-between align-items-center">
@@ -67,8 +67,8 @@
             <div class="ps-3 text-center">
               <a href="{% url 'cashregister_app:movements_view' %}" class="btn btn-primary mb-2"
               type="button">Movimientos</a>
-              <a href="{% url 'cashregister_app:cashregister_close_view' %}" class="btn btn-warning mb-2"
-                type="button">Cierre</a>
+              <a href="{% url 'cashregister_app:cashregister_arching_view' %}" class="btn btn-warning mb-2"
+                type="button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Arqueo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
             </div>
           </div>
         </div>

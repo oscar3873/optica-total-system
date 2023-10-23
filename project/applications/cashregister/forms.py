@@ -90,9 +90,8 @@ class CashRegisterDetailForm(forms.ModelForm):
         widgets = {
             'counted_amount': forms.NumberInput(
                 attrs={
-                    'class': 'form-control',
+                    'class': 'form-control difference-input',
                     'placeholder': '0.00',
-                    'value': '0.00'
                 })
         }
         

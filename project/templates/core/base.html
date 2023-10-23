@@ -107,7 +107,7 @@
                         <ul class="navbar-nav flex-column mb-3" id="navbarVerticalNav">
                             {% if  request.user.is_staff %}
                                 <li class="nav-item">
-                                    <div class="row navbar-vertical-label-wrapper mt-0 mb-2">
+                                    <div class="row navbar-vertical-label-wrapper mt-0">
                                         <div class="col-auto navbar-vertical-label">
                                             <span class="fas fa-store"></span>
                                             Sucursal
@@ -116,13 +116,13 @@
                                             <hr class="mb-0 navbar-vertical-divider" />
                                         </div>
                                     </div>
-                                    <form method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
+                                    <form class="d-flex align-items-center justify-content-center" method="post" action="{% url 'branches_app:branch_change' %}" id="branch-change-form">
                                         {% csrf_token %}
                                         <!-- SUCURSAL DEL USUARIO -->
                                         {{ branch_user.name }}
                                         
                                         <!-- PARA QUE EL ADMIN SE MUEVA DE SUCURSAL EN SUCURSAL -->
-                                        <select name="branch_id" id="branch_id" class="form-select fs--1 m-2">
+                                        <select name="branch_id" id="branch_id" class="form-select fs--1 m-2 w-75">
                                             {% for branch in branches %}
                                             <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
                                                 {{ branch.name }}
@@ -213,11 +213,18 @@
                                             class="nav-link-text ps-1">Movimientos</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_close_view' %}" role="button"
+                                <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_arching_view' %}" role="button"
+                                    aria-expanded="false" id="cashregister_closed">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-calculator"></span></span><span
+                                            class="nav-link-text ps-1">Arqueo de caja</span>
+                                    </div>
+                                </a>
+                                    <!-- parent pages--><a class="nav-link" href="{% url 'cashregister_app:cashregister_close_view' %}" role="button"
                                     aria-expanded="false" id="cashregister_closed">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-lock"></span></span><span
-                                            class="nav-link-text ps-1">Cierres de caja</span>
+                                            class="nav-link-text ps-1">Cierre de caja</span>
                                     </div>
                                 </a>
                             </li>

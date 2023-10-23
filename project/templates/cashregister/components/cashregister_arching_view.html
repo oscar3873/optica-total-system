@@ -52,13 +52,13 @@
                         <p class="fw-bold fs-1 text-900 my-0">{{form.initial.type_method}}</p>
                         <p class="fs--2 fw-lighter text-600">Se consideran <span class="text-warning">todos</span> los movimientos en <span class="text-warning">{{form.initial.type_method|lower}}</span> registrados en la caja</p>
                         <span class="form-label text-600 fw-semi-bold">Total en sistema</span>
-                        <p class="fw-bold fs-1 text-900 my-0">${{ form.initial.registered_amount }}</p>
+                        <p id="{{forloop.counter}}" data-type-method="{{form.initial.type_method|lower}}" class="fw-bold fs-1 text-900 my-0">${{ form.initial.registered_amount|floatformat:2|intcomma }}</p>
                         <p class="fs--2 fw-lighter text-600">Total que se registro en la caja en <span class="text-warning">{{form.initial.type_method|lower}}</span></p>
                         <label for="{{ form.counted_amount.id_for_label }}" class="form-label">Total caja fisica</label>
                         {{ form.counted_amount }}
                         <p class="fs--2 fw-lighter text-600">Ingrese el monto que registro en <span class="text-warning">{{form.initial.type_method|lower}}</span> en su caja </p>
-                        <label for="{{ form.difference.id_for_label }}" class="form-label">Diferencia entre ambos</label>
-                        {{ form.difference }}
+                        <label for="difference-{{ form.initial.type_method|lower }}" class="form-label">Diferencia entre ambos</label>
+                        <p class="fw-bold fs-1 text-900 my-0"><span id="difference-{{ form.initial.type_method|lower }}">1567</span></p>
                         <p class="fs--2 fw-lighter text-600"><span class="text-warning">Diferencia</span> que existe entre su caja de <span class="text-warning">sistema</span> y su registro <span class="text-warning">manual</span> en <span class="text-warning">{{form.initial.type_method|lower}}</span></p>
                     </div>
                     {% endfor %}
@@ -67,7 +67,7 @@
                         <div class="lottie mx-auto my-3" style="width: 120px; height: 120px" data-options='{"path":"{% static "cashregister/img/animated-icons/check-primary-light.json" %}"}'></div>
                     </div>
                     <h4 class="mb-1">Ha completado el proceso de arqueo!</h4>
-                    <p>Ya puede confirmar el cierre de la caja</p><button class="btn btn-warning px-5 px-sm-6" type="submit">Confirmar cierre<span class="fas fa-chevron-right ms-2" data-fa-transform="shrink-3"> </span></button>
+                    <p>Ya puede confirmar el cierre de la caja</p><button class="btn btn-warning px-5 px-sm-6" type="submit">Arqueo de caja<span class="fas fa-chevron-right ms-2" data-fa-transform="shrink-3"> </span></button>
                     </div>
                 </div>
                 </form>
