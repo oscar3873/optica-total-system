@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 from .models import *
 from .forms import *
-
+from applications.cashregister.utils import obtener_nombres_de_campos
 # Create your views here.
 
 #################################### CREATE ####################################
@@ -102,13 +102,7 @@ class PromotionListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        promotion_model = Promotion
-        excluded_fields = ['description', 'branch']  # Corrección: cambia 'descripcion' a 'description'
-        custom_fields = [
-            field.name for field in promotion_model._meta.get_fields()
-            if not field.is_relation and field.name not in excluded_fields
-        ]
-        context['table_column'] = custom_fields
+        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id')
         return context
 
     def get_queryset(self):
@@ -132,7 +126,7 @@ class PromotionListView(LoginRequiredMixin, ListView):
 class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Promotion
     template_name = 'promotions/promotions_delete_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('promotions_app:promotion_list')
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
