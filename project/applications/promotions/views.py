@@ -12,17 +12,25 @@ from .forms import *
 
 #################################### CREATE ####################################
 class PromotionCreateView(CustomUserPassesTestMixin, FormView):
-    form_class = PromotionProductForm  # Utiliza el nuevo formulario
+    form_class = PromotionProductForm
     template_name = 'promotions/promotions_page.html'
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
-        # Procesar el formulario y asociar productos a la promoción
-        promotion = form.save()  # Guarda la promoción en la base de datos
-        selected_products = form.cleaned_data.get('products')
+        print(form.cleaned_data)
+        # Crea la promoción sin guardarla en la base de datos aún
+        promotion = form.save(commit=False)
+        promotion.branch = self.request.user.branch
+        promotion.type_prom = form.cleaned_data.get('type_discount')
+        # Guarda la promoción en la base de datos
+        promotion.save()
+        # Obtiene los productos seleccionados del formulario
+        selected_products = form.cleaned_data.get('productsSelected')
+        print(selected_products)
         for product in selected_products:
+            # Crea una relación entre la promoción y el producto
             PromotionProduct.objects.create(promotion=promotion, product=product)
-        #messages.success(self.request, 'Promoción creada exitosamente.')
+        # Redirige a la página de inicio o a donde desees después de guardar
         return super().form_valid(form)
 
 
@@ -67,7 +75,7 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         # Procesa el formulario de actualización
         promotion = form.save()  # Guarda la promoción actualizada
-        selected_products = form.cleaned_data.get('products')
+        selected_products = form.cleaned_data.get('productsSelected')
         PromotionProduct.objects.filter(promotion=promotion).delete()  # Elimina las relaciones anteriores
         for product in selected_products:
             PromotionProduct.objects.create(promotion=promotion, product=product)  # Crea las nuevas relaciones
@@ -76,17 +84,19 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
 #################################### LIST ####################################
 class PromotionListView(LoginRequiredMixin, ListView):
     model = Promotion
-    template_name = 'promotions/promotion_list_page.html'
+    template_name = 'promotions/promotions_list_page.html'
     context_object_name = 'promotions'
     paginate_by = 25
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy')
+
+        if branch_actualy is not None:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             branch = branch_actualy
         else:
+            # Proporciona un valor predeterminado si branch_actualy es None
             branch = user.branch
 
         return Promotion.objects.filter(branch=branch)  # Filtra las promociones según la sucursal
@@ -94,8 +104,12 @@ class PromotionListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         custom_fields = ['name', 'type_prom__name', 'description', 'start_date', 'end_date']
-        context['custom_promotions'] = Promotion.objects.filter(branch=self.get_queryset().first().branch).values(*custom_fields)
+
+        if self.get_queryset().first():
+            context['custom_promotions'] = Promotion.objects.filter(branch=self.get_queryset().first().branch).values(*custom_fields)
+
         return context
+
 
 
 # def ajax_promotional_products(request):

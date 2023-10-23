@@ -10,7 +10,7 @@ from applications.branches.models import Branch
 class TypePromotion(BaseAbstractWithUser):
     name = models.CharField(max_length=100, verbose_name='Tipo de Promoción')
 
-    def str(self):
+    def __str__(self):
         return self.name
 
 class Promotion(models.Model):
@@ -28,7 +28,7 @@ class Promotion(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Activo')
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
 
-    def str(self):
+    def __str__(self):
         return f'{self.name}\n{self.description}\nDescuento: {self.discount}%'
 
     
@@ -37,5 +37,5 @@ class PromotionProduct(BaseAbstractWithUser):
     promotion = models.ForeignKey(Promotion, on_delete=models.CASCADE, related_name='promotion_products', null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='promotions', null=True, blank=True)
 
-    def str(self):
+    def __str__(self):
         return f'{self.promotion.name} - {self.product.name}'
