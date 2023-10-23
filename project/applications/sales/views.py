@@ -45,7 +45,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
             customer = saleform.cleaned_data['customer']
             if not customer:
-                customer = Customer.objects.first()
+                customer = Customer.objects.first() # 'Anonimo'
 
         promotions_active = Promotion.objects.filter(is_active=True)
         promotional_products = {promotion: [] for promotion in promotions_active}
@@ -84,8 +84,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         product_cristal = True #find_cristal_product(all_products_to_sale)
 
-        process_customer(customer, sale, payment_methods, total, product_cristal)
-        if product_cristal:
+        customer_cc_and_cristal = process_customer(customer, sale, payment_methods, total, product_cristal)
+        if customer_cc_and_cristal:
             # messages.info(self.request, "%s" % product_cristal.name)
             return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 

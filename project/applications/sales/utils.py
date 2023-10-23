@@ -89,12 +89,16 @@ def generate_proof(proof_type): # generar factura o recibo
     pass
 
 def process_customer(customer, sale, payment_methods, total, product_cristal):
+    """
+    Funcion que procesa los datos de metodos de pago y el tipo de cliente.
+    """
+
     payment_total = 0
     for payment in payment_methods:
         payment.save(commit=False)
         payment_total += payment.amount
 
-    if payment_total < total:
+    if Decimal(payment_total) < Decimal(total):
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
         sale.missing_balance = Decimal(total) - Decimal(payment_total)
 
@@ -110,9 +114,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal):
         # sale.save()
         return True
     
-    elif product_cristal:
-        sale.state = Sale.STATE[1][0] # "PENDIENTE"
-
     elif customer.has_credit_account:
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
         # customer.credit_transactions.create(
@@ -122,27 +123,34 @@ def process_customer(customer, sale, payment_methods, total, product_cristal):
         # )
         customer.credit_balance += sale.total
         # customer.sale()
+    
+    elif product_cristal:
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+        Movement.objects.create(
+            payment_method = payment.type_method,
+            amount = total,
+            cash_register = CashRegister.objects.filter(
+                is_closed = False,
+                branch = customer.branch,
+                ),
+            description = "Venta de productos a %s" % customer.get_full_name(),
+            currency = Currency.objects.first(),
+            type_operation = "Ingreso",
+        )
+
     else:
         sale.state = Sale.STATE[0][0] # 'COMPLETO'
         # sale.save()
-        # transaction = Transaction.objects.create(
-        #     transaction_type = Transaction_type.objects.first(),
-        #     description = "Transaccion de Venta deproducto",
-        #     branch = customer.branch,
-        #     content_type = Sale,
-        #     object_id = sale.pk
-        # )
         # Movement.objects.create(
-        #     transaction = transaction,
         #     payment_method = payment.type_method,
         #     amount = total,
         #     cash_register = CashRegister.objects.filter(
         #         is_closed = False,
         #         branch = customer.branch,
-        #         description = "Venta de productos a %s" % customer.get_full_name(),
-        #         currency = Currency.objects.first(),
-        #         type_operation = "Ingreso",
-        #     )
+        #         ),
+        #     description = "Venta de productos a %s" % customer.get_full_name(),
+        #     currency = Currency.objects.first(),
+        #     type_operation = "Ingreso",
         # )
 
     # sale.save()
