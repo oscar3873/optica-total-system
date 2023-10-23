@@ -37,7 +37,7 @@ class CashRegister(BaseAbstractWithUser):
     final_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Monto final")
     counted_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Monto de la caja fisica")
     difference = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Diferencia")
-    
+    observations = models.TextField(null=True, blank=True, verbose_name="Observaciones")
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Sucursal")
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Divisa")
     is_close = models.BooleanField(default=False, verbose_name="Estado")
@@ -78,7 +78,7 @@ class CashRegisterDetail(BaseAbstractWithUser):
     cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE, null=True, blank=True)
     type_method = models.ForeignKey(PaymentType, on_delete=models.CASCADE, null=True, blank=True)
     registered_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    counted_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    counted_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     difference = models.DecimalField(max_digits=10, decimal_places=2)
     
     objects = CashRegisterDetailManager()

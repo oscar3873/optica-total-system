@@ -65,21 +65,20 @@ class CashRegisterForm(forms.ModelForm):
 
 class CloseCashRegisterForm(forms.Form):
     
-    final_balance = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        widget=forms.NumberInput(
+    observations = forms.CharField(
+        widget=forms.Textarea(
             attrs={
                 'class': 'form-control',
-                'placeholder': '0.00',
-                'autofocus':''
-                }
-            )
+                'class': 'form-control',
+                'rows': '5',
+                'placeholder': 'Ej. Falto plata de ...'
+            }
         )
+    )
     
     class Meta:
         model = CashRegister
-        fields = ['final_balance']
+        fields = ['observations']
 
 
 class CashRegisterDetailForm(forms.ModelForm):
@@ -90,9 +89,8 @@ class CashRegisterDetailForm(forms.ModelForm):
         widgets = {
             'counted_amount': forms.NumberInput(
                 attrs={
-                    'class': 'form-control',
+                    'class': 'form-control difference-input',
                     'placeholder': '0.00',
-                    'value': '0.00'
                 })
         }
         

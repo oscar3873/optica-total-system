@@ -1,0 +1,75 @@
+{% load static %}
+{% load humanize %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+    <!-- ===============================================-->
+    <!--    Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+    {% include 'core/components/messages.html' %}
+
+    <!-- ===============================================-->
+    <!--    Fin Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+      <!-- Titulo del formulario wizard -->
+      <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i class="fa-inverse fa-stack-1x text-primary fas fa-lock"></i></span>
+        <div class="col">
+          <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Cierre de caja</span><span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+          <p class="mb-0">Aquí puede realizar el cierre de caja</p>
+        </div>
+      </div>
+    </div>
+
+    {% if cashregister %}
+        <!-- Card -->
+        <div class="card theme-wizard h-100 mb-5">
+          <div class="card-header bg-light pt-3 pb-2">
+          </div>
+          <!-- Card body -->
+          <div class="card-body py-4" id="wizard-controller">
+              <form method="post">
+                {% csrf_token %}
+                  <label for="{{form.observations.id_for_label}}">Observaciones de la caja</label>
+                  {{form.observations}}
+                  <small>Cualquier detalle necesario antes de cerrar <span class="text-warning">en caso de ser necesario</span></small>
+                  <button type="submit" class="btn btn-warning d-block mt-2">Cerrar caja</button>
+              </form>
+          </div>
+        </div>
+    {% else %}
+        <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+          <!--Card-->
+          <div class="card bg-transparent-50 overflow-hidden">
+            <div class="card-header position-relative">
+              <div class="bg-holder d-none d-md-block bg-card z-index-1"
+                style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+              </div>
+              <!--/.bg-holder-->
+      
+              <div class="position-relative z-index-2">
+                <div>
+                  <h5 class="text-primary mb-1">No hay una caja abierta</h5>
+                </div>
+                <div class="d-flex py-3">
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="d-flex py-3 justify-content-between">
+                <a href="{% url 'cashregister_app:cashregister_create_view' %}" class="btn btn-primary" type="submit">Abrir
+                  caja</a>
+              </div>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->

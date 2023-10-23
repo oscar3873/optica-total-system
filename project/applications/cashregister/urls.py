@@ -6,6 +6,7 @@ from applications.cashregister.views import *
 app_name = 'cashregister_app'
 
 urlpatterns = [
+    ############################# URL DE LA CAJA #############################
     path(
         '',
         CashRegisterView.as_view(),
@@ -27,7 +28,7 @@ urlpatterns = [
         name = 'cashregister_update_view'
     ),
     path(
-        'delete/<pk>',
+        'delete/<pk>/',
         CashRegisterDeleteView.as_view(),
         name = 'cashregister_delete_view'
     ),
@@ -37,15 +38,26 @@ urlpatterns = [
         name = 'cashregister_create_view'
     ),
     path(
+        'close/',
+        CashRegisterCloseView.as_view(),
+        name = 'cashregister_close_view'
+    ),
+    path(
+        'close/ticket/<int:pk>',
+        CloseTicketCashRegister.as_view(),
+        name= 'close_ticket_view'
+    ),
+    path(
         'arching/',
         CashRegisterArching.as_view(),
         name = 'cashregister_arching_view'
     ),
     path(
-        'close/',
-        CashRegisterArching.as_view(),
-        name = 'cashregister_close_view'
+        'arching/ticket/<pk>/',
+        archingTicket,
+        name = 'arching_ticket_view'
     ),
+    ############################# URL DE MOVIMIENTOS #############################
     path(
         'movements/',
         MovementsView.as_view(),
