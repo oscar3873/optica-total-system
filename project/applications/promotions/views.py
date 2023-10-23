@@ -103,9 +103,10 @@ class PromotionListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         promotion_model = Promotion
+        excluded_fields = ['description', 'branch']  # Corrección: cambia 'descripcion' a 'description'
         custom_fields = [
             field.name for field in promotion_model._meta.get_fields()
-            if not field.is_relation
+            if not field.is_relation and field.name not in excluded_fields
         ]
         context['table_column'] = custom_fields
         return context
