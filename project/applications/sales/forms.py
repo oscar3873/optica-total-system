@@ -2,6 +2,7 @@ from django import forms
 
 from applications.core.mixins import ValidationFormMixin
 from applications.products.models import Product
+from applications.cashregister.models import Payment, PaymentMethod
 from .models import *
 
 class SaleForm(forms.ModelForm):
@@ -20,11 +21,6 @@ class SaleForm(forms.ModelForm):
         )
     )
 
-    total = forms.DecimalField(
-        required=False,
-        initial= 0
-    )
-
     customer = forms.ModelChoiceField(
         required=False,
         queryset = Customer.objects.all(),
@@ -32,7 +28,7 @@ class SaleForm(forms.ModelForm):
     )
     class Meta:
         model = Sale
-        fields = ['total', 'customer',]
+        fields = ['customer',]
 
 
 class OrderDetailForm(forms.ModelForm):
@@ -64,3 +60,30 @@ OrderDetailFormset = forms.inlineformset_factory(
     form=OrderDetailForm,
     extra = 1,
 )
+
+
+
+class PaymentMethodsForm(ValidationFormMixin):
+    amount = forms.DecimalField(
+        required = True,
+        max_digits = 20,
+        min_value = 0,
+        initial = 0,
+        widget = forms.NumberInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
+    payment_method = forms.ModelChoiceField(
+        required = True,
+        queryset = PaymentMethod.objects.all(),
+        widget = forms.RadioSelect(
+            attrs={'class': 'form-control'}
+        )
+    )
+    class Meta:
+        model = Payment
+        fields = ['amount', 'payment_method',]
+
+
+PaymentMethodsFormset = forms.formset_factory(PaymentMethodsForm, extra = 1)

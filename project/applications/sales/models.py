@@ -57,7 +57,7 @@ class Sale(BaseAbstractWithUser):
     total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
     discount = models.PositiveIntegerField(verbose_name='Descuento',  null=True, blank=True)
-
+    missing_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
 
 class OrderDetail(BaseAbstractWithUser):
     """
