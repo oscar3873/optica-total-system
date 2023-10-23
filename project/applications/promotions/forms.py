@@ -23,14 +23,14 @@ class PromotionProductForm(forms.ModelForm):
         ),
     )
 
-    products = forms.ModelMultipleChoiceField(
+    productsSelected = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'product-checkboxes'}),
     )
 
     class Meta:
         model = Promotion
-        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'products']
+        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'productsSelected', 'discount']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

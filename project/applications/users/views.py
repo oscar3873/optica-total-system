@@ -1,6 +1,4 @@
 import os
-from django.forms.models import BaseModelForm
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth import authenticate, login, logout, views
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +6,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 
 from django.views.generic import View
-from django.views.generic import FormView, DetailView, UpdateView, RedirectView
+from django.views.generic import FormView, DetailView, UpdateView
 
 from applications.core.models import Objetives
 from django.utils import timezone
@@ -16,7 +14,7 @@ from django.utils import timezone
 from .forms import UserCreateForm
 from .models import User
 from .forms import *
-from .utils import generate_profile_img_and_assign
+from .utils import fix_image_orientation, generate_profile_img_and_assign
 from applications.branches.models import Branch, Branch_Objetives
 from applications.employes.models import Employee_Objetives
 from applications.core.mixins import CustomUserPassesTestMixin
@@ -186,22 +184,37 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
 
 
 class UserChangeImagen(FormView):
+    template_name = 'users/user_account_page.html'
     form_class = ImagenChangeForm
 
     def form_valid(self, form):
+        from PIL import Image
+        from project.settings.local import MEDIA_ROOT
+
         pk = self.kwargs['pk']
         user_profile = User.objects.get(pk=pk)
         new_image = form.cleaned_data['imagen']
 
         if new_image:
+            image = Image.open(new_image)
+            image = fix_image_orientation(image)  # Corregir la orientación si es necesario
+            image.thumbnail((500, 500)) # Re-dimensionar imagen
+
             if user_profile.imagen:
                 user_profile.imagen.delete()
                 os.remove(user_profile.imagen.path)
-            user_profile.imagen = new_image
+
+            # Guardar la imagen en la carpeta profile en la misma ubicación
+            name_img = user_profile.first_name[0] + user_profile.last_name[0] + str(user_profile.pk)
+            image_path = os.path.join(MEDIA_ROOT, "profile", f'{name_img}.jpg')
+            image.save(image_path, format='JPEG')
+
+            user_profile.imagen = os.path.join("profile", f'{name_img}.jpg')
             user_profile.save()
-            messages.success(self.request, 'Imagen de perfil actualizada correctamente.')
+
+            messages.success(self.request, 'Imagen de perfil actualizada correctamente')
         else:
-            messages.error(self.request, 'Debes seleccionar una imagen válida.')
+            messages.error(self.request, 'Debes seleccionar una imagen válida')
         return super().form_valid(form)
 
     def get_success_url(self):

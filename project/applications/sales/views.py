@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.branches.models import Branch
 from applications.clients.forms import CustomerForm
 from applications.promotions.models import Promotion
+from project.settings.base import DATE_NOW
 from .utils import *
 from .models import *
 from .forms import *
@@ -39,36 +40,63 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         saleform = SaleForm(self.request.POST)
 
         if saleform.is_valid():
-            sale = saleform.cleaned_data
+            sale = saleform
+            print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
+            customer = saleform.cleaned_data['customer']
 
         promotions_active = Promotion.objects.filter(is_active=True)
         promotional_products = {promotion: [] for promotion in promotions_active}
 
         order_details = []
+        all_products_to_sale = []
+        discount_promo = []
         total = 0
 
-        # Procesa los datos del formulario aquí
+        # Procesa los datos del formset
         for formset in formsets:
+            if not formset.cleaned_data['product']:
+                messages.error(self.request, "No se ha seleccionado ningun producto.")
+                return super().form_invalid(form)
+            
             if formset.is_valid():
-                product = formset.cleaned_data['product']
-                quantity = formset.cleaned_data['quantity']
-                for _ in range(quantity):
-                    total += product.sale_price
-
+                total += get_total_and_products(formset, all_products_to_sale)
                 order_details.append(process_formset(formset, promotional_products))
-                
-        discount_promo = []
+
         # Ordena los productos en cada promoción por precio
         for promotion, products in promotional_products.items():
             process_promotion(promotional_products, promotion, products, discount_promo)
             
         discount_promo = sum(discount_promo)
         print('DESCUENTO TOTAL: ', discount_promo)
-
-        if saleform.cleaned_data['total'] == total:
+        print('Total de Front y Back IGUALES: ', saleform.cleaned_data['total'] == total)
+        if saleform.cleaned_data['total'] == total: # Modo prueba
             sale = saleform.save(commit=False)
-            sale.total -= discount_promo 
-            print(sale.total)
+            sale.discount = discount_promo
+            print('=> TOTAL: ', total - discount_promo)
+
+        if not customer: # or 'Anonimo' in customer.first_name: # Si no hay un cliente real
+            sale.state = Sale.STATE[0][0] # "COMPLETADO"
+            print('\nCLIENTE ANONIMO\n\n\n')
+        elif customer.has_credit_account: # Si hay un cliente real y tiene Cuenta corriente
+            sale.state = Sale.STATE[1][0] # "PENDIENTE"
+            # customer.credit_transactions.create(
+            #     date = DATE_NOW,
+            #     amount = sale.total,
+            #     description = "Venta de productos"
+            # )
+            customer.credit_balance += sale.total
+            print('\nCLIENTE : ', customer.first_name, '\n\n\n')
+        # sale.save()
+
+        has_proof = saleform.cleaned_data.pop('has_proof') or None
+        # proof_type = switch_case(has_proof, sale)
+        # if proof_type:
+        #     generate_proof(proof_type)
+
+        product_cristal = True #find_cristal_product(all_products_to_sale)
+        if customer and product_cristal:
+            # messages.info(self.request, "%s" % product_cristal.name)
+            return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)

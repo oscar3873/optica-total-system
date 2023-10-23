@@ -1,8 +1,17 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
 
-from .models import OrderDetail
+from .models import Invoice, OrderDetail, Receipt
 
+def get_total_and_products(formset, all_products_to_sale):
+    total = 0
+
+    product = formset.cleaned_data['product']
+    all_products_to_sale.append(product)
+    quantity = formset.cleaned_data['quantity']
+    for _ in range(quantity):
+        total += product.sale_price
+    return total
 
 def process_formset(formset, promotional_products):
     if formset.is_valid():
@@ -28,7 +37,6 @@ def process_formset(formset, promotional_products):
 
 # Función para calcular la suma de los primeros N elementos de una lista
 def sumFirst_N_Elements(lst, n):
-    print(sum(sorted(lst)[:n]))
     return sum(sorted(lst)[:n])
 
 # Función para procesar productos en una promoción
@@ -55,3 +63,24 @@ def process_promotion(promotional_products, promotion, products, discount_promo)
         """
         discount_promo = [ $, $, $ ...]
         """
+
+def switch_case(case, sale):
+    if case == 'A':
+        return sale.invoice.create( # CREA UN OBJ DE FACTURA
+            # consultar Campos
+        )
+    elif case == 'B':
+        return sale.receipt.create( # CREA UN OBJ DE RECIBO COMUN
+            # consultar Campos
+        )
+    else:
+        return None
+
+def find_cristal_product(all_products_to_sale):
+    for product in all_products_to_sale:
+        if 'cristal' in product.category.name:
+            return product
+    return None
+
+def generate_proof(proof_type): # generar factura o recibo
+    pass

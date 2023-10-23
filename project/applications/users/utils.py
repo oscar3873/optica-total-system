@@ -49,6 +49,30 @@ def generate_profile_img_and_assign(user):
 
 
 
+def fix_image_orientation(image):
+    from PIL import ExifTags
+
+    try:
+        exif = image._getexif()
+        if exif is not None:
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation':
+                    break
+
+            if orientation in exif:
+                if exif[orientation] == 3:
+                    image = image.rotate(180, expand=True)
+                elif exif[orientation] == 6:
+                    image = image.rotate(270, expand=True)
+                elif exif[orientation] == 8:
+                    image = image.rotate(90, expand=True)
+    except (AttributeError, KeyError, IndexError):
+        # No se pudo obtener información de orientación EXIF o la imagen no la tiene.
+        pass
+
+    return image
+
+
 
 
 
