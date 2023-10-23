@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         if(!setProductIds.has(product.id)){
                             const item = document.createElement('li');
                             item.style.zIndex = "3";
-                            item.style.backgroundColor = '#748194';
+                            item.style.backgroundColor = '#464c55';
                             
                             item.style.cursor = 'pointer';
                             item.classList.add('list-group-item', 'products');
