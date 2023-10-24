@@ -27,6 +27,13 @@ class PromotionProductForm(forms.ModelForm):
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'product-checkboxes'}),
     )
+    
+    is_active = forms.BooleanField(
+        label="Activo", 
+        widget=forms.CheckboxInput(
+            attrs={'class': 'form-check-input mb-2'}
+        )
+    )
 
     class Meta:
         model = Promotion
