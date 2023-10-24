@@ -11,7 +11,7 @@ urlpatterns = [
         name = 'promotion_new'
     ),
     path(
-        'detail',
+        'detail/promotion/<pk>',
         PromotionDetailView.as_view(),
         name = 'promotion_detail'
     ),
@@ -23,7 +23,7 @@ urlpatterns = [
     ),
     
     path(
-        'update',
+        'update/promotion/<pk>',
         PromotionUpdateView.as_view(),
         name = 'promotion_update'
     ),
@@ -34,7 +34,7 @@ urlpatterns = [
         name = 'promotion_list'
     ),
     path(
-        'delete',
+        'delete/promotion/<pk>/',
         PromotionDeleteView.as_view(),
         name = 'promotion_delete'
     )

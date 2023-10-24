@@ -29,12 +29,10 @@
                 <div class="row flex-between-center">
                     <div class="col-12 text-center col-sm-auto d-flex align-items-center pe-0">
                         <div>
-                            <form>
+                            <form id="searchForm" method="GET" data-ajax-search-url="{% url 'promotions_app:ajax_promotional_products' %}">
                                 <div class="input-group">
-                                    <input class="form-control form-control-sm shadow-none search" type="search"
-                                        placeholder="Buscar" aria-label="search" />
-                                    <div class="input-group-text bg-transparent"><span
-                                            class="fa fa-search fs--1 text-600"></span></div>
+                                    <input maxlength="50" class="form-control form-control-sm shadow-none search" id="searchInput" type="search" placeholder="Buscar" aria-label="search" />
+                                    <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                                 </div>
                             </form>
                         </div>
@@ -44,9 +42,6 @@
                             <a href="{% url 'promotions_app:promotion_new' %}" class="btn btn-falcon-default btn-sm"
                                 type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                     class="d-none d-sm-inline-block ms-1">Nueva promoción</span></a>
-                            <button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter"
-                                    data-fa-transform="shrink-3 down-2"></span><span
-                                    class="d-none d-sm-inline-block ms-1">Filtros</span></button>
                             <button class="btn btn-falcon-default btn-sm" type="button"><span
                                     class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
                                     class="d-none d-sm-inline-block ms-1">Exportar</span></button>
@@ -63,7 +58,16 @@
                             <tr>
                                 {% for column in table_column %}
                                 <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">
-                                    {{column.1}}</th>
+                                    {% if column.1 == 'Inicio' %}
+                                        Fecha de inicio
+                                    {% else %}
+                                        {% if column.1 == 'Fin' %}
+                                            Fecha de Finalización
+                                        {% else %}
+                                            {{column.1}}
+                                        {% endif %}
+                                    {% endif %}
+                                </th>
                                 {% endfor %}
                                 <th class="no-sort pe-1 align-middle data-table-row-action">Acciones</th>
                             </tr>
@@ -75,10 +79,10 @@
                             <tr class="btn-reveal-trigger">
                                 <td class="align-start name">{{promotion.name}}</td>
                                 <td class="align-start type_prom">{{promotion.type_prom}}</td>
+                                <td class="align-start start_date">{{promotion.start_date}}</td>
+                                <td class="align-start end_date">{{promotion.end_date}}</td>
                                 <td class="align-start is_active">{{promotion.is_active}}</td>
-                                <td class="align-start email">{{promotion.start_date}}</td>
-                                <td class="align-start email">{{promotion.end_date}}</td>
-                                <td class="align-middle white-space-nowrap text-end">
+                                <td class="align-middle white-space-nowrap text-start">
                                     <div class="dropstart font-sans-serif position-static d-inline-block">
                                         <button
                                             class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
@@ -89,7 +93,7 @@
                                         <div class="dropdown-menu dropdown-menu-end border py-2"
                                             aria-labelledby="dropdown0">
                                             <a class="dropdown-item"
-                                                href="{% url 'promotions_app:promotion_detail'  %} ">Detalle</a>
+                                                href="{% url 'promotions_app:promotion_detail' promotion.id %} ">Detalle</a>
                                             <a class="dropdown-item"
                                                 href="#">Editar</a>
                                             <div class="dropdown-divider"></div>
