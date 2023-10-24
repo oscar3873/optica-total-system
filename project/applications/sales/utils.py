@@ -88,23 +88,21 @@ def find_cristal_product(all_products_to_sale):
 def generate_proof(proof_type): # generar factura o recibo
     pass
 
-def process_customer(customer, sale, payment_methods, total, product_cristal):
+def process_customer(customer, sale, payment_methods, total, product_cristal, amount):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
 
     payment_total = 0
-    for payment in payment_methods:
-        payment.save(commit=False)
-        payment_total += payment.amount
-    
-    if customer.has_credit_account:
+    # for payment in payment_methods:
+    #     payment.save(commit=False)
+    #     payment_total += payment.amount
+
+    payment = payment_methods
+    payment_total = amount
+
+    if customer.has_credit_account and payment:
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        # customer.credit_transactions.create(
-        #     date = DATE_NOW,
-        #     amount = sale.total,
-        #     description = "Venta de productos"
-        # )
         customer.credit_balance += sale.total
         # customer.save()
         if product_cristal:

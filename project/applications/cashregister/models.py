@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.urls import reverse
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
 from applications.cashregister.managers import CashRegisterManager, MovementManager, CashRegisterDetailManager
+from applications.sales.models import PaymentType
 
 
 
@@ -46,32 +46,6 @@ class CashRegister(BaseAbstractWithUser):
     
     def __str__(self):
         return "Caja #" + str(self.pk) + " - " + str(self.date_open.__format__('%d/%m/%Y'))
-
-
-class PaymentType(BaseAbstractWithUser):
-    name = models.CharField(max_length=50)
-    
-    def __str__(self):
-        return self.name
-    
-
-
-#ESTO VA EN LA APLICACION DE SALES
-class PaymentMethod(BaseAbstractWithUser):
-    name = models.CharField(max_length=50)
-    type_method = models.ForeignKey(PaymentType, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.name + ' - ' + str(self.type_method)
-    
-
-#ESTO VA EN LA APLICACION DE SALES
-class Payment(BaseAbstractWithUser):
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    date_payment = models.DateField(auto_now_add=True)
-    description = models.TextField(null=True, blank=True, max_length=100, default='Sin descripcion')
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
 
 
 class CashRegisterDetail(BaseAbstractWithUser):

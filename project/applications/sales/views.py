@@ -31,22 +31,25 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             branch = self.request.user.branch
 
         context['sale_form'] = SaleForm
-        context['payment_form'] = PaymentMethodsFormset
+        # context['payment_form'] = PaymentMethodsFormset
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
         context['payment_method_form'] = PaymentMethodForm
         
         return context
 
+
     def form_valid(self, form):
         formsets = form
         saleform = SaleForm(self.request.POST)
-        payment_methods = PaymentMethodsFormset(self.request.POST)
+        # payment_methods = PaymentMethodsFormset(self.request.POST)
 
         if saleform.is_valid():
-            sale = saleform
+            sale = saleform.save(commit=False)
             print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
             customer = saleform.cleaned_data['customer']
+            payment_methods = saleform.cleaned_data.pop('payment_method')
+            amount = saleform.cleaned_data.pop('amount')
             if not customer:
                 customer = Customer.objects.first() # 'Anonimo'
 
@@ -74,8 +77,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             
         discount_promo = sum(discount_promo)
         print('DESCUENTO TOTAL: ', discount_promo)
-
-        sale = saleform.save(commit=False)
+ 
         sale.discount = discount_promo
         print('=> TOTAL: ', total - discount_promo)
 
@@ -87,7 +89,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         product_cristal = True #find_cristal_product(all_products_to_sale)
 
-        customer_cc_and_cristal = process_customer(customer, sale, payment_methods, total, product_cristal)
+        customer_cc_and_cristal = process_customer(customer, sale, payment_methods, total, product_cristal, amount)
         if customer_cc_and_cristal:
             # messages.info(self.request, "%s" % product_cristal.name)
             return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
@@ -98,6 +100,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         messages.error(self.request, "Error. Verifique los datos.")
         return super().form_invalid(form)
+
 
 class PaymentMethodCreateView(FormView):
     """
@@ -115,7 +118,7 @@ class PaymentMethodCreateView(FormView):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
             new_payment_method_data = {
                 'id': payment_method.id,
-                'name': payment_method.name,
+                'name': payment_method.__str__(),
             }
             # Si es una solicitud AJAX, devuelve una respuesta JSON
             return JsonResponse({'status': 'success', 'new_payment_method': new_payment_method_data})

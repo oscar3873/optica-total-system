@@ -214,18 +214,25 @@
                         <label for="">Seleccione el metodo de pago</label>
                         <div class="col-8">
                             <div class="form-group">
-                                <select class="form-control" name="" id="">
+                                <!-- <select class="form-control" name="" id="">
                                     <option>Efectivo</option>
                                     <option>Transferencia</option>
                                     <option>Banco Macro - Tarjeta de Debito</option>
                                     <option>BNA - Tarjeta de Credito</option>
                                     <option>BNA - Tarjeta de Debito</option>
-                                </select>
+                                </select> -->
+                                {{sale_form.type_method}}
                             </div>
                         </div>
                         <div class="col-4">
                             <button id="addPaymentMethod" class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="tooltip" data-bs-target="#payment-method-modal" data-bs-original-title="Añadir nueva metodo de pago" style="cursor: pointer"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span></button>
                         </div>
+
+                        <div>
+                            <p>input para el monto</p>
+                            {{sale_form.amount}}
+                        </div>
+                        
                     </div>
                 </div>
             </div>

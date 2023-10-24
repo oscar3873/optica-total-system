@@ -2,8 +2,6 @@ from django import forms
 
 from applications.core.mixins import ValidationFormMixin
 from applications.products.models import Product
-from applications.cashregister.models import PaymentMethod, PaymentType
-from applications.cashregister.models import Payment, PaymentMethod
 from .models import *
 
 class SaleForm(forms.ModelForm):
@@ -22,10 +20,34 @@ class SaleForm(forms.ModelForm):
         )
     )
 
+    amount = forms.DecimalField(
+        widget = forms.NumberInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
     customer = forms.ModelChoiceField(
         required=False,
         queryset = Customer.objects.all(),
         widget = forms.RadioSelect()
+    )
+
+    type_method = forms.ModelChoiceField(
+        queryset=PaymentMethod.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    discount = forms.IntegerField(
+        initial = 0,
+        widget = forms.NumberInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
     )
     
     class Meta:
@@ -106,3 +128,7 @@ class PaymentMethodForm(forms.ModelForm):
     class Meta:
         model = PaymentMethod
         fields = ['name', 'type_method']
+
+# PaymentMethodsFormset = forms.formset_factory(
+#     PaymentMethodForm, extra=1
+# )
