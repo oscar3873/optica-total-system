@@ -21,6 +21,7 @@ class SaleForm(forms.ModelForm):
     )
 
     amount = forms.DecimalField(
+        required = True,
         widget = forms.NumberInput(
             attrs={'class': 'form-control'}
         )
@@ -32,7 +33,7 @@ class SaleForm(forms.ModelForm):
         widget = forms.RadioSelect()
     )
 
-    type_method = forms.ModelChoiceField(
+    payment_method = forms.ModelChoiceField(
         queryset=PaymentMethod.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
         widget=forms.Select(
             attrs={
@@ -41,7 +42,8 @@ class SaleForm(forms.ModelForm):
         )
     )
 
-    discount = forms.IntegerField(
+    general_discount = forms.IntegerField(
+        required=False,
         initial = 0,
         widget = forms.NumberInput(
             attrs={
