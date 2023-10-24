@@ -24,7 +24,6 @@
         <div class="card-header bg-light">
             <div class="row pb-md-0">
                 <div class="col-12 col-sm-6">
-                    <!-- hardcodeado -->
                     <h5 class="mb-2">{{promotion.name}}</h5>
                     <p class="text-700 fs--2">{{promotion.description}}</p>
                 </div>
@@ -56,21 +55,22 @@
                 <div class="col-lg-6 mb-3 mb-sm-0">
                     <div class="row">
                         <div class="col-12">
-                            <h5 class="mb-3">Datos de la promoción:</h5>
+                            <h5 class="mb-3">Datos de la promoción</h5>
                         </div>
                         <div class="col-12 d-flex justify-content-between">
                             <p class="fw-normal fw-semi-bold mb-1">Tipo de promoción:</p>
-                            <!-- hardcodeado -->
                             <span class="ms-3 text-900 fw-bold">{{promotion.type_prom}}</span>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between" id="promotion_discount">
+                            <p class="fw-normal fw-semi-bold mb-1">Descuento:</p>
+                            <span class="ms-3 text-900 fw-bold">{{promotion.discount}}%</span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                             <p class="fw-normal fw-semi-bold mb-1">Inicio:</p>
-                            <!-- hardcodeado -->
                             <span class="ms-3 text-800 fw-bold">{{promotion.start_date}}</span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                             <p class="fw-normal fw-semi-bold mb-1">Fin:</p>
-                            <!-- hardcodeado -->
                             <span class="ms-3 text-800 fw-bold">{{promotion.end_date}}</span>
                         </div>
 
