@@ -57,17 +57,24 @@
                         <thead class="bg-200 text-900">
                             <tr>
                                 {% for column in table_column %}
-                                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">
-                                    {% if column.1 == 'Inicio' %}
-                                        Fecha de inicio
+                                <!-- <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Precio' %}d-none d-md-table-cell{% endif %}" data-sort="{{column.0}}">{{column.1}}</th> -->
+                                    {% if column.1 == 'Nombre de la Promoción' %}
+                                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">Nombre</th>
                                     {% else %}
-                                        {% if column.1 == 'Fin' %}
-                                            Fecha de Finalización
+                                        {% if column.1 == 'Tipo de promoción' %}
+                                            <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">{{column.1}}</th>
                                         {% else %}
-                                            {{column.1}}
+                                            {% if column.1 == 'Inicio' %}
+                                                <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">Fecha de inicio</th>
+                                            {% else %}
+                                                {% if column.1 == 'Fin' %}
+                                                    <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">Fecha de finalización</th>
+                                                {% else %}
+                                                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">{{column.1}}</th>
+                                                {% endif %}
+                                            {% endif %}
                                         {% endif %}
                                     {% endif %}
-                                </th>
                                 {% endfor %}
                                 <th class="no-sort pe-1 align-middle data-table-row-action">Acciones</th>
                             </tr>
@@ -78,10 +85,14 @@
                             {% for promotion in promotions %}
                             <tr class="btn-reveal-trigger">
                                 <td class="align-start name">{{promotion.name}}</td>
-                                <td class="align-start type_prom">{{promotion.type_prom}}</td>
-                                <td class="align-start start_date">{{promotion.start_date}}</td>
-                                <td class="align-start end_date">{{promotion.end_date}}</td>
-                                <td class="align-start is_active">{{promotion.is_active}}</td>
+                                <td class="align-start d-none d-md-table-cell type_prom">{{promotion.type_prom}}</td>
+                                <td class="align-start d-none d-md-table-cell start_date">{{promotion.start_date}}</td>
+                                <td class="align-start d-none d-md-table-cell end_date">{{promotion.end_date}}</td>
+                                {% if promotion.is_active %}
+                                    <td class="align-start is_active"><span class="badge badge-soft-success rounded-pill">Activa</span></td>
+                                {% else %}
+                                    <td class="align-start is_active"><span class="badge badge-soft-secondary rounded-pill">Inactiva</span></td>
+                                {% endif %}
                                 <td class="align-middle white-space-nowrap text-start">
                                     <div class="dropstart font-sans-serif position-static d-inline-block">
                                         <button
