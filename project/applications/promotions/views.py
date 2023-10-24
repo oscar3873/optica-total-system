@@ -36,7 +36,7 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
 
 #################################### DETAILS ####################################
 class PromotionDetailView(LoginRequiredMixin, DetailView):
-    template_name = 'promotions/promotion_detail_page.html'
+    template_name = 'promotions/promotions_detail_page.html'
     model = Promotion
     
     def get(self, request, *args, **kwargs):
