@@ -27,6 +27,14 @@ class PromotionProductForm(forms.ModelForm):
         queryset=Product.objects.all(),
         widget=forms.CheckboxSelectMultiple(attrs={'class': 'product-checkboxes'}),
     )
+    
+    is_active = forms.BooleanField(
+        label="Activo", 
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={'class': 'form-check mb-2'}
+        )
+    )
 
     class Meta:
         model = Promotion
@@ -36,5 +44,10 @@ class PromotionProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-            field.widget.attrs['required'] = ''
+            if not field_name == 'is_active':
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['required'] = ''
+            else:
+                field.widget.attrs['class'] = 'form-check-input mb-2'
+        
+        

@@ -26,11 +26,11 @@
                 <form method="post">
                 {% csrf_token %}
                     <div class="mb-4">
-                        <p class="fw-semi-bold">¿Estás seguro de que quieres <span class="text-warning">eliminar</span> la promoción "INSERTE PROMOCION" ?</p>
+                        <p class="fw-semi-bold">¿Estás seguro de que quieres <span class="text-warning">eliminar</span> la promoción "{{promotion.name}}" ?</p>
                     </div>
                     <div class="mb-4">
                         <button type="submit" class="btn btn-danger">Confirmar eliminación</button>
-                        <a class="btn btn-secondary" href="{% url 'products_app:product_list' %}">Cancelar</a>
+                        <a class="btn btn-secondary" href="{% url 'promotions_app:promotion_list' %}">Cancelar</a>
                     </div>
                 </form>
             </div>

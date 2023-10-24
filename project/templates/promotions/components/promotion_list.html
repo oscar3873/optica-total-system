@@ -58,20 +58,16 @@
                             <tr>
                                 {% for column in table_column %}
                                 <!-- <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Precio' %}d-none d-md-table-cell{% endif %}" data-sort="{{column.0}}">{{column.1}}</th> -->
-                                    {% if column.1 == 'Nombre de la Promoción' %}
-                                        <th class="sort pe-1 align-middle white-space-nowrap" data-sort="{{column.0}}">Nombre</th>
+                                    {% if column.1 == 'Tipo de promoción' %}
+                                        <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">{{column.1}}</th>
                                     {% else %}
-                                        {% if column.1 == 'Tipo de promoción' %}
-                                            <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">{{column.1}}</th>
+                                        {% if column.1 == 'Inicio' %}
+                                            <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">Fecha de inicio</th>
                                         {% else %}
-                                            {% if column.1 == 'Inicio' %}
-                                                <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">Fecha de inicio</th>
+                                            {% if column.1 == 'Fin' %}
+                                                <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">Fecha de finalización</th>
                                             {% else %}
-                                                {% if column.1 == 'Fin' %}
-                                                    <th class="sort pe-1 align-middle white-space-nowrap d-none d-md-table-cell" data-sort="{{column.0}}">Fecha de finalización</th>
-                                                {% else %}
-                                                <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">{{column.1}}</th>
-                                                {% endif %}
+                                            <th class="sort pe-1 align-middle white-space-nowrap " data-sort="{{column.0}}">{{column.1}}</th>
                                             {% endif %}
                                         {% endif %}
                                     {% endif %}
@@ -106,10 +102,10 @@
                                             <a class="dropdown-item"
                                                 href="{% url 'promotions_app:promotion_detail' promotion.id %} ">Detalle</a>
                                             <a class="dropdown-item"
-                                                href="#">Editar</a>
+                                                href="{% url 'promotions_app:promotion_update' promotion.id %}">Editar</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item text-danger"
-                                                href="#">Borrar</a>
+                                                href="{% url 'promotions_app:promotion_delete' promotion.id %}">Borrar</a>
 
                                         </div>
                                     </div>
