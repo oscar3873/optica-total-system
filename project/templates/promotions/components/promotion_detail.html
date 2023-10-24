@@ -25,8 +25,8 @@
             <div class="row pb-md-0">
                 <div class="col-12 col-sm-6">
                     <!-- hardcodeado -->
-                    <h5 class="mb-2">Promo Verano</h5>
-                    <p class="text-700 fs--2">Esta promo es solo para el verano 2023</p>
+                    <h5 class="mb-2">{{promotion.name}}</h5>
+                    <p class="text-700 fs--2">{{promotion.description}}</p>
                 </div>
             </div>
             <div class="row mt-2">
@@ -41,7 +41,7 @@
                         <span class="fas fa-ellipsis-h"></span>
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Editar</a>
+                        <a class="dropdown-item" href="{% url 'promotions_app:promotion_update' promotion.id %}">Editar</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-danger"
                             href="#">Eliminar</a>
@@ -61,17 +61,17 @@
                         <div class="col-12 d-flex justify-content-between">
                             <p class="fw-normal fw-semi-bold mb-1">Tipo de promoción:</p>
                             <!-- hardcodeado -->
-                            <span class="ms-3 text-900 fw-bold">2x1</span>
+                            <span class="ms-3 text-900 fw-bold">{{promotion.type_prom}}</span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
-                            <p class="fw-normal fw-semi-bold mb-1">Fecha de inicio:</p>
+                            <p class="fw-normal fw-semi-bold mb-1">Inicio:</p>
                             <!-- hardcodeado -->
-                            <span class="ms-3 text-800 fw-bold">20/12/2023</span>
+                            <span class="ms-3 text-800 fw-bold">{{promotion.start_date}}</span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
-                            <p class="fw-normal fw-semi-bold mb-1">Precio de venta:</p>
+                            <p class="fw-normal fw-semi-bold mb-1">Fin:</p>
                             <!-- hardcodeado -->
-                            <span class="ms-3 text-primary fw-bold">20/12/2023</span>
+                            <span class="ms-3 text-800 fw-bold">{{promotion.end_date}}</span>
                         </div>
 
 
@@ -82,7 +82,9 @@
                         <div class="col-12">
                             <h5 class="mb-0">Productos</h5>
                         </div>
-                        <H5>LISTA DE PRODUCTOS ASOCIADOS A ESTA PROMO</H5>
+                        {% for product in promotion.products %}
+                        <p>{{product}}</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
