@@ -1,0 +1,71 @@
+{% load static %}
+{% load humanize %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+
+    <!-- ===============================================-->
+    <!--    Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+    {% include 'core/components/messages.html' %}
+
+    <!-- ===============================================-->
+    <!--    Fin Errores de Sistema (Backend)-->
+    <!-- ===============================================-->
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Titulo del formulario wizard -->
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+                class="fa-inverse fa-stack-1x text-primary fas fa-credit-card"></i></span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Metodo de pago</span><span
+                    class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Aquí puedes crear un metodo de pago</p>          
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+		<div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+			<div class="card h-100 mb-5">     
+				<div class="card-body py-4">
+					<div class="tab-content">
+                        <form class="mt-3" method="post">
+                                {% csrf_token %}
+                                <div class="col-md-5">
+                                    <div class="mb-3">
+                                        <label for="id_name" class="form-label">Nombre</label>
+                                        {{form.name}}
+                                        <small>Debe ingresar <span class="text-warning fs--2">al menos 3 caracteres.</span></small>
+                                        <!-- <div class="valid-feedback">Perfecto!</div> -->
+                                        <div class="invalid-feedback">Error al enviar. Verifique que haya ingresado al menos 3 caracteres.</div>
+                                        <small class="text-danger">{{form.name.errors}}</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="id_type_method" class="form-label">Tipo</label>
+                                        {{form.type_method}}
+                                        <small>Seleccione un <span class="text-warning fs--2">tipo</span></small>
+                                        <!-- <div class="valid-feedback">Perfecto!</div> -->
+                                        <div class="invalid-feedback">Error al enviar. Verifique que haya ingresado al menos 3 caracteres.</div>
+                                        <small class="text-danger">{{form.type_method.errors}}</small>
+                                    </div>
+                                    <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Crear</button>
+                                </div>
+                        </form>
+					</div>
+				</div>
+			</div>
+		</div>    
+
+    <!-- ===============================================-->
+    <!--   Fin Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+</div>
+
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->

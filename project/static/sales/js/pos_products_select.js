@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createProductElement(product) {
         const productDiv = document.createElement('div');
-        productDiv.classList.add('product-item');
+        productDiv.classList.add('product-item', 'mx-3');
     
         const formCheckDiv = document.createElement('div');
         formCheckDiv.classList.add('form-check', 'mb-0', 'custom-radio', 'radio-select', 'ps-0');
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
         innerRow.classList.add('row', 'gx-card', 'mx-0', 'bg-200', 'fs--1', 'fw-semi-bold');
         
         const leftColumn = document.createElement('div');
-        leftColumn.classList.add('col-8', 'py-3', 'ps-1');
+        leftColumn.classList.add('col-12', 'col-md-8', 'py-3', 'ps-1');
         
         const dFlexContainer = document.createElement('div');
         dFlexContainer.classList.add('d-flex', 'align-items-center');
@@ -256,10 +256,10 @@ document.addEventListener('DOMContentLoaded', function() {
         productpatternH5.appendChild(barcode);
         
         const rightColumn = document.createElement('div');
-        rightColumn.classList.add('col-4', 'py-3', 'ps-1');
+        rightColumn.classList.add('col-12', 'col-md-4', 'py-3', 'ps-1');
         
         const colMd4 = document.createElement('div');
-        colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-600');
+        colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-900');
         colMd4.id = `price-${product.id}`;
         colMd4.textContent = `$ ${product.sale_price}`;
         

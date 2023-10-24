@@ -2,7 +2,6 @@ from django import forms
 
 from applications.core.mixins import ValidationFormMixin
 from applications.products.models import Product
-from applications.cashregister.models import Payment, PaymentMethod
 from .models import *
 
 class SaleForm(forms.ModelForm):
@@ -21,11 +20,36 @@ class SaleForm(forms.ModelForm):
         )
     )
 
+    amount = forms.DecimalField(
+        widget = forms.NumberInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+
     customer = forms.ModelChoiceField(
         required=False,
         queryset = Customer.objects.all(),
         widget = forms.RadioSelect()
     )
+
+    type_method = forms.ModelChoiceField(
+        queryset=PaymentMethod.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
+    discount = forms.IntegerField(
+        initial = 0,
+        widget = forms.NumberInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+    
     class Meta:
         model = Sale
         fields = ['customer',]
@@ -61,29 +85,50 @@ OrderDetailFormset = forms.inlineformset_factory(
     extra = 1,
 )
 
+"""
+class PaymentType(BaseAbstractWithUser):
+    name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.name
+    
 
 
-class PaymentMethodsForm(ValidationFormMixin):
-    amount = forms.DecimalField(
-        required = True,
-        max_digits = 20,
-        min_value = 0,
-        initial = 0,
-        widget = forms.NumberInput(
-            attrs={'class': 'form-control'}
+#ESTO VA EN LA APLICACION DE SALES
+class PaymentMethod(BaseAbstractWithUser):
+    name = models.CharField(max_length=50)
+    type_method = models.ForeignKey(PaymentType, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name + ' - ' + str(self.type_method)
+
+"""
+
+class PaymentMethodForm(forms.ModelForm):
+    
+    name = forms.CharField(
+        required=True,
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Ej.: BNA, Macro, GoCuotas'
+            }
         )
     )
-
-    payment_method = forms.ModelChoiceField(
-        required = True,
-        queryset = PaymentMethod.objects.all(),
-        widget = forms.RadioSelect(
-            attrs={'class': 'form-control'}
+    
+    type_method = forms.ModelChoiceField(
+        queryset=PaymentType.objects.exclude(name__in=['Efectivo', 'Transferencia']), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control'
+            }
         )
-    )
+    )    
     class Meta:
-        model = Payment
-        fields = ['amount', 'payment_method',]
+        model = PaymentMethod
+        fields = ['name', 'type_method']
 
-
-PaymentMethodsFormset = forms.formset_factory(PaymentMethodsForm, extra = 1)
+# PaymentMethodsFormset = forms.formset_factory(
+#     PaymentMethodForm, extra=1
+# )

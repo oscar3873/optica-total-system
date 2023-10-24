@@ -1,13 +1,20 @@
 from django.db import models
 
-from django_timestamps.softDeletion import SoftDeletionModel
-from django_timestamps.timestamps import TimestampsModel
 from applications.clients.models import Customer
 from applications.products.models import Product
 from applications.core.models import BaseAbstractWithUser
-from applications.branches.models import Branch
 
 # Create your models here.
+
+class InvoiceType(BaseAbstractWithUser):
+    TYPE = [
+        ('A', 'Factura A'),
+        ('B', 'Factura B'),
+        ('X', 'Comprobante de pago'),
+    ]
+
+    num_invoice = models.CharField(unique=True, db_index=True, null=True, blank=True)
+    name = models.CharField(max_length=10, choices=TYPE, default=TYPE[0], null=True, blank=True)
 
 class Invoice(BaseAbstractWithUser):
     """
@@ -16,8 +23,8 @@ class Invoice(BaseAbstractWithUser):
     """
 
     invoice_num = models.PositiveBigIntegerField(verbose_name='Numero de factura')
-    invoice_type = models.CharField(max_length=20, verbose_name='Tipo de factura')
-    client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='invoice', null=True , blank=True)
+    invoice_type = models.ForeignKey(InvoiceType, on_delete=models.SET_NULL, verbose_name='Tipo de factura', null=True , blank=True)
+    client = models.ForeignKey(Customer, on_delete=models.SET_NULL, related_name='invoice', null=True , blank=True)
 
 
 class Receipt(BaseAbstractWithUser):
@@ -79,3 +86,29 @@ class OrderDetail(BaseAbstractWithUser):
                 f'Cantidad: {self.quantity}\n' +
                 f'Total: $ {self.product.sale_price * self.quantity}'
                 )
+
+
+
+class PaymentType(BaseAbstractWithUser):
+    name = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.name
+    
+
+
+#ESTO VA EN LA APLICACION DE SALES
+class PaymentMethod(BaseAbstractWithUser):
+    name = models.CharField(max_length=50)
+    type_method = models.ForeignKey(PaymentType, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name + ' - ' + str(self.type_method)
+
+#ESTO VA EN LA APLICACION DE SALES
+class Payment(BaseAbstractWithUser):
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
+    date_payment = models.DateField(auto_now_add=True)
+    description = models.TextField(null=True, blank=True, max_length=100, default='Sin descripcion')
+    sale = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='sale_payment', null=True)

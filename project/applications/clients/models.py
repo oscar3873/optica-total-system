@@ -42,24 +42,6 @@ class Customer(Person, BaseAbstractWithUser):
         return f'{self.last_name}, {self.first_name}'
 
 
-class CreditTransaction(models.Model):
-    """
-    Modelo para registrar transacciones de cuenta corriente
-    """
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="credit_transactions", verbose_name="Cliente")
-    date = models.DateTimeField(auto_now_add=True, verbose_name="Fecha y Hora")
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
-    description = models.TextField(blank=True, null=True, verbose_name="Descripción")
-    sale = models.ForeignKey('sales.Sale', on_delete=models.CASCADE, null=True, blank=True)
-
-    class Meta:
-        verbose_name = "Transacción de Cuenta Corriente"
-        verbose_name_plural = "Transacciones de Cuenta Corriente"
-
-    def __str__(self) -> str:
-        return f'Transacción por {self.amount} de {self.customer}: {self.date}'
-    
-
 class Customer_HealthInsurance(BaseAbstractWithUser):
     """
     Clase intermedia para Clientes y sus Obras sociales

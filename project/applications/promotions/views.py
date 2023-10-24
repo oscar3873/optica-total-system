@@ -20,18 +20,31 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
         print(form.cleaned_data)
         # Crea la promoción sin guardarla en la base de datos aún
         promotion = form.save(commit=False)
-        promotion.branch = self.request.user.branch
         promotion.type_prom = form.cleaned_data.get('type_discount')
+        
+        # Modificamos la forma de obtener la sucursal
+        try:
+            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+        except Branch.DoesNotExist:
+            branch_actualy = None
+        
+        # Asignamos la sucursal a la promoción
+        promotion.branch = branch_actualy
+
         # Guarda la promoción en la base de datos
         promotion.save()
+
         # Obtiene los productos seleccionados del formulario
         selected_products = form.cleaned_data.get('productsSelected')
         print(selected_products)
         for product in selected_products:
             # Crea una relación entre la promoción y el producto
             PromotionProduct.objects.create(promotion=promotion, product=product)
+
         # Redirige a la página de inicio o a donde desees después de guardar
         return super().form_valid(form)
+
 
 
 #################################### DETAILS ####################################

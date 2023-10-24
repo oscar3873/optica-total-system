@@ -88,70 +88,48 @@ def find_cristal_product(all_products_to_sale):
 def generate_proof(proof_type): # generar factura o recibo
     pass
 
-def process_customer(customer, sale, payment_methods, total, product_cristal):
+def process_customer(customer, sale, payment_methods, total, product_cristal, amount):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
 
     payment_total = 0
-    for payment in payment_methods:
-        payment.save(commit=False)
-        payment_total += payment.amount
+    # for payment in payment_methods:
+    #     payment.save(commit=False)
+    #     payment_total += payment.amount
 
-    if Decimal(payment_total) < Decimal(total):
+    payment = payment_methods
+    payment_total = amount
+
+    if customer.has_credit_account and payment:
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+        customer.credit_balance += sale.total
+        # customer.save()
+        if product_cristal:
+            return True
+    
+    elif product_cristal: # 
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
         sale.missing_balance = Decimal(total) - Decimal(payment_total)
-
-    if product_cristal and customer.has_credit_account:
-        sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        # customer.credit_transactions.create(
-        #     date = DATE_NOW,
-        #     amount = sale.total,
-        #     description = "Venta de productos"
-        # )
-        customer.credit_balance += sale.total
-        # customer.sale()
-        # sale.save()
+        set_movement(payment_total, payment.type_method, customer)
         return True
-    
-    elif customer.has_credit_account:
-        sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        # customer.credit_transactions.create(
-        #     date = DATE_NOW,
-        #     amount = sale.total,
-        #     description = "Venta de productos"
-        # )
-        customer.credit_balance += sale.total
-        # customer.sale()
-    
-    elif product_cristal:
-        sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        Movement.objects.create(
-            payment_method = payment.type_method,
-            amount = total,
-            cash_register = CashRegister.objects.filter(
-                is_closed = False,
-                branch = customer.branch,
-                ),
-            description = "Venta de productos a %s" % customer.get_full_name(),
-            currency = Currency.objects.first(),
-            type_operation = "Ingreso",
-        )
 
     else:
         sale.state = Sale.STATE[0][0] # 'COMPLETO'
-        # sale.save()
-        # Movement.objects.create(
-        #     payment_method = payment.type_method,
-        #     amount = total,
-        #     cash_register = CashRegister.objects.filter(
-        #         is_closed = False,
-        #         branch = customer.branch,
-        #         ),
-        #     description = "Venta de productos a %s" % customer.get_full_name(),
-        #     currency = Currency.objects.first(),
-        #     type_operation = "Ingreso",
-        # )
-
+        sale.save()
+        set_movement(total, payment.type_method, customer)
     # sale.save()
-    return False
+
+
+def set_movement(total, method, customer):
+    Movement.objects.create(
+        payment_method = method,
+        amount = total,
+        cash_register = CashRegister.objects.filter(
+            is_closed = False,
+            branch = customer.branch,
+            ).last(),
+        description = "Venta de productos a %s" % customer.get_full_name(),
+        # currency = "Pesos",
+        type_operation = "Ingreso",
+    )

@@ -313,6 +313,31 @@
                                         <!-- more inner pages-->
                                     </li>
                                 </ul>
+                                <!-- parent pages--><a class="nav-link dropdown-indicator" href="#payment-method"
+                                    role="button" data-bs-toggle="collapse" aria-expanded="false"
+                                    aria-controls="payment-method" id="sales_billing">
+                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
+                                                class="fas fa-credit-card"></span></span><span
+                                            class="nav-link-text ps-1">Metodos de pago</span>
+                                    </div>
+                                </a>
+                                <ul class="nav collapse false" id="payment-method">
+                                    <li class="nav-item"><a class="nav-link dropdown-sales-billing" href="{% url 'sales_app:payment_method_create_view' %}"
+                                            aria-expanded="false" id="sales_billing_new">
+                                            <div class="d-flex align-items-center"><span
+                                                    class="nav-link-text ps-1">Crear metodo de pago</span>
+                                            </div>
+                                        </a>
+                                        <!-- more inner pages-->
+                                    </li>
+                                    {% comment %} <li class="nav-item"><a class="nav-link dropdown-sales-billing" href="#payment-method-modal"
+                                            data-bs-toggle="modal" aria-expanded="false" id="sales_billing_history">
+                                            <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Lista de metodos de pago</span>
+                                            </div>
+                                        </a>
+                                        <!-- more inner pages-->
+                                    </li> {% endcomment %}
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <!-- label-->
