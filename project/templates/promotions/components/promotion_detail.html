@@ -82,8 +82,8 @@
                         <div class="col-12">
                             <h5 class="mb-0">Productos</h5>
                         </div>
-                        {% for product in promotion.products %}
-                        <p>{{product}}</p>
+                        {% for product_relation in associated_products %}
+                            <p>{{ product_relation.product.name }} </p>
                         {% endfor %}
                     </div>
                 </div>
