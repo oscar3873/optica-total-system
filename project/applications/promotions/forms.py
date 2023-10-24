@@ -48,6 +48,6 @@ class PromotionProductForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
                 field.widget.attrs['required'] = ''
             else:
-                field.widget.attrs['class'] = 'form-check-input'
+                field.widget.attrs['class'] = 'form-check-input mb-2'
         
         
