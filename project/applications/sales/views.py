@@ -1,5 +1,5 @@
 from decimal import Decimal
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -13,6 +13,7 @@ from project.settings.base import DATE_NOW
 from .utils import *
 from .models import *
 from .forms import *
+from django.views.generic import ListView
 
 # Create your views here.
 
@@ -33,6 +34,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
+        context['payment_method_form'] = PaymentMethodForm
+        
         return context
 
     def form_valid(self, form):
@@ -104,3 +107,50 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         messages.error(self.request, "Error. Verifique los datos.")
         return super().form_invalid(form)
+
+class PaymentMethodCreateView(FormView):
+    """
+    Crear una catogoria nueva para el producto
+    """
+    form_class = PaymentMethodForm
+    template_name = 'sales/payment_method_create_page.html'
+    success_url = reverse_lazy('sales_app:payment_method_view')
+
+    def form_valid(self, form):
+        payment_method  = form.save(commit=False)
+        payment_method.user_made = self.request.user
+        payment_method.save()
+
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            new_payment_method_data = {
+                'id': payment_method.id,
+                'name': payment_method.name,
+            }
+            # Si es una solicitud AJAX, devuelve una respuesta JSON
+            return JsonResponse({'status': 'success', 'new_payment_method': new_payment_method_data})
+        else:
+            # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
+            return super().form_valid(form)
+        
+    def form_invalid(self, form):
+        
+        print("######################################################")
+        print("El formulario es invalido")
+        print(form.errors)
+        print(form.cleaned_data['name'])
+        print(form.cleaned_data.get('type_method'))
+        return super().form_invalid(form)
+    
+    
+class PaymentMethodView(ListView):
+    """
+    Listar todas las categorias de productos
+    """
+    model = PaymentMethod
+    template_name = 'sales/payment_method_list_page.html'
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['payment_method_form'] = PaymentMethodForm
+        return context
