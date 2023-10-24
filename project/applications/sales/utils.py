@@ -1,7 +1,10 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
 
-from .models import Invoice, OrderDetail, Receipt
+from project.settings.base import DATE_NOW
+from applications.cashregister.models import CashRegister, Currency, Movement, Transaction
+
+from .models import*
 
 def get_total_and_products(formset, all_products_to_sale):
     total = 0
@@ -84,3 +87,71 @@ def find_cristal_product(all_products_to_sale):
 
 def generate_proof(proof_type): # generar factura o recibo
     pass
+
+def process_customer(customer, sale, payment_methods, total, product_cristal):
+    """
+    Funcion que procesa los datos de metodos de pago y el tipo de cliente.
+    """
+
+    payment_total = 0
+    for payment in payment_methods:
+        payment.save(commit=False)
+        payment_total += payment.amount
+
+    if Decimal(payment_total) < Decimal(total):
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+        sale.missing_balance = Decimal(total) - Decimal(payment_total)
+
+    if product_cristal and customer.has_credit_account:
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+        # customer.credit_transactions.create(
+        #     date = DATE_NOW,
+        #     amount = sale.total,
+        #     description = "Venta de productos"
+        # )
+        customer.credit_balance += sale.total
+        # customer.sale()
+        # sale.save()
+        return True
+    
+    elif customer.has_credit_account:
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+        # customer.credit_transactions.create(
+        #     date = DATE_NOW,
+        #     amount = sale.total,
+        #     description = "Venta de productos"
+        # )
+        customer.credit_balance += sale.total
+        # customer.sale()
+    
+    elif product_cristal:
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+        Movement.objects.create(
+            payment_method = payment.type_method,
+            amount = total,
+            cash_register = CashRegister.objects.filter(
+                is_closed = False,
+                branch = customer.branch,
+                ),
+            description = "Venta de productos a %s" % customer.get_full_name(),
+            currency = Currency.objects.first(),
+            type_operation = "Ingreso",
+        )
+
+    else:
+        sale.state = Sale.STATE[0][0] # 'COMPLETO'
+        # sale.save()
+        # Movement.objects.create(
+        #     payment_method = payment.type_method,
+        #     amount = total,
+        #     cash_register = CashRegister.objects.filter(
+        #         is_closed = False,
+        #         branch = customer.branch,
+        #         ),
+        #     description = "Venta de productos a %s" % customer.get_full_name(),
+        #     currency = Currency.objects.first(),
+        #     type_operation = "Ingreso",
+        # )
+
+    # sale.save()
+    return False

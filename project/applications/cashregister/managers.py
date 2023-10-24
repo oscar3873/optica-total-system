@@ -1,6 +1,11 @@
+from datetime import date
+from collections import defaultdict
 from django.db import models
+from django.db.models import Count, Sum
+from django.db.models.functions import Trunc
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
+
 
 class CashRegisterManager(models.Manager):
     
@@ -14,15 +19,42 @@ class CashRegisterManager(models.Manager):
             final_balance = final_balance
         )
         return cash_register
+
+    def get_movements_data(self, cashregister):
+        return cashregister.movement_set.all().filter(deleted_at=None)
     
     #Esto todavia no tenerlo en cuenta esta sin revizar
-    def get_final_balance(self, cash_register):
-        movements = cash_register.movements.all()
-        income = movements.filter(type_operation='Ingreso').aggregate(total=models.Sum('amount'))['total'] or 0
-        expenses = movements.filter(type_operation='Egreso').aggregate(total=models.Sum('amount'))['total'] or 0
-        final_balance = income - expenses
-        return final_balance
-        
+    def get_archering_data(self, cash_register):
+        from applications.cashregister.models import CashRegisterDetail, PaymentType
+        from applications.users.models import User
+
+        arqueos = CashRegisterDetail.objects.filter(cash_register=cash_register)
+        arqueos = arqueos.annotate(creation_datetime=Trunc('created_at', 'minute'))
+
+        resultados = arqueos.values(
+            'creation_datetime', 'cash_register', 'type_method', 'registered_amount', 'counted_amount', 'difference', 'user_made'
+        )
+
+        # Crear un diccionario para agrupar los resultados por fecha
+        data_by_datetime = defaultdict(list)
+        for resultado in resultados:
+            creation_datetime = resultado['creation_datetime']
+            type_method_id = resultado['type_method']
+            type_method_name = PaymentType.objects.get(id=type_method_id).name
+            resultado['type_method'] = type_method_name  # Reemplazar el ID por el nombre
+            user_made_id = resultado['user_made']
+            user_made_name = User.objects.get(id=user_made_id)
+            resultado['user_made'] = user_made_name  # Reemplazar el ID por el nombre
+            data_by_datetime[creation_datetime].append(resultado)
+
+        # Formatear los resultados en la estructura deseada
+        formatted_results = []
+        for datetime, data in data_by_datetime.items():
+            formatted_result = {datetime: data}
+            formatted_results.append(formatted_result)
+
+        return formatted_results
+
 
 class CashRegisterDetailManager(models.Manager):
     def registered_amount_for_type_method(self, type_method, movements_model, cashregister):

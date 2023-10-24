@@ -430,12 +430,11 @@ def pay_credits(request, pk):
     customer = Customer.objects.get(pk=pk)
     total = 0
 
-    # transactions = customer.transactions.all().filter(sale__state = 'PENDIENTE') 
+    # transactions = customer.credit_transactions.all().filter(sale__state = 'PENDIENTE') 
     # for transaction in transactions:      
     #     transaction.sale.state = 'COMPLETADO'
     #     total += transaction.sale.amount
     #     transaction.sale.save()
-
 
     # Movement.objects.create(
     #     amount = total,
@@ -443,9 +442,8 @@ def pay_credits(request, pk):
     #     cash_register = user.branch.cash_register_set.filter(is_close = False).last(),
     #     description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
     #     currency = Currency.objects.first(),
-    #     type_operation = 'in',
+    #     type_operation = 'Ingreso',
     #     payment_method = PaymentType.objects.first(),
-    #     ...
     # )
 
     customer.credit_balance = 0

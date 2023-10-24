@@ -71,7 +71,7 @@
             <p class="text-700 fs--2">
                 Abierta por 
                 <a href="">{{cashregister.user_made.first_name.title}}</a>
-                <span class="">el {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</span>
+                <!-- <span class="">el {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</span> -->
             </p>
         </div>
         <div class="row mt-2">
@@ -95,7 +95,7 @@
                     <div class="col-6 mt-4 col-sm-4">
                     <p class="fw-normal fw-semi-bold mb-1">Balance final</p>
                     </div>
-                    <div class="col mt-4 text-800 fw-bold">{{cashregister.final_balance}} {{cashregister.currency.code}}</div>
+                    <div class="col mt-4 text-800 fw-bold">{{cashregister.final_balance|floatformat:2|intcomma}} {{cashregister.currency.code}}</div>
                 </div>
                 <div class="row my-0">
                     <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">monto final</span> con el que se cerro la caja</p>
@@ -104,42 +104,10 @@
                     <div class="col-6 mt-4 col-sm-4">
                     <p class="fw-normal fw-semi-bold mb-1">Balance inicial</p>
                     </div>
-                    <div class="col mt-4 text-800 fw-bold">{{cashregister.initial_balance}} {{cashregister.currency.code}}</div>
+                    <div class="col mt-4 text-800 fw-bold">{{cashregister.initial_balance|floatformat:2|intcomma}} {{cashregister.currency.code}}</div>
                 </div>
                 <div class="row my-0">
                     <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">monto inicial</span> con el que se abrio la caja</p>
-                </div>
-                <div class="row">
-                    <div class="col-6 mt-4 col-sm-4">
-                    <p class="fw-normal fw-semi-bold mb-1">Conteo</p>
-                    </div>
-                    <div class="col mt-4 text-800 fw-bold">
-                        {% if cashregister.is_close %}
-                        {{cashregister.counted_balance}} {{cashregister.currency.code}}
-                        {% else %}
-                        <p class="fs--1 fw-lighter fst-italic">La caja esta abierta</p>
-                        {% endif %}
-                        
-                    </div>
-                </div>
-                <div class="row my-0">
-                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el monto que contó en su <span class="text-warning">caja real</span></p>
-                </div>
-                <div class="row">
-                    <div class="col-6 mt-4 col-sm-4">
-                    <p class="fw-normal fw-semi-bold mb-1">Diferencia</p>
-                    </div>
-                    <div class="col mt-4 text-800 fw-bold">
-                        {% if cashregister.is_close %}
-                        {{cashregister.difference}} {{cashregister.currency.code}}
-                        {% else %}
-                        <p class="fs--1 fw-lighter fst-italic">La caja esta abierta</p>
-                        {% endif %}
-                        
-                    </div>
-                </div>
-                <div class="row my-0">
-                    <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el monto es la <span class="text-warning">diferencia</span> entre la caja del sistema y la caja fisica</p>
                 </div>
             </div>
             <div class="col-lg col-xxl-6 mt-4 mt-lg-0 offset-xxl-1">
@@ -153,22 +121,6 @@
                 </div>
                 <div class="row my-0">
                     <p class="fs--2 py-0 my-0 fw-lighter text-600">Esto es alguna observacion <span class="text-warning">importante</span> como <span class="text-warning">recordatorio</span> cuando cerro la caja</p>
-                </div>
-                <div class="row">
-                    <div class="col-6 mt-4 col-sm-4">
-                    <p class="fw-normal fw-semi-bold mb-0">Transacción</p>
-                    </div>
-                    <div class="col mt-4">
-                    <p class="fst-italic text-400 mb-0">(Completar cuando se integre)</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6 mt-4 col-sm-4">
-                    <p class="fw-normal fw-semi-bold mb-1">Metodo de pago</p>
-                    </div>
-                    <div class="col mt-4">
-                    <p class="mb-1">(Integrar cuando este funcionando)</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -189,7 +141,7 @@
                         {%if movement.type_operation == 'Ingreso' %}
                             <span class="badge badge-soft-success rounded-pill">{{movement.get_type_operation_display}}</span>
                         {% else %}
-                            <span class="badge badge-soft-danger rounded-pill">{{movement.get_type_operation_display}}</span>
+                            <span class="badge badge-soft-danger rounded-pill">{{movement.get_type_operation_display}}&nbsp;&nbsp;</span>
                         {% endif %}
                         <a class="btn btn-link d-md-none" href="{% url 'cashregister_app:movements_detail_view' movement.pk %}">ver detalle</a>
                     </div>
@@ -218,48 +170,42 @@
             <h5 class="mb-0">Arqueo de caja</h5>
         </div>
         <div class="card-body">
-            <div class="table-responsive fs--1">
-                <table class="table table-striped border-bottom">
-                    <thead class="bg-200 text-900">
-                        <tr>
-                            <th class="border-0">Products</th>
-                            <th class="border-0 text-center">Quantity</th>
-                            <th class="border-0 text-end">Rate</th>
-                            <th class="border-0 text-end">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="border-200">
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">Platinum web hosting package9</h6>
-                                <p class="mb-0">Down 35mb, Up 100mb</p>
-                            </td>
-                            <td class="align-middle text-center">2</td>
-                            <td class="align-middle text-end">$65.00</td>
-                            <td class="align-middle text-end">$130.00</td>
-                        </tr>
-                        <tr class="border-200">
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">2 Page website design</h6>
-                                <p class="mb-0">Includes basic wireframes and responsive templates</p>
-                            </td>
-                            <td class="align-middle text-center">1</td>
-                            <td class="align-middle text-end">$2,100.00</td>
-                            <td class="align-middle text-end">$2,100.00</td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">Mobile App Development</h6>
-                                <p class="mb-0">Includes responsive navigation</p>
-                            </td>
-                            <td class="align-middle text-center">8</td>
-                            <td class="align-middle text-end">$5,00.00</td>
-                            <td class="align-middle text-end">$4,000.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="row g-0 justify-content-end">
+            {% for date in archering_data %}
+                <div class="table-responsive fs--1">
+                    {% for key, value in date.items %}
+                    <h6>{{ key|date:"l, j F Y H:i" }}</h6>
+                    <div class="d-flex flex-column flex-md-row justify-content-between">
+                        <span>realizado por <a href="{% url 'users_app:profile' value.0.user_made.pk  %}">{{value.0.user_made}}</a></span>
+                        <a href="{% url 'cashregister_app:arching_ticket_view' cashregister.pk %}">
+                            <span class="fas fa-receipt"></span>
+                            <span cla>Ticket</span>
+                        </a>
+                    </div>
+                    <table class="table table-striped border-bottom">
+                        <thead class="bg-200 text-900">
+                            <tr>
+                                <th class="border-0">Tipo</th>
+                                <th class="border-0 text-center">Monto</th>
+                                <th class="border-0 text-end">Conteo</th>
+                                <th class="border-0 text-end">Diferencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for v in value %}
+                                <tr class="border-200">
+                                    <td class="align-middle">{{ v.type_method }}</td>
+                                    <td class="align-middle text-center">{{ v.registered_amount|floatformat:2|intcomma }}</td>
+                                    <td class="align-middle text-end">{{ v.counted_amount|floatformat:2|intcomma }}</td>
+                                    <td class="align-middle text-end">{{ v.difference|floatformat:2|intcomma }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endfor %}
+                </div>
+                <br>
+            {% endfor %}
+            <!-- <div class="row g-0 justify-content-end">
                 <div class="col-auto">
                     <table class="table table-sm table-borderless fs--1 text-end">
                         <tr>
@@ -276,7 +222,7 @@
                         </tr>
                     </table>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 

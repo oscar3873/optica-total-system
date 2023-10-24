@@ -73,9 +73,9 @@
                             <tr class="btn-reveal-trigger">
                                 <td class="align-start name">{{promotion.name}}</td>
                                 <td class="align-start type_prom">{{promotion.type_prom}}</td>
-                                <td class="align-start is_active">{{promotion.is_active}}</td>
                                 <td class="align-start email">{{promotion.start_date}}</td>
                                 <td class="align-start email">{{promotion.end_date}}</td>
+                                <td class="align-start is_active">{{promotion.is_active}}</td>
                                 <td class="align-middle white-space-nowrap text-end">
                                     <div class="dropstart font-sans-serif position-static d-inline-block">
                                         <button
@@ -87,7 +87,7 @@
                                         <div class="dropdown-menu dropdown-menu-end border py-2"
                                             aria-labelledby="dropdown0">
                                             <a class="dropdown-item"
-                                                href="{% url 'promotions_app:promotion_detail'  %} ">Detalle</a>
+                                                href="{% url 'promotions_app:promotion_detail' promotion.id %} ">Detalle</a>
                                             <a class="dropdown-item"
                                                 href="#">Editar</a>
                                             <div class="dropdown-divider"></div>

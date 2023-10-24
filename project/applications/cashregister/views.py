@@ -115,7 +115,7 @@ class CashRegisterDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         
         cashregister = self.get_object()
-        movements = Movement.objects.filter(cash_register=cashregister, deleted_at=None)
+        movements = Movement.objects.filter(cash_register=cashregister, deleted_at=None)[:5]
         
         context['cashregister'] = cashregister
         context['movements'] = movements
@@ -132,18 +132,60 @@ class CashRegisterDetailView(DetailView):
             "cash_register",
         )
         
+        archering_data = CashRegister.objects.get_archering_data(self.get_object())
+        context['archering_data'] = archering_data
+        print('###################################################')
+        print(context['archering_data'])
+        
         return context
 
 
+#Esta view aun esta sin uso
 class CashRegisterUpdateView(DetailView):
     template_name = 'cashregister/cashregister_update_page.html'
     model = CashRegister
 
-
+#Esta view aun esta sin uso
 class CashRegisterDeleteView(DeleteView):
     template_name = 'cashregister/cashregister_delete_page.html'
     model = CashRegister
     success_url = reverse_lazy('cashregister_app:cashregister_list_view')
+
+
+class CashRegisterCloseView(FormView):
+    template_name = 'cashregister/cashregister_close_page.html'
+    form_class = CloseCashRegisterForm
+    success_url = reverse_lazy('cashregister_app:cashregister_view')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            cashregister = CashRegister.objects.get(is_close=False, branch=branch_actualy)
+        except CashRegister.DoesNotExist:
+            cashregister = None
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
+        context['cashregister'] = cashregister
+        return context
+    
+    def form_valid(self, form):
+        # branch = self.request.user.branch
+        observations = form.cleaned_data['observations']
+        cashregister = CashRegister.objects.get(is_close=False, branch=self.request.user.branch)
+        cashregister.observations = observations
+        cashregister.is_close = True
+        cashregister.save()
+        
+        self.get_context_data()['cashregister'] = cashregister
+        
+        return render(self.request, 'cashregister/components/ticket_close_cashregister.html', self.get_context_data())
+    
+    def form_invalid(self, form):
+        print("######################################")
+        print(form.errors)
+        messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
+        return super().form_invalid(form)
 
 
 class CashRegisterArching(View):
@@ -162,8 +204,7 @@ class CashRegisterArching(View):
             {
                 'type_method': method, # tipo de metodo de pago
                 'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister) # calculo de monto registrado por el metodo de pago elegido
-            }
-            for method in PaymentType.objects.all()]
+            } for method in PaymentType.objects.all()]
         # Hay que buscar una alternativa a esta linea de codigo
         # Porque todo deja de funcionar si se saca initial=initial_data
         formset = CashRegisterDetailFormSet(initial=initial_data)
@@ -187,7 +228,9 @@ class CashRegisterArching(View):
                 'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister)
             }
             for method in PaymentType.objects.all()]
-        
+        print("#########################################################")
+        print(formset.is_valid())
+        print(formset.errors)
         if formset.is_valid():
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
@@ -196,11 +239,13 @@ class CashRegisterArching(View):
             for form, data in zip(formset, final_data): # Esto esta provisorio, machea cada metodo con un form del formset, pero si se cambian de orden se rompe todo
                 if form.is_valid():
                     instance = form.save(commit=False)
+                    print("#########################################################")
+                    print(instance)
                     instance.user_made = request.user
                     instance.cash_register = cashregister
                     instance.type_method = data['type_method']
                     instance.registered_amount = abs(data['registered_amount'])
-                    instance.counted_amount = abs(instance.counted_amount)
+                    instance.counted_amount = abs(instance.counted_amount) if instance.counted_amount is not None else 0
                     instance.difference = instance.counted_amount - instance.registered_amount
                     instance.save()
             # Se comento esto porque ahora no se cierra la caja sino que se registra una arqueo nada mas 
@@ -210,7 +255,38 @@ class CashRegisterArching(View):
         else:
             messages.error(request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
             return render(request, self.template_name, {'formset': formset})
-        return redirect('cashregister_app:cashregister_create_view')
+        return redirect('cashregister_app:cashregister_view')
+
+
+class CloseTicketCashRegister(View):
+    template_name = 'cashregister/components/ticket_close_cashregister.html'
+    def get(self, request, *args, **kwargs):
+        
+        context = {}
+        try:
+            #recuperamos la caja que viene por argumento en la peticion get
+            cashregister = CashRegister.objects.get(pk=kwargs['pk'])
+        except CashRegister.DoesNotExist:
+            cashregister = None
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
+        context['cashregister'] = cashregister
+        context['movements'] = CashRegister.objects.get_movements_data(cashregister)
+        print("######################################")
+        print(context)
+        
+        return render(request, self.template_name, context)
+
+
+#Falta corregir esta funcion y pasarla a una clase
+def archingTicket(request, pk):
+    
+    cashregister = CashRegister.objects.get(pk=pk)
+    archering_data = CashRegister.objects.get_archering_data(cashregister)
+    print("#########################################################")
+    print(archering_data)
+    context = {}
+    
+    return render(request, 'cashregister/components/ticket_arching.html')
 
 
 class MovementsView(TemplateView):
@@ -410,16 +486,18 @@ class CurrencyCreateView(FormView):
         else:
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
+
+
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
-################ SEARCH PRODUCTS AJAX ################
+################ SEARCH MOVEMENTS AJAX ################
 
 def ajax_search_movements(request):
-    branch = request.user.branch
+    # branch = request.user.branch
 
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch = Branch.objects.get(id=branch_actualy)
+    # branch_actualy = request.session.get('branch_actualy')
+    # if request.user.is_staff and branch_actualy:
+    #     branch = Branch.objects.get(id=branch_actualy)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
