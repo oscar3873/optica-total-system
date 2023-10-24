@@ -29,12 +29,10 @@
                 <div class="row flex-between-center">
                     <div class="col-12 text-center col-sm-auto d-flex align-items-center pe-0">
                         <div>
-                            <form>
+                            <form id="searchForm" method="GET" data-ajax-search-url="{% url 'promotions_app:ajax_promotional_products' %}">
                                 <div class="input-group">
-                                    <input class="form-control form-control-sm shadow-none search" type="search"
-                                        placeholder="Buscar" aria-label="search" />
-                                    <div class="input-group-text bg-transparent"><span
-                                            class="fa fa-search fs--1 text-600"></span></div>
+                                    <input maxlength="50" class="form-control form-control-sm shadow-none search" id="searchInput" type="search" placeholder="Buscar" aria-label="search" />
+                                    <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
                                 </div>
                             </form>
                         </div>
