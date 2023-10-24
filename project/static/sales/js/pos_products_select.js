@@ -271,6 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
         inputElement.id = product.id;
         inputElement.type = 'checkbox';
         inputElement.name = 'products';
+        inputElement.setAttribute('hidden', '');
         inputElement.value = product.id;
         inputElement.addEventListener('change', function () {
             const isChecked = inputElement.checked;

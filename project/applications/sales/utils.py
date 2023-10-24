@@ -101,7 +101,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     payment = payment_methods
     payment_total = amount
 
-    if customer.has_credit_account and payment:
+    if customer and customer.has_credit_account and payment:
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
         customer.credit_balance += sale.total
         # customer.save()

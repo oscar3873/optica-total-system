@@ -115,6 +115,19 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
                     customer = customer,
                     user_made=user
                 )
+
+            if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX                
+                data = {
+                    'id': customer.id,
+                    'first_name': customer.first_name,
+                    'last_name': customer.last_name,
+                    'phone_number': customer.phone_number,
+                    'phone_code': customer.phone_code,
+                    'dni': customer.dni,
+                    'has_credit_account': '$ %s' % customer.credit_balance if customer.has_credit_account else 0,
+                }
+                return JsonResponse({'customer': data})
+            
         messages.success(self.request, 'Se ha registrado un cliente con exito.')
         return super().form_valid(form)
 
@@ -619,6 +632,7 @@ def ajax_search_customers(request):
     from django.db.models import Q
 
     branch = request.user.branch
+    print(branch)
 
     branch_actualy = request.session.get('branch_actualy')
     if request.user.is_staff and branch_actualy:
@@ -659,35 +673,3 @@ def ajax_search_customers(request):
         print(data)
         return JsonResponse({'data': data})
     
-
-################## NEW CUSTOMER AJAX #####################
-
-def ajax_new_customers(request):
-    if request.method == 'POST':
-        customer_form = CustomerForm(request.POST)
-
-        if customer_form.is_valid():
-            # Guarda el objeto Customer en la base de datos
-            customer = customer_form.save(commit=False)
-            customer.user_made = request.user  # Asigna el usuario que realizó la acción (ajusta esto según tus necesidades)
-            customer.branch = request.user.branch
-            customer.save()
-
-            data = {
-                'id': customer.id,
-                'first_name': customer.first_name,
-                'last_name': customer.last_name,
-                'phone_number': customer.phone_number,
-                'phone_code': customer.phone_code,
-                'dni': customer.dni,
-                'has_credit_account': '$ %s' % customer.credit_balance if customer.has_credit_account else 0,
-            }
-            return JsonResponse({'customer': data})
-        else:
-            data = {
-                'error': 'Error en la carga de Cliente',
-            }
-            return JsonResponse(data)  # Devuelve un código de estado 400 para indicar un error de validación
-
-    return JsonResponse({'error': 'Método no permitido'}, status=405)  # Devuelve un código de estado 405 para indicar un método no permitido
-
