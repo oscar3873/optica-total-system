@@ -30,6 +30,7 @@ class PromotionProductForm(forms.ModelForm):
     
     is_active = forms.BooleanField(
         label="Activo", 
+        required=False,
         widget=forms.CheckboxInput(
             attrs={'class': 'form-check mb-2'}
         )
