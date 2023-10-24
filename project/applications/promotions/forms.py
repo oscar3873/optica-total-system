@@ -31,7 +31,7 @@ class PromotionProductForm(forms.ModelForm):
     is_active = forms.BooleanField(
         label="Activo", 
         widget=forms.CheckboxInput(
-            attrs={'class': 'form-check-input mb-2'}
+            attrs={'class': 'form-check mb-2'}
         )
     )
 
@@ -43,5 +43,10 @@ class PromotionProductForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-            field.widget.attrs['required'] = ''
+            if not field_name == 'is_active':
+                field.widget.attrs['class'] = 'form-control'
+                field.widget.attrs['required'] = ''
+            else:
+                field.widget.attrs['class'] = 'form-check-input'
+        
+        
