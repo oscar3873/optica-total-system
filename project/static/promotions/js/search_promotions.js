@@ -31,26 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             nameCell.appendChild(nameText);
                             row.appendChild(nameCell);
 
-                            const discountCell = document.createElement('td');
-                            discountCell.className = 'align-start discount';
-                            const discountText = document.createTextNode(promotion.discount);
-                            discountCell.appendChild(discountText);
-                            row.appendChild(discountCell);
-
                             const type_promCell = document.createElement('td');
                             type_promCell.className = 'align-start type_prom';
                             const type_promText = document.createTextNode(promotion.type_prom);
                             type_promCell.appendChild(type_promText);
                             row.appendChild(type_promCell);
-
-                            const is_activeCell = document.createElement('td');
-                            is_activeCell.className = 'align-start is_active';
-                            const is_activeSpan = document.createElement('span');
-                            is_activeSpan.className = 'badge badge-soft-success rounded-pill';
-                            const is_activeText = document.createTextNode(`${promotion.is_active}`);
-                            pricespan.appendChild(is_activeText);
-                            priceCell.appendChild(is_activeSpan);
-                            row.appendChild(is_activeCell);
 
                             const start_dateCell = document.createElement('td');
                             start_dateCell.className = 'align-start start_date d-none d-md-table-cell';
@@ -64,6 +49,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             end_dateCell.appendChild(end_dateText);
                             row.appendChild(end_dateCell);
 
+                            const is_activeCell = document.createElement('td');
+                            is_activeCell.className = 'align-start is_active';
+                            const is_activeSpan = document.createElement('span');
+                            let is_activeText;
+                            if(promotion.is_active){
+                                is_activeSpan.className = 'badge badge-soft-success rounded-pill';
+                                is_activeText = document.createTextNode('Activa');
+                            }
+                            else{
+                                is_activeSpan.className = 'badge badge-soft-secondary rounded-pill';
+                                is_activeText = document.createTextNode('Inactiva');
+                            }
+                            pricespan.appendChild(is_activeText);
+                            priceCell.appendChild(is_activeSpan);
+                            row.appendChild(is_activeCell);
 
                             const actionsCell = document.createElement('td');
                             actionsCell.className = 'align-middle white-space-nowrap text-start';

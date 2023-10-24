@@ -30,7 +30,7 @@ class PromotionProductForm(forms.ModelForm):
 
     class Meta:
         model = Promotion
-        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'productsSelected', 'discount']
+        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'productsSelected', 'discount', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
