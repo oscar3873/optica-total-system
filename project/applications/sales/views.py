@@ -18,7 +18,7 @@ from django.views.generic import ListView
 # Create your views here.
 
 class PointOfSaleView(LoginRequiredMixin, FormView):
-    form_class = OrderDetailFormset
+    form_class = SaleForm
     template_name = 'sales/point_of_sale_page.html'
     success_url = reverse_lazy('core_app:home')
 
@@ -30,7 +30,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         except Branch.DoesNotExist:
             branch = self.request.user.branch
 
-        context['sale_form'] = SaleForm
+        context['formset'] = OrderDetailFormset
         # context['payment_form'] = PaymentMethodsFormset
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
@@ -40,15 +40,15 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
 
     def form_valid(self, form):
-        formsets = form
-        saleform = SaleForm(self.request.POST)
+        formsets = OrderDetailFormset(self.request.POST)
+        saleform = form
         # payment_methods = PaymentMethodsFormset(self.request.POST)
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
             print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
             customer = saleform.cleaned_data['customer']
-            payment_methods = saleform.cleaned_data.pop('payment_method')
+            payment_methods = saleform.cleaned_data.pop('type_method')
             amount = saleform.cleaned_data.pop('amount')
             if not customer:
                 customer = Customer.objects.first() # 'Anonimo'
