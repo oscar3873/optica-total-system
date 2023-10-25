@@ -76,6 +76,15 @@
                             <span class="ms-3 text-800 fw-bold">{{promotion.end_date}}</span>
                         </div>
 
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">Estado:</p>
+                            {% if promotion.is_active %}
+                                <span class="ms-3 text-success fw-bold">Activa</span>
+                            {% else %}
+                                <span class="ms-3 text-secondary fw-bold">Inactiva</span>
+                            {% endif %}
+                        </div>
+
 
                     </div>
                 </div>
