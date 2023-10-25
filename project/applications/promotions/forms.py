@@ -14,13 +14,17 @@ class PromotionProductForm(forms.ModelForm):
     start_date = forms.DateField(
         widget=forms.DateInput(
             attrs={'type': 'date'},
+            format='%Y-%m-%d'
         ),
+        
     )
 
     end_date = forms.DateField(
         widget=forms.DateInput(
             attrs={'type': 'date'},
+            format='%Y-%m-%d'
         ),
+        
     )
 
     productsSelected = forms.ModelMultipleChoiceField(
@@ -49,5 +53,10 @@ class PromotionProductForm(forms.ModelForm):
                 field.widget.attrs['required'] = ''
             else:
                 field.widget.attrs['class'] = 'form-check-input mb-2'
+            
+        if self.instance:
+            self.fields['type_prom'].initial = self.instance.type_prom
+            self.fields['start_date'].initial = self.instance.start_date
+            self.fields['end_date'].initial = self.instance.end_date
         
-        
+    
