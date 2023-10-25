@@ -52,7 +52,7 @@ class PromotionProductForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
                 field.widget.attrs['required'] = ''
             else:
-                field.widget.attrs['class'] = 'form-check-input'
+                field.widget.attrs['class'] = 'form-check-input mb-2'
             
         if self.instance:
             self.fields['type_prom'].initial = self.instance.type_prom

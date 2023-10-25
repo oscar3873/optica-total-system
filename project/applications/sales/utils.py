@@ -86,9 +86,10 @@ def find_cristal_product(all_products_to_sale):
     return None
 
 def generate_proof(proof_type): # generar factura o recibo
-    pass
+    print('IMPRIMIENDO %s' % proof_type)
 
-def process_customer(customer, sale, payment_methods, total, product_cristal, amount):
+
+def process_customer(customer, sale, payment_methods, total, product_cristal, amount, user):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
@@ -98,38 +99,54 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     #     payment.save(commit=False)
     #     payment_total += payment.amount
 
-    payment = payment_methods
     payment_total = amount
 
-    if customer and customer.has_credit_account and payment:
+    if customer.has_credit_account and ('cuenta corriente' in payment_methods.name): 
+        """Si el cliente TIENE CUENTA CORRIENTE y el metodo de pago sea Cuenta Corriente"""
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        customer.credit_balance += sale.total
-        # customer.save()
+        customer.credit_balance += total
+        customer.save()
         if product_cristal:
+            """Si  lo que el cliente compra tiene CRISTAL"""
             return True
-    
-    elif product_cristal: # 
+
+    elif product_cristal: 
+        """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
         sale.missing_balance = Decimal(total) - Decimal(payment_total)
-        set_movement(payment_total, payment.type_method, customer)
+        set_movement(payment_total, payment_methods.type_method, customer, user)
         return True
 
     else:
+        """Si el cliente TIENE O NO CUENTA CORRIENTE pero paga el total de la compra"""
         sale.state = Sale.STATE[0][0] # 'COMPLETO'
         sale.save()
-        set_movement(total, payment.type_method, customer)
-    # sale.save()
+        set_movement(total, payment_methods.type_method, customer, user)
+
+    sale.user_made = user
+    sale.save()
+
+    Payment.objects.create(
+        amount = amount,
+        payment_method = payment_methods,
+        sale = sale,
+    )
 
 
-def set_movement(total, method, customer):
+def set_movement(total, method, customer, user):
+    description = "Venta de productos"
+    if customer:
+        description += " a %s" % customer.get_full_name()
+
     Movement.objects.create(
+        user_made = user,
         payment_method = method,
         amount = total,
         cash_register = CashRegister.objects.filter(
-            is_closed = False,
-            branch = customer.branch,
+            is_close = False,
+            branch = user.branch,
             ).last(),
-        description = "Venta de productos a %s" % customer.get_full_name(),
-        # currency = "Pesos",
+        description = description,
+        currency = Currency.objects.first(),
         type_operation = "Ingreso",
     )
