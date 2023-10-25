@@ -21,7 +21,7 @@ class SaleForm(forms.ModelForm):
     )
 
     amount = forms.DecimalField(
-        required = True,
+        required = False,
         widget = forms.NumberInput(
             attrs={'class': 'form-control'}
         )
@@ -42,7 +42,7 @@ class SaleForm(forms.ModelForm):
         )
     )
 
-    general_discount = forms.IntegerField(
+    discount = forms.IntegerField(
         required=False,
         initial = 0,
         widget = forms.NumberInput(
@@ -54,7 +54,7 @@ class SaleForm(forms.ModelForm):
     
     class Meta:
         model = Sale
-        fields = ['customer',]
+        fields = ['customer', 'discount']
 
 
 class OrderDetailForm(forms.ModelForm):

@@ -50,7 +50,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             customer = saleform.cleaned_data['customer']
             payment_methods = saleform.cleaned_data.pop('payment_method')
             amount = saleform.cleaned_data.pop('amount')
-            general_discount = saleform.cleaned_data.pop('general_discount')
             if not customer:
                 customer = Customer.objects.get(name__icontains='Anonimo') #'Anonimo'
 
@@ -69,6 +68,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
             
             if formset.is_valid():
+                print('\n\nDatos de Formset: ', formset.cleaned_data)
                 total += get_total_and_products(formset, all_products_to_sale)
                 order_details.append(process_formset(formset, promotional_products))
 
@@ -79,7 +79,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         discount_promo = sum(discount_promo)
         print('DESCUENTO TOTAL: ', discount_promo)
  
-        sale.discount = discount_promo + Decimal(total * general_discount/100)
         sale.total = total
         print('=> TOTAL: ', total - discount_promo)
 
@@ -89,8 +88,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             generate_proof(proof_type)
 
         product_cristal = find_cristal_product(all_products_to_sale)
-        customer_cc_and_cristal = process_customer(customer, sale, payment_methods, total, product_cristal, amount, self.request.user)
-        if customer_cc_and_cristal:
+        process_customer(customer, sale, payment_methods, total, amount, self.request.user)
+        if product_cristal:
             # messages.info(self.request, "%s" % product_cristal.name)
             return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 
