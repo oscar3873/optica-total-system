@@ -67,7 +67,7 @@
               <div class="d-flex justify-content-center d-lg-none pb-3">
                 <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva nota</a>
               </div>
-              <div class="row row-ligth">
+              <div class="row row-ligth mb-4">
                 {% for note in notes %}
                 <div class="col-md-6 mb-3">
                   <div class="card h-100 mb-3 note-card" style="background-color:{{ note.label.color}}">
