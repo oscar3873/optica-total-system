@@ -78,15 +78,14 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Promotion
     form_class = PromotionProductForm
     template_name = 'promotions/promotions_page.html'
-    success_url = reverse_lazy('promotions_app:promotion_detail')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Puedes agregar datos adicionales al contexto si es necesario
+        context['update'] = 1
         return context
 
     def form_valid(self, form):
-        promotion = self.object  # Obtén la instancia actual de la promoción
+        promotion = form.instance
         promotion.type_prom = form.cleaned_data.get('type_discount')
         promotion.start_date = form.cleaned_data.get('start_date')
         promotion.end_date = form.cleaned_data.get('end_date')
@@ -107,13 +106,11 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
         # Guarda la promoción actualizada
         promotion.save()
 
-        return super().form_valid(form)
-    
+        return HttpResponseRedirect(reverse_lazy('promotions_app:promotion_detail', kwargs = {'pk':promotion.pk}))
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # Pasa la instancia de la promoción al formulario
         kwargs['instance'] = self.object
-        # Pasa los valores de type_prom, start_date, end_date y los productos asociados
         kwargs['initial'] = {
             'type_discount': self.object.type_prom,
             'start_date': self.object.start_date,
@@ -121,6 +118,7 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
             'productsSelected': self.object.promotion_products.values_list('product', flat=True)
         }
         return kwargs
+
     
     
 
