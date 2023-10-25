@@ -50,8 +50,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             customer = saleform.cleaned_data['customer']
             payment_methods = saleform.cleaned_data.pop('payment_method')
             amount = saleform.cleaned_data.pop('amount')
-            if not customer:
-                customer = Customer.objects.get(name__icontains='Anonimo') #'Anonimo'
 
         promotions_active = Promotion.objects.filter(is_active=True)
         promotional_products = {promotion: [] for promotion in promotions_active}
@@ -72,6 +70,11 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 total += get_total_and_products(formset, all_products_to_sale)
                 order_details.append(process_formset(formset, promotional_products))
 
+                product_cristal = find_cristal_product(all_products_to_sale)
+                if product_cristal and not customer:
+                    messages.error(self.request, "Seleccione un cliente antes de Vender Cristales")
+                    return super().form_invalid(form)
+
         # Ordena los productos en cada promoción por precio
         for promotion, products in promotional_products.items():
             process_promotion(promotional_products, promotion, products, discount_promo)
@@ -83,12 +86,16 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         print('=> TOTAL: ', total - discount_promo)
 
         has_proof = saleform.cleaned_data.pop('has_proof') or None
-        proof_type = switch_case(has_proof, sale)
+        proof_type = switch_invoice_receipt(has_proof, sale)
         if proof_type:
             generate_proof(proof_type)
 
-        product_cristal = find_cristal_product(all_products_to_sale)
         process_customer(customer, sale, payment_methods, total, amount, self.request.user)
+
+        for order in order_details:
+            order.sale = sale
+            order.save()
+
         if product_cristal:
             # messages.info(self.request, "%s" % product_cristal.name)
             return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))

@@ -24,11 +24,11 @@ def process_formset(formset, promotional_products):
 
         price = product.sale_price * Decimal((1 + discount/100))
 
-        # order_detail = OrderDetail.objects.create(
-        #     product=product, 
-        #     quantity=quantity,
-        #     price=price, 
-        #     discount=discount)
+        order_detail = OrderDetail.objects.create(
+            product=product, 
+            quantity=quantity,
+            price=price, 
+            discount=discount)
 
         promotion = product.promotions.exists()
         if promotion:
@@ -36,7 +36,7 @@ def process_formset(formset, promotional_products):
                 promotion = product.promotions.last().promotion
                 promotional_products[promotion].append((product, discount))
 
-        return None #order_detail
+        return order_detail
 
 # Función para calcular la suma de los primeros N elementos de una lista
 def sumFirst_N_Elements(lst, n):
@@ -67,7 +67,8 @@ def process_promotion(promotional_products, promotion, products, discount_promo)
         discount_promo = [ $, $, $ ...]
         """
 
-def switch_case(case, sale):
+def switch_invoice_receipt(case, sale):
+    """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
     if case == 'A':
         return sale.invoice.create( # CREA UN OBJ DE FACTURA
             # consultar Campos
@@ -80,6 +81,7 @@ def switch_case(case, sale):
         return None
 
 def find_cristal_product(all_products_to_sale):
+    """Ecuentra un CRISTAL dentro de la orden de venta (productos)"""
     for product in all_products_to_sale:
         if 'cristal' in product.category.name.lower():
             return product
@@ -101,36 +103,41 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
     payment_total = amount
 
-    if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
-        """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
-        sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        customer.credit_balance += total * Decimal(1 - sale.discount / 100)
-        customer.save()
-
-    elif customer.has_credit_account:
-        """Si TIENE CUENTA CORRIENTE + Metodo: Credito/Debito/Efectivo"""
-        missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
-        sale.missing_balance = missing_balance
-        if missing_balance > 0:
+    if customer:
+        if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
+            """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
             sale.state = Sale.STATE[1][0] # "PENDIENTE"
-            customer.credit_balance += missing_balance
+            customer.credit_balance += total * Decimal(1 - sale.discount / 100)
             customer.save()
+
+        elif customer.has_credit_account:
+            """Si TIENE CUENTA CORRIENTE + Metodo: Credito/Debito/Efectivo"""
+            missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
+            sale.missing_balance = missing_balance
+            if missing_balance > 0:
+                sale.state = Sale.STATE[1][0] # "PENDIENTE"
+                customer.credit_balance += missing_balance
+                customer.save()
+            else:
+                sale.state = Sale.STATE[0][0] # "COMPLETO"
+            # set_movement(payment_total, payment_methods.type_method, customer, user)
+
+        elif product_cristal: 
+            """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
+            sale.state = Sale.STATE[1][0] # "PENDIENTE"
+            missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
+            sale.missing_balance = missing_balance
+            # set_movement(payment_total, payment_methods.type_method, customer, user)
+
         else:
-            sale.state = Sale.STATE[0][0] # "COMPLETO"
-        set_movement(payment_total, payment_methods.type_method, customer, user)
-
-    elif product_cristal: 
-        """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
-        sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
-        sale.missing_balance = missing_balance
-        set_movement(payment_total, payment_methods.type_method, customer, user)
-
+            """Si el cliente TIENE O NO CUENTA CORRIENTE pero paga el total de la compra - NO CRISTAL"""
+            sale.state = Sale.STATE[0][0] # 'COMPLETO'
+            sale.save()
+            # set_movement(total, payment_methods.type_method, customer, user)
     else:
-        """Si el cliente TIENE O NO CUENTA CORRIENTE pero paga el total de la compra"""
-        sale.state = Sale.STATE[0][0] # 'COMPLETO'
-        sale.save()
-        set_movement(total, payment_methods.type_method, customer, user)
+        """Si el CLIETNE NO REGISTRA"""
+        # set_movement(total, None, customer, user)
+
 
     sale.user_made = user
     sale.save()
