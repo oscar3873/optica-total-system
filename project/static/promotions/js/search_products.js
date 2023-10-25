@@ -1,7 +1,13 @@
 let idProductGlobal;
 let setProductIds = new Set();
 document.addEventListener("DOMContentLoaded", function () {
-    
+    const checkboxContainer = document.getElementById('products-selected');
+    if(checkboxContainer.classList.contains('update')){
+        const checkboxes = Array.from(checkboxContainer.querySelectorAll('input[type="checkbox"]'));
+        checkboxes.forEach(checkbox => {
+            setProductIds.add(parseInt(checkbox.value));
+        });
+    }
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.trim().toLowerCase();
@@ -77,12 +83,11 @@ document.addEventListener("DOMContentLoaded", function () {
             label.classList.add('d-block');
 
 
-            const checkboxContainer = document.getElementById('products-selected');
+            
             label.appendChild(checkboxProduct);
             checkboxContainer.appendChild(label);
 
             checkboxProduct.addEventListener("change", function () {
-                const checkboxContainer = document.getElementById('products-selected');
                 if (!checkboxProduct.checked) {
                     // Si el checkbox se desmarca, elimina el checkbox y su etiqueta
                     checkboxContainer.removeChild(label);

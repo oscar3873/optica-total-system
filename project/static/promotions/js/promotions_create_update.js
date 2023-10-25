@@ -8,6 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
         else{
             discountInput.removeAttribute("disabled");
         }
-    })
-    
+    });
+
+    const productsSelectedContainer = document.getElementById('products-selected');
+    if(productsSelectedContainer.classList.contains('update')){
+        const checkboxes = Array.from(productsSelectedContainer.querySelectorAll('input[type="checkbox"]'));
+        checkboxes.forEach(cheeckbox => {
+            cheeckbox.classList.add('form-check-input');
+        });
+    }   
 });

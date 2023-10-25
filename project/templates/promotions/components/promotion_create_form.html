@@ -175,7 +175,14 @@
                             <button type="submit" class="btn btn-primary z-0">Cargar</button>
                             <div class="pt-4 pb-2">
                                 <h5>Productos seleccionados:</h5>
-                                <div id="products-selected" class="form-check d-flex flex-column" hidden></div>
+
+                                {% if update %}
+                                    <div id="products-selected" class="form-check d-flex flex-column update">
+                                        {{form.productsSelected}}
+                                    </div>
+                                {% else %}
+                                    <div id="products-selected" class="form-check d-flex flex-column" hidden></div>
+                                {% endif %}
                             </div>
                             <!-- <input type="submit" value="Guardar"> -->
                         </form>
