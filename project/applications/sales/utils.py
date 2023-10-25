@@ -7,6 +7,8 @@ from applications.cashregister.models import CashRegister, Currency, Movement, T
 from .models import*
 
 def get_total_and_products(formset, all_products_to_sale):
+    """Segun los prodcutos recibidos, se suma un total $$. 
+    A demas de guardar dichos productos en una varaible all_products_to_sale"""
     total = 0
 
     product = formset.cleaned_data['product']
@@ -17,6 +19,7 @@ def get_total_and_products(formset, all_products_to_sale):
     return total
 
 def process_formset(formset, promotional_products):
+    """Procesa el un producto que viene del formset y retorna un detalle de venta (order_detail)"""
     if formset.is_valid():
         product = formset.cleaned_data['product']
         quantity = formset.cleaned_data['quantity']

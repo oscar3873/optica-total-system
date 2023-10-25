@@ -17,6 +17,16 @@ class SaleForm(forms.ModelForm):
         choices = MODEL_CHOICES,
         initial = MODEL_CHOICES[0],
         widget = forms.Select(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '0.00'
+                }
+        )
+    )
+
+    description = forms.CharField(
+        required = False,
+        widget = forms.TextInput(
             attrs={'class': 'form-control'}
         )
     )
@@ -37,9 +47,7 @@ class SaleForm(forms.ModelForm):
     payment_method = forms.ModelChoiceField(
         queryset=PaymentMethod.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
         widget=forms.Select(
-            attrs={
-                'class': 'form-control'
-            }
+            attrs={'class': 'form-control'}
         )
     )
 
@@ -47,9 +55,7 @@ class SaleForm(forms.ModelForm):
         required=False,
         initial = 0,
         widget = forms.NumberInput(
-            attrs={
-                'class': 'form-control'
-            }
+            attrs={'class': 'form-control'}
         )
     )
     
