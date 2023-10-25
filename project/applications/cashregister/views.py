@@ -87,7 +87,7 @@ class CashRegisterListView(ListView):
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
-            cashregisters = CashRegister.objects.filter(branch=branch_actualy, deleted_at=None)
+            cashregisters = CashRegister.objects.filter(branch=branch_actualy, deleted_at=None).order_by('-created_at')
         except CashRegister.DoesNotExist:
             cashregisters = None
             messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
@@ -115,7 +115,7 @@ class CashRegisterDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         
         cashregister = self.get_object()
-        movements = Movement.objects.filter(cash_register=cashregister, deleted_at=None)[:5]
+        movements = Movement.objects.filter(cash_register=cashregister, deleted_at=None).order_by('-created_at')[:5]
         
         context['cashregister'] = cashregister
         context['movements'] = movements
@@ -138,7 +138,6 @@ class CashRegisterDetailView(DetailView):
         print(context['archering_data'])
         
         return context
-
 
 #Esta view aun esta sin uso
 class CashRegisterUpdateView(DetailView):
@@ -296,7 +295,6 @@ class MovementsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        branch = self.request.user.branch
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
@@ -304,9 +302,10 @@ class MovementsView(TemplateView):
         except CashRegister.DoesNotExist:
             cashregisters = None
         #Tener en cuenta que cuando se hace una consulta por filtro anula lo de deleted_at y hay que especificarlo de nuevo
-        movements = Movement.objects.filter(cash_register__in=cashregisters, deleted_at=None)
-        
+        movements = Movement.objects.filter(cash_register__in=cashregisters, deleted_at=None).order_by('-created_at')
         context['movements'] = movements
+        print("###############################################################")
+        print(movements)
         context['table_column'] = obtener_nombres_de_campos(Movement, 
             "description", 
             "currency", 

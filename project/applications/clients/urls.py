@@ -126,9 +126,8 @@ urlpatterns = [
     ####################### AJAX SEARCH ###################
     
     path(
-        'ajax-search-customers',
+        'ajax-search-customers/',
         ajax_search_customers,
         name='ajax_search_customers'
     ),
-
 ]

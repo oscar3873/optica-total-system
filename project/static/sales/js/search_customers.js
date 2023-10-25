@@ -1,46 +1,38 @@
-let idProductGlobal;
-let setProductIds = new Set();
+let idCustomerGlobal;
 document.addEventListener("DOMContentLoaded", function () {
     
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.trim().toLowerCase();
-
             if (!searchTerm) {
                 // Limpiar los resultados de búsqueda si no hay término de búsqueda
                 searchResults.innerHTML = '';
                 return;
             }
 
-            // Realizar la búsqueda de productos que coincidan con el término de búsqueda
+            // Realizar la búsqueda de clientes que coincidan con el término de búsqueda
             $.ajax({
-                url: `/products/ajax_search_products/?search_term=${searchTerm}`,
+                url: `/customers/ajax-search-customers/?search_term=${searchTerm}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    const products = data.data;
-
+                    const customers = data.data;
                     // Mostrar los resultados de búsqueda
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
-
-                    products.forEach(product => {
-                        if(!setProductIds.has(product.id)){
-                            const item = document.createElement('li');
-                            item.style.zIndex = "3";
-                            item.style.backgroundColor = '#464c55';
-                            
-                            item.style.cursor = 'pointer';
-                            item.classList.add('list-group-item', 'products');
-                            item.dataset.productId = product.id;
-                            item.innerHTML = `
-                            <div class="d-flex justify-content-between">
-                                <h6>${product.name}</h6>
-                                <h6 class="font-weight-bold">&nbsp${product.barcode}</h6>
-                            </div>
+                    customers.forEach(customer => {
+                        const item = document.createElement('li');
+                        item.style.zIndex = "3";
+                        item.style.backgroundColor = '#464c55';
+                        item.style.cursor = 'pointer';
+                        item.classList.add('list-group-item', 'customers');
+                        item.dataset.customerId = customer.id;
+                        item.innerHTML = `
+                        <div class="d-flex justify-content-between">
+                            <h6>${customer.first_name} ${customer.last_name}</h6>
+                            <small>${customer.dni}</small>
+                        </div>
                         `;
                         searchResults.appendChild(item);
-                        };
-                        
                     });
                 },
                 error: function(error) {
@@ -50,64 +42,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         searchResults.addEventListener('click', (event) => {
+            const checkboxContainer = document.getElementById('selected_customer');
+            //Si tiene hijo hay que eliminarlos para que ponga los nuevos
+            if(checkboxContainer.hasChildNodes()){
+                while(checkboxContainer.firstChild){
+                    checkboxContainer.removeChild(checkboxContainer.firstChild);
+                }
+            }
 
-            const item = event.target.closest('.products');
+            const item = event.target.closest('.customers');
             if (!item) {
                 return;
             }
 
-            const productId = item.dataset.productId;
-            idProductGlobal=productId;
-            const productName = item.querySelector('h6').textContent;
+            const customerId = item.dataset.customerId;
+            idCustomerGlobal=customerId;
+            const customerName = item.querySelector('h6').textContent;
 
-            // Rellenar el campo del producto seleccionado y ocultar los resultados de búsqueda
+            // Rellenar el campo del customer seleccionado y ocultar los resultados de búsqueda
             searchInput.value = '';
             searchResults.innerHTML = '';
 
-            const checkboxProduct = document.createElement("input");
-            checkboxProduct.type = "checkbox";
-            checkboxProduct.classList.add('form-check-input');
+            const checkboxCustomer = document.createElement("input");
+            checkboxCustomer.type = "radio";
+            checkboxCustomer.classList.add('form-check-input', 'me-1', 'invisible');
             // Asegúrate de que todas las casillas de verificación tengan el mismo nombre
-            checkboxProduct.name = "productsSelected"; 
-            checkboxProduct.value = productId;
-            checkboxProduct.id = `${productName}`;
-            checkboxProduct.checked = true;
+            checkboxCustomer.name = "customer"; 
+            checkboxCustomer.value = customerId;
+            checkboxCustomer.id = `${customerName}`;
+            checkboxCustomer.checked = true;
             const label = document.createElement("label");
-            label.textContent = productName;
-            label.classList.add('d-block');
+            const titleH5Customer = document.createElement('h5')
+            const textContentCustomer = document.createTextNode(customerName);
+            titleH5Customer.appendChild(textContentCustomer);
+            label.classList.add('d-block', 'mt-2');
 
-
-            const checkboxContainer = document.getElementById('products-selected');
-            label.appendChild(checkboxProduct);
+            label.appendChild(titleH5Customer)
+            label.appendChild(checkboxCustomer);
             checkboxContainer.appendChild(label);
-
-            checkboxProduct.addEventListener("change", function () {
-                const checkboxContainer = document.getElementById('products-selected');
-                if (!checkboxProduct.checked) {
-                    // Si el checkbox se desmarca, elimina el checkbox y su etiqueta
-                    checkboxContainer.removeChild(label);
-                    setProductIds.delete(parseInt(checkboxProduct.value));    
-                }
-            });
-
-            setProductIds.add(parseInt(productId));
-            // Añadir el ID del producto al formulario
-            const productIdCheck = document.createElement('input');
-            productIdCheck.type = 'hidden';
-            productIdCheck.name = `selected_product_id_${fieldIdentifier}`;
-            productIdCheck.value = productId;
-            searchInput.closest('form').appendChild(productIdCheck);
+            // Añadir el ID del customer al formulario
+            const customerIdCheck = document.createElement('input');
+            customerIdCheck.type = 'hidden';
+            customerIdCheck.name = `selected_customer_id_${fieldIdentifier}`;
+            customerIdCheck.value = customerId;
+            searchInput.closest('form').appendChild(customerIdCheck);
         });
     }
 
-
     function configureSearchInputs(form, count) {
         const fieldPrefix = `id_form-${count}`;
-        const searchInputA = form.querySelector(`#${fieldPrefix}-search-productA-input`);
-        const searchResultsA = form.querySelector(`#${fieldPrefix}-search-productA-results`);
-        configureSearch(searchInputA, searchResultsA, 'productA');
+        const searchInputA = form.querySelector(`#${fieldPrefix}-search-customerA-input`);
+        const searchResultsA = form.querySelector(`#${fieldPrefix}-search-customerA-results`);
+        configureSearch(searchInputA, searchResultsA, 'customerA');
     }
-
 
     // SOLO PARA EL FORMULARIO 1
     const form_0 = document.getElementById('id_form-0');
