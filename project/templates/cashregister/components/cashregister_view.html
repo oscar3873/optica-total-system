@@ -56,15 +56,17 @@
             <div class="pe-3">
               <p class="text-700 fs--0 fw-medium">Balance inicial </p>
               <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
+              <small class="d-none d-md-inline">Monto inicial en <span class="text-warning">Efectivo</span></small>
             </div>
             <div class="ps-3">
               <p class="text-700 fs--0">Balance Actual </p>
               <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.final_balance|floatformat:2|intcomma}} </h4>
+              
             </div>
           </div>
           <div class="d-flex pb-3 justify-content-between align-items-center">
             <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
-            <div class="ps-3 text-center">
+            <div class="ps-3 text-end text-md-center">
               <a href="{% url 'cashregister_app:movements_view' %}" class="btn btn-primary mb-2"
               type="button">Movimientos</a>
               <a href="{% url 'cashregister_app:cashregister_arching_view' %}" class="btn btn-warning mb-2"
@@ -75,6 +77,7 @@
         <div class="card-footer">
           <div class="pe-3">
             <p class="text-600 fs--1 fw-medium">El {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</p>
+            <small class="d-none d-md-inline">EL monto final tiene en cuenta <span class="text-warning">Efectivo, Tarjetas de Credito, Tarjetas de Debito y Transfer.</span></small>
           </div>
         </div>
       </div>

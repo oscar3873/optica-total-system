@@ -633,13 +633,12 @@ def ajax_search_customers(request):
 
     branch = request.user.branch
     print(branch)
-
+    print("################################################")
+    print("Entre aqui")
     branch_actualy = request.session.get('branch_actualy')
     if request.user.is_staff and branch_actualy:
         branch = Branch.objects.get(id=branch_actualy)
-
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
 
@@ -672,4 +671,3 @@ def ajax_search_customers(request):
         } for customer in customers]
         print(data)
         return JsonResponse({'data': data})
-    
