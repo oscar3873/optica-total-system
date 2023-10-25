@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Capturar todos los links de la barra lateral
     var links = document.querySelectorAll('#navbarVerticalNav a');
     // Capturar cada dropdown
+    let dropdownControlPanel = document.getElementById('control-panel');
     let dropdownObjetives = document.getElementById('sales_objetives');
     let dropdownBilling = document.getElementById('sales_billing');
     let dropdownPaymentMethods = document.getElementById('payment_methods');
@@ -14,8 +15,11 @@ document.addEventListener("DOMContentLoaded", function () {
             // Evita que el enlace se comporte como un enlace normal
             //event.preventDefault();
             let clickedLinkId = link.id;
-
-            if (link.classList.contains('dropdown-sales_objetives')) {
+            if (link.classList.contains('dropdown-control-panel')) {
+                dropdownControlPanel.classList.add('active');
+                localStorage.setItem('dropdown', dropdownControlPanel.id);
+            }
+            else if (link.classList.contains('dropdown-sales_objetives')) {
                 dropdownObjetives.classList.add('active');
                 localStorage.setItem('dropdown', dropdownObjetives.id);
             } 
@@ -70,14 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let idLinkActiveSaved = localStorage.getItem('clickedLink');
     if (idLinkActiveSaved) {
         let clickedElement = document.getElementById(idLinkActiveSaved);
-        if(idLinkActiveSaved != 'daily_reports'){
-            const linkDailyReports = document.getElementById('daily_reports');
-            linkDailyReports.classList.remove('active');
-            if (clickedElement) {
-                clickedElement.classList.add('active');
-                clickedElement.scrollIntoView();
-            }
-        }     
+        if (clickedElement) {
+            clickedElement.classList.add('active');
+            clickedElement.scrollIntoView();
+        }   
     }
 
 
