@@ -9,7 +9,8 @@ class LabelCreateForm(ValidationFormMixin):
     
     label = forms.CharField(
         widget=forms.TextInput(
-            attrs={'class': 'form-control'}
+            attrs={'class': 'form-control',
+                'placeholder': 'Ej: Recordatorio'}
         )
     )
 
@@ -37,14 +38,17 @@ class NoteCreateForm(ValidationFormMixin):
     subject = forms.CharField(
         label='Asunto',
         widget=forms.TextInput(
-            attrs={'class': 'form-control'}
+            attrs={'class': 'form-control',
+                'placeholder': 'Ej: Cumpleaños de Juan'}
         )
     )
 
     description = forms.CharField(
         label='Descripcion',
         widget=forms.Textarea(
-            attrs={'class': 'form-control', 'rows': '5'}
+            attrs={'class': 'form-control', 
+                'placeholder': 'Ej: Felicidades Juan!!',
+                'rows': '5'}
         ),
     )
 

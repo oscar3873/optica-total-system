@@ -18,7 +18,7 @@ from django.views.generic import ListView
 # Create your views here.
 
 class PointOfSaleView(LoginRequiredMixin, FormView):
-    form_class = SaleForm
+    form_class = OrderDetailFormset
     template_name = 'sales/point_of_sale_page.html'
     success_url = reverse_lazy('core_app:home')
 
@@ -30,7 +30,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         except Branch.DoesNotExist:
             branch = self.request.user.branch
 
-        context['formset'] = OrderDetailFormset
+        context['sale_form'] = SaleForm
         # context['payment_form'] = PaymentMethodsFormset
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
@@ -40,18 +40,18 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
 
     def form_valid(self, form):
-        formsets = OrderDetailFormset(self.request.POST)
-        saleform = form
+        formsets = form
+        saleform = SaleForm(self.request.POST)
         # payment_methods = PaymentMethodsFormset(self.request.POST)
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
             print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
             customer = saleform.cleaned_data['customer']
-            payment_methods = saleform.cleaned_data.pop('type_method')
+            payment_methods = saleform.cleaned_data.pop('payment_method')
             amount = saleform.cleaned_data.pop('amount')
             if not customer:
-                customer = Customer.objects.first() # 'Anonimo'
+                customer = Customer.objects.get(name__icontains='Anonimo') #'Anonimo'
 
         promotions_active = Promotion.objects.filter(is_active=True)
         promotional_products = {promotion: [] for promotion in promotions_active}
@@ -68,6 +68,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
             
             if formset.is_valid():
+                print('\n\nDatos de Formset: ', formset.cleaned_data)
                 total += get_total_and_products(formset, all_products_to_sale)
                 order_details.append(process_formset(formset, promotional_products))
 
@@ -78,19 +79,17 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         discount_promo = sum(discount_promo)
         print('DESCUENTO TOTAL: ', discount_promo)
  
-        sale.discount = discount_promo
+        sale.total = total
         print('=> TOTAL: ', total - discount_promo)
 
-
         has_proof = saleform.cleaned_data.pop('has_proof') or None
-        # proof_type = switch_case(has_proof, sale)
-        # if proof_type:
-        #     generate_proof(proof_type)
+        proof_type = switch_case(has_proof, sale)
+        if proof_type:
+            generate_proof(proof_type)
 
-        product_cristal = True #find_cristal_product(all_products_to_sale)
-
-        customer_cc_and_cristal = process_customer(customer, sale, payment_methods, total, product_cristal, amount)
-        if customer_cc_and_cristal:
+        product_cristal = find_cristal_product(all_products_to_sale)
+        process_customer(customer, sale, payment_methods, total, amount, self.request.user)
+        if product_cristal:
             # messages.info(self.request, "%s" % product_cristal.name)
             return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 

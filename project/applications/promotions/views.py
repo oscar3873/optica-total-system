@@ -77,17 +77,18 @@ class PromotionDetailView(LoginRequiredMixin, DetailView):
 class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Promotion
     form_class = PromotionProductForm
-    template_name = 'promotions/promotion_update_page.html'
-    success_url = reverse_lazy('promotions_app:promotion_detail')
+    template_name = 'promotions/promotions_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Puedes agregar datos adicionales al contexto si es necesario
+        context['update'] = 1
         return context
 
     def form_valid(self, form):
-        promotion = form.save(commit=False)  # No guardamos inmediatamente
-        promotion.save()  # Guarda la promoción actualizada
+        promotion = form.instance
+        promotion.type_prom = form.cleaned_data.get('type_discount')
+        promotion.start_date = form.cleaned_data.get('start_date')
+        promotion.end_date = form.cleaned_data.get('end_date')
 
         selected_products = form.cleaned_data['productsSelected']
         existing_products = promotion.promotion_products.all()
@@ -102,7 +103,24 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
             if not promotion.promotion_products.filter(product=product).exists():
                 PromotionProduct.objects.create(promotion=promotion, product=product)
 
-        return super().form_valid(form)
+        # Guarda la promoción actualizada
+        promotion.save()
+
+        return HttpResponseRedirect(reverse_lazy('promotions_app:promotion_detail', kwargs = {'pk':promotion.pk}))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.object
+        kwargs['initial'] = {
+            'type_discount': self.object.type_prom,
+            'start_date': self.object.start_date,
+            'end_date': self.object.end_date,
+            'productsSelected': self.object.promotion_products.values_list('product', flat=True)
+        }
+        return kwargs
+
+    
+    
 
 
     

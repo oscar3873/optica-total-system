@@ -81,14 +81,15 @@ def switch_case(case, sale):
 
 def find_cristal_product(all_products_to_sale):
     for product in all_products_to_sale:
-        if 'cristal' in product.category.name:
+        if 'cristal' in product.category.name.lower():
             return product
     return None
 
 def generate_proof(proof_type): # generar factura o recibo
-    pass
+    print('IMPRIMIENDO %s' % proof_type)
 
-def process_customer(customer, sale, payment_methods, total, product_cristal, amount):
+
+def process_customer(customer, sale, payment_methods, total, product_cristal, amount, user):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
@@ -98,38 +99,65 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     #     payment.save(commit=False)
     #     payment_total += payment.amount
 
-    payment = payment_methods
     payment_total = amount
 
-    if customer and customer.has_credit_account and payment:
+    if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
+        """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        customer.credit_balance += sale.total
-        # customer.save()
-        if product_cristal:
-            return True
-    
-    elif product_cristal: # 
+        customer.credit_balance += total * Decimal(1 - sale.discount / 100)
+        customer.save()
+
+    elif customer.has_credit_account:
+        """Si TIENE CUENTA CORRIENTE + Metodo: Credito/Debito/Efectivo"""
+        missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
+        sale.missing_balance = missing_balance
+        if missing_balance > 0:
+            sale.state = Sale.STATE[1][0] # "PENDIENTE"
+            customer.credit_balance += missing_balance
+            customer.save()
+        else:
+            sale.state = Sale.STATE[0][0] # "COMPLETO"
+        set_movement(payment_total, payment_methods.type_method, customer, user)
+
+    elif product_cristal: 
+        """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
-        sale.missing_balance = Decimal(total) - Decimal(payment_total)
-        set_movement(payment_total, payment.type_method, customer)
-        return True
+        missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
+        sale.missing_balance = missing_balance
+        set_movement(payment_total, payment_methods.type_method, customer, user)
 
     else:
+        """Si el cliente TIENE O NO CUENTA CORRIENTE pero paga el total de la compra"""
         sale.state = Sale.STATE[0][0] # 'COMPLETO'
         sale.save()
-        set_movement(total, payment.type_method, customer)
-    # sale.save()
+        set_movement(total, payment_methods.type_method, customer, user)
+
+    sale.user_made = user
+    sale.save()
+
+    Payment.objects.create(
+        user_made = user,
+        amount = amount or total,
+        payment_method = payment_methods,
+        description = f"Pago de venta Nro: {sale.pk}",
+        sale = sale,
+    )
 
 
-def set_movement(total, method, customer):
+def set_movement(total, type_method, customer, user):
+    description = "Venta de productos"
+    if not 'Anonimo' in customer.first_name:
+        description += " a %s" % customer.get_full_name()
+
     Movement.objects.create(
-        payment_method = method,
+        user_made = user,
+        payment_method = type_method,
         amount = total,
         cash_register = CashRegister.objects.filter(
-            is_closed = False,
-            branch = customer.branch,
+            is_close = False,
+            branch = user.branch,
             ).last(),
-        description = "Venta de productos a %s" % customer.get_full_name(),
-        # currency = "Pesos",
+        description = description,
+        currency = Currency.objects.first(),
         type_operation = "Ingreso",
     )

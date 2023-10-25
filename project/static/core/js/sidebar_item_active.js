@@ -1,8 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
     
+    // Capturar todos los links de la barra lateral
     var links = document.querySelectorAll('#navbarVerticalNav a');
+    // Capturar cada dropdown
+    let dropdownControlPanel = document.getElementById('control-panel');
     let dropdownObjetives = document.getElementById('sales_objetives');
     let dropdownBilling = document.getElementById('sales_billing');
+    let dropdownPaymentMethods = document.getElementById('payment_methods');
     let dropdownCategories = document.getElementById('products_categories');
     let dropdownPromotions = document.getElementById('products_promotions');
 
@@ -10,16 +14,22 @@ document.addEventListener("DOMContentLoaded", function () {
         link.addEventListener('click', function (event) {
             // Evita que el enlace se comporte como un enlace normal
             //event.preventDefault();
-
             let clickedLinkId = link.id;
-
-            if (link.classList.contains('dropdown-sales_objetives')) {
+            if (link.classList.contains('dropdown-control-panel')) {
+                dropdownControlPanel.classList.add('active');
+                localStorage.setItem('dropdown', dropdownControlPanel.id);
+            }
+            else if (link.classList.contains('dropdown-sales_objetives')) {
                 dropdownObjetives.classList.add('active');
                 localStorage.setItem('dropdown', dropdownObjetives.id);
             } 
             else if(link.classList.contains('dropdown-sales-billing')){
                 dropdownBilling.classList.add('active');
                 localStorage.setItem('dropdown', dropdownBilling.id);
+            }
+            else if(link.classList.contains('dropdown-payment-methods')){
+                dropdownPaymentMethods.classList.add('active');
+                localStorage.setItem('dropdown', dropdownPaymentMethods.id);
             }
             else if(link.classList.contains('dropdown-categories')){
                 dropdownCategories.classList.add('active');
@@ -36,8 +46,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     links.forEach(function (otherLink) {
                         otherLink.classList.remove('active');
                     });
-
-                    if(link != dropdownObjetives && link != dropdownBilling && link != dropdownCategories && link != dropdownPromotions){
+                    // Si el link seleccionado no es un dropdown, se le agrega la clase 'active'
+                    if(link != dropdownObjetives && link != dropdownBilling && link != dropdownPaymentMethods && link != dropdownCategories && link != dropdownPromotions){
                         link.classList.add('active');
                     }
                 }
@@ -64,14 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
     let idLinkActiveSaved = localStorage.getItem('clickedLink');
     if (idLinkActiveSaved) {
         let clickedElement = document.getElementById(idLinkActiveSaved);
-        if(idLinkActiveSaved != 'daily_reports'){
-            const linkDailyReports = document.getElementById('daily_reports');
-            linkDailyReports.classList.remove('active');
-            if (clickedElement) {
-                clickedElement.classList.add('active');
-                clickedElement.scrollIntoView();
-            }
-        }     
+        if (clickedElement) {
+            clickedElement.classList.add('active');
+            clickedElement.scrollIntoView();
+        }   
     }
 
 

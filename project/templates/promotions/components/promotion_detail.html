@@ -43,7 +43,7 @@
                         <a class="dropdown-item" href="{% url 'promotions_app:promotion_update' promotion.id %}">Editar</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item text-danger"
-                            href="#">Eliminar</a>
+                            href="{% url 'promotions_app:promotion_delete' promotion.id %}">Eliminar</a>
                     </div>
                     {% endif %}
                 </div>
@@ -61,10 +61,12 @@
                             <p class="fw-normal fw-semi-bold mb-1">Tipo de promoción:</p>
                             <span class="ms-3 text-900 fw-bold">{{promotion.type_prom}}</span>
                         </div>
+                        {% if not promotion.discount == 0 %}
                         <div class="col-12 d-flex justify-content-between" id="promotion_discount">
                             <p class="fw-normal fw-semi-bold mb-1">Descuento:</p>
                             <span class="ms-3 text-900 fw-bold">{{promotion.discount}}%</span>
                         </div>
+                        {% endif %}
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                             <p class="fw-normal fw-semi-bold mb-1">Inicio:</p>
                             <span class="ms-3 text-800 fw-bold">{{promotion.start_date}}</span>
@@ -74,16 +76,27 @@
                             <span class="ms-3 text-800 fw-bold">{{promotion.end_date}}</span>
                         </div>
 
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">Estado:</p>
+                            {% if promotion.is_active %}
+                                <span class="ms-3 text-success fw-bold">Activa</span>
+                            {% else %}
+                                <span class="ms-3 text-secondary fw-bold">Inactiva</span>
+                            {% endif %}
+                        </div>
+
 
                     </div>
                 </div>
                 <div class="col-lg-6 ps-sm-4 pt-2 pt-sm-0 border-top border-sm-0">
                     <div class="row mt-3 mt-sm-0">
                         <div class="col-12">
-                            <h5 class="mb-0">Productos</h5>
+                            <h5 class="fw-normal fw-semi-bold mb-0">Productos</h5>
                         </div>
                         {% for product_relation in associated_products %}
-                            <p>{{ product_relation.product.name }} </p>
+                            <div class="col-12">
+                                <span class="ms-1 text-800 fw-bold d-inline-block"><span class="text-primary">•</span> {{ product_relation.product.name }}</span>
+                            </div>
                         {% endfor %}
                     </div>
                 </div>

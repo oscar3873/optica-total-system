@@ -16,14 +16,15 @@
             class="fa-inverse fa-stack-1x text-primary fas fa-sticky-note"></i></span>
             <div class="col">
                 <h5 class="mb-0 text-primary position-relative"><span
-                        class="bg-200 dark__bg-1100 pe-3">Notas</span><span
+                        class="bg-200 dark__bg-1100 pe-3">Crear nota</span><span
                         class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-                <p class="mb-0">Nueva Nota</p>
+                <p class="mb-0">Aquí puede crear una nueva nota</p>
             </div>
         </div>
     </div>
 
-    <div class="row justify-content-sm-center my-2">
+    <!-- MENSAJE DE ERROR HECHO POR JAVI-->
+    <!-- <div class="row justify-content-sm-center my-2">
         <div class="col">
             {% if form.errors %}
             <div class="alert alert-danger" role="alert">
@@ -38,14 +39,14 @@
             </div>
             {% endif %}
         </div>
-    </div>
+    </div> -->
 
-    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="col-lg-6 col-xl-10 col-xxl-6 h-100">
         <div class="card theme-wizard h-100 p-0">
             <div class="card-header bg-light pt-3 pb-2">
                 <div class="col">
-                    <p class="fs--2 mb-0"><span class="text-warning">{{user.last_name}}, {{user.first_name}}</span> esta por
-                        registrar un añadir una nota
+                    <p class="fs--2 mb-0"><span class="text-warning">{{user.last_name}}, {{user.first_name}}</span> 
+                        está por añadir una nota
                     </p>
                 </div>
             </div>
@@ -55,15 +56,20 @@
                         aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
                         <form method="POST" class="row needs-validation align-items-center" novalidate="">
                             {% csrf_token %}
-                            <div class="row justify-content-sm-center pb-2">
-                                <div class="col-12 col-sm">
+                            <div class="row pb-2">
+                                <div class="col-12 col-sm-7">
                                     <label for="id_first_name"
                                         class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Asunto</span>
+                                        <span>Título</span>
                                     </label>
                                     {{ form.subject }}
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Este campo no puede estar vacio.</div>
+                                    {% if form.subject.errors %}
+                                        <div class="text-danger fs--2">
+                                            {{form.subject.errors}}
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <!-- <div class="row justify-content-sm-center">
@@ -95,40 +101,61 @@
                                     {% endif %}
                                 </div>
                             </div> -->
-                            <div class="row justify-content-sm-center">
-                                <div class="col-12 col-sm">
+                            <div class="row ">
+                                <div class="col-12">
                                     <label for="id_first_name"
                                         class="col-12 col-form-label d-flex justify-content-start align-items-center">
                                         <span>Tipo de Nota</span>
                                     </label>
                                     <div class="row">
-                                        <div class="col">
+                                        <div class="col-12 col-sm-7">
                                             <div class="input-group d-flex">
                                                 {{ form.label }}
-                                                
-                                                <button id="addLabel" type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                                    data-bs-target="#note-label-modal">+</button>
+                                                {% if form.label.errors %}
+                                                    <div class="text-danger fs--2">
+                                                        {{form.label.errors}}
+                                                    </div>
+                                                {% endif %}
+                                                <span id="addLabel" class="fa-stack ms-2 ps-3" data-bs-toggle="modal" data-bs-target="#note-label-modal" title="Agregar nuevo tipo de nota" style="cursor: pointer">
+                                                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
+                                                </span>
                                             </div>
                                         </div>
-                                        <input type="color" class=" form-control-color" id="color-input-disabled" value=""
-                                                title="Choose your color" disabled>
+                                        <div>
+                                            <label for="color-input-disabled"
+                                                class="col-12 col-form-label d-flex justify-content-start align-items-center mt-1">
+                                                <span>Color</span>
+                                            </label>
+                                            <input type="color" class=" form-control-color" id="color-input-disabled" value=""
+                                            title="Choose your color" disabled>
+                                        </div>
+                                        <div>
+                                            
+                                        </div>
                                     </div>
+                                    
                                 </div>
                             </div>
-                            <div class="row justify-content-sm-center">
-                                <div class="col-12 col-sm py-3">
+                            <div class="row">
+                                <div class="col-12 py-3">
                                     <label for="id_first_name"
                                         class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                        <span>Descripcion</span>
+                                        <span>Descripción</span>
                                     </label>
                                     {{ form.description }}
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">La nota debe tener contenido.</div>
+                                    {% if form.description.errors %}
+                                        <div class="text-danger fs--2">
+                                            {{form.description.errors}}
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-12">
-                                    <button type="submit" class="btn btn-primary" name="submit">Registrar</button>
+                                    <button type="submit" class="btn btn-primary" name="submit">Cargar</button>
                                 </div>
                             </div>
                         </form>
@@ -144,15 +171,26 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="create-modalLabel">Crear Label</h5>
+                <h5 class="modal-title" id="create-modalLabel">Crear nuevo tipo de nota</h5>
             </div>
             <div class="modal-body">
                 <form id="id_label_form" method="post">
                     {% csrf_token %}
-                    {{ label_form.as_p }}
-                    <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                    <div class="row">
+
+                        <div class="pb-3 pb-sm-4 ">
+                            <div class="col-12">
+                                <label for="{{ label_form.label.id_for_label }}" class="form-label">Tipo:</label>
+                                {{ label_form.label }}
+                            </div>
+                            <div class="col-12 pt-3">
+                                <label for="{{ label_form.color.id_for_label }}" class="form-label">Color:</label>
+                                {{ label_form.color }}
+                            </div>
+                        </div>
+                        
+                    </div>
                     <button class="btn btn-primary" type="button" id="save-label">Guardar</button>
-                    <!-- Fin del formulario de creación de Category-->
                 </form>
             </div>
             <div class="modal-footer">
@@ -167,4 +205,5 @@
 {% block extra_js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'notes/js/create_label.js' %}"></script>
+<script src="{% static 'notes/js/selected_color.js' %}"></script>
 {% endblock extra_js %}
