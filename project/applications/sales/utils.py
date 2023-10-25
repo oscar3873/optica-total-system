@@ -67,14 +67,18 @@ def process_promotion(promotional_products, promotion, products, discount_promo)
         discount_promo = [ $, $, $ ...]
         """
 
-def switch_invoice_receipt(case, sale):
+def switch_invoice_receipt(invoice_or_receipt, sale):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
-    if case == 'A':
-        return sale.invoice.create( # CREA UN OBJ DE FACTURA
+    if invoice_or_receipt == 'A':
+        return sale.invoice.create( # CREA UN OBJ DE FACTURA A
             # consultar Campos
         )
-    elif case == 'B':
-        return sale.receipt.create( # CREA UN OBJ DE RECIBO COMUN
+    elif invoice_or_receipt == 'B':
+        return sale.invoice.create( # CREA UN OBJ DE FACTURA B
+            # consultar Campos
+        )
+    elif invoice_or_receipt == 'C':
+        return sale.receipt.create( # CREA UN OBJ DE COMPROBANTE / TICKET COMUN
             # consultar Campos
         )
     else:

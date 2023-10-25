@@ -6,9 +6,10 @@ from .models import *
 
 class SaleForm(forms.ModelForm):
     MODEL_CHOICES = (
-        ('C', 'No generar'),
-        ('A', 'Factura'),
-        ('B', 'Ticket comun')
+        ('D', 'No generar'),
+        ('A', 'Factura A'),
+        ('B', 'Factura B'),
+        ('C', 'Ticket comun'),
     )
 
     has_proof = forms.ChoiceField(

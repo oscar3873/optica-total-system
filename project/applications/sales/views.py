@@ -1,5 +1,4 @@
-from decimal import Decimal
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -81,9 +80,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             
         discount_promo = sum(discount_promo)
         print('DESCUENTO TOTAL: ', discount_promo)
- 
+
         sale.total = total
-        print('=> TOTAL: ', total - discount_promo)
+        print('=> TOTAL aplicando descuento: ', total - discount_promo)
 
         has_proof = saleform.cleaned_data.pop('has_proof') or None
         proof_type = switch_invoice_receipt(has_proof, sale)
