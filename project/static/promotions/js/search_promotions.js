@@ -18,10 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 url: searchUrl,
                 data: { search_term: searchTerm },
                 success: function (data) {
+                        console.log('data: ', data);
                     // Limpia los resultados anteriores
-                    if (data.data.length > 0) {
+                    if (data.promotions.length > 0) {
                         searchResults.innerHTML = '';
-                        data.data.forEach(function (promotion) {
+                        data.promotions.forEach(function (promotion) {
                             const row = document.createElement('tr');
                             row.className = 'btn-reveal-trigger';
 
@@ -90,13 +91,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             const detailLink = document.createElement('a');
                             detailLink.className = 'dropdown-item';
-                            detailLink.href = `/products/detail/product/${product.id}`;
+                            detailLink.href = `/promotions/detail/promotion/${product.id}`;
                             detailLink.textContent = 'Detalle';
                             dropdownMenu.appendChild(detailLink);
                             if (product.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.className = 'dropdown-item';
-                                editLink.href = `/promotions/update/${product.id}`;
+                                editLink.href = `/promotions/update/promotion/${product.id}`;
                                 editLink.textContent = 'Editar';
                                 dropdownMenu.appendChild(editLink);
 
