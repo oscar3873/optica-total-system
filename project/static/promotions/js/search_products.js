@@ -33,10 +33,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         if(!setProductIds.has(product.id)){
                             const item = document.createElement('li');
                             item.style.zIndex = "3";
-                            item.style.backgroundColor = '#464c55';
-                            
                             item.style.cursor = 'pointer';
-                            item.classList.add('list-group-item', 'products');
+                            item.classList.add('list-group-item', 'products', 'list-group-item-secondary');
                             item.dataset.productId = product.id;
                             item.innerHTML = `
                             <div class="d-flex justify-content-between">
