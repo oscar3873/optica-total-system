@@ -143,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return str.length > maxLength ? str.slice(0, maxLength - 3) + '...' : str;
     }
 
+    let promotions = {};
+
     // Event listener para el campo de búsqueda
     searchInput.addEventListener('input', handleSearch);
 
@@ -158,7 +160,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 type: 'GET',
                 dataType: 'json',
                 success : function (allPromotions) {
-                    promotions = allPromotions
+                    promotions = allPromotions.promotions;
+                    console.log(promotions);
                 }
             });
 

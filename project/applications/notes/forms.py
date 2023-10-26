@@ -63,9 +63,19 @@ class NoteCreateForm(ValidationFormMixin):
         })
     )
 
+    color_value = forms.CharField(
+    )
+
     class Meta:
         model = Note
         fields = ['subject', 'description', 'label']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance.pk:
+            print(self.instance.label.color)
+            self.fields['color_value'].initial = self.instance.label.color
 
 
     def clean_subject(self):
