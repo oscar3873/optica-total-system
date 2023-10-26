@@ -64,6 +64,7 @@ class NoteCreateForm(ValidationFormMixin):
     )
 
     color_value = forms.CharField(
+        required=False
     )
 
     class Meta:
