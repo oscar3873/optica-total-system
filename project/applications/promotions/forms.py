@@ -29,7 +29,7 @@ class PromotionProductForm(forms.ModelForm):
 
     productsSelected = forms.ModelMultipleChoiceField(
         queryset=Product.objects.all(),
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'product-checkboxes'}),
+        widget=forms.CheckboxSelectMultiple(),
         required = False
     )
     
@@ -43,35 +43,22 @@ class PromotionProductForm(forms.ModelForm):
 
     class Meta:
         model = Promotion
-        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'productsSelected', 'discount', 'is_active']
-
+        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'productsSelected', 'discount', 'is_active', 'user_made']
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         for field_name, field in self.fields.items():
-            if not field_name in ['is_active', 'productsSelected']:
+            if not field_name == 'is_active':
                 field.widget.attrs['class'] = 'form-control'
                 field.widget.attrs['required'] = ''
-            else:
-                field.widget.attrs['class'] = 'form-check-input mb-2'
             
-        if self.instance:
+        if self.instance.pk:
             self.fields['type_prom'].initial = self.instance.type_prom
             self.fields['start_date'].initial = self.instance.start_date
             self.fields['end_date'].initial = self.instance.end_date
-        
-        if self.instance.pk:  # Update
-            related_products = self.instance.promotion_products.values_list('product', flat=True)
-            available_products = Product.objects.filter(id__in=related_products)
-            self.fields['productsSelected'].queryset = available_products
-            self.fields['productsSelected'].initial = related_products
-        else:  # Create
-            # Cuando creas una nueva promoción, puedes configurar el queryset del campo
-            # para que muestre solo los productos relacionados con la promoción.
-            related_products = PromotionProduct.objects.filter(promotion=self.instance).values_list('product', flat=True)
-            available_products = Product.objects.filter(id__in=related_products)
-            self.fields['productsSelected'].queryset = available_products
-            
-        
-        
-    
+
+    def clean_productsSelected(self):
+        products_selected = self.cleaned_data.get('productsSelected')
+        print(products_selected)
+        return products_selected 

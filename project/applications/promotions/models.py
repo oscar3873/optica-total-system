@@ -13,7 +13,7 @@ class TypePromotion(BaseAbstractWithUser):
     def __str__(self):
         return self.name
 
-class Promotion(models.Model):
+class Promotion(BaseAbstractWithUser):
     """
     Clase para Promociones
     Guarda datos generales de una promoción.
