@@ -44,7 +44,7 @@ class PromotionProductForm(forms.ModelForm):
 
     class Meta:
         model = Promotion
-        fields = ['name', 'description', 'type_prom', 'start_date', 'end_date', 'productsSelected', 'discount', 'is_active', 'user_made']
+        fields = ['name', 'description', 'start_date', 'end_date', 'productsSelected', 'discount', 'is_active', 'user_made']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,11 +55,7 @@ class PromotionProductForm(forms.ModelForm):
                 field.widget.attrs['required'] = ''
             
         if self.instance.pk:
-            self.fields['type_prom'].initial = self.instance.type_prom
+            self.fields['type_discount'].initial = self.instance.type_prom
             self.fields['start_date'].initial = self.instance.start_date
             self.fields['end_date'].initial = self.instance.end_date
-
-    def clean_productsSelected(self):
-        products_selected = self.cleaned_data.get('productsSelected')
-        print(products_selected)
-        return products_selected 
+            self.fields['productsSelected'].initial = self.instance.promotion_products.values_list('product', flat=True)
