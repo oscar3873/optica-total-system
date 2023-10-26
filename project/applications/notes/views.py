@@ -95,7 +95,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
 class NoteDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Note
     template_name = 'notes/note_delete.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('note_app:note_list')
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
