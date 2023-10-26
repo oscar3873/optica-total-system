@@ -1,7 +1,7 @@
 from django import forms
 
-from .models import Supplier, Product_Supplier
-from applications.products.models import Product
+from .models import Brand_Supplier, Supplier, Product_Supplier
+from applications.products.models import Brand, Product
 from applications.core.mixins import ValidationFormMixin
 from django.core.validators import RegexValidator
 
@@ -56,27 +56,21 @@ class SupplierForm(ValidationFormMixin):
                 }
         )
     )
-    products = forms.ModelMultipleChoiceField(
-        queryset=Product.objects.all(),
+    brands = forms.ModelMultipleChoiceField(
+        queryset=Brand.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False
         )
     class Meta:
         model = Supplier
-        fields = ('name','phone_number','phone_code','email','products',)
+        fields = ('name','phone_number','phone_code','email')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         if self.instance.pk:  # Update
-            related_products = self.instance.product_suppliers.values_list('product__id', flat=True)
-            available_products = Product.objects.exclude(id__in=related_products) | Product.objects.filter(id__in=related_products)
-            self.fields['products'].queryset = available_products
-            self.fields['products'].initial = related_products
-        else:  # Create
-            all_products = Product.objects.all()
-            related_products = Product_Supplier.objects.values_list('product__id', flat=True)
-            available_products = all_products.exclude(id__in=related_products)
-            self.fields['products'].queryset = available_products
+            related_products = self.instance.brand_suppliers.values_list('brand__id', flat=True)
+            self.fields['brands'].initial = related_products
 
     def clean_name(self):
         name = self.cleaned_data['name']

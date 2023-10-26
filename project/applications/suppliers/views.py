@@ -5,7 +5,7 @@ from django.shortcuts import render
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import SupplierForm
-from .models import Supplier, Product_Supplier
+from .models import Supplier, Brand_Supplier
 #from .core.utils import obtener_nombres_de_campos
 from applications.employes.utils import obtener_nombres_de_campos
 
@@ -20,8 +20,8 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         supplier.user_made = self.request.user
         supplier.save()
         
-        for product in form.cleaned_data['products']:
-            Product_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
+        for product in form.cleaned_data['brands']:
+            Brand_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
         return super().form_valid(form)
 
 
@@ -35,18 +35,18 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
         form.instance.user_made = self.request.user
         supplier = form.save()
 
-        selected_products = form.cleaned_data['products']
-        existing_products = supplier.product_suppliers.all()
+        selected_brands = form.cleaned_data['brand']
+        existing_brands = supplier.brand_suppliers.all()
 
         # Elimina relaciones existentes que ya no están seleccionadas
-        for product_suppliers in existing_products: # product_suppliers es la tabla intermedia (relacion inversa)
-            if product_suppliers.product not in selected_products:
-                supplier.product_suppliers.get(product=product_suppliers.product).delete()
+        for brand_suppliers in existing_brands: # brand_suppliers es la tabla intermedia (relacion inversa)
+            if brand_suppliers.brand not in selected_brands:
+                supplier.brand_suppliers.get(brand=brand_suppliers.brand).delete()
 
         # Crea nuevas relaciones solo para características no existentes
-        for product in selected_products:
-            if product not in existing_products.values_list('product', flat=True): # Si NO existe ya un producto relacionado con el proveedor, crea la relacion
-                Product_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
+        for brand in selected_brands:
+            if brand not in existing_brands.values_list('brand', flat=True): # Si NO existe ya un producto relacionado con el proveedor, crea la relacion
+                Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made = self.request.user)
 
         return super().form_valid(form)
 

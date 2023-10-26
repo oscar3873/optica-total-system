@@ -113,21 +113,6 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
 
         return HttpResponseRedirect(reverse_lazy('promotions_app:promotion_detail', kwargs = {'pk':promotion.pk}))
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.object
-        kwargs['initial'] = {
-            'type_discount': self.object.type_prom,
-            'start_date': self.object.start_date,
-            'end_date': self.object.end_date,
-            'productsSelected': self.object.promotion_products.values_list('product', flat=True)
-        }
-        return kwargs
-
-    
-    
-
-
     
 #################################### LIST ####################################
 class PromotionListView(LoginRequiredMixin, ListView):
@@ -189,6 +174,6 @@ def ajax_promotional_products(request):
         for promotion in promotions:
             # Obtén los productos asociados a cada promoción
             associated_products = promotion.promotion_products.values_list('product__id', flat=True)
-            list_promotion[promotion.name] = (promotion.type_prom.pk, promotion.discount, list(associated_products))
+            list_promotion[promotion.name] = (promotion.type_prom.name, promotion.discount, list(associated_products))
 
         return JsonResponse({'promotions': list_promotion})
