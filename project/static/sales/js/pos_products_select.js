@@ -119,8 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const totalOfForms = document.getElementById('id_total');
     const totalElement = document.getElementById('total');
-    const discountElement = document.getElementById('discount');
+    const discountElement = document.getElementById('id_discount');
     const TotalSuccess = document.getElementById('total-success');
+
+    discountElement.addEventListener('input', updateTotal);
 
     const ButtonDelete = document.getElementById("button-delete-all");
     ButtonDelete.addEventListener('click', function() {
@@ -143,16 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener para el campo de búsqueda
     searchInput.addEventListener('input', handleSearch);
-
-    let promotions = [];
-
-    let promotionA = [];
-    let promotionB = [];
-    let promotionC = [];
-
-    let priceA = [];
-    let priceB = [];
-    let priceC = [];
 
     function handleSearch() {
         const query = searchInput.value;
@@ -279,48 +271,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 let formset = addFormset(product);
                 selectedProducts.push(formset);
 
-                var lista_promocion = searchKeyPromotions(inputElement.value, parseFloat(product.sale_price));
-                if (lista_promocion !== false) {
-                    if (lista_promocion[1].length > 1) {
-                        const productsSelects = [...selectproductsContainer.querySelectorAll(`div[id^="order_detaill-formset-"]`)];
-                       
-                        let promotion = 'promocion';
-                        if (lista_promocion[0] === 'A'){
-                            let quantity = priceA.length;
-                            if (quantity % 2 === 1){
-                                quantity = quantity/2 - 1
-                            }else{
-                                quantity = quantity/2
-                            }
-                            let restar_total = sumFirst_N_minors_Elements(priceA, quantity);
-                            promotion = '2x1';
-
-                        }else if (lista_promocion[0] === 'B'){
-                            let quantity = priceA.length;
-                            if (quantity % 2 === 1){
-                                quantity = quantity/2 - 1
-                            }else{
-                                quantity = quantity/2
-                            }
-                            let restar_total = parseFloat(sumFirst_N_minors_Elements(priceB, quantity) / 2);
-                            promotion = '50% off 2da unidad';
-
-                        }else{
-                            promotion = '% Descuento'
-                        }
-                        
-                        productsSelects.forEach(product_promo => {
-                            const inputElement = product_promo.querySelector('input');
-                            if (inputElement && lista_promocion[1].includes(inputElement.value)) {
-                                const show_promotion = document.createElement('div');
-                                show_promotion.classList.add('fs-1', 'text-success');
-                                show_promotion.textContent = promotion;
-                                product_promo.lastChild.appendChild(show_promotion);
-                            }
-                        });
-                    }
-                }
-
             } else {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
@@ -443,48 +393,19 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
       }
 
-    function updateTotal(){        
+    function updateTotal(){
         var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
-        var discount = parseFloat(discountElement.textContent.replace('$', '')).toFixed(2);
+        var discount = parseFloat(discountElement.value).toFixed(2);
         var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);
-
-        total = parseFloat(subtotal - discount).toFixed(2);
+        
+        if (discountElement.value === '') {
+            discount = 0;
+        }
+        
+        total = parseFloat(subtotal * (1 - discount/100)).toFixed(2);
         totalElement.textContent = `$ ${total}`;
         TotalSuccess.textContent = `$ ${total}`;
 
         totalOfForms.value = total;
     }
-
-    function searchKeyPromotions(id, price) {
-        for (var key in promotions) {
-            if (promotions.hasOwnProperty(key)) {
-                if (promotions[key].includes(id)) {
-                    if (key === 'A'){               // 2x1
-                        promotionA.push(id);
-                        priceA.push(price);
-                        priceA.sort((a, b) => a - b);
-
-                        return ['A', promotionA];
-
-                    }else if (key === 'B'){         // -50% en 2da unidad
-                        promotionB.push(id);
-                        priceB.push(price);
-                        priceB.sort((a, b) => a - b);
-                        
-                        return ['B', promotionB];
-
-                    }else if (key === 'C'){         // % 
-                        promotionC.push(id);
-
-                        return ['C', promotionC];
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    function sumFirst_N_minors_Elements(list, n) {
-        return list.slice(0, n).reduce((acumulador, elemento) => acumulador + elemento, 0);
-      }
 });
