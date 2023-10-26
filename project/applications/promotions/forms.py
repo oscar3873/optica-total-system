@@ -8,7 +8,8 @@ from .models import Promotion, PromotionProduct, TypePromotion
 class PromotionProductForm(forms.ModelForm):
     
     type_discount = forms.ModelChoiceField(
-        queryset= TypePromotion.objects.all()
+        queryset= TypePromotion.objects.all(),
+        empty_label="Elija una opción"
     )
 
     start_date = forms.DateField(
