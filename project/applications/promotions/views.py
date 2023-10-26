@@ -82,6 +82,11 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['update'] = 1
+        
+        related_products = self.get_object().promotion_products.values_list('product', flat=True)
+        available_products = Product.objects.filter(id__in=related_products)
+        context['products_selected'] = available_products
+        
         return context
 
     def form_valid(self, form):
@@ -133,7 +138,7 @@ class PromotionListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id')
+        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id', 'created_at', 'deleted_at', 'updated_at', 'user_ma')
         return context
 
     def get_queryset(self):
@@ -159,9 +164,13 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
     template_name = 'promotions/promotions_delete_page.html'
     success_url = reverse_lazy('promotions_app:promotion_list')
     
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        self.object.delete()  # Realiza la eliminación suave
+    def form_valid(self, form):
+        promotion = self.get_object()
+        print(promotion.promotion_products.all())
+        for relation in promotion.promotion_products.all():
+            relation.delete()
+            
+        promotion.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
 def ajax_promotional_products(request):

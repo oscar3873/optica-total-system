@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 #Importaciones de la app
 from applications.branches.models import Branch
-from applications.clients.forms import CustomerForm
+from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
 
@@ -37,6 +37,16 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
         context['payment_method_form'] = PaymentMethodForm
+
+        context['order_servise'] = {
+            'service': ServiceOrderForm,
+            'pupilar': InterpupillaryForm,
+            'correction': CorrectionForm,
+            'material': MaterialForm,
+            'color': ColorForm,
+            'cristal': CristalForm,
+            'tratamiento': TratamientForm,
+        }
         
         return context
 
@@ -100,7 +110,23 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         if product_cristal:
             # messages.info(self.request, "%s" % product_cristal.name)
-            return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
+            correction_form = CorrectionForm(self.request.POST)
+            material_form = MaterialForm(self.request.POST)
+            color_form = ColorForm(self.request.POST)
+            cristal_form = CristalForm(self.request.POST)
+            tratamiento_form = TratamientForm(self.request.POST)
+            pupilar_form = InterpupillaryForm(self.request.POST)
+
+            if (
+                correction_form.is_valid() and
+                material_form.is_valid() and 
+                color_form.is_valid() and
+                cristal_form.is_valid() and 
+                tratamiento_form.is_valid() and 
+                pupilar_form.is_valid()
+                ):
+                pass
+            # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
