@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'sales/components/sales_list_view.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="{% static 'sales/js/ajax_search_sales.js' %}"></script>
+{% endblock extra_js %}
