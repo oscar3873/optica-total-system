@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 type: 'GET',
                 dataType: 'json',
                 success : function (allPromotions) {
-                    promotions = allPromotions;
+                    promotions = allPromotions.promotions;
                     console.log(promotions);
                 }
             });
