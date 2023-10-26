@@ -1,10 +1,13 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
+from django.contrib import messages
 
 from project.settings.base import DATE_NOW
 from applications.cashregister.models import CashRegister, Currency, Movement, Transaction
+from django.contrib import messages
 
-from .models import*
+from applications.clients.forms import *
+from .models import *
 
 def get_total_and_products(formset, all_products_to_sale):
     """Segun los prodcutos recibidos, se suma un total $$. 
@@ -175,3 +178,32 @@ def set_movement(total, type_method, customer, user):
         currency = Currency.objects.first(),
         type_operation = "Ingreso",
     )
+
+
+def process_service_order(request, customer):
+    service_order = ServiceOrder(request.POST)
+    correction_form = CorrectionForm(request.POST)
+    material_form = MaterialForm(request.POST)
+    color_form = ColorForm(request.POST)
+    cristal_form = CristalForm(request.POST)
+    tratamiento_form = TratamientForm(request.POST)
+    pupilar_form = InterpupillaryForm(request.POST)
+
+    if (
+        correction_form.is_valid() and
+        material_form.is_valid() and 
+        color_form.is_valid() and
+        cristal_form.is_valid() and 
+        tratamiento_form.is_valid() and 
+        pupilar_form.is_valid()
+        ):
+
+        # Create the main form instance
+        ServiceOrder.objects.create_lab(
+            request.user, service_order, correction_form, material_form,
+            color_form, cristal_form, tratamiento_form, pupilar_form,
+            customer
+        )
+        messages.success(request, 'Se ha registrado una nueva orden de servicio con exito.')
+    else: 
+        print(correction_form.errors)

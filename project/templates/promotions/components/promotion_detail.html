@@ -93,11 +93,18 @@
                         <div class="col-12">
                             <h5 class="fw-normal fw-semi-bold mb-0">Productos</h5>
                         </div>
-                        {% for product_relation in associated_products %}
-                            <div class="col-12">
-                                <span class="ms-1 text-800 fw-bold d-inline-block"><span class="text-primary">•</span> {{ product_relation.product.name }}</span>
-                            </div>
-                        {% endfor %}
+                        {% if associated_products %}
+                            {% for product_relation in associated_products %}
+                                <div class="col-12">
+                                    <span class="ms-1 text-800 fw-bold d-inline-block"><span class="text-primary">•</span> {{ product_relation.product.name }}</span>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                        <div class="col-12">
+                            <span class="ms-1 text-800 fw-bold d-inline-block ms-3">Aún no hay productos asociados a esta promoción</span>
+                        </div>
+                        {% endif %}
+                        
                     </div>
                 </div>
             </div>

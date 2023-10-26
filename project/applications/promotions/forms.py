@@ -38,7 +38,7 @@ class PromotionProductForm(forms.ModelForm):
         label="Activo", 
         required=False,
         widget=forms.CheckboxInput(
-            attrs={'class': 'form-check mb-2'}
+            attrs={'class': 'form-check-input mb-2'}
         )
     )
 

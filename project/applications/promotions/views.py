@@ -173,6 +173,7 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
         promotion.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
+
 def ajax_promotional_products(request):
     branch = request.user.branch
 
@@ -182,7 +183,7 @@ def ajax_promotional_products(request):
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         
-        promotions = Promotion.objects.all()  # Obtén todas las promociones
+        promotions = Promotion.objects.filter(branch=branch, is_active=True)  # Obtén todas las promociones
         list_promotion = {}
 
         for promotion in promotions:
