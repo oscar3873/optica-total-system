@@ -138,7 +138,7 @@ class PromotionListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id', 'created_at', 'deleted_at', 'updated_at', 'user_ma')
+        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id', 'created_at', 'deleted_at', 'updated_at', 'user_made')
         return context
 
     def get_queryset(self):
