@@ -1,3 +1,5 @@
+import locale
+from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import *
 from django.db import transaction
@@ -9,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.branches.models import Branch
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
+from applications.cashregister.utils import obtener_nombres_de_campos
 
 from .utils import *
 from .models import *
@@ -164,3 +167,85 @@ class PaymentMethodView(ListView):
         context = super().get_context_data(**kwargs)
         context['payment_method_form'] = PaymentMethodForm
         return context
+    
+    
+######################## SALES #############################
+
+class SalesListView(ListView):
+    template_name = 'sales/sale_page.html'
+    model = Sale
+    paginate_by = 25
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
+        try:
+            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+            sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None).order_by('-created_at')
+        except CashRegister.DoesNotExist:
+            sales = None
+            messages.error(self.request, 'No hay ventas registradas para esta sucursal')
+        context['sales'] = sales
+        context['table_column'] = obtener_nombres_de_campos(Sale,
+            "id",
+            "invoice", 
+            "receipt",
+            "refund_date",
+            "branch",
+            "deleted_at", 
+            "discount",
+            "created_at",
+            "updated_at", 
+            )
+        
+        return context
+    
+
+#------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
+
+################ SEARCH MOVEMENTS AJAX ################
+
+def ajax_search_sales(request):
+    # branch = request.user.branch
+
+    # branch_actualy = request.session.get('branch_actualy')
+    # if request.user.is_staff and branch_actualy:
+    #     branch = Branch.objects.get(id=branch_actualy)
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+
+        # Obtener el valor de search_term de la solicitud
+        search_term = request.GET.get('search_term', '')
+        print("###################### Esto es lo que se esta buscando: ",search_term)
+        if not search_term:
+            # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
+            paginate_by = SalesListView().paginate_by
+            print("####################################",paginate_by)
+            sales = Sale.objects.all().filter(deleted_at = None)[:paginate_by]
+        else:
+            # Usando Q por todos los campos existentes en la tabla
+            sales = Sale.objects.all().filter(deleted_at = None).filter(
+                Q(total__icontains=search_term) |
+                Q(date_time_sale__icontains=search_term) |
+                Q(state__icontains=search_term) |
+                Q(user_made__first_name__icontains=search_term) |
+                Q(user_made__last_name__icontains=search_term) |
+                Q(customer__first_name__icontains=search_term) |
+                Q(customer__last_name__icontains=search_term)
+            )[:25]
+        # Crear una lista de diccionarios con los datos de los empleados
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+        data = [{
+            'id': sale.id,
+            'total': sale.total,
+            'missing_balance': sale.missing_balance,
+            'date_time_sale': sale.date_time_sale.strftime('%d %B %Y'),
+            'state': sale.state,
+            'customer': str(sale.customer),
+            'customer_id': sale.customer.id,
+            'user_made': str(sale.user_made),
+            'is_staff': 1 if request.user.is_staff else 0
+        } for sale in sales]
+        locale.setlocale(locale.LC_TIME, '')
+        return JsonResponse({'data': data})
