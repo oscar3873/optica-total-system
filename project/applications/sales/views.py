@@ -117,6 +117,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
+        print(form.errors)
         messages.error(self.request, "Error. Verifique los datos.")
         return super().form_invalid(form)
 

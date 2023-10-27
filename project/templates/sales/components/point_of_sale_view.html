@@ -89,67 +89,6 @@
                                     <!-- Selected customer -->
                                 </div>
                             </form>
-                            <!-- Modal para crear Cliente Nuevo -->
-                            <div id="New-customer" class="modal fade" tabindex="-1" aria-labelledby="New-customerLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="New-customerLabel">Nuevo cliente</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                        <form id="New-customer-form" method="post">
-                                            {% csrf_token %}
-                                            <div class="row justify-content-sm-center pb-2">
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.first_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
-                                                    {{ customer_form.first_name }}
-                                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
-                                                </div>
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.last_name.id_for_label }}" class="form-label col-form-label">Apellido:</label>
-                                                    {{ customer_form.last_name }}
-                                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>                                    
-                                                </div>
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.dni.id_for_label }}" class="form-label col-form-label">DNI/CUIL/CUIT:</label>
-                                                    {{ customer_form.dni }}
-                                                </div>
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.birth_date.id_for_label }}" class="form-label col-form-label">Fecha de nacimiento:</label>
-                                                    {{ customer_form.birth_date }}
-                                                </div>
-                                                <div class="col-4 pt-3">
-                                                    <label for="{{ customer_form.phone_code.id_for_label }}" class="form-label col-form-label">Código:</label>
-                                                    {{ customer_form.phone_code }}
-                                                </div>
-                                                <div class="col-7 col-md-8 col-md-4 pt-3">
-                                                    <label for="{{ customer_form.phone_number.id_for_label }}" class="form-label col-form-label">Celular:</label>
-                                                    {{ customer_form.phone_number }}
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-sm-center pb-2">
-                                                <div class="col-12 pt-3">
-                                                    <label for="{{ customer_form.email.id_for_label }}" class="form-label col-form-label">Correo:</label>
-                                                    {{ customer_form.email }}
-                                                </div>
-                                                <div class="col-12 pt-3">
-                                                    <label for="{{ customer_form.address.id_for_label }}" class="form-label col-form-label">Domicilio:</label>
-                                                    {{ customer_form.address }}
-                                                </div>
-                                                <div class="d-flex align-items-center col pt-4 pt-sm-3">
-                                                    <label for="{{ customer_form.has_credit_account.id_for_label }}" class="form-label col-form-label pt-2 me-3">Tiene cuenta corriente:</label>
-                                                    {{customer_form.has_credit_account}}
-                                                </div>
-                                            </div>
-                                            <button class="btn btn-primary mt-4" type="button" id="save-customer">Guardar</button>
-                                        </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
@@ -205,8 +144,7 @@
                                     <h5 class="modal-title" id="paymentLabel">Confirmar pago</h5>
                                 </div>
                                 <div class="modal-body">
-                                <form id="payment-form" method="post">
-                                    {% csrf_token %}
+
                                     <div class="row justify-content-sm-center pb-2">
                                         <div class="col-12 pt-3">
                                             <label for="{{ sale_form.amount.id_for_label }}" class="form-label col-form-label">Monto recibido</label>
@@ -219,10 +157,10 @@
                                             <small>Se puede dejar un detalle al <span class="text-warning">finalizar</span> la venta</small>
                                         </div>
                                     </div>
-                                    <button type="submit" class="btn btn-success mt-4" id="save-customer">Realizar venta</button>
+                                    <button type="submit" class="btn btn-success mt-4">Realizar venta</button>
                                     <!--Boton modal de orden de servicio-->
                                     <button type="button" class="btn btn-warning mt-4" data-bs-target="#serviceOrder" data-bs-toggle="modal">Orden de servicio</button>
-                                </form>
+
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
@@ -504,35 +442,6 @@
                                     <div class="col-4">
                                         <!--Boton para modal de metodo de pago-->
                                         <button id="addPaymentMethod" class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="tooltip" data-bs-target="#payment-method-modal" data-bs-original-title="Añadir nueva metodo de pago" style="cursor: pointer"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span></button>
-                                        <!-- Modal para crear el metod de pago-->
-                                        <div class="modal fade" id="payment-method-modal" tabindex="-1" aria-labelledby="payment-method-modalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="payment-method-modalLabel">Añadir nuevo metodo de pago</h5>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form id="payment-method-form" method="post">
-                                                            {% csrf_token %}
-                                                            <div class="pb-3">
-                                                                <label for="{{ payment_method_form.name.id_for_label }}" class="form-label">Nombre:</label>
-                                                                {{payment_method_form.name}}
-                                                            </div>
-                                                            <div class="pb-3">
-                                                                <label for="{{ payment_method_form.type_method.id_for_label }}" class="form-label">Tipo:</label>
-                                                                {{payment_method_form.type_method}}
-                                                            </div>
-                                                            <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                                                            <button class="btn btn-primary" type="button" id="save-payment-method">Guardar</button>
-                                                            <!-- Fin del formulario de creación de Currency-->
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -560,6 +469,98 @@
             </div>
         </div>
     </form>
+
+            <!-- Modal para crear el metod de pago-->
+            <div class="modal fade" id="payment-method-modal" tabindex="-1" aria-labelledby="payment-method-modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="payment-method-modalLabel">Añadir nuevo metodo de pago</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form id="payment-method-form" method="post">
+                                {% csrf_token %}
+                                <div class="pb-3">
+                                    <label for="{{ payment_method_form.name.id_for_label }}" class="form-label">Nombre:</label>
+                                    {{payment_method_form.name}}
+                                </div>
+                                <div class="pb-3">
+                                    <label for="{{ payment_method_form.type_method.id_for_label }}" class="form-label">Tipo:</label>
+                                    {{payment_method_form.type_method}}
+                                </div>
+                                <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                                <button class="btn btn-primary" type="button" id="save-payment-method">Guardar</button>
+                                <!-- Fin del formulario de creación de Currency-->
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para crear Cliente Nuevo -->
+            <div id="New-customer" class="modal fade" tabindex="-1" aria-labelledby="New-customerLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="New-customerLabel">Nuevo cliente</h5>
+                        </div>
+                        <div class="modal-body">
+                        <form id="New-customer-form" method="post">
+                            {% csrf_token %}
+                            <div class="row justify-content-sm-center pb-2">
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.first_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
+                                    {{ customer_form.first_name }}
+                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.last_name.id_for_label }}" class="form-label col-form-label">Apellido:</label>
+                                    {{ customer_form.last_name }}
+                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>                                    
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.dni.id_for_label }}" class="form-label col-form-label">DNI/CUIL/CUIT:</label>
+                                    {{ customer_form.dni }}
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.birth_date.id_for_label }}" class="form-label col-form-label">Fecha de nacimiento:</label>
+                                    {{ customer_form.birth_date }}
+                                </div>
+                                <div class="col-4 pt-3">
+                                    <label for="{{ customer_form.phone_code.id_for_label }}" class="form-label col-form-label">Código:</label>
+                                    {{ customer_form.phone_code }}
+                                </div>
+                                <div class="col-7 col-md-8 col-md-4 pt-3">
+                                    <label for="{{ customer_form.phone_number.id_for_label }}" class="form-label col-form-label">Celular:</label>
+                                    {{ customer_form.phone_number }}
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center pb-2">
+                                <div class="col-12 pt-3">
+                                    <label for="{{ customer_form.email.id_for_label }}" class="form-label col-form-label">Correo:</label>
+                                    {{ customer_form.email }}
+                                </div>
+                                <div class="col-12 pt-3">
+                                    <label for="{{ customer_form.address.id_for_label }}" class="form-label col-form-label">Domicilio:</label>
+                                    {{ customer_form.address }}
+                                </div>
+                                <div class="d-flex align-items-center col pt-4 pt-sm-3">
+                                    <label for="{{ customer_form.has_credit_account.id_for_label }}" class="form-label col-form-label pt-2 me-3">Tiene cuenta corriente:</label>
+                                    {{customer_form.has_credit_account}}
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-4" type="button" id="save-customer">Guardar</button>
+                        </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     <!-- ===============================================-->
     <!--   Fin Card con la presentacion de la caja-->

@@ -123,7 +123,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
                     'phone_number': customer.phone_number,
                     'phone_code': customer.phone_code,
                     'dni': customer.dni,
-                    'has_credit_account': '$ %s' % customer.credit_balance if customer.has_credit_account else 0,
+                    'credit_balance': '$ %s' % customer.credit_balance if customer.has_credit_account else None,
+                    'has_credit_account': customer.has_credit_account
                 }
                 return JsonResponse({'customer': data})
             
