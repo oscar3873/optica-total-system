@@ -1,7 +1,7 @@
 from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
-from applications.products.models import Product
+from applications.products.models import Product, Brand
 from .managers import SupplierManager
 
 """ 
@@ -38,3 +38,27 @@ class Product_Supplier(BaseAbstractWithUser):
 
     def __str__(self) -> str:
         return f'Producto: {self.product}\nProveedor: {self.supplier}'
+
+class Brand_Supplier(models.Model):
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='brand_suppliers', null=True, verbose_name='Proveedor')
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand_suppliers', null=True, verbose_name='Marca')
+
+    class Meta:
+        verbose_name = "Marca por Proveedor"
+
+    def __str__(self):
+        return f'{self.supplier.business_name} | {self.brand.name}'
+    
+
+class Bank(models.Model):
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='banks')
+    cbu = models.CharField(max_length=20, verbose_name='CBU')
+    bank_name = models.CharField(max_length=50, verbose_name='Nombre del Banco')
+    cuit = models.CharField(max_length=20, verbose_name='CUIT', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Banco"
+        verbose_name_plural = "Bancos"
+
+    def __str__(self) -> str:
+        return f'{self.bank_name} | {self.cbu}'

@@ -113,21 +113,6 @@ class PromotionUpdateView(CustomUserPassesTestMixin, UpdateView):
 
         return HttpResponseRedirect(reverse_lazy('promotions_app:promotion_detail', kwargs = {'pk':promotion.pk}))
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['instance'] = self.object
-        kwargs['initial'] = {
-            'type_discount': self.object.type_prom,
-            'start_date': self.object.start_date,
-            'end_date': self.object.end_date,
-            'productsSelected': self.object.promotion_products.values_list('product', flat=True)
-        }
-        return kwargs
-
-    
-    
-
-
     
 #################################### LIST ####################################
 class PromotionListView(LoginRequiredMixin, ListView):
@@ -138,7 +123,7 @@ class PromotionListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id', 'created_at', 'deleted_at', 'updated_at', 'user_ma')
+        context['table_column'] = obtener_nombres_de_campos(Promotion, 'description', 'branch', 'discount', 'id', 'created_at', 'deleted_at', 'updated_at', 'user_made')
         return context
 
     def get_queryset(self):
@@ -173,6 +158,7 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
         promotion.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
 
+
 def ajax_promotional_products(request):
     branch = request.user.branch
 
@@ -182,12 +168,12 @@ def ajax_promotional_products(request):
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         
-        promotions = Promotion.objects.all()  # Obtén todas las promociones
+        promotions = Promotion.objects.filter(branch=branch, is_active=True)  # Obtén todas las promociones
         list_promotion = {}
 
         for promotion in promotions:
             # Obtén los productos asociados a cada promoción
-            associated_products = promotion.promotion_products.values_list('product__name', flat=True)
-            list_promotion[promotion.name] = list(associated_products)
+            associated_products = promotion.promotion_products.values_list('product__id', flat=True)
+            list_promotion[promotion.name] = (promotion.type_prom.name, promotion.discount, list(associated_products))
 
         return JsonResponse({'promotions': list_promotion})

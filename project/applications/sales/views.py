@@ -108,24 +108,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
-        if product_cristal:
-            # messages.info(self.request, "%s" % product_cristal.name)
-            correction_form = CorrectionForm(self.request.POST)
-            material_form = MaterialForm(self.request.POST)
-            color_form = ColorForm(self.request.POST)
-            cristal_form = CristalForm(self.request.POST)
-            tratamiento_form = TratamientForm(self.request.POST)
-            pupilar_form = InterpupillaryForm(self.request.POST)
-
-            if (
-                correction_form.is_valid() and
-                material_form.is_valid() and 
-                color_form.is_valid() and
-                cristal_form.is_valid() and 
-                tratamiento_form.is_valid() and 
-                pupilar_form.is_valid()
-                ):
-                pass
+        if product_cristal and customer:
+            process_service_order(self.request, customer)
             # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 
         messages.success(self.request, "Se ha generado la venta con éxito!")

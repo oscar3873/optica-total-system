@@ -19,7 +19,6 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['label_form'] = LabelCreateForm
-
         return context
 
     @transaction.atomic
@@ -44,10 +43,10 @@ class NoteUpdateView(CustomUserPassesTestMixin, UpdateView):
     template_name = 'notes/note_form.html'
     success_url = reverse_lazy('note_app:note_list')
 
-    def get_form_kwargs(self): ##revisar
-        kwargs = super().get_form_kwargs()
-        kwargs['user'] = self.request.user  # Pasa el usuario actual al formulario
-        return kwargs
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['label_form'] = LabelCreateForm
+        return context
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -96,7 +95,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
 class NoteDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Note
     template_name = 'notes/note_delete.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('note_app:note_list')
     
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
