@@ -414,13 +414,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const productId = checkbox.value;
             const price = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
             const quantity = parseFloat(document.getElementById(`id_order_detaill-${productId}-quantity`).value);
-            const discountProductElement = document.getElementById(`id_order_detaill-${productId}-discount`);
-            const discountPercentage = discountProductElement.value;
-            let discount=0;
-            console.log(discountPercentage);
-            if(discountPercentage != '' && parseFloat(discountPercentage)>0){
-                discount = price*(discountPercentage/100);
-            }
 
             const buyDetail = document.getElementById('selected-products-list');
             // // Creo un array de los div que contienen el tipo de promocion
@@ -433,6 +426,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Recorro el array promotions para ver los productos y la promocion a la que pertenecen
             promotions.forEach(promotionElement => {
                 let prodId = parseInt(promotionElement.getAttribute('id').match(/\d+/)[0], 10);
+
+                console.log(promotionElement);
+
                 let promType = promotionElement.getAttribute('data-promotion');
                 if(promType != '2x1'){
                     promotionDiscount = promotionElement.getAttribute('data-discount');
@@ -440,6 +436,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 let priceElement = buyDetail.querySelector(`#price-${prodId}`);
                 const price = parseInt(priceElement.getAttribute('data-price'));
+                
+                let discountProductElement = document.getElementById(`id_order_detaill-${prodId}-discount`);
+                let discountPercentage = discountProductElement.value;
+                // Calculo de descuento por producto unitario
+                let discount_2for = 0;
+                if(discountPercentage != '' && parseFloat(discountPercentage)>0){
+                    console.log('precio : ',price);
+                    discount_2for = price*(discountPercentage/100);
+                } 
+                console.log('Descuento DEL 2DO FOR =', discount_2for);
+
                 // MODIFICAR AQUI EN CASO DE AGREGAR O CAMBIAR EL NOMBRE DE LOS TIPOS DE PROMOCION
                 if(promType == '2x1'){
                     // Obtengo el valor del campo de cantidad de ese producto
@@ -449,18 +456,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     agregando el precio a la lista de promocion a la que corresponde, por cada unidad del producto */
                     console.log('cant: ',quantityProduct);
                     for(let i=0; i<quantityProduct; i++){
-                        prom2x1.push(price);
+                        prom2x1.push(price - discount_2for);
                     }
                 }
-                else if(promType == '2da un'){
+                else if (promType.includes('2da')){
                     const quantityProductElement = buyDetail.querySelector(`#id_order_detaill-${prodId}-quantity`);
                     const quantityProduct = quantityProductElement.value;
                     for(let i=0; i<quantityProduct; i++){
-                        prom2ndUn.push(price);
+                        prom2ndUn.push(price - discount_2for);
                     }
                     
                 }
-                // else if(promType == 'Descuento'){
+                // else if(promType.includes('descuento')){
                 //     promDiscount.push(price);
                 // }
                 // else if(promType == 'none'){
@@ -472,12 +479,16 @@ document.addEventListener('DOMContentLoaded', function() {
             let importPromotion2x1 = promotionPrice(prom2x1, 0);
             let importPromotion2ndUn = promotionPrice(prom2ndUn,promotionDiscount);
             console.log('Importe a pagar en productos de promo 2x1: ',importPromotion2x1);
+            console.log(prom2x1);
             console.log('Importe a pagar en productos de promo 2da un: ',importPromotion2ndUn);
+            console.log(prom2ndUn);
 
 
             // Calcula el subtotal para el producto y agrégalo al subtotal total
-            const productoSubtotal = (price - discount) * quantity;
-            subtotalValue += productoSubtotal;
+            console.log('Precio = ',price);
+            const productoSubtotal = importPromotion2x1 + importPromotion2ndUn;
+            console.log('SubTotal del producto = ', productoSubtotal);
+            subtotalValue = productoSubtotal;
         }
     });
 
@@ -488,14 +499,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateTotal(){
         var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
-        var discount = parseFloat(discountElement.value).toFixed(2);
+        var discount_for_sale = parseFloat(discountElement.value).toFixed(2);
         var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);
 
         if (discountElement.value === '') {
-            discount = 0;
+            discount_for_sale = 0;
         }
         
-        total = parseFloat(subtotal * (1 - discount/100)).toFixed(2);
+        total = parseFloat(subtotal * (1 - discount_for_sale/100)).toFixed(2);
         totalElement.textContent = `$ ${total}`;
         TotalSuccess.textContent = `$ ${total}`;
 
