@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const rowProduct = document.createElement('div');
         rowProduct.id = `order_detaill-formset-${product.id}`
-        rowProduct.classList.add('border-bottom', 'd-flex', 'justify-content-between');
+        rowProduct.classList.add('border-bottom', 'd-flex', 'justify-content-between', 'pt-3');
     
         const headerrow = document.createElement('th');
         headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', function() {
         promotion.classList.add('text-600', 'fw-normal', 'fs--1');
         const promotionLabelItem = productHasPromotion(product.id, promotions);
         if(promotionLabelItem.length != 0){
+            promotion.classList.remove('text-600');
+            promotion.classList.add('text-success');
             promotion.textContent = `Promo: ${promotionLabelItem[1]}`;
             promotion.setAttribute('data-promotion',`${promotionLabelItem[1]}`);
             promotion.setAttribute('data-discount',`${promotionLabelItem[2]}`);
@@ -283,8 +285,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const promotionLabelItem = productHasPromotion(product.id, promotions);
         if(promotionLabelItem.length != 0){ 
             const promLabel = document.createElement('div');
-            promLabel.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-900');
-            promLabel.textContent = `Promo: ${promotionLabelItem[0]}`;
+            promLabel.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-success');
+            promLabel.textContent = `${promotionLabelItem[0]}`;
             rightColumn.appendChild(promLabel);
         }
         
