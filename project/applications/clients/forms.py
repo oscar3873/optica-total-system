@@ -32,6 +32,7 @@ class CustomerForm(PersonForm):
             field.required = True
         self.fields['has_credit_account'].required = False
         self.fields['h_insurance'].required = False
+        self.fields['address'].required = False
         self.fields['email'].required = False
 
         if self.instance.pk:
@@ -44,7 +45,8 @@ class CustomerForm(PersonForm):
         exclude = ['user_made','deleted_at', 'branch', 'credit_balance']
 
     def clean_email(self):
-        email = super().clean_email()
+        email = self.cleaned_data.get('email')
+        print(email)
         if not email:
             email = None
         return email

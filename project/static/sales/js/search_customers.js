@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         item.style.cursor = 'pointer';
                         item.classList.add('list-group-item', 'customers');
                         item.dataset.customerId = customer.id;
+                        item.dataset.customerCredit = customer.has_credit_account;
                         item.innerHTML = `
                         <div class="d-flex justify-content-between">
                             <h6>${customer.first_name} ${customer.last_name}</h6>
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             const customerId = item.dataset.customerId;
+            const customerCredit = item.dataset.customerCredit;
             idCustomerGlobal=customerId;
             const customerName = item.querySelector('h6').textContent;
 
@@ -69,12 +71,14 @@ document.addEventListener("DOMContentLoaded", function () {
             // Asegúrate de que todas las casillas de verificación tengan el mismo nombre
             checkboxCustomer.name = "customer"; 
             checkboxCustomer.value = customerId;
-            checkboxCustomer.id = `${customerName}`;
+            checkboxCustomer.id = `id_customer`;
+            checkboxCustomer.hidden = true;
             checkboxCustomer.checked = true;
             const label = document.createElement("label");
             const titleH5Customer = document.createElement('h5')
             const textContentCustomer = document.createTextNode(customerName);
             titleH5Customer.appendChild(textContentCustomer);
+            titleH5Customer.id = 'selecter_customer_title';
             label.classList.add('d-block', 'mt-2');
 
             label.appendChild(titleH5Customer)
@@ -86,6 +90,21 @@ document.addEventListener("DOMContentLoaded", function () {
             customerIdCheck.name = `selected_customer_id_${fieldIdentifier}`;
             customerIdCheck.value = customerId;
             searchInput.closest('form').appendChild(customerIdCheck);
+
+
+            let payment_method = document.getElementById('id_payment_method');
+            if (customerCredit == 1) {
+                var searchText = "Cuenta Corriente";
+                // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
+                for (var i = 0; i < payment_method.options.length; i++) {
+                    if (payment_method.options[i].text.includes(searchText)) {
+                        // Selecciona la opción encontrada
+                        payment_method.options[i].selected = true;
+                    }
+                }
+            }else{
+                payment_method.options[0].selected = true;
+            }
         });
     }
 

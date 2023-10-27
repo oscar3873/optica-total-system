@@ -15,9 +15,19 @@ urlpatterns = [
         PaymentMethodCreateView.as_view(),
         name = 'payment_method_create_view'
     ),
-        path(
+    path(
         'currency/',
         PaymentMethodView.as_view(),
         name = 'payment_method_view'
+    ),
+    path(
+        'list/',
+        SalesListView.as_view(),
+        name = 'sales_list_view'
+    ),
+    path(
+        'ajax_search_sales/',
+        ajax_search_sales,
+        name='ajax_search_sales'
     ),
 ]

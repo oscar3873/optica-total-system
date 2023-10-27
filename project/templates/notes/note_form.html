@@ -63,6 +63,7 @@
                                         <span>Título</span>
                                     </label>
                                     {{ form.subject }}
+                                    <small>Debe ingresar al menos <span class="text-warning">3 caracteres.</span></small>
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Este campo no puede estar vacio.</div>
                                     {% if form.subject.errors %}
@@ -72,35 +73,7 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <!-- <div class="row justify-content-sm-center">
-                                <div class="col-md-10">
-                                    <label for="id_subject"
-                                        class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Su Sucursal</span>
-                                    </label>
-                                    <div class="mb-3">
-                                        <h6 class="fs-1">{{ user.branch }}</h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row justify-content-md-center">
-                                <div class="col-md-10 my-2">
-                                    <label for="id_subject"
-                                        class="col col-form-label d-flex justify-content-between align-items-center">
-                                        <span>Sucursales</span>
-                                    </label>
-                                    <div class="mb-3">
-                                        {{ form.branch }}
-                                    </div>
-                                    {% if form.branch.errors %}
-                                    <div class="alert alert-warning" role="alert">
-                                        {% for error in form.branch.errors %}
-                                        {{ error }}
-                                        {% endfor %}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div> -->
+
                             <div class="row ">
                                 <div class="col-12">
                                     <label for="id_first_name"
@@ -120,7 +93,9 @@
                                                     <i class="fas fa-circle fa-stack-2x text-primary"></i>
                                                     <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
                                                 </span>
+                                                
                                             </div>
+                                            <small>Seleccione <span class="text-warning">uno o agregue un nuevo.</span></small>
                                         </div>
                                         <div>
                                             <label for="color-input-disabled"
@@ -130,6 +105,7 @@
                                             <input type="color" class=" form-control-color" id="color-input-disabled" {% if form %}value="{{ form.color_value.initial }}"{% endif %}
                                             title="Choose your color" disabled>
                                         </div>
+                                        <small>Color que <span class="text-warning">tiene el tipo seleccionado.</span></small>
                                         <div>
                                             
                                         </div>
@@ -183,10 +159,12 @@
                                 <label for="{{ label_form.label.id_for_label }}" class="form-label">Tipo:</label>
                                 {{ label_form.label }}
                             </div>
+                            <small>Debe ingresar al menos <span class="text-warning">3 caracteres.</span></small>
                             <div class="col-12 pt-3">
                                 <label for="{{ label_form.color.id_for_label }}" class="form-label">Color:</label>
                                 {{ label_form.color }}
                             </div>
+                            <small>Seleccione <span class="text-warning">un color para este tipo de nota.</span></small>
                         </div>
                         
                     </div>

@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function() {
 
 
@@ -9,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const rowProduct = document.createElement('div');
         rowProduct.id = `order_detaill-formset-${product.id}`
-        rowProduct.classList.add('border-bottom', 'd-flex', 'justify-content-between');
+        rowProduct.classList.add('border-bottom', 'd-flex', 'justify-content-between', 'pt-3');
     
         const headerrow = document.createElement('th');
         headerrow.classList.add('fs-1', 'col-8', 'text-700', 'px-0', 'pt-0');
@@ -18,6 +19,23 @@ document.addEventListener('DOMContentLoaded', function() {
         const divdetail = document.createElement('div');
         divdetail.classList.add('text-600', 'fw-normal', 'fs--1');
         divdetail.textContent = 'COD: ' + product.barcode;
+
+        const promotion = document.createElement('div');
+        promotion.id = `type-promotion-product-${product.id}`;
+        promotion.classList.add('text-600', 'fw-normal', 'fs--1');
+        const promotionLabelItem = productHasPromotion(product.id, promotions);
+        if(promotionLabelItem.length != 0){
+            promotion.classList.remove('text-600');
+            promotion.classList.add('text-success');
+            promotion.textContent = `Promo: ${promotionLabelItem[1]}`;
+            promotion.setAttribute('data-promotion',`${promotionLabelItem[1]}`);
+            promotion.setAttribute('data-discount',`${promotionLabelItem[2]}`);
+        }
+        else{
+            promotion.textContent = `Sin promociones activas`;
+            promotion.setAttribute('data-promotion',`none`);
+            promotion.setAttribute('data-discount','0');
+        }       
     
         const buttonRemove = document.createElement('a');
         buttonRemove.classList.add('text-danger');
@@ -32,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var priceSelected = product.sale_price.replace(/\$/g, "");
         pricerow.textContent = `$ ${parseFloat(priceSelected).toFixed(2)}`;
         pricerow.id = `price-${product.id}`;
+        pricerow.setAttribute('data-price',`${product.sale_price}`);
 
         const checkbox_form = document.createElement('input');
         checkbox_form.type = 'checkbox';
@@ -80,7 +99,9 @@ document.addEventListener('DOMContentLoaded', function() {
         discount.id = `id_order_detaill-${product.id}-discount`;
         discount.name = `order_detaill-${count}-discount`
         discount.type = 'number';
-        
+        discount.addEventListener("input", function() {
+            CalculateSubtotal();
+        });
         const discountLabel = document.createElement('label');
         discountLabel.setAttribute('for', discount.id );
         discountLabel.textContent = 'Descuento:';
@@ -92,6 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         quantityRowcontainer.appendChild(quantityRow);
 
         headerrow.appendChild(divdetail);
+        headerrow.appendChild(promotion);
         headerrow.appendChild(checkbox_form);
         headerrow.appendChild(quantityRowcontainer);
         headerrow.appendChild(discountLabel);
@@ -161,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataType: 'json',
                 success : function (allPromotions) {
                     promotions = allPromotions.promotions;
-                    console.log(promotions);
                 }
             });
 
@@ -259,6 +280,15 @@ document.addEventListener('DOMContentLoaded', function() {
         colMd4.textContent = `$ ${product.sale_price}`;
         
         rightColumn.appendChild(colMd4);
+
+        // Promotion
+        const promotionLabelItem = productHasPromotion(product.id, promotions);
+        if(promotionLabelItem.length != 0){ 
+            const promLabel = document.createElement('div');
+            promLabel.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-success');
+            promLabel.textContent = `${promotionLabelItem[0]}`;
+            rightColumn.appendChild(promLabel);
+        }
         
         // Checkboxes de los productos encontrados
         const inputElement = document.createElement('input');
@@ -377,30 +407,90 @@ document.addEventListener('DOMContentLoaded', function() {
     function CalculateSubtotal() {
         const checkboxes = document.querySelectorAll('#selected-products-list input[type="checkbox"]');
         let subtotalValue = 0.00;
-      
+
         checkboxes.forEach(checkbox => {
-          if (checkbox.checked) {
+        if (checkbox.checked) {
             // Si el checkbox está marcado, obtén el precio y la cantidad del producto relacionado
             const productId = checkbox.value;
-            const precio = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
-            const cantidad = parseFloat(document.getElementById(`id_order_detaill-${productId}-quantity`).value);
-            
+            const price = parseFloat(document.getElementById(`price-${productId}`).textContent.replace('$', ''));
+            const quantity = parseFloat(document.getElementById(`id_order_detaill-${productId}-quantity`).value);
+            const discountProductElement = document.getElementById(`id_order_detaill-${productId}-discount`);
+            const discountPercentage = discountProductElement.value;
+            let discount=0;
+            console.log(discountPercentage);
+            if(discountPercentage != '' && parseFloat(discountPercentage)>0){
+                discount = price*(discountPercentage/100);
+            }
+
+            const buyDetail = document.getElementById('selected-products-list');
+            // // Creo un array de los div que contienen el tipo de promocion
+            const promotions = Array.from(buyDetail.querySelectorAll('[id^="type-promotion-product-"]'));
+            let prom2x1 = [];
+            let prom2ndUn = [];
+            // let promDiscount = [];
+            // let promNone = [];
+            let promotionDiscount = 0;
+            // Recorro el array promotions para ver los productos y la promocion a la que pertenecen
+            promotions.forEach(promotionElement => {
+                let prodId = parseInt(promotionElement.getAttribute('id').match(/\d+/)[0], 10);
+                let promType = promotionElement.getAttribute('data-promotion');
+                if(promType != '2x1'){
+                    promotionDiscount = promotionElement.getAttribute('data-discount');
+                }
+                
+                let priceElement = buyDetail.querySelector(`#price-${prodId}`);
+                const price = parseInt(priceElement.getAttribute('data-price'));
+                // MODIFICAR AQUI EN CASO DE AGREGAR O CAMBIAR EL NOMBRE DE LOS TIPOS DE PROMOCION
+                if(promType == '2x1'){
+                    // Obtengo el valor del campo de cantidad de ese producto
+                    const quantityProductElement = buyDetail.querySelector(`#id_order_detaill-${prodId}-quantity`);
+                    const quantityProduct = quantityProductElement.value;
+                    /* Itero la cantidad de unidades de ese mismo producto, 
+                    agregando el precio a la lista de promocion a la que corresponde, por cada unidad del producto */
+                    console.log('cant: ',quantityProduct);
+                    for(let i=0; i<quantityProduct; i++){
+                        prom2x1.push(price);
+                    }
+                }
+                else if(promType == '2da un'){
+                    const quantityProductElement = buyDetail.querySelector(`#id_order_detaill-${prodId}-quantity`);
+                    const quantityProduct = quantityProductElement.value;
+                    for(let i=0; i<quantityProduct; i++){
+                        prom2ndUn.push(price);
+                    }
+                    
+                }
+                // else if(promType == 'Descuento'){
+                //     promDiscount.push(price);
+                // }
+                // else if(promType == 'none'){
+                //     const quantityProductElement = buyDetail.querySelector(`#id_order_detaill-${prodId}-quantity`);
+                //     const quantityProduct = quantityProductElement.value;
+                //     promNone.push(price*quantityProduct);
+                // }
+            });
+            let importPromotion2x1 = promotionPrice(prom2x1, 0);
+            let importPromotion2ndUn = promotionPrice(prom2ndUn,promotionDiscount);
+            console.log('Importe a pagar en productos de promo 2x1: ',importPromotion2x1);
+            console.log('Importe a pagar en productos de promo 2da un: ',importPromotion2ndUn);
+
+
             // Calcula el subtotal para el producto y agrégalo al subtotal total
-            const productoSubtotal = precio * cantidad;
+            const productoSubtotal = (price - discount) * quantity;
             subtotalValue += productoSubtotal;
-          }
-        });
-      
+        }
+    });
+
         subtotalElement.textContent = `$ ${subtotalValue.toFixed(2)}`;
 
         updateTotal();
-      }
+    }
 
     function updateTotal(){
         var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
         var discount = parseFloat(discountElement.value).toFixed(2);
         var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);
-        
+
         if (discountElement.value === '') {
             discount = 0;
         }
@@ -410,5 +500,89 @@ document.addEventListener('DOMContentLoaded', function() {
         TotalSuccess.textContent = `$ ${total}`;
 
         totalOfForms.value = total;
-    }
+    };
+
+
+    // Función para saber si un producto tiene una promocion asociada, devuelve un array con [nombrePromo,tipoDePromo]
+    // Devuelve un array ['nombreDeLaPromo','tipoDePromo','porcentajeDeDescuento']
+    function productHasPromotion(productId ,promotions){
+        let promotion = [];
+        for (var promotionName in promotions) {
+            if (promotions.hasOwnProperty(promotionName)) {
+                const products = promotions[promotionName][2];
+                if(products.includes(parseInt(productId))){
+                    promotion.push(promotionName);
+                    promotion.push(promotions[promotionName][0]);
+                    if(promotions[promotionName][1] != 0){
+                        promotion.push(promotions[promotionName][1]);
+                    }
+                }
+            }
+        }
+        return promotion;
+    };
+
+    // Recibe una lista de precios y un descuento, retorna la sumatoria de los precios a pagar
+    // Sirve para lista de promo '2x1' y promo '2da un'
+    // Para usar para promo 2x1, el parametro 'discount' debe ser cero, para la otra promo debe recibir el descuento correspondiente
+    function promotionPrice(list, discount){
+        console.log('---------entra a la funcion con tam: ',list.length);
+        console.log('discount = ',discount);
+        discount = parseFloat(discount);
+        // Ordena la lista de precios de mayor a menor
+        list.sort(function(a, b) {
+            return b - a;
+        });
+
+        let totalToPay = 0;
+        let sumSecondUnit = 0;
+        let totalDiscount = 0;
+        let size = list.length;
+
+        // Controla si la cantidad de elementos es par y si es distinta de 0
+        if(size!=0 && size%2==0){
+            console.log('ENTRA PAR');
+            // Recorre la lista de precios hasta el final
+            for(let i=0; i<size; i++){
+                console.log('iteración: ',i);
+                // Pregunta si aún no llega a la mitad de la lista
+                if(i<size/2){
+                    console.log('entra en la primera mitad');
+                    totalToPay = totalToPay + list[i];
+                }
+                // Si ya llegó a la mitad de la lista, pregunta si existe un descuento y si aún no llega al final de la lista
+                else if(discount!=0 && i<size){
+                    console.log('entra a calcular desc');
+                    // Suma de los precios de las segundas unidades de menor precio
+                    sumSecondUnit = sumSecondUnit + parseInt(list[i]);
+                    // Suma del descuento de cada precio de la lista
+                    totalDiscount = totalDiscount + (list[i]*(discount/100));
+                }
+            }
+        }
+        // Caso en que la cantidad es impar
+        else if(size!=0){
+            console.log('ENTRA IMPAR');
+            // Recorre la lista de precios hasta el final
+            for(let i=0; i<=size; i++){
+                if(i<=size/2){
+                    totalToPay = totalToPay + list[i];
+                }
+                // Si ya llegó a la mitad de la lista, pregunta si existe un descuento, si el tamaño de la lista es distinto de 1 y si aún no llega al final de la lista
+                else if(discount!=0 && size!=1 && i<size){
+                    sumSecondUnit = sumSecondUnit + parseInt(list[i]);
+                    totalDiscount = totalDiscount + (list[i]*(discount/100));
+                }
+            }
+        }
+        // Importe total a pagar de las segundas unidades ya con los descuentos aplicados
+        importWithDiscount = sumSecondUnit - totalDiscount;
+        // Se le suma, el importe total anterior, a la suma de los productos de mayor valor que no tienen descuento
+        totalToPay = totalToPay + importWithDiscount;
+        //  Retorna el importe a pagar de la lista de la promocion recibida
+        console.log('CONT TAM ',size, 'RETORNA: ',totalToPay);
+        return totalToPay;
+    };
+
+
 });

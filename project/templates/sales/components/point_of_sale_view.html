@@ -50,7 +50,7 @@
                 <!--TOTAL-->
                 <div class="card mb-2 p-4">
                     <div class="col-xl-12 text-center">
-                        <div class="fs-4 fw-semi-bold d-flex justify-content-between">
+                        <div class="display-3 fw-semi-bold d-flex justify-content-between">
                             Total:
                             <span class="text-success text-start" id="total-success">$ 0.00</span>
                         </div>
@@ -89,67 +89,6 @@
                                     <!-- Selected customer -->
                                 </div>
                             </form>
-                            <!-- Modal para crear Cliente Nuevo -->
-                            <div id="New-customer" class="modal fade" tabindex="-1" aria-labelledby="New-customerLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="New-customerLabel">Nuevo cliente</h5>
-                                        </div>
-                                        <div class="modal-body">
-                                        <form id="New-customer-form" method="post">
-                                            {% csrf_token %}
-                                            <div class="row justify-content-sm-center pb-2">
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.first_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
-                                                    {{ customer_form.first_name }}
-                                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
-                                                </div>
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.last_name.id_for_label }}" class="form-label col-form-label">Apellido:</label>
-                                                    {{ customer_form.last_name }}
-                                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>                                    
-                                                </div>
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.dni.id_for_label }}" class="form-label col-form-label">DNI/CUIL/CUIT:</label>
-                                                    {{ customer_form.dni }}
-                                                </div>
-                                                <div class="col-md-6 pt-3">
-                                                    <label for="{{ customer_form.birth_date.id_for_label }}" class="form-label col-form-label">Fecha de nacimiento:</label>
-                                                    {{ customer_form.birth_date }}
-                                                </div>
-                                                <div class="col-4 pt-3">
-                                                    <label for="{{ customer_form.phone_code.id_for_label }}" class="form-label col-form-label">Código:</label>
-                                                    {{ customer_form.phone_code }}
-                                                </div>
-                                                <div class="col-7 col-md-8 col-md-4 pt-3">
-                                                    <label for="{{ customer_form.phone_number.id_for_label }}" class="form-label col-form-label">Celular:</label>
-                                                    {{ customer_form.phone_number }}
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-sm-center pb-2">
-                                                <div class="col-12 pt-3">
-                                                    <label for="{{ customer_form.email.id_for_label }}" class="form-label col-form-label">Correo:</label>
-                                                    {{ customer_form.email }}
-                                                </div>
-                                                <div class="col-12 pt-3">
-                                                    <label for="{{ customer_form.address.id_for_label }}" class="form-label col-form-label">Domicilio:</label>
-                                                    {{ customer_form.address }}
-                                                </div>
-                                                <div class="d-flex align-items-center col pt-4 pt-sm-3">
-                                                    <label for="{{ customer_form.has_credit_account.id_for_label }}" class="form-label col-form-label pt-2 me-3">Tiene cuenta corriente:</label>
-                                                    {{customer_form.has_credit_account}}
-                                                </div>
-                                            </div>
-                                            <button class="btn btn-primary mt-4" type="button" id="save-customer">Guardar</button>
-                                        </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                         </div>
                     </div>
@@ -180,7 +119,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center bg-light py-3">
                         <div class="fw-semi-bold">Descuento</div>
-                        <div class="col-6">
+                        <div class="col-6 col-sm-3 col-lg-2">
                             {{sale_form.discount}}
                         </div>
                     </div>
@@ -193,11 +132,271 @@
                     </div>
                 </div>
                 <div class="card mt-2">
-                    <button type="submit" class="btn btn-primary p-2">
-                        <span class="fs-2">
-                            ir a pagar
-                        </span>
+                    <!--Boton modal de pago-->
+                    <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#payment">
+                        Pagar
                     </button>
+                    <!-- Modal para pagar -->
+                    <div id="payment" class="modal fade" tabindex="-1" aria-labelledby="paymentLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="paymentLabel">Confirmar pago</h5>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="row justify-content-sm-center pb-2">
+                                        <div class="col-12 pt-3">
+                                            <label for="{{ sale_form.amount.id_for_label }}" class="form-label col-form-label">Monto recibido</label>
+                                            {{sale_form.amount}}
+                                            <small>Ingrese el <span class="text-warning">monto</span>con el que confirmara la venta</small>
+                                        </div>
+                                        <div class="col-12 pt-3">
+                                            <label for="{{ sale_form.description.id_for_label }}" class="form-label col-form-label">Descripcion</label>
+                                            {{sale_form.description}}
+                                            <small>Se puede dejar un detalle al <span class="text-warning">finalizar</span> la venta</small>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-success mt-4">Realizar venta</button>
+                                    <!--Boton modal de orden de servicio-->
+                                    <button type="button" class="btn btn-warning mt-4" data-bs-target="#serviceOrder" data-bs-toggle="modal">Orden de servicio</button>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Modal orden de servicio-->
+                    <div class="modal fade" id="serviceOrder" aria-hidden="true" aria-labelledby="serviceOrderLabel" tabindex="-1">
+                        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="serviceOrder">Generar orden de servicio</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div>
+                                        <!--Correccion-->
+                                        <div class="px-sm-3 px-md-5">
+                                            <div class="text-center">
+                                                <h4>Lejos</h4>
+                                            </div>
+                                            <div class="table-responsive scrollbar">
+                                                <table class="table table-bordered overflow-hidden table-fixed" id="table_from_correction">
+                                                    <colgroup>
+                                                        <col class="col-3"/>
+                                                        <col class="col-3"/>
+                                                        <col class="col-3"/>
+                                                        <col class="col-3"/>
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr class="btn-reveal-trigger">
+                                                            <th scope="col"></th>
+                                                            <th class="text-center" scope="col">Esferico</th>
+                                                            <th class="text-center" scope="col">Cilindrico</th>
+                                                            <th class="text-center" scope="col">Eje</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="btn-reveal-trigger">
+                                                            <td>
+                                                                <p><strong>Derecho</strong></p>
+                                                            </td>
+                                                            <td>{{ order_servise.correction.lej_od_cilindrico }}</td>
+                                                            <td>{{ order_servise.correction.lej_od_esferico }}</td>
+                                                            <td>{{ order_servise.correction.lej_od_eje }}</td>
+                                                        </tr>
+                                                        <tr class="btn-reveal-trigger">
+                                                            <td>
+                                                                <p><strong>Izquierdo</strong></p>
+                                                            </td>
+                                                            <td>{{ order_servise.correction.lej_oi_esferico }}</td>
+                                                            <td>{{ order_servise.correction.lej_oi_cilindrico }}</td>
+                                                            <td>{{ order_servise.correction.lej_oi_eje }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="text-center">
+                                                <h4>Cerca</h4>
+                                            </div>
+                                            <div class="table-responsive scrollbar">
+                                                <table class="table table-bordered overflow-hidden" id="table_from_correction">
+                                                    <colgroup>
+                                                        <col class="col-3"/>
+                                                        <col class="col-3"/>
+                                                        <col class="col-3"/>
+                                                        <col class="col-3"/>
+                                                    </colgroup>
+                                                    <thead>
+                                                        <tr class="btn-reveal-trigger">
+                                                            <th scope="col"></th>
+                                                            <th class="text-center" scope="col">Esferico</th>
+                                                            <th class="text-center" scope="col">Cilindrico</th>
+                                                            <th class="text-center" scope="col">Eje</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="btn-reveal-trigger">
+                                                            <td>
+                                                                <p><strong>Derecho</strong></p>
+                                                            </td>
+                                                            <td>{{ order_servise.correction.cer_od_cilindrico }}</td>
+                                                            <td>{{ order_servise.correction.cer_od_esferico }}</td>
+                                                            <td>{{ order_servise.correction.cer_od_eje }}</td>
+                                                        </tr>
+                                                        <tr class="btn-reveal-trigger">
+                                                            <td>
+                                                                <p><strong>Izquierdo</strong></p>
+                                                            </td>
+                                                            <td>{{ order_servise.correction.cer_oi_esferico }}</td>
+                                                            <td>{{ order_servise.correction.cer_oi_cilindrico }}</td>
+                                                            <td>{{ order_servise.correction.cer_oi_eje }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- </form> -->
+                                        </div>
+                                        <!--Caracteristicas-->
+                                        <div class="px-sm-3 px-md-5">
+                                            <!-- <form> -->
+                                            <div class="row">
+                                                <div class="col position-relative text-center">
+                                                    <div class="row">
+                                                        <h5 class="mt-2 mb-5">Materiales</h5>
+                                                    </div>
+                                                    {{ order_servise.material.material_choice }}
+                                                </div>
+                                                <div class="col form-check-reverse text-center">
+                                                    <div class="row">
+                                                        <h5 class="mt-2 mb-5">Color</h5>
+                                                    </div>
+                                                    {{ order_servise.color.color_choice }}
+                                                </div>
+                                                <div class="col text-center">
+                                                    <div class="row">
+                                                        <h5 class="mt-2 mb-5">Cristales</h5>
+                                                    </div>
+                                                    {{ order_servise.cristal.cristal_choice }}
+                                                </div>
+                                                <div class="col text-center">
+                                                    <div class="row">
+                                                        <h5 class="mt-2 mb-4">Tratamiento de Cristales</h5>
+                                                    </div>
+                                                    {{ order_servise.tratamiento.tratamient_choice }}
+                                                </div>
+                                            </div>
+                                            <!-- </form> -->
+                                        </div>
+                                        <!--Pupilar-->
+                                        <div class="px-sm-3 px-md-5">
+                                            <!-- <form class="form-validation"> -->
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="text-center">
+                                                        <h4>Lejos</h4>
+                                                    </div>
+                                                    <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col"></th>
+                                                                <th scope="col">Izquierdo</th>
+                                                                <th scope="col">Derecho</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <p><strong>Nanopupilar</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.pupilar.lej_oi_nanopupilar }}</td>
+                                                                <td>{{ order_servise.pupilar.lej_od_nanopupilar }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <p><strong>Pelicula</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.pupilar.lej_oi_pelicula }}</td>
+                                                                <td>{{ order_servise.pupilar.lej_od_pelicula }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <p><strong>Total</strong>
+                                                                </td>
+                                                                <td colspan="2">{{ order_servise.pupilar.lej_total }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="text-center">
+                                                        <h4>Cerca</h4>
+                                                    </div>
+                                                    <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                                                        <thead>
+                                                            <tr>
+                                                                <th scope="col"></th>
+                                                                <th scope="col">Izquierdo</th>
+                                                                <th scope="col">Derecho</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <p><strong>Nanopupilar</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.pupilar.cer_oi_nanopupilar }}</td>
+                                                                <td>{{ order_servise.pupilar.cer_od_nanopupilar }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <p><strong>Pelicula</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.pupilar.cer_oi_pelicula }}</td>
+                                                                <td>{{ order_servise.pupilar.cer_od_pelicula }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <p><strong>Total</strong></p>
+                                                                </td>
+                                                                <td colspan="2">{{ order_servise.pupilar.cer_total }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- </form> -->
+                                        </div>
+                                        <!--Diagnostico-->
+                                        <div class="px-sm-3 px-md-5">
+                                            <div class="row justify-content-sm-center pb-2">
+                                                    <div class="container mb-2">
+                                                        <label for="id_diagnostic" class="form-label">Diagnostico</label>
+                                                        {{order_servise.service.diagnostic}}
+                                                    </div>
+                                                    <div class="container mb-2">
+                                                        <label for="id_armazon" class="form-label">Armazon</label>
+                                                        {{order_servise.service.armazon}}
+                                                    </div>
+                                                    <div class="container">
+                                                        <label for="id_observation" class="form-label">Observaciones</label>
+                                                        {{order_servise.service.observations}}
+                                                    </div>
+                                            </div>  
+                                            
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-secondary" data-bs-target="#payment" type="button" data-bs-toggle="modal">Volver a confirmar la venta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <!--SECCION IZQUIERDA-->
@@ -225,45 +424,143 @@
                         </div>
                     </div>
                 </div>
-                <!--METODOS DE PAGO-->
-                <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-6">
+                        <!--METODOS DE PAGO-->
+                        <div class="card mb-3">
+                            <div class="card-header bg-light">
+                                <h5>Metodos de pago</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <label for="">Seleccione el metodo de pago</label>
+                                    <div class="col-8">
+                                        <div class="form-group">
+                                            {{sale_form.payment_method}}
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <!--Boton para modal de metodo de pago-->
+                                        <button id="addPaymentMethod" class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="tooltip" data-bs-target="#payment-method-modal" data-bs-original-title="Añadir nueva metodo de pago" style="cursor: pointer"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <!--Facturacion-->
+                        <div class="card mb-3">
                     <div class="card-header bg-light">
-                        <h5>Metodos de pago</h5>
+                        <h5>Facturacion</h5>
                     </div>
                     <div class="card-body">
                         <div class="row align-items-center">
-                            <label for="">Seleccione el metodo de pago</label>
+                            <label for="">Seleccione el tipo de factura</label>
                             <div class="col-8">
                                 <div class="form-group">
-                                    {{sale_form.payment_method}}
+                                    {{sale_form.has_proof}}
                                 </div>
                             </div>
-                            <div class="col-4">
-                                <button id="addPaymentMethod" class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="tooltip" data-bs-target="#payment-method-modal" data-bs-original-title="Añadir nueva metodo de pago" style="cursor: pointer"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span></button>
-                            </div>
-
-                            <div>
-                                <p>input para el monto</p>
-                                {{sale_form.amount}}
-                            </div>
-                            
+                        </div>
+                    </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- ORDEN DE SERVICIO -->
-
-                {{order_servise.pupilar}}
-                {{order_servise.correction}}
-                {{order_servise.material}}
-                {{order_servise.color}}
-                {{order_servise.cristal}}
-                {{order_servise.tratamiento}}
-                {{order_servise.service}}
-
             </div>
         </div>
     </form>
+
+            <!-- Modal para crear el metod de pago-->
+            <div class="modal fade" id="payment-method-modal" tabindex="-1" aria-labelledby="payment-method-modalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="payment-method-modalLabel">Añadir nuevo metodo de pago</h5>
+                        </div>
+                        <div class="modal-body">
+                            <form id="payment-method-form" method="post">
+                                {% csrf_token %}
+                                <div class="pb-3">
+                                    <label for="{{ payment_method_form.name.id_for_label }}" class="form-label">Nombre:</label>
+                                    {{payment_method_form.name}}
+                                </div>
+                                <div class="pb-3">
+                                    <label for="{{ payment_method_form.type_method.id_for_label }}" class="form-label">Tipo:</label>
+                                    {{payment_method_form.type_method}}
+                                </div>
+                                <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
+                                <button class="btn btn-primary" type="button" id="save-payment-method">Guardar</button>
+                                <!-- Fin del formulario de creación de Currency-->
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal para crear Cliente Nuevo -->
+            <div id="New-customer" class="modal fade" tabindex="-1" aria-labelledby="New-customerLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="New-customerLabel">Nuevo cliente</h5>
+                        </div>
+                        <div class="modal-body">
+                        <form id="New-customer-form" method="post">
+                            {% csrf_token %}
+                            <div class="row justify-content-sm-center pb-2">
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.first_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
+                                    {{ customer_form.first_name }}
+                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.last_name.id_for_label }}" class="form-label col-form-label">Apellido:</label>
+                                    {{ customer_form.last_name }}
+                                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>                                    
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.dni.id_for_label }}" class="form-label col-form-label">DNI/CUIL/CUIT:</label>
+                                    {{ customer_form.dni }}
+                                </div>
+                                <div class="col-md-6 pt-3">
+                                    <label for="{{ customer_form.birth_date.id_for_label }}" class="form-label col-form-label">Fecha de nacimiento:</label>
+                                    {{ customer_form.birth_date }}
+                                </div>
+                                <div class="col-4 pt-3">
+                                    <label for="{{ customer_form.phone_code.id_for_label }}" class="form-label col-form-label">Código:</label>
+                                    {{ customer_form.phone_code }}
+                                </div>
+                                <div class="col-7 col-md-8 col-md-4 pt-3">
+                                    <label for="{{ customer_form.phone_number.id_for_label }}" class="form-label col-form-label">Celular:</label>
+                                    {{ customer_form.phone_number }}
+                                </div>
+                            </div>
+                            <div class="row justify-content-sm-center pb-2">
+                                <div class="col-12 pt-3">
+                                    <label for="{{ customer_form.email.id_for_label }}" class="form-label col-form-label">Correo:</label>
+                                    {{ customer_form.email }}
+                                </div>
+                                <div class="col-12 pt-3">
+                                    <label for="{{ customer_form.address.id_for_label }}" class="form-label col-form-label">Domicilio:</label>
+                                    {{ customer_form.address }}
+                                </div>
+                                <div class="d-flex align-items-center col pt-4 pt-sm-3">
+                                    <label for="{{ customer_form.has_credit_account.id_for_label }}" class="form-label col-form-label pt-2 me-3">Tiene cuenta corriente:</label>
+                                    {{customer_form.has_credit_account}}
+                                </div>
+                            </div>
+                            <button class="btn btn-primary mt-4" type="button" id="save-customer">Guardar</button>
+                        </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
     <!-- ===============================================-->
     <!--   Fin Card con la presentacion de la caja-->
@@ -274,33 +571,3 @@
 <!-- ===============================================-->
 <!--    Fin Contentenedor del block main-->
 <!-- ===============================================-->
-
-<!-- Modal para crear el metod de pago-->
-<div class="modal fade" id="payment-method-modal" tabindex="-1" aria-labelledby="payment-method-modalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="payment-method-modalLabel">Añadir nuevo metodo de pago</h5>
-            </div>
-            <div class="modal-body">
-                <form id="payment-method-form" method="post">
-                    {% csrf_token %}
-                    <div class="pb-3">
-                        <label for="{{ payment_method_form.name.id_for_label }}" class="form-label">Nombre:</label>
-                        {{payment_method_form.name}}
-                    </div>
-                    <div class="pb-3">
-                        <label for="{{ payment_method_form.type_method.id_for_label }}" class="form-label">Tipo:</label>
-                        {{payment_method_form.type_method}}
-                    </div>
-                    <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                    <button class="btn btn-primary" type="button" id="save-payment-method">Guardar</button>
-                    <!-- Fin del formulario de creación de Currency-->
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>

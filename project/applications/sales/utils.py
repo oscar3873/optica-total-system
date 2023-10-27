@@ -205,5 +205,7 @@ def process_service_order(request, customer):
             customer
         )
         messages.success(request, 'Se ha registrado una nueva orden de servicio con exito.')
+        return True # todo OK con el formulario
     else: 
         print(correction_form.errors)
+    return False # hubo un error
