@@ -69,23 +69,24 @@ document.addEventListener("DOMContentLoaded", function () {
             // Asegúrate de que todas las casillas de verificación tengan el mismo nombre
             checkboxCustomer.name = "customer"; 
             checkboxCustomer.value = customerId;
-            checkboxCustomer.id = `${customerName}`;
+            checkboxCustomer.id = `id_customer`;
             checkboxCustomer.checked = true;
             const label = document.createElement("label");
             const titleH5Customer = document.createElement('h5')
             const textContentCustomer = document.createTextNode(customerName);
             titleH5Customer.appendChild(textContentCustomer);
+            titleH5Customer.id = 'selecter_customer_title';
             label.classList.add('d-block', 'mt-2');
 
             label.appendChild(titleH5Customer)
             label.appendChild(checkboxCustomer);
             checkboxContainer.appendChild(label);
             // Añadir el ID del customer al formulario
-            const customerIdCheck = document.createElement('input');
-            customerIdCheck.type = 'hidden';
-            customerIdCheck.name = `selected_customer_id_${fieldIdentifier}`;
-            customerIdCheck.value = customerId;
-            searchInput.closest('form').appendChild(customerIdCheck);
+            // const customerIdCheck = document.createElement('input');
+            // customerIdCheck.type = 'hidden';
+            // customerIdCheck.name = `selected_customer_id_${fieldIdentifier}`;
+            // customerIdCheck.value = customerId;
+            // searchInput.closest('form').appendChild(customerIdCheck);
         });
     }
 
