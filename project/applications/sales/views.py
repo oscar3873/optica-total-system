@@ -2,6 +2,7 @@ import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.generic import *
+from django.db import transaction
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -50,7 +51,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         return context
 
-
+    @transaction.atomic
     def form_valid(self, form):
         formsets = form
         saleform = SaleForm(self.request.POST)
@@ -109,13 +110,14 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.save()
 
         if product_cristal and customer:
-            process_service_order(self.request, customer)
+            success_service_order = process_service_order(self.request, customer)
             # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
 
     def form_invalid(self, form):
+        print(form.errors)
         messages.error(self.request, "Error. Verifique los datos.")
         return super().form_invalid(form)
 

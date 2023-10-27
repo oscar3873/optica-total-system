@@ -115,7 +115,6 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
                     customer = customer,
                     user_made=user
                 )
-
             if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX                
                 data = {
                     'id': customer.id,
@@ -124,7 +123,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
                     'phone_number': customer.phone_number,
                     'phone_code': customer.phone_code,
                     'dni': customer.dni,
-                    'has_credit_account': '$ %s' % customer.credit_balance if customer.has_credit_account else 0,
+                    'credit_balance': '$ %s' % customer.credit_balance if customer.has_credit_account else None,
+                    'has_credit_account': customer.has_credit_account
                 }
                 return JsonResponse({'customer': data})
             
@@ -132,6 +132,9 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
+        print(form.error)
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX  
+            return JsonResponse({'error': form.error})
         messages.error(self.request, 'Por favor, verifique los campos.')
         return super().form_invalid(form)
 
