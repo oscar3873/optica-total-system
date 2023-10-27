@@ -199,13 +199,12 @@ def process_service_order(request, customer):
         ):
 
         # Create the main form instance
-        ServiceOrder.objects.create_lab(
+        service = ServiceOrder.objects.create_lab(
             request.user, service_order, correction_form, material_form,
             color_form, cristal_form, tratamiento_form, pupilar_form,
             customer
         )
-        messages.success(request, 'Se ha registrado una nueva orden de servicio con exito.')
-        return True # todo OK con el formulario
+
+        print(service)
     else: 
         print(correction_form.errors)
-    return False # hubo un error

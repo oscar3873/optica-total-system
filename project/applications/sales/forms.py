@@ -91,7 +91,7 @@ OrderDetailFormset = forms.inlineformset_factory(
     Sale,
     OrderDetail,
     form=OrderDetailForm,
-    extra = 0,
+    extra = 1,
 )
 
 """

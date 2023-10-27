@@ -1,5 +1,7 @@
+var button_serviceOrder = document.querySelector("[data-bs-target='#serviceOrder']");
 document.addEventListener('DOMContentLoaded', function() {
     const saveCustomer = document.getElementById('save-customer');
+
 
     saveCustomer.addEventListener('click', function() {
         const formData = new FormData(document.getElementById('New-customer-form'));
@@ -47,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     let payment_method = document.getElementById('id_payment_method');
 
                     if (customer_data.has_credit_account) {
+                        
+                        button_serviceOrder.hidden = false;
+                
                         var searchText = "Cuenta Corriente";
                         // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                         for (var i = 0; i < payment_method.options.length; i++) {
@@ -57,6 +62,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }else{
                         payment_method.options[0].selected = true;
+
+                        button_serviceOrder.hidden = true;
                     }
 
                     // Cierra el modal al guardar exitosamente
