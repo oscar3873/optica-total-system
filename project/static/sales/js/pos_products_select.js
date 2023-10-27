@@ -432,7 +432,10 @@ document.addEventListener('DOMContentLoaded', function() {
             promotions.forEach(promotionElement => {
                 let prodId = parseInt(promotionElement.getAttribute('id').match(/\d+/)[0], 10);
                 let promType = promotionElement.getAttribute('data-promotion');
-                promotionDiscount = promotionElement.getAttribute('data-discount');
+                if(promType != '2x1'){
+                    promotionDiscount = promotionElement.getAttribute('data-discount');
+                }
+                
                 let priceElement = buyDetail.querySelector(`#price-${prodId}`);
                 const price = parseInt(priceElement.getAttribute('data-price'));
                 // MODIFICAR AQUI EN CASO DE AGREGAR O CAMBIAR EL NOMBRE DE LOS TIPOS DE PROMOCION
@@ -522,6 +525,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Para usar para promo 2x1, el parametro 'discount' debe ser cero, para la otra promo debe recibir el descuento correspondiente
     function promotionPrice(list, discount){
         console.log('---------entra a la funcion con tam: ',list.length);
+        console.log('discount = ',discount);
         discount = parseFloat(discount);
         // Ordena la lista de precios de mayor a menor
         list.sort(function(a, b) {
@@ -538,12 +542,15 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('ENTRA PAR');
             // Recorre la lista de precios hasta el final
             for(let i=0; i<size; i++){
+                console.log('iteración: ',i);
                 // Pregunta si aún no llega a la mitad de la lista
                 if(i<size/2){
+                    console.log('entra en la primera mitad');
                     totalToPay = totalToPay + list[i];
                 }
                 // Si ya llegó a la mitad de la lista, pregunta si existe un descuento y si aún no llega al final de la lista
                 else if(discount!=0 && i<size){
+                    console.log('entra a calcular desc');
                     // Suma de los precios de las segundas unidades de menor precio
                     sumSecondUnit = sumSecondUnit + parseInt(list[i]);
                     // Suma del descuento de cada precio de la lista
@@ -571,6 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Se le suma, el importe total anterior, a la suma de los productos de mayor valor que no tienen descuento
         totalToPay = totalToPay + importWithDiscount;
         //  Retorna el importe a pagar de la lista de la promocion recibida
+        console.log('CONT TAM ',size, 'RETORNA: ',totalToPay);
         return totalToPay;
     };
 
