@@ -3,6 +3,7 @@ from django.db import models
 from applications.clients.models import Customer
 from applications.products.models import Product
 from applications.core.models import BaseAbstractWithUser
+from applications.branches.models import Branch
 
 # Create your models here.
 
@@ -57,14 +58,16 @@ class Sale(BaseAbstractWithUser):
         ('CANCELADO','CANCELADO')
     ]
 
-    state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False)
+    date_time_sale = models.DateTimeField(auto_now_add=True, verbose_name='Fecha')
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     receipt = models.ForeignKey(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
-    total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False)
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True, verbose_name='Cliente')
+    state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False, verbose_name='Estado')
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
     discount = models.PositiveIntegerField(verbose_name='Descuento',  null=True, blank=True)
-    missing_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True)
+    missing_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True, verbose_name="Saldo")
+    total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False, verbose_name="Total")
+    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
 
 class OrderDetail(BaseAbstractWithUser):
     """
