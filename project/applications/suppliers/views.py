@@ -1,11 +1,12 @@
-from django.http import HttpResponseRedirect
+from typing import Any
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView,DeleteView)
 from django.shortcuts import render
 
 from applications.core.mixins import CustomUserPassesTestMixin
-from .forms import SupplierForm
-from .models import Supplier, Brand_Supplier
+from .forms import BankForm, SupplierForm
+from .models import *
 #from .core.utils import obtener_nombres_de_campos
 from applications.employes.utils import obtener_nombres_de_campos
 
@@ -14,6 +15,12 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
     template_name = 'suppliers/supplier_create_page.html'
     success_url = reverse_lazy('suppliers_app:list_supplier')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bank_form'] = BankForm
+        context['update_create'] = 'Registrar un proveedor'
+        return context
 
     def form_valid(self, form):
         supplier = form.save(commit=False)
@@ -28,8 +35,14 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_update_page.html'
+    template_name = 'suppliers/supplier_create_page.html'
     success_url = reverse_lazy('suppliers_app:list_supplier')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bank_form'] = BankForm
+        context['update_create'] = f'Actualizar proveedor: {self.get_object().name.upper()}'
+        return context
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
@@ -102,3 +115,20 @@ class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
         self.object = self.get_object()
         self.object.delete()  # Realiza la eliminación suave
         return HttpResponseRedirect(self.get_success_url())
+
+
+def set_bank_supplier(request):
+    bank = BankForm(request.POST)
+    if bank.is_valid():
+        bank.save(commt=False)
+        bank.user_made = request.user
+        bank.save()
+    
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX 
+        bank_data = {
+            'id': bank.pk,
+            'name': bank.name,
+            'cbu': bank.cbu,
+            'cuit': bank.cuit
+        }
+    return JsonResponse(bank_data)

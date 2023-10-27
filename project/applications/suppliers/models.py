@@ -1,7 +1,7 @@
 from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
-from applications.products.models import Product, Brand
+from applications.products.models import Brand
 from .managers import SupplierManager
 
 """ 
@@ -29,15 +29,6 @@ class Supplier(BaseAbstractWithUser):
         return f'{self.name} | {self.phone_number} | {self.email}'
     
 
-class Product_Supplier(BaseAbstractWithUser):
-    """
-    Clase intermedia de Producto y Proveedor almacenando sus PK para sus posteriores analisis
-    """
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name='product_suppliers', null=True, verbose_name='Producto')
-    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT, related_name='product_suppliers', null=True, verbose_name='Proveedor')
-
-    def __str__(self) -> str:
-        return f'Producto: {self.product}\nProveedor: {self.supplier}'
 
 class Brand_Supplier(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='brand_suppliers', null=True, verbose_name='Proveedor')
@@ -50,7 +41,7 @@ class Brand_Supplier(models.Model):
         return f'{self.supplier.business_name} | {self.brand.name}'
     
 
-class Bank(models.Model):
+class Bank(BaseAbstractWithUser):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='banks')
     cbu = models.CharField(max_length=20, verbose_name='CBU')
     bank_name = models.CharField(max_length=50, verbose_name='Nombre del Banco')

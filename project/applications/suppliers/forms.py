@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Brand_Supplier, Supplier, Product_Supplier
+from .models import Bank, Brand_Supplier, Supplier#, Product_Supplier
 from applications.products.models import Brand, Product
 from applications.core.mixins import ValidationFormMixin
 from django.core.validators import RegexValidator
@@ -69,36 +69,22 @@ class SupplierForm(ValidationFormMixin):
         super().__init__(*args, **kwargs)
         
         if self.instance.pk:  # Update
-            related_products = self.instance.brand_suppliers.values_list('brand__id', flat=True)
-            self.fields['brands'].initial = related_products
+            related_brands = self.instance.brand_suppliers.values_list('brand__id', flat=True)
+            self.fields['brands'].initial = related_brands
 
     def clean_name(self):
         name = self.cleaned_data['name']
         self.validate_length(name, 3, 'El nombre del proveedor debe tener al menos 3 carácteres.')
         return name
-    
 
-    """ def clean_phone_number(self):
-        phone_number = self.cleaned_data['phone_number']
+class BankForm(ValidationFormMixin):
 
-        # Expresión regular para validar números de teléfono de varios países.
-        phone_number_pattern = re.compile(r'^(?:\+?[0-9]{1,3})?[0-9]{6,}$')
-
-        if not phone_number_pattern.match(str(phone_number)):
-            raise forms.ValidationError("Ingrese un número de teléfono válido.")
-
-        return phone_number
-    """
-    """ def clean_email(self):
-        email = self.cleaned_data['email']
-
-        # Utiliza el validador de Django para validar la dirección de correo electrónico.
-        email_validator = EmailValidator()
-
-        try:
-            email_validator(email)
-        except forms.ValidationError:
-            raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
-
-        return email
-"""
+    class Meta:
+        model = Bank
+        fields = ['cbu', 'bank_name', 'cuit']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['required'] = ''

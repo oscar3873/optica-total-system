@@ -35,31 +35,74 @@
   <!-- ===============================================-->
 
   {% if supplier %}
-  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!--Card-->
-    <div class="card bg-transparent-50 overflow-hidden">
-      <div class="card-header position-relative">
-        <div class="bg-holder d-none d-md-block bg-card z-index-1"
-          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-        </div>
-        <!--/.bg-holder-->
-
-        <div class="position-relative z-index-2">
-          <div>
-            <p class="fs--2 mb-0">{{supplier.name}} </p>
-						<p class="fs--2 mb-0">{{supplier.phone_number}} </p>
-						<p class="fs--2 mb-0">{{supplier.email}} </p>
+    <div class="card mb-3 col-sm-10 col-lg-8">
+      <div class="card-header bg-light">
+          <div class="row pb-md-0">
+              <div class="col-12 col-sm-6">
+                <h5 class="mb-2"> {{supplier.name}}</h5>
+              </div>
           </div>
-        </div>
+          <div class="row mt-2">
+              <div class="col">
+                  {% if request.user.is_staff %}
+                  <a class="btn btn-falcon-default btn-sm" href="{% url 'suppliers_app:new_supplier' %}">
+                      <span class="fas fa-plus fs--2 me-1"></span>
+                      Nuevo Proveedor
+                  </a>
+                  <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
+                      data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <span class="fas fa-ellipsis-h"></span>
+                  </button>
+                  <div class="dropdown-menu">
+                      <a class="dropdown-item" href="{% url 'suppliers_app:update_supplier' supplier.id %}">Editar</a>
+                      <div class="dropdown-divider"></div>
+                      <a class="dropdown-item text-danger" href="{% url 'suppliers_app:supplier_delete' supplier.id %}">Eliminar</a>
+                  </div>
+                  {% endif %}
+              </div>
+          </div>
       </div>
-      <div class="card-body">
-        <div class="d-flex pb-3 justify-content-between align-items-center">
-          <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
-          
+      <div class="card-body border-top">            
+        <div class="row">
+            <div class="col-lg-6 mb-3 mb-sm-0">
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="mb-3">Datos del Proveedor</h5>
+                    </div>
+                    <div class="col-12 d-flex justify-content-between">
+                        <p class="fw-normal fw-semi-bold mb-1">Teléfono:</p>
+                        <span class="ms-3 text-800 fw-bold"><a href="https://wa.me/{{supplier.phone_code}}{{ supplier.phone_number }}">{{supplier.phone_code}}{{ supplier.phone_number }}</a></span>
+                    </div>
+                    <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                      <p class="fw-normal fw-semi-bold mb-1">Email:</p>
+                      <span class="ms-3 text-800 fw-bold">{{supplier.email}}</span>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center ">
+                      {% comment %} <h5 class="mb-3">Bancos:&nbsp;
+                          {% if request.user.is_staff %}
+                          <a href="{% url 'suppliers_app:supplier_update' supplier.id %}"></a>
+                          {% endif %}
+                      </h5>
+                      {% if supplier.customer_insurance.all %}
+                      {% for banco in customer.customer_insurance.all %}
+                      <p class="ms-sm-2 text-900 fw-bold d-inline">
+                          <a href="{% url 'suppliers_app:hi_detail' insurance.h_insurance.pk %}"
+                              class="text-decoration-none">
+                              {{ insurance.h_insurance.name }}
+                          </a>
+                      </p>
+                      {% endfor %}
+                      {% else %}
+                      <p class="fw-lighter fst-italic">No hay bancos asociados</p>
+                      {% endif %} {% endcomment %}
+                  </div>
+              </div>
+            </div>
         </div>
       </div>
     </div>
-  </div>
 
   {% else %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
