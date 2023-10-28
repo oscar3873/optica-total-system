@@ -103,14 +103,14 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         if proof_type:
             generate_proof(proof_type)
 
-        process_customer(customer, sale, payment_methods, total, amount, self.request.user)
+        process_customer(customer, sale, payment_methods, total, product_cristal, amount, self.request.user)
 
         for order in order_details:
             order.sale = sale
             order.save()
 
         if product_cristal and customer:
-            success_service_order = process_service_order(self.request, customer)
+            process_service_order(self.request, customer)
             # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 
         messages.success(self.request, "Se ha generado la venta con éxito!")

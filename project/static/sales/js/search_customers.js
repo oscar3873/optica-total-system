@@ -1,4 +1,5 @@
 let idCustomerGlobal;
+
 document.addEventListener("DOMContentLoaded", function () {
     
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
@@ -94,6 +95,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             let payment_method = document.getElementById('id_payment_method');
             if (customerCredit == 1) {
+
+                button_serviceOrder.hidden = false;
+
                 var searchText = "Cuenta Corriente";
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                 for (var i = 0; i < payment_method.options.length; i++) {
@@ -104,6 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }else{
                 payment_method.options[0].selected = true;
+
+                button_serviceOrder.hidden = true;
+
             }
         });
     }
