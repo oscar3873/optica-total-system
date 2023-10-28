@@ -3,8 +3,7 @@ from decimal import Decimal
 from django.contrib import messages
 
 from project.settings.base import DATE_NOW
-from applications.cashregister.models import CashRegister, Currency, Movement, Transaction
-from django.contrib import messages
+from applications.cashregister.models import CashRegister, Currency, Movement
 
 from applications.clients.forms import *
 from .models import *
@@ -19,7 +18,11 @@ def get_total_and_products(formset, all_products_to_sale):
     quantity = formset.cleaned_data['quantity']
     for _ in range(quantity):
         total += product.sale_price
+
+    product.stock -= quantity
+    product.save()
     return total
+
 
 def process_formset(formset, promotional_products):
     """Procesa el un producto que viene del formset y retorna un detalle de venta (order_detail)"""
@@ -28,7 +31,7 @@ def process_formset(formset, promotional_products):
         quantity = formset.cleaned_data['quantity']
         discount = formset.cleaned_data['discount'] or 0
 
-        price = product.sale_price * Decimal((1 + discount/100))
+        price = product.sale_price
 
         order_detail = OrderDetail.objects.create(
             product=product, 
@@ -49,10 +52,18 @@ def sumFirst_N_Elements(lst, n):
     return sum(sorted(lst)[:n])
 
 # Función para procesar productos en una promoción
-def process_promotion(promotional_products, promotion, products, discount_promo):
-    discounted_prices = []
+def process_promotion(promotional_products, promotion, products_with_discountPromo, discount_promo):
+    discounted_prices = [] 
 
-    for product, discount in products:
+    list_products = []
+
+    for elemento in products_with_discountPromo:
+        if isinstance(elemento, tuple):
+            list_products.append(elemento)
+        else:
+            percentage_desc_promo = elemento
+
+    for product, discount in list_products: # _ SERIA EL DESCUENTO DE LA PROPIA PROMO
         original_price = product.sale_price
         discounted_price = original_price * Decimal(1 - (discount / 100))
         discounted_prices.append(discounted_price)
@@ -62,16 +73,27 @@ def process_promotion(promotional_products, promotion, products, discount_promo)
     promotional_products[promotion].sort()
 
     if len(promotional_products[promotion]) > 1:
-        quantity_elem = len(promotional_products[promotion])
-        if quantity_elem % 2 != 0:
-            quantity_elem = quantity_elem // 2 - 1
-        else: 
-            quantity_elem = quantity_elem // 2
+        if '2x1' in promotion.type_prom.name:
+            quantity_elem = len(promotional_products[promotion])
+            if quantity_elem % 2 != 0:
+                quantity_elem = quantity_elem // 2 - 1
+            else: 
+                quantity_elem = quantity_elem // 2
 
-        discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem))
-        """
-        discount_promo = [ $, $, $ ...]
-        """
+            discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem))
+
+        elif '2da' in promotion.type_prom.name:
+            quantity_elem = len(promotional_products[promotion])
+            if quantity_elem % 2 != 0:
+                quantity_elem = quantity_elem // 2 - 1
+            else: 
+                quantity_elem = quantity_elem // 2
+
+            discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem)*(1-percentage_desc_promo/100))
+        
+        else: # Decuento unitario
+            discount_promo.append(sum(promotional_products[promotion])*(1-percentage_desc_promo/100))
+
 
 def switch_invoice_receipt(invoice_or_receipt, sale):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
@@ -113,10 +135,14 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
     payment_total = amount
 
+    if Decimal(total) - Decimal(payment_total) > 0:
+        sale.state = Sale.STATE[1][0] # "PENDIENTE"
+    else:
+        sale.state = Sale.STATE[0][0] # "COMPLETO"
+
     if customer:
         if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
-            sale.state = Sale.STATE[1][0] # "PENDIENTE"
             customer.credit_balance += total * Decimal(1 - sale.discount / 100)
             customer.save()
 
@@ -125,36 +151,30 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
             missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
             sale.missing_balance = missing_balance
             if missing_balance > 0:
-                sale.state = Sale.STATE[1][0] # "PENDIENTE"
                 customer.credit_balance += missing_balance
                 customer.save()
-            else:
-                sale.state = Sale.STATE[0][0] # "COMPLETO"
             # set_movement(payment_total, payment_methods.type_method, customer, user)
 
         elif product_cristal: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
-            sale.state = Sale.STATE[1][0] # "PENDIENTE"
             missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
             sale.missing_balance = missing_balance
-            # set_movement(payment_total, payment_methods.type_method, customer, user)
+            set_movement(payment_total, payment_methods.type_method, customer, user)
 
         else:
-            """Si el cliente TIENE O NO CUENTA CORRIENTE pero paga el total de la compra - NO CRISTAL"""
-            sale.state = Sale.STATE[0][0] # 'COMPLETO'
-            sale.save()
-            # set_movement(total, payment_methods.type_method, customer, user)
+            """Si el cliente NO CUENTA CORRIENTE pero paga el total de la compra - NO CRISTAL"""
+            set_movement(total, payment_methods.type_method, customer, user)
     else:
         """Si el CLIETNE NO REGISTRA"""
-        # set_movement(total, None, customer, user)
+        set_movement(total,  payment_methods.type_method, None, user)
 
-
+    sale.branch = user.branch
     sale.user_made = user
     sale.save()
 
     Payment.objects.create(
         user_made = user,
-        amount = amount or total,
+        amount = amount if amount > 0 else total,
         payment_method = payment_methods,
         description = f"Pago de venta Nro: {sale.pk}",
         sale = sale,
@@ -163,7 +183,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
 def set_movement(total, type_method, customer, user):
     description = "Venta de productos"
-    if not 'Anonimo' in customer.first_name:
+    if customer and not 'Anonimo' in customer.first_name:
         description += " a %s" % customer.get_full_name()
 
     Movement.objects.create(

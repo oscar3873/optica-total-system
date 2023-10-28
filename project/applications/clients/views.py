@@ -10,6 +10,7 @@ from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.models import Branch
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.cashregister.models import Currency, Movement, PaymentType
+from applications.sales.models import Payment
 from project.settings.base import DATE_NOW
 
 from .models import *
@@ -448,7 +449,7 @@ def pay_credits(request, pk):
     customer = Customer.objects.get(pk=pk)
     total = 0
 
-    transactions = customer.credit_transactions.filter(sale__state = 'PENDIENTE') 
+    transactions = Payment.objects.all(customer)
     for transaction in transactions:      
         transaction.sale.state = 'COMPLETADO'
         total += transaction.sale.amount
@@ -459,7 +460,7 @@ def pay_credits(request, pk):
         date_movement = DATE_NOW.date(),
         cash_register = user.branch.cashregister_set.filter(is_close=False).last(),
         description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
-        currency = Currency.objects.first(),
+        currency = Currency.objects.get(name__icontains='PESO'),
         type_operation = 'Ingreso',
         payment_method = PaymentType.objects.first(),
     )

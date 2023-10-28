@@ -4,6 +4,7 @@ from applications.clients.models import Customer
 from applications.products.models import Product
 from applications.core.models import BaseAbstractWithUser
 from applications.branches.models import Branch
+from .managers import PaymentManager
 
 # Create your models here.
 
@@ -64,9 +65,10 @@ class Sale(BaseAbstractWithUser):
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True, verbose_name='Cliente')
     state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False, verbose_name='Estado')
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
-    discount = models.PositiveIntegerField(verbose_name='Descuento',  null=True, blank=True)
-    missing_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0, blank=True, null=True, verbose_name="Saldo")
-    total = models.DecimalField(max_digits=10, decimal_places=2, blank=False, null=False, verbose_name="Total")
+    discount = models.PositiveIntegerField(verbose_name='Descuento', default=0, null=True, blank=True)
+    missing_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0, blank=True, null=True, verbose_name="Saldo")
+    subtotal = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Subtotal")
+    total = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Total")
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
 
 class OrderDetail(BaseAbstractWithUser):
@@ -110,8 +112,11 @@ class PaymentMethod(BaseAbstractWithUser):
 
 #ESTO VA EN LA APLICACION DE SALES
 class Payment(BaseAbstractWithUser):
+    customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='payments', null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.CASCADE)
     date_payment = models.DateField(auto_now_add=True)
     description = models.TextField(null=True, blank=True, max_length=100, default='Sin descripcion')
     sale = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='sale_payment', null=True)
+
+    objects = PaymentManager()

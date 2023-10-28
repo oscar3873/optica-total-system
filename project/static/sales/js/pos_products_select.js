@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', function() {
 
 
@@ -43,6 +44,11 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonRemove.textContent = 'Quitar';
         buttonRemove.addEventListener('click', function () {
             removeProduct(product.id); // Llama a la función removeProduct pasando la fila del producto
+            
+            if (product.category.toLowerCase().includes('cristal')){
+                button_serviceOrder.hidden = true;
+                has_cristal = false;
+            }
         });
     
         const pricerow = document.createElement('th');
@@ -152,7 +158,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .map(selected => selected.getAttribute('data-product-id'))
             .filter(productId => productId);
         // Llama a removeProduto con cada id
-        productIds.forEach(productId => removeProduct(productId));
+        productIds.forEach(productId => {
+
+            removeProduct(productId);
+
+            button_serviceOrder.hidden = true;
+            has_cristal = false;
+        });
     });
 
 
@@ -199,21 +211,23 @@ document.addEventListener('DOMContentLoaded', function() {
         
                         // Para cada producto en los resultados
                         data.data.forEach(product => {
-                            // Crea un elemento HTML para el producto utilizando la función createProductElement
-                            const productElement = createProductElement(product);
-        
-                            // Verifica si el producto estaba seleccionado previamente
-                            selectedProducts.some(selectedProduct => {
-                                const selectedProductId = selectedProduct.dataset.productId;
-                            
-                                if (parseInt(selectedProductId) === product.id) {
-                                    // Si estaba seleccionado previamente, marca el checkbox como seleccionado
-                                    const checkbox = productElement.querySelector('input[type="checkbox"]');
-                                    checkbox.checked = true;
-                                }
-                            });
-                            // Agrega el elemento al contenedor de resultados
-                            findsProductsContainer.appendChild(productElement);
+                            if (product.stock > 0){
+                                // Crea un elemento HTML para el producto utilizando la función createProductElement
+                                const productElement = createProductElement(product);
+            
+                                // Verifica si el producto estaba seleccionado previamente
+                                selectedProducts.some(selectedProduct => {
+                                    const selectedProductId = selectedProduct.dataset.productId;
+                                
+                                    if (parseInt(selectedProductId) === product.id) {
+                                        // Si estaba seleccionado previamente, marca el checkbox como seleccionado
+                                        const checkbox = productElement.querySelector('input[type="checkbox"]');
+                                        checkbox.checked = true;
+                                    }
+                                });
+                                // Agrega el elemento al contenedor de resultados
+                                findsProductsContainer.appendChild(productElement);
+                            }
                         });
                     }
                 },
@@ -304,9 +318,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 let formset = addFormset(product);
                 selectedProducts.push(formset);
 
+                if (product.category.toLowerCase().includes('cristal')){
+                    has_cristal = true;
+                }
+                if (has_cristal && document.getElementById('id_customer')){
+                    button_serviceOrder.hidden = false;
+                }
+
             } else {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
+
+                if (product.category.toLowerCase().includes('cristal')){
+                    button_serviceOrder.hidden = true;
+                    has_cristal = false;
+                }
             }
             CalculateSubtotal();
         });

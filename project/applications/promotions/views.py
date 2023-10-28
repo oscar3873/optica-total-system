@@ -167,5 +167,4 @@ def ajax_promotional_products(request):
             # Obtén los productos asociados a cada promoción
             associated_products = promotion.promotion_products.values_list('product__id', flat=True)
             list_promotion[promotion.name] = (promotion.type_prom.name, promotion.discount, list(associated_products))
-
         return JsonResponse({'promotions': list_promotion})

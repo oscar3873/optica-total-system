@@ -1,3 +1,4 @@
+import copy
 import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
@@ -59,18 +60,19 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
-            print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
             customer = saleform.cleaned_data['customer']
             payment_methods = saleform.cleaned_data.pop('payment_method')
             amount = saleform.cleaned_data.pop('amount')
+            discount_sale = saleform.cleaned_data['discount']
 
         promotions_active = Promotion.objects.filter(is_active=True)
-        promotional_products = {promotion: [] for promotion in promotions_active}
+        promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
+        
         order_details = []
         all_products_to_sale = []
         discount_promo = []
-        total = 0
+        subtotal = 0
 
         # Procesa los datos del formset
         for formset in formsets:
@@ -79,8 +81,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
             
             if formset.is_valid():
-                print('\n\nDatos de Formset: ', formset.cleaned_data)
-                total += get_total_and_products(formset, all_products_to_sale)
+                subtotal += get_total_and_products(formset, all_products_to_sale)
                 order_details.append(process_formset(formset, promotional_products))
 
                 product_cristal = find_cristal_product(all_products_to_sale)
@@ -88,22 +89,27 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                     messages.error(self.request, "Seleccione un cliente antes de Vender Cristales")
                     return super().form_invalid(form)
 
+        promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
-        for promotion, products in promotional_products.items():
-            process_promotion(promotional_products, promotion, products, discount_promo)
-            
-        discount_promo = sum(discount_promo)
+        for promotion, products_with_discountPromo in promotional_products.items():
+            process_promotion(promotional_products_clone, promotion, products_with_discountPromo, discount_promo)
+        
+        print('\n\n\nLISTADO DE PROMOCIONES: ', promotional_products_clone)
+        print('LISTADO DE DESCUENTOS: ', discount_promo)
+        discount_promo = Decimal(sum(discount_promo))
+        print('SUBTOTAL (TOTAL EN PRODUCTOS): ', subtotal)
         print('DESCUENTO TOTAL: ', discount_promo)
-
-        sale.total = total
-        print('=> TOTAL aplicando descuento: ', total - discount_promo)
+        print('DESCUENTO DE VENTA: %', discount_sale)
+        sale.subtotal = Decimal(subtotal - discount_promo)
+        sale.total = Decimal(subtotal - discount_promo) * Decimal(1 - discount_sale/100)
+        print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
         has_proof = saleform.cleaned_data.pop('has_proof') or None
         proof_type = switch_invoice_receipt(has_proof, sale)
         if proof_type:
             generate_proof(proof_type)
 
-        process_customer(customer, sale, payment_methods, total, product_cristal, amount, self.request.user)
+        process_customer(customer, sale, payment_methods, subtotal, product_cristal, amount, self.request.user)
 
         for order in order_details:
             order.sale = sale
