@@ -17,17 +17,14 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('promotions_app:promotion_list')
 
     def form_valid(self, form):
-        print(form.cleaned_data)
         # Crea la promoción sin guardarla en la base de datos aún
         promotion = form.save(commit=False)
         promotion.type_prom = form.cleaned_data.get('type_discount')
         
+        user = self.request.user
         # Modificamos la forma de obtener la sucursal
-        try:
-            branch_actualy = self.request.session.get('branch_actualy')
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-        except Branch.DoesNotExist:
-            branch_actualy = None
+        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
+        branch_actualy = Branch.objects.get(id=branch_actualy)
         
         # Asignamos la sucursal a la promoción
         promotion.branch = branch_actualy
@@ -37,7 +34,6 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
 
         # Obtiene los productos seleccionados del formulario
         selected_products = form.cleaned_data.get('productsSelected')
-        print(selected_products)
         for product in selected_products:
             # Crea una relación entre la promoción y el producto
             PromotionProduct.objects.create(promotion=promotion, product=product)
@@ -128,15 +124,11 @@ class PromotionListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         user = self.request.user
-        branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
 
-        if branch_actualy is not None:
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = branch_actualy
-        else:
-            branch = user.branch
+        branch_actualy = Branch.objects.get(id=branch_actualy)
 
-        return Promotion.objects.filter(branch=branch)
+        return Promotion.objects.filter(branch=branch_actualy)
 
 
 
