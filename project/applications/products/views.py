@@ -431,7 +431,11 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         features_list = Product.objects.get_feature_types_and_values(self.get_object())
         context['features'] = features_list
-        context['supplier'] = Brand_Supplier.objects.get(brand = self.get_object().brand)
+        try:
+            context['suppliers'] = Brand_Supplier.objects.get(brand = self.get_object().brand)
+        except:
+            context['suppliers'] = None
+            
         return context
     
     

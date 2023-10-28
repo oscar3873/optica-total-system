@@ -66,7 +66,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     var label = document.createElement("label");
                     label.textContent = result.name;
-                    label.htmlFor = result.name;
                     label.classList.add('d-block');
 
                     var searchResults = document.getElementById("search-results");
