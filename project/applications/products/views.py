@@ -14,6 +14,7 @@ from django.views.generic import (
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.core.mixins import CustomUserPassesTestMixin
+from applications.suppliers.models import Brand_Supplier
 from .models import Brand, Category, Product
 from .forms import *
 from .utils import *
@@ -192,7 +193,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
     
     def get_form_kwargs(self):
         user = self.request.user
-        branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
         if user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             branch = branch_actualy
@@ -209,7 +210,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
 
         if form.is_valid():
             if user.is_staff:
-                branch_actualy = self.request.session.get('branch_actualy')
+                branch_actualy = self.request.session.get('branch_actualy')  or user.branch.pk
                 branch_actualy = Branch.objects.get(id=branch_actualy)
                 branch = branch_actualy
             else:
@@ -343,7 +344,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = self.request.session.get('branch_actualy')  or user.branch.pk
             branch_actualy = Branch.objects.get(id=branch_actualy)
             branch = branch_actualy
         else:
@@ -430,6 +431,11 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         features_list = Product.objects.get_feature_types_and_values(self.get_object())
         context['features'] = features_list
+        try:
+            context['suppliers'] = Brand_Supplier.objects.get(brand = self.get_object().brand)
+        except:
+            context['suppliers'] = None
+            
         return context
     
     
@@ -501,7 +507,7 @@ class ProductSearchView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        branch_actualy = self.request.session.get('branch_actualy')
+        branch_actualy = self.request.session.get('branch_actualy')  or user.branch.pk
         if user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             branch = branch_actualy

@@ -38,7 +38,7 @@ class Brand_Supplier(models.Model):
         verbose_name = "Marca por Proveedor"
 
     def __str__(self):
-        return f'{self.supplier.business_name} | {self.brand.name}'
+        return f'{self.supplier.name} | {self.brand.name}'
     
 
 class Bank(BaseAbstractWithUser):

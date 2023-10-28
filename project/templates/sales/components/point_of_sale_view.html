@@ -50,9 +50,9 @@
                 <!--TOTAL-->
                 <div class="card mb-2 p-4">
                     <div class="col-xl-12 text-center">
-                        <div class="display-3 fw-semi-bold d-flex justify-content-between">
-                            Total:
-                            <span class="text-success text-start" id="total-success">$ 0.00</span>
+                        <div class="display-6 fw-semi-bold d-flex justify-content-between">
+                            
+                            <span class="text-success text-start" id="total-success">$ 00.00</span>
                         </div>
                     </div>
                 </div>
@@ -67,8 +67,8 @@
                                 <div class="col-9">
                                     <div id="id_form-0">
                                         <div class="d-flex flex-column position-relative">
+                                            <!-- Buscador -->
                                             <div class="input-group">
-                                                <!-- Buscador -->
                                                 <input type="search" id="id_form-0-search-customerA-input"
                                                 class="form-control form-control-sm shadow-none search"
                                                 placeholder="Buscar">
@@ -102,7 +102,6 @@
                             <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
                         </button>
                     </div>
-                        
                         <div class="card-body">
                             <div class="px-0 product-sale-item product-container">
                                 <table class="table table-borderless fs--1 mb-0">
@@ -111,24 +110,20 @@
                                 </table>
                             </div>
                         </div>
-                    
-
                     <div class="card-footer d-flex justify-content-between bg-light py-2">
                         <div class="fw-semi-bold">Subtotal</div>
                         <div class="fw-bold" id="subtotal">$ 0.00</div>
                     </div>
                     <div class="card-footer d-flex justify-content-between align-items-center bg-light py-3">
                         <div class="fw-semi-bold">Descuento</div>
-                        <div class="col-6 col-sm-3 col-lg-2">
+                        <div class="col-6 col-sm-3 col-lg-3">
                             {{sale_form.discount}}
                         </div>
                     </div>
                     <div class="fs-1 card-footer d-flex justify-content-between bg-light py-3">
                         <div class="fw-semi-bold">Total a pagar</div>
                         <div class="fw-bold" id="total">$ 0.00</div>
-
                         <input type="number" name="total" value="0" step="any" id="id_total" hidden>
-
                     </div>
                 </div>
                 <div class="card mt-2">
@@ -262,38 +257,42 @@
                                             </div>
                                             <!-- </form> -->
                                         </div>
+                                        <hr>
                                         <!--Caracteristicas-->
                                         <div class="px-sm-3 px-md-5">
                                             <!-- <form> -->
                                             <div class="row">
-                                                <div class="col position-relative text-center">
+                                                <div class="col position-relative text-start">
                                                     <div class="row">
                                                         <h5 class="mt-2 mb-5">Materiales</h5>
                                                     </div>
-                                                    {{ order_servise.material.material_choice }}
+                                                    <div class="text-start">{{ order_servise.material.material_choice }}</div>
                                                 </div>
-                                                <div class="col form-check-reverse text-center">
+                                                <div class="col form-check-reverse text-start">
                                                     <div class="row">
                                                         <h5 class="mt-2 mb-5">Color</h5>
                                                     </div>
-                                                    {{ order_servise.color.color_choice }}
+                                                    <div class="text-start">{{ order_servise.color.color_choice }}</div>
                                                 </div>
-                                                <div class="col text-center">
+                                                <div class="col text-start">
                                                     <div class="row">
                                                         <h5 class="mt-2 mb-5">Cristales</h5>
                                                     </div>
-                                                    {{ order_servise.cristal.cristal_choice }}
+                                                    <div class="text-start">{{ order_servise.cristal.cristal_choice }}</div>
+                                                    
                                                 </div>
-                                                <div class="col text-center">
+                                                <div class="col text-start">
                                                     <div class="row">
                                                         <h5 class="mt-2 mb-4">Tratamiento de Cristales</h5>
                                                     </div>
-                                                    {{ order_servise.tratamiento.tratamient_choice }}
+                                                    <div class="text-start">{{ order_servise.tratamiento.tratamient_choice }}</div>
+                                                    
                                                 </div>
                                             </div>
                                             <!-- </form> -->
                                         </div>
                                         <!--Pupilar-->
+                                        <hr>
                                         <div class="px-sm-3 px-md-5">
                                             <!-- <form class="form-validation"> -->
                                             <div class="row">
@@ -372,6 +371,7 @@
                                             </div>
                                             <!-- </form> -->
                                         </div>
+                                        <hr>
                                         <!--Diagnostico-->
                                         <div class="px-sm-3 px-md-5">
                                             <div class="row justify-content-sm-center pb-2">
@@ -390,7 +390,6 @@
                                             </div>  
                                             
                                         </div>
-
                                     </div>
                                 </div>
                                 <div class="modal-footer">
