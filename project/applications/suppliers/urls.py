@@ -35,5 +35,11 @@ urlpatterns = [
         'ajax_bank_supplier',
         set_bank_supplier,
         name='set_bank_supplier'
-    )
+    ),
+    
+    path(
+        'brands/ajax_search_brands/', 
+        ajax_search_brands, 
+        name='ajax_search_brands'),
+
 ]

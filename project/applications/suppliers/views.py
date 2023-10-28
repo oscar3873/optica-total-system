@@ -27,8 +27,8 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         supplier.user_made = self.request.user
         supplier.save()
         
-        for product in form.cleaned_data['brands']:
-            Brand_Supplier.objects.create(supplier=supplier, product=product, user_made = self.request.user)
+        for brand in form.cleaned_data['brands']:
+            Brand_Supplier.objects.create(supplier=supplier, brand=brand)
         return super().form_valid(form)
 
 
@@ -76,34 +76,30 @@ class SuppliersListView(CustomUserPassesTestMixin, ListView):
         return context
 
 
+from django.shortcuts import render
+from django.views.generic import DetailView
+
 class SupplierDetailView(DetailView):
     model = Supplier
     template_name = 'suppliers/supplier_page.html'
     context_object_name = 'supplier'
     
     def get_object(self, queryset=None):
-        # Intenta obtener el objeto Product o retorna None si no se encuentra
+        # Intenta obtener el objeto Supplier o retorna None si no se encuentra
         try:
             obj = super().get_object(queryset=queryset)
-        # Puedes retornar None o cualquier otro valor que desees
         except:
-            obj=None
+            obj = None
         return obj
         
-    def get(self, request, *args, **kwargs):
-        # Obtén el objeto utilizando el método get_object()
-        self.object = self.get_object()
-        
-        if self.object is None:
-            # El objeto no se encontró, renderiza una plantilla personalizada
-            return render(request, 'suppliers/supplier_page.html')
-        # El objeto se encontró, continúa con el comportamiento predeterminado
-        context =self.get_context_data()
-        return self.render_to_response(context)
-    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['all_products_suppliers'] = Supplier.objects.get_all_products(self.object)
+        supplier = self.object  # Obtén el proveedor del contexto
+        
+        # Obtén las marcas relacionadas al proveedor
+        brands = supplier.brand_suppliers.all()
+        
+        context['related_brands'] = brands
         return context
 
 class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
@@ -118,17 +114,28 @@ class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
 
 
 def set_bank_supplier(request):
-    bank = BankForm(request.POST)
-    if bank.is_valid():
-        bank.save(commt=False)
-        bank.user_made = request.user
-        bank.save()
-    
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX 
-        bank_data = {
-            'id': bank.pk,
-            'name': bank.name,
-            'cbu': bank.cbu,
-            'cuit': bank.cuit
-        }
-    return JsonResponse(bank_data)
+    if request.method == 'POST':
+        bank_form = BankForm(request.POST)
+        if bank_form.is_valid():
+            supplier_id = request.POST.get('supplier_id')  # Asegúrate de tener el campo supplier_id en tu formulario
+            supplier = Supplier.objects.get(pk=supplier_id)
+            bank = bank_form.save(commit=False)
+            bank.user_made = request.user
+            bank.supplier = supplier
+            bank.save()
+
+            if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+                bank_data = {
+                    'id': bank.pk,
+                    'name': bank.bank_name,
+                    'cbu': bank.cbu,
+                    'cuit': bank.cuit
+                }
+                return JsonResponse(bank_data)
+
+    return JsonResponse({'error': 'No se pudo guardar el banco'})
+
+def ajax_search_brands(request):
+    search_term = request.GET.get('search_term', '')
+    results = Brand.objects.filter(name__icontains=search_term).values('id', 'name')  # Filtrar las marcas que coincidan con el término de búsqueda
+    return JsonResponse({'data': list(results)})

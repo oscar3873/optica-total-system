@@ -1,7 +1,11 @@
 {% load static %} {% load humanize %}
 <!-- ===============================================-->
-<!--    Contentenedor del block main-->
+<!--    Contenedor del bloque principal-->
 <!-- ===============================================-->
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="/static/suppliers/js/search_brands.js"></script>
+</head>
 
 <div class="container py-4">
   <!-- ===============================================-->
@@ -11,32 +15,27 @@
   {% include 'core/components/messages.html' %}
 
   <!-- ===============================================-->
-  <!--    Fin Errores de Sistema (Backend)-->
+  <!--    Fin de Errores de Sistema (Backend)-->
   <!-- ===============================================-->
-	<div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!-- Titulo del formulario wizard -->
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Título del formulario wizard -->
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
           class="fa-inverse fa-stack-1x text-primary fas fa-user-tie"></i></span>
       <div class="col">
         <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Proveedor</span><span
             class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-          <p class="mb-0">{{update_create}}</p>
+        <p class="mb-0">{{update_create}}</p>
       </div>
     </div>
   </div>
   <!-- ===============================================-->
-  <!--    Card con la presentacion de la caja-->
+  <!--    Tarjeta con la presentación de la caja-->
   <!-- ===============================================-->
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <div class="card theme-wizard h-100 mb-5">
       <div class="card-body py-4" id="wizard-controller">
         <div class="tab-content">
-          <div
-            class="tab-pane active px-sm-3 px-md-5"
-            role="tabpanel"
-            aria-labelledby="bootstrap-wizard-validation-tab1"
-            id="bootstrap-wizard-validation-tab1"
-          >
+          <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
             <form class="mt-3" method="post">
               {% csrf_token %}
               <div class="mb-3">
@@ -64,7 +63,7 @@
                     <label
                       for="{{ form.phone_code.id_for_label }}"
                       class="form-label"
-                      >Código del pais:</label
+                      >Código del país:</label
                     >
                     {{ form.phone_code }} {% if form.phone_code.errors %}
                     <div class="text-danger fs--2">
@@ -91,7 +90,7 @@
                   </div>
                 </div>
                 <div class="row">
-									<div class="col-12 col-sm-6">
+                  <div class="col-12 col-sm-6">
                     <button
                       class="btn btn-primary d-block w-100 mt-3"
                       type="submit"
@@ -107,69 +106,61 @@
                     </button>
                   </div>
                 </div>
-								<div class="row">
-									<label for="id_products" class="form-label mt-3">Marcas</label>
-									{{form.brands}}
-								</div>
+                <div class="row">
+                  <label for="id_brands" class="form-label mt-3">Marcas</label>
+                  <input type="search" id="id_brands-search" class="form-control form-control-sm shadow-none search" placeholder="Buscar marca">
+                </div>
+                <ul id="id_brands-search-results" class="list-group text-dark z-3 position-absolute pt-4 mt-1"></ul>
               </div>
             </form>
-
-            <!-- Modal -->
-            <div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="bankModalLabel">Añadir Banco</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form method="post" id="bank-form" class="row g-3 needs-validation align-items-center" novalidate="">
-                      {% csrf_token %}
-                      <div class="row justify-content-sm-center pb-2">
-                        <div class="col pt-3">
-                          <label for="{{ bank_form.bank_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
-                          {{ bank_form.bank_name }}
-                          <div class="valid-feedback"></div>
-                          <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
-                        </div>
-                      </div>
-                      <div class="row justify-content-sm-center pb-2">
-                        <div class="col-12">
-                          <label for="{{ bank_form.cuit.id_for_label }}" class="form-label col-form-label">CUIT:</label>
-                          {{ bank_form.cuit }}
-                          <div class="valid-feedback">Perfecto!</div>
-                          <div class="invalid-feedback">Ingrese solo números.</div>
-                        </div>
-                        <div class="col-12 pt-2">
-                          <label for="{{ bank_form.cbu.id_for_label }}" class="form-label col-form-label">CBU O ALIAS:</label>
-                          {{ bank_form.cbu }}
-                          <div class="valid-feedback">Perfecto!</div>
-                          <!-- <div class="invalid-feedback">Ingrese solo números.</div> -->
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="save-bank">Añadir Banco</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
-
           </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- ===============================================-->
-  <!--   Fin Card con la presentacion de la caja-->
-  <!-- ===============================================-->
+  <!-- Modal -->
+<div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bankModalLabel">Añadir Banco</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="bank-form" class="row g-3 needs-validation align-items-center" novalidate="">
+          {% csrf_token %}
+          <div class="row justify-content-sm-center pb-2">
+            <div class="col pt-3">
+              <label for="{{ bank_form.bank_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
+              {{ bank_form.bank_name }}
+              <div class="valid-feedback"></div>
+              <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
+            </div>
+          </div>
+          <div class="row justify-content-sm-center pb-2">
+            <div class="col-12">
+              <label for="{{ bank_form.cuit.id_for_label }}" class="form-label col-form-label">CUIT:</label>
+              {{ bank_form.cuit }}
+              <div class="valid-feedback">Perfecto!</div>
+              <div class="invalid-feedback">Ingrese solo números.</div>
+            </div>
+            <div class="col-12 pt-2">
+              <label for="{{ bank_form.cbu.id_for_label }}" class="form-label col-form-label">CBU O ALIAS:</label>
+              {{ bank_form.cbu }}
+              <div class="valid-feedback">Perfecto!</div>
+              <!-- <div class="invalid-feedback">Ingrese solo números.</div> -->
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="save-bank">Guardar</button>
+      </div>
+    </div>
+  </div>
 </div>
-
+</div>
 <!-- ===============================================-->
-<!--    Fin Contentenedor del block main-->
+<!--    Fin Contentenedor del bloque principal-->
 <!-- ===============================================-->

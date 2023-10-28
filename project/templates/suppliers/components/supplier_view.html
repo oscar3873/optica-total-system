@@ -22,7 +22,7 @@
     <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
           class="fa-inverse fa-stack-1x text-primary fas fa-user-tie"></i></span>
       <div class="col">
-        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Proveedor</span><span
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Detalle del proveedor</span><span
             class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
         <p class="mb-0">Aqui puede vizualizar un proveedor</p>
       </div>
@@ -39,7 +39,7 @@
       <div class="card-header bg-light">
           <div class="row pb-md-0">
               <div class="col-12 col-sm-6">
-                <h5 class="mb-2"> {{supplier.name}}</h5>
+                <h5 class="mb-2"> {{ supplier.name }}</h5>
               </div>
           </div>
           <div class="row mt-2">
@@ -71,34 +71,37 @@
                     </div>
                     <div class="col-12 d-flex justify-content-between">
                         <p class="fw-normal fw-semi-bold mb-1">Teléfono:</p>
-                        <span class="ms-3 text-800 fw-bold"><a href="https://wa.me/{{supplier.phone_code}}{{ supplier.phone_number }}">{{supplier.phone_code}}{{ supplier.phone_number }}</a></span>
+                        <span class="ms-3 text-800 fw-bold"><a href="https://wa.me/{{ supplier.phone_code }}{{ supplier.phone_number }}">{{ supplier.phone_code }}{{ supplier.phone_number }}</a></span>
                     </div>
                     <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
                       <p class="fw-normal fw-semi-bold mb-1">Email:</p>
-                      <span class="ms-3 text-800 fw-bold">{{supplier.email}}</span>
+                      <span class="ms-3 text-800 fw-bold">{{ supplier.email }}</span>
                     </div>
                 </div>
                 <div class="row">
-                  <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center ">
-                      {% comment %} <h5 class="mb-3">Bancos:&nbsp;
-                          {% if request.user.is_staff %}
-                          <a href="{% url 'suppliers_app:supplier_update' supplier.id %}"></a>
-                          {% endif %}
-                      </h5>
-                      {% if supplier.customer_insurance.all %}
-                      {% for banco in customer.customer_insurance.all %}
-                      <p class="ms-sm-2 text-900 fw-bold d-inline">
-                          <a href="{% url 'suppliers_app:hi_detail' insurance.h_insurance.pk %}"
-                              class="text-decoration-none">
-                              {{ insurance.h_insurance.name }}
-                          </a>
-                      </p>
+                  <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center">
+                    <h5 class="mb-3">Bancos:&nbsp;</h5>
+                    <div class="d-inline-flex">
+                      {% for bank in supplier.banks.all %}
+                        <p class="ms-sm-2 text-900 fw-bold d-inline">{{ bank.bank_name }}</p>
                       {% endfor %}
-                      {% else %}
-                      <p class="fw-lighter fst-italic">No hay bancos asociados</p>
-                      {% endif %} {% endcomment %}
+                    </div>
+                    {% if not supplier.banks.all %}
+                      <p class="fw-lighter fst-italic">No hay bancos registrados</p>
+                    {% endif %}
                   </div>
-              </div>
+                </div>
+                <div class="row my-0">
+                    <small class="fs--2 py-0 my-0">El proveedor puede tener<span class="text-warning"> más de un banco.</span></small>
+                </div>
+                <div class="col-12 pt-3">
+                    <h5 class="mb-3">Marcas Asociadas:</h5>
+                    <ul class="list-inline">
+                      {% for brand_supplier in supplier.brand_suppliers.all %}
+                        <h5 class="ms-sm-2 text-primary fw-bold d-inline">{{ brand_supplier.brand.name }}</h5>
+                      {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
       </div>
