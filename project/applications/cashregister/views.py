@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 
 #Importaciones de la app
+from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 from applications.branches.models import Branch
 from applications.cashregister.models import CashRegister, CashRegisterDetail, PaymentType, Movement, Transaction, TransactionType
 from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailFormSet
@@ -18,7 +19,7 @@ from django.views.generic import DetailView
 
 
 # Create your views here.
-class CashRegisterCreateView(FormView):
+class CashRegisterCreateView(LoginRequiredMixin, FormView):
     template_name = 'cashregister/cashregister_create_page.html'
     form_class = CashRegisterForm
     success_url = reverse_lazy('cashregister_app:cashregister_view')
@@ -26,7 +27,7 @@ class CashRegisterCreateView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = self.request.session.get('branch_actualy') 
             branch_actualy = Branch.objects.get(id=branch_actualy)
             cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False)
             
@@ -57,7 +58,7 @@ class CashRegisterCreateView(FormView):
         messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
         return super().form_invalid(form)
 
-class CashRegisterView(TemplateView):
+class CashRegisterView(CustomUserPassesTestMixin, TemplateView):
     template_name = 'cashregister/cashregister_page.html'
     model = CashRegister
     form_class = CloseCashRegisterForm
@@ -65,7 +66,6 @@ class CashRegisterView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        branch = self.request.user.branch
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
@@ -76,14 +76,13 @@ class CashRegisterView(TemplateView):
         return context
 
 
-class CashRegisterListView(ListView):
+class CashRegisterListView(CustomUserPassesTestMixin, ListView):
     template_name = 'cashregister/cashregister_list_page.html'
     model = CashRegister
     
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        branch = self.request.user.branch
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
@@ -107,7 +106,7 @@ class CashRegisterListView(ListView):
         return context
 
 
-class CashRegisterDetailView(DetailView):
+class CashRegisterDetailView(CustomUserPassesTestMixin, DetailView):
     template_name = 'cashregister/cashregister_detail_page.html'
     model = CashRegister
     
@@ -140,18 +139,18 @@ class CashRegisterDetailView(DetailView):
         return context
 
 #Esta view aun esta sin uso
-class CashRegisterUpdateView(DetailView):
+class CashRegisterUpdateView(CustomUserPassesTestMixin, DetailView):
     template_name = 'cashregister/cashregister_update_page.html'
     model = CashRegister
 
 #Esta view aun esta sin uso
-class CashRegisterDeleteView(DeleteView):
+class CashRegisterDeleteView(CustomUserPassesTestMixin, DeleteView):
     template_name = 'cashregister/cashregister_delete_page.html'
     model = CashRegister
     success_url = reverse_lazy('cashregister_app:cashregister_list_view')
 
 
-class CashRegisterCloseView(FormView):
+class CashRegisterCloseView(LoginRequiredMixin, FormView):
     template_name = 'cashregister/cashregister_close_page.html'
     form_class = CloseCashRegisterForm
     success_url = reverse_lazy('cashregister_app:cashregister_view')
@@ -187,7 +186,7 @@ class CashRegisterCloseView(FormView):
         return super().form_invalid(form)
 
 
-class CashRegisterArching(View):
+class CashRegisterArching(LoginRequiredMixin, View):
     template_name = 'cashregister/cashregister_arching_page.html'
     
     def get(self, request, *args, **kwargs):
@@ -257,7 +256,7 @@ class CashRegisterArching(View):
         return redirect('cashregister_app:cashregister_view')
 
 
-class CloseTicketCashRegister(View):
+class CloseTicketCashRegister(LoginRequiredMixin, View):
     template_name = 'cashregister/components/ticket_close_cashregister.html'
     def get(self, request, *args, **kwargs):
         
@@ -288,7 +287,7 @@ def archingTicket(request, pk):
     return render(request, 'cashregister/components/ticket_arching.html')
 
 
-class MovementsView(TemplateView):
+class MovementsView(CustomUserPassesTestMixin, TemplateView):
     template_name = 'cashregister/movements_page.html'
     paginate_by = 25
     
@@ -323,7 +322,7 @@ class MovementsView(TemplateView):
         return context
 
 
-class MovementsCreateView(FormView):
+class MovementsCreateView(CustomUserPassesTestMixin, FormView):
     template_name = 'cashregister/movements_create_page.html'
     model = Movement
     form_class = MovementForm
@@ -334,7 +333,6 @@ class MovementsCreateView(FormView):
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = self.request.user.branch
             cashregister = CashRegister.objects.get(branch=branch_actualy, is_close=False)
         except CashRegister.DoesNotExist:
             cashregister = None
@@ -347,7 +345,6 @@ class MovementsCreateView(FormView):
     def form_valid(self, form):
         branch_actualy = self.request.session.get('branch_actualy')
         branch_actualy = Branch.objects.get(id=branch_actualy)
-        branch = self.request.user.branch
         cash_register = CashRegister.objects.get(branch=branch_actualy, is_close=False)
 
         try:
@@ -373,7 +370,7 @@ class MovementsCreateView(FormView):
         return super().form_invalid(form)
 
 
-class MovementsDeleteView(DeleteView):
+class MovementsDeleteView(CustomUserPassesTestMixin, DeleteView):
     template_name = 'cashregister/movements_delete_page.html'
     model = Movement
     success_url = reverse_lazy('cashregister_app:movements_view')
@@ -395,7 +392,7 @@ class MovementsDeleteView(DeleteView):
         return super().post(request, *args, **kwargs)
     
 
-class MovementsUpdateView(UpdateView):
+class MovementsUpdateView(CustomUserPassesTestMixin, UpdateView):
     template_name = 'cashregister/movements_create_page.html'
     model = Movement
     form_class = MovementForm
@@ -406,7 +403,6 @@ class MovementsUpdateView(UpdateView):
         try:
             branch_actualy = self.request.session.get('branch_actualy')
             branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = self.request.user.branch
             cashregister = CashRegister.objects.get(branch=branch_actualy, is_close=False)
         except CashRegister.DoesNotExist:
             cashregister = None
@@ -446,7 +442,7 @@ class MovementsUpdateView(UpdateView):
         return super().form_invalid(form)
 
 
-class MovementsDetailView(DetailView):
+class MovementsDetailView(CustomUserPassesTestMixin, DetailView):
     template_name = 'cashregister/movements_detail_page.html'
     model = Movement
     
@@ -460,7 +456,7 @@ class CurrencyView(TemplateView):
     pass
 
 
-class CurrencyCreateView(FormView):
+class CurrencyCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una catogoria nueva para el producto
     """

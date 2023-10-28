@@ -30,8 +30,8 @@ class CategoryForm(ValidationFormMixin):
             raise forms.ValidationError("Ya existe una categoria con ese nombre.")
         except Category.DoesNotExist:
             pass
-        self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
-        return name
+        self.validate_length(name_formated, 3, 'La categoria debe tener al menos 3 caracteres.')
+        return name_formated
 
 
 class BrandForm(ValidationFormMixin):
@@ -56,8 +56,8 @@ class BrandForm(ValidationFormMixin):
             raise forms.ValidationError("Ya existe una marca con ese nombre.")
         except Brand.DoesNotExist:
             pass
-        self.validate_length(name, 3, 'La categoria debe tener al menos 3 caracteres.')
-        return name
+        self.validate_length(name_formated, 3, 'La categoria debe tener al menos 3 caracteres.')
+        return name_formated
 
 
 class ProductForm(ValidationFormMixin):
@@ -230,8 +230,9 @@ class ProductForm(ValidationFormMixin):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        self.validate_length(name, 3, 'El nombre del producto debe tener al menos 3 caracteres.')
-        return name
+        name_formated = name.capitalize()
+        self.validate_length(name_formated, 3, 'La categoria debe tener al menos 3 caracteres.')
+        return name_formated
 
 
 class FeatureForm(ValidationFormMixin):

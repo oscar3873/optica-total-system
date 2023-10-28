@@ -101,7 +101,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
             customer = form.save(commit=False)
             customer.user_made = self.request.user
 
-            branch_actualy = self.request.session.get('branch_actualy')
+            branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
             if user.is_staff and branch_actualy:
                 branch_actualy = Branch.objects.get(id=branch_actualy)
                 customer.branch = branch_actualy
@@ -345,8 +345,9 @@ class CustomerListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        branch = self.request.user.branch
-        branch_actualy = self.request.session.get('branch_actualy')
+        user = self.request.user
+        branch = user.branch
+        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
         if  self.request.user.is_staff and branch_actualy:
             branch_actualy = Branch.objects.get(id=branch_actualy)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesiÃ³n,

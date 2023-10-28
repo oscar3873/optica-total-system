@@ -93,7 +93,7 @@ class OrderDetail(BaseAbstractWithUser):
 
 
 class PaymentType(BaseAbstractWithUser):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Tipo de Pago')
     
     def __str__(self):
         return self.name
@@ -102,7 +102,7 @@ class PaymentType(BaseAbstractWithUser):
 
 #ESTO VA EN LA APLICACION DE SALES
 class PaymentMethod(BaseAbstractWithUser):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, verbose_name='Metodo de Pago')
     type_method = models.ForeignKey(PaymentType, on_delete=models.CASCADE)
     
     def __str__(self):
