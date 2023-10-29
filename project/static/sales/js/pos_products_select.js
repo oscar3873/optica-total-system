@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataType: 'json',
                 success : function (allPromotions) {
                     promotions = allPromotions.promotions;
+                    console.log(promotions);
                 }
             });
 
@@ -302,9 +303,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if(promotionLabelItem.length != 0){ 
             const promLabel = document.createElement('div');
             promLabel.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-success');
+            var cadena = promotionLabelItem[0]; // Suponiendo que promotionLabelItem[0] contiene 'palabra-otra'
+            var partes = cadena.split('-'); // Divide la cadena en un array en cada ocurrencia del guion
+            var resultado = partes[0]; // Toma la primera parte del array
             promLabel.textContent = promotionLabelItem[2] > 0
-                                    ? `${promotionLabelItem[0]} ${parseInt(promotionLabelItem[2])}${promotionLabelItem[1]}`
-                                    : `${promotionLabelItem[0]} ${promotionLabelItem[1]}`;
+                                    ? `${resultado} ${parseInt(promotionLabelItem[2])}${promotionLabelItem[1]}`
+                                    : `${resultado} ${promotionLabelItem[1]}`;
             rightColumn.appendChild(promLabel);
         }
         
