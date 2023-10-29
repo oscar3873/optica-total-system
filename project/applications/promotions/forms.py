@@ -2,10 +2,11 @@ from django import forms
 from django import forms
 
 from applications.products.models import Product
+from applications.core.mixins import ValidationFormMixin
 from .models import Promotion, PromotionProduct, TypePromotion
 
 
-class PromotionProductForm(forms.ModelForm):
+class PromotionProductForm(ValidationFormMixin):
     
     type_discount = forms.ModelChoiceField(
         queryset= TypePromotion.objects.all(),
