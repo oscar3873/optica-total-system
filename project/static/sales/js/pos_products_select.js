@@ -503,7 +503,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 else if(promType.includes('Descuento')){ // Si la promocion es Descuento por producto
-                    promDiscount.push(price - discount_2for);
+                    for(let i=0; i<quantityProduct; i++){
+                        promDiscount.push(price - discount_2for);
+                    }
                 }
 
                 else if(promType == 'none'){ // Sin promocion
