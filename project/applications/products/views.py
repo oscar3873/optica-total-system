@@ -713,6 +713,7 @@ def ajax_search_products(request):
             'stock': product.stock,
             'category': product.category.name,
             'brand': product.brand.name,
-            'is_staff': 1 if request.user.is_staff else 0
+            'is_staff': 1 if request.user.is_staff else 0,
+            'in_promo': 1 if product.promotions.count() > 0 else 0,
         } for product in products]
         return JsonResponse({'data': data})

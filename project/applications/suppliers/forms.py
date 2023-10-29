@@ -74,8 +74,9 @@ class SupplierForm(ValidationFormMixin):
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        self.validate_length(name, 3, 'El nombre del proveedor debe tener al menos 3 carácteres.')
-        return name
+        name_formated = name.title()
+        self.validate_length(name_formated, 3, 'El nombre del proveedor debe tener al menos 3 carácteres.')
+        return name_formated
 
 class BankForm(ValidationFormMixin):
 
@@ -88,3 +89,9 @@ class BankForm(ValidationFormMixin):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
+
+    def clean_bank_name(self):
+        name = self.cleaned_data['bank_name']
+        name_formated = name.title()
+        self.validate_length(name_formated, 3, 'El nombre debe tener al menos 3 caracteres.')
+        return name_formated

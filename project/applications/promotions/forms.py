@@ -59,3 +59,14 @@ class PromotionProductForm(forms.ModelForm):
             self.fields['start_date'].initial = self.instance.start_date
             self.fields['end_date'].initial = self.instance.end_date
             self.fields['productsSelected'].initial = self.instance.promotion_products.values_list('product', flat=True)
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        name_formated = name.title()
+        self.validate_length(name_formated, 3, 'El nombre debe tener al menos 3 caracteres.')
+        return name_formated
+    
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        description_formated = description.title()
+        return description_formated
