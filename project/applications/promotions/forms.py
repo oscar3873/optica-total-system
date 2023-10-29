@@ -67,6 +67,12 @@ class PromotionProductForm(ValidationFormMixin):
         self.validate_length(name_formated, 3, 'El nombre debe tener al menos 3 caracteres.')
         return name_formated
     
+    def clean_discount(self):
+        discount = self.cleaned_data['discount']
+        if discount and discount < 0:
+            raise forms.ValidationError('El valor del Descuento debe ser un numero positivo.')
+        return discount
+    
     def clean_description(self):
         description = self.cleaned_data['description']
         description_formated = description.title()
