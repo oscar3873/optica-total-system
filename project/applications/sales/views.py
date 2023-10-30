@@ -132,6 +132,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         if product_cristal and not 'anonimo' in customer.first_name.lower():
             service_order = process_service_order(self.request, customer)
+            service_order.sale = sale
+            service_order.save()
             # renderizar html de service_order sin return para que continue la funcion form_valid
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
