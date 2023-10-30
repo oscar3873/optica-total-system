@@ -1,4 +1,5 @@
 import copy
+from datetime import datetime
 import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
@@ -125,33 +126,16 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         process_customer(customer, sale, payment_methods, sale.total, product_cristal, amount, self.request)
 
-        order_details_template = []
         for order in order_details:
             order.sale = sale
             order.save()
-            order_details_template.append((order, f'{order.price*Decimal(1-order.discount/100):.2f}'))
 
         if product_cristal and not 'anonimo' in customer.first_name.lower():
             service_order = process_service_order(self.request, customer)
             # renderizar html de service_order sin return para que continue la funcion form_valid
-
-            context = {
-                'customer': customer,
-                'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
-                'order_details': order_details_template,
-                'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
-                'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
-                'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
-                'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
-                'seler': self.request.user,
-                'total_discount': f'{discount_promo:.2f}',  # Muestra discount_promo con 2 decimales
-            }
-
-            messages.success(self.request, "Se ha generado la venta con éxito!")
-            return render(self.request, 'sales/components/comprobante_pago.html', context)
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
-        return HttpResponseRedirect(self.success_url)
+        return HttpResponseRedirect(reverse_lazy('sales_app:detail', kwargs={'pk': sale.id}))
 
     def form_invalid(self, form):
         print(form.errors)
@@ -257,6 +241,44 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
         return context
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
+
+def show_invoice(request, pk_sale):
+    sale = Sale.objects.get(id=pk_sale)
+    customer = sale.customer
+
+    service_order = ServiceOrder.objects.get(sale=sale, is_done=False)
+
+    payment = Payment.objects.get(sale=sale)
+
+    order_details = sale.order_detaill.filter()
+    order_details_template = []
+
+    for order in list(order_details):
+        order_details_template.append((order, f'{order.price*Decimal(1-order.discount/100):.2f}'))
+
+    # Convertir la cadena en un objeto de fecha
+    format = "%A, %d de %B de %Y"
+    sale_date = datetime.strptime(sale.created_at.date(), format)
+
+    context = {
+        'customer': customer,
+        'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
+        'order_details': order_details_template,
+        'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
+        'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
+        'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
+        'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
+        'seler': sale.user_made,
+        'total_discount': f'{sale.discount:.2f}',  # Muestra discount_promo con 2 decimales
+        'payment_method': payment.payment_method.name,
+        'pay': f'{sale.total - sale.missing_balance:.2f}',
+        'missing_balance': f'{sale.missing_balance:.2f}', # Saldo pendiente
+        'date': sale_date,
+        'time': sale.created_at.time()
+    }
+
+    return render(request, 'sales/components/comprobante_pago.html', context)
+
 
 ################ SEARCH MOVEMENTS AJAX ################
 

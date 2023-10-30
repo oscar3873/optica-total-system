@@ -35,4 +35,11 @@ urlpatterns = [
         ajax_search_sales,
         name='ajax_search_sales'
     ),
+
+    ######## MUESTRA TICKET DE VENTA Y ORDEN DE SERVICIO EN CASO DE HABER ########
+    path(
+        'show_invoice',
+        show_invoice,
+        name='show_invoice'
+    )
 ]

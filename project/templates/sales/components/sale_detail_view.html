@@ -43,6 +43,12 @@
         </div>
         <!--/.bg-holder-->
 
+        
+        <a href="{% url 'sales_app:show_invoice' sale.pk %}" type="btn btn-warning">
+            Ver Comprobante de Pago
+        </a>
+
+
         <div class="card-body position-relative">
             <h5>Detalle de venta: #{{sale.pk}}</h5>
             <p class="fs--1">{{sale.created_at}}</p>

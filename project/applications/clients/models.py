@@ -125,5 +125,6 @@ class ServiceOrder(BaseAbstractWithUser):
     armazon = models.CharField(max_length=100, null=True, blank=True, verbose_name='Armazon')
     observations = models.CharField(max_length=200, null=True, blank=True, verbose_name='Observacion')
     is_done = models.BooleanField(default=False, null=True, blank=True, verbose_name='Estado')
+    sale = models.ForeignKey('sales.Sale', on_delete=models.PROTECT, related_name='service_order', null=True)
 
     objects = ServiceOrderManager()
