@@ -1,6 +1,8 @@
+import copy
 import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render
 from django.views.generic import *
 from django.db import transaction
 from django.urls import reverse_lazy
@@ -58,20 +60,27 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         saleform = SaleForm(self.request.POST)
         # payment_methods = PaymentMethodsFormset(self.request.POST)
 
+        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+
         if saleform.is_valid():
             sale = saleform.save(commit=False)
-            print('\n\n\nDatos de SaleForm: ',saleform.cleaned_data)
             customer = saleform.cleaned_data['customer']
             payment_methods = saleform.cleaned_data.pop('payment_method')
             amount = saleform.cleaned_data.pop('amount')
+            discount_sale = saleform.cleaned_data['discount']
+            if discount_sale < 0:
+                messages.error(self.request, "Descuento de venta Inválido. Ingrese solo valores positivos.")
+                return super().form_invalid(form)
 
-        promotions_active = Promotion.objects.filter(is_active=True)
-        promotional_products = {promotion: [] for promotion in promotions_active}
+        promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
+        promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
+        
         order_details = []
         all_products_to_sale = []
         discount_promo = []
-        total = 0
+        subtotal = 0
 
         # Procesa los datos del formset
         for formset in formsets:
@@ -80,8 +89,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
             
             if formset.is_valid():
-                print('\n\nDatos de Formset: ', formset.cleaned_data)
-                total += get_total_and_products(formset, all_products_to_sale)
+                subtotal += get_total_and_products(formset, all_products_to_sale)
                 order_details.append(process_formset(formset, promotional_products))
 
                 product_cristal = find_cristal_product(all_products_to_sale)
@@ -89,31 +97,52 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                     messages.error(self.request, "Seleccione un cliente antes de Vender Cristales")
                     return super().form_invalid(form)
 
+        promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
-        for promotion, products in promotional_products.items():
-            process_promotion(promotional_products, promotion, products, discount_promo)
-            
-        discount_promo = sum(discount_promo)
+        for promotion, products_with_discountPromo in promotional_products.items():
+            process_promotion(promotional_products_clone, promotion, products_with_discountPromo, discount_promo)
+        
+        print('\n\n\nLISTADO DE PROMOCIONES: ', promotional_products_clone)
+        print('LISTADO DE DESCUENTOS: ', discount_promo)
+        discount_promo = Decimal(sum(discount_promo))
+        print('SUBTOTAL (TOTAL EN PRODUCTOS): ', subtotal)
         print('DESCUENTO TOTAL: ', discount_promo)
-
-        sale.total = total
-        print('=> TOTAL aplicando descuento: ', total - discount_promo)
+        print('DESCUENTO DE VENTA: %', discount_sale)
+        sale.subtotal = Decimal(subtotal - discount_promo)
+        sale.total = Decimal(subtotal - discount_promo) * Decimal(1 - discount_sale/100)
+        print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
         has_proof = saleform.cleaned_data.pop('has_proof') or None
         proof_type = switch_invoice_receipt(has_proof, sale)
         if proof_type:
             generate_proof(proof_type)
 
-        process_customer(customer, sale, payment_methods, total, product_cristal, amount, self.request.user)
+        process_customer(customer, sale, payment_methods, sale.total, product_cristal, amount, self.request)
 
+        order_details_template = []
         for order in order_details:
             order.sale = sale
             order.save()
+            order_details_template.append((order, order.price*(1-order.discount)))
 
-        if product_cristal and customer:
-            process_service_order(self.request, customer)
-            # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
+        if product_cristal and not 'anonimo' in customer.first_name.lower():
+            service_order = process_service_order(self.request, customer)
+            # renderizar html de service_order sin return para que continue la funcion form_valid
 
+            context = {
+                'customer': customer,
+                'total': sale.total,
+                'products': order_details_template,
+                'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
+                'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
+                'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
+                'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
+                'seler': self.request.user,
+            }
+
+            messages.success(self.request, "Se ha generado la venta con éxito!")
+            return render(self.request, 'sales/components/comprobante_pago.html', context)
+        
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
 
@@ -198,7 +227,8 @@ class SalesListView(ListView):
             "deleted_at", 
             "discount",
             "created_at",
-            "updated_at", 
+            "updated_at",
+            "subtotal",
             )
         
         return context

@@ -8,158 +8,161 @@
 </head>
 
 <div class="container py-4">
-  <!-- ===============================================-->
-  <!--    Errores de Sistema (Backend)-->
-  <!-- ===============================================-->
-
+  <!-- Errores de Sistema (Backend) -->
   {% include 'core/components/messages.html' %}
 
-  <!-- ===============================================-->
-  <!--    Fin de Errores de Sistema (Backend)-->
-  <!-- ===============================================-->
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <!-- Título del formulario wizard -->
-    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
-          class="fa-inverse fa-stack-1x text-primary fas fa-user-tie"></i></span>
-      <div class="col">
-        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Proveedor</span><span
-            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
-        <p class="mb-0">{{update_create}}</p>
+      <!-- Título del formulario wizard -->
+      <div class="d-flex mb-4">
+          <span class="fa-stack me-2 ms-n1">
+              <i class="fas fa-circle fa-stack-2x text-300"></i>
+              <i class="fa-inverse fa-stack-1x text-primary fas fa-user-tie"></i>
+          </span>
+          <div class="col">
+              <h5 class="mb-0 text-primary position-relative">
+                  <span class="bg-200 dark__bg-1100 pe-3">Proveedor</span>
+                  <span class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span>
+              </h5>
+              <p class="mb-0">{{ update_create }}</p>
+          </div>
       </div>
-    </div>
   </div>
-  <!-- ===============================================-->
-  <!--    Tarjeta con la presentación de la caja-->
-  <!-- ===============================================-->
+
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
-    <div class="card theme-wizard h-100 mb-5">
-      <div class="card-body py-4" id="wizard-controller">
-        <div class="tab-content">
-          <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-            <form class="mt-3" method="post">
-              {% csrf_token %}
-              <div class="mb-3">
-                <div class="row mt-2">
-                  <div class="col-12 col-sm-6">
-                    <label
-                      for="{{ form.name.id_for_label }}"
-                      class="form-label"
-                      >Proveedor</label>
-                    {{form.name}}
-                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
-                    {% if form.name.errors %} 
-											{% for error in form.name.errors %}
-											<div class="text-danger fs--2">{{error}}</div>
-											{% endfor %} 
-										{% endif %}
-                  </div>
-                  <div class="col-12 col-sm-6">
-                    <label for="id_email" class="form-label">Email</label>
-                    {{form.email}}
-                  </div>
-                </div>
-                <div class="row mt-2">
-                  <div class="col-12 col-sm-6">
-                    <label
-                      for="{{ form.phone_code.id_for_label }}"
-                      class="form-label"
-                      >Código del país:</label
-                    >
-                    {{ form.phone_code }} {% if form.phone_code.errors %}
-                    <div class="text-danger fs--2">
-                      {{ form.phone_code.errors.0 }}
+      <div class="card theme-wizard h-100 mb-5">
+          <div class="card-body py-4" id="wizard-controller">
+              <div class="tab-content">
+                  <div class="tab-pane active px-sm-3 px-md-5" role="tabpanel" aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
+                      <form class="mt-3" method="post">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                              <div class="row mt-2">
+                                  <div class="col-sm-6 pt-1">
+                                      <label for="{{ form.name.id_for_label }}" class="form-label">Proveedor</label>
+                                      {{ form.name }}
+                                      <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                                      {% if form.name.errors %} 
+                                          {% for error in form.name.errors %}
+                                              <div class="text-danger fs--2">{{ error }}</div>
+                                          {% endfor %} 
+                                      {% endif %}
+                                  </div>
+                                  <div class="col-sm-6 pt-1">
+                                      <label for="id_email" class="form-label">Email</label>
+                                      {{ form.email }}
+                                  </div>
+                              </div>
+                              <div class="row mt-2">
+                                  <div class="col-5 col-sm-3 col-md-2 pt-3">
+                                      <label for="{{ form.phone_code.id_for_label }}" class="form-label">Código:</label>
+                                      {{ form.phone_code }}
+                                      {% if form.phone_code.errors %}
+                                          <div class="text-danger fs--2">{{ form.phone_code.errors.0 }}</div>
+                                      {% endif %}
+                                  </div>
+                                  <div class="col-7 col-sm-4 col-md-4 pt-3">
+                                      <label for="{{ form.phone_number.id_for_label }}" class="form-label">Celular:</label>
+                                      {{ form.phone_number }}
+                                      <small>Ingrese el número <span class="text-warning">sin espacios ni guiones.</span></small>
+                                      {% if form.phone_number.errors %} 
+                                          {% for error in form.phone_number.errors %}
+                                              <div class="text-danger fs--2">{{ error }}</div>
+                                          {% endfor %} 
+                                      {% endif %}
+                                  </div>
+                                  <div class="col-12 col-sm-6 col-md-6 pt-3">
+                                    <label for="{{ form.address.id_for_label }}" class="form-label">Dirección:</label>
+                                    {{ form.address }}
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-12 col-sm pt-2">
+                                    <div class="row align-items-center">
+                                        <label for="id_h_insurance"
+                                            class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                            <h5 class = "m-0">Bancos asociados: </h5>
+                                            <span class="fa-stack me-2 ms-2" data-bs-toggle="modal"
+                                            data-bs-target="#bankModal" title="Cargar una Obra Social" style="cursor: pointer">
+                                                <svg class="svg-inline--fa fa-circle fa-w-16 fa-stack-2x text-primary" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg>
+                                                <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-sm-4">
+                                        <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
+                                    </div>
+                                </div>
+                                  
+                              </div>
+                              <div class="row">
+                                    <h5 class = "mt-4">Marcas: </h5>
+                                    {{ form.brands }}
+                              </div>
+                                <div class="row pt-1 pb-3">
+                                    <div class="col-12 col-sm-6 form-group">
+                                        <div class="d-flex flex-column">
+                                            <div class="input-group">
+                                                <input type="search" id="id_brands-search"
+                                                class="form-control form-control-sm shadow-none search"
+                                                placeholder="Buscar marca">
+                                                <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span>
+                                                </div>
+                                            </div>
+                                            <ul id="id_brands-search-results"class="list-group text-dark z-3 position-absolute pt-4 mt-1"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                    {% endif %}
-                  </div>
-                  <div class="col-12 col-sm-6">
-                    <label
-                      for="{{ form.phone_number.id_for_label }}"
-                      class="form-label"
-                      >Celular:
-                    </label>
-                    {{form.phone_number}}
-                    <small
-                      >Ingrese el número
-                      <span class="text-warning">sin espacios ni guiones.</span>
-                    </small>
-                    {% if form.phone_number.errors %} 
-											{% for error in form.phone_number.errors %}
-											<div class="text-danger fs--2">{{error}}</div>
-											{% endfor %} 
-										{% endif %}
-                  </div>
                 </div>
-                <div class="row">
-                  <div class="col-12 col-sm-6">
-                    <button
-                      class="btn btn-primary d-block w-100 mt-3"
-                      type="submit"
-                      name="submit"
-                    >
-                      Registrar
-                    </button>
-                  </div>
-                  <div class="col-12 col-sm-6">
-                    <!-- Botón para abrir el modal -->
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bankModal">
-                      Añadir Banco
-                    </button>
-                  </div>
-                </div>
-                <div class="row">
-                  <label for="id_brands" class="form-label mt-3">Marcas</label>
-                  <input type="search" id="id_brands-search" class="form-control form-control-sm shadow-none search" placeholder="Buscar marca">
-                </div>
-                <ul id="id_brands-search-results" class="list-group text-dark z-3 position-absolute pt-4 mt-1"></ul>
-              </div>
-            </form>
-          </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
   <!-- Modal -->
-<div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bankModalLabel">Añadir Banco</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form method="post" id="bank-form" class="row g-3 needs-validation align-items-center" novalidate="">
-          {% csrf_token %}
-          <div class="row justify-content-sm-center pb-2">
-            <div class="col pt-3">
-              <label for="{{ bank_form.bank_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
-              {{ bank_form.bank_name }}
-              <div class="valid-feedback"></div>
-              <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
+    <div class="modal fade" id="bankModal" tabindex="-1" aria-labelledby="bankModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bankModalLabel">Añadir Banco</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
-          <div class="row justify-content-sm-center pb-2">
-            <div class="col-12">
-              <label for="{{ bank_form.cuit.id_for_label }}" class="form-label col-form-label">CUIT:</label>
-              {{ bank_form.cuit }}
-              <div class="valid-feedback">Perfecto!</div>
-              <div class="invalid-feedback">Ingrese solo números.</div>
+            <div class="modal-body">
+                <form method="post" id="bank-form" class="row g-3 needs-validation align-items-center" novalidate="">
+                {% csrf_token %}
+                <div class="row justify-content-sm-center pb-2">
+                    <div class="col pt-3">
+                    <label for="{{ bank_form.bank_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
+                    {{ bank_form.bank_name }}
+                    <div class="valid-feedback"></div>
+                    <div class="invalid-feedback">Ingrese solo letras del alfabeto.</div>
+                    </div>
+                </div>
+                <div class="row justify-content-sm-center pb-2">
+                    <div class="col-12">
+                    <label for="{{ bank_form.cuit.id_for_label }}" class="form-label col-form-label">CUIT:</label>
+                    {{ bank_form.cuit }}
+                    <div class="valid-feedback">Perfecto!</div>
+                    <div class="invalid-feedback">Ingrese solo números.</div>
+                    </div>
+                    <div class="col-12 pt-2">
+                    <label for="{{ bank_form.cbu.id_for_label }}" class="form-label col-form-label">CBU O ALIAS:</label>
+                    {{ bank_form.cbu }}
+                    <div class="valid-feedback">Perfecto!</div>
+                    <!-- <div class="invalid-feedback">Ingrese solo números.</div> -->
+                    </div>
+                </div>
+                </form>
             </div>
-            <div class="col-12 pt-2">
-              <label for="{{ bank_form.cbu.id_for_label }}" class="form-label col-form-label">CBU O ALIAS:</label>
-              {{ bank_form.cbu }}
-              <div class="valid-feedback">Perfecto!</div>
-              <!-- <div class="invalid-feedback">Ingrese solo números.</div> -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="save-bank">Guardar</button>
             </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="save-bank">Guardar</button>
-      </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 </div>
 <!-- ===============================================-->
 <!--    Fin Contentenedor del bloque principal-->

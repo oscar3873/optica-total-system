@@ -7,7 +7,7 @@
 
 /* Barra de scroll personalizada */
 .product-container::-webkit-scrollbar {
-    width: 5px; /* Ancho total del riel */
+    width: 7px; /* Ancho total del riel */
 }
 
 .product-container::-webkit-scrollbar-thumb {
@@ -21,6 +21,13 @@
 }
 
 .product-sale-item {
-    max-height: 470px;
+    max-height: 500px;
     overflow-y: auto;
+}
+
+.boton-Quitar {
+    background-color: transparent;
+    border: none; /* Elimina el borde, si lo hubiera */
+    color: inherit; /* Usa el color de texto heredado */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
 }

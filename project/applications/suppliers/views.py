@@ -11,6 +11,7 @@ from .models import *
 from applications.employes.utils import obtener_nombres_de_campos
 
 # Create your views here.
+################################# CREATE ##############################
 class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
     template_name = 'suppliers/supplier_create_page.html'
@@ -18,6 +19,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['brandsSelected'] = Brand.objects.all()  # Obtén todas las marcas
         context['bank_form'] = BankForm
         context['update_create'] = 'Registrar un proveedor'
         return context
@@ -27,11 +29,14 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         supplier.user_made = self.request.user
         supplier.save()
         
-        for brand in form.cleaned_data['brands']:
-            Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made = self.request.user)
+        selected_brands = form.cleaned_data.get('brandsSelected')
+        for brand in selected_brands:  # Usa brandsSelected en lugar de brands
+            Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made=self.request.user)
+        
         return super().form_valid(form)
 
 
+################################# UPDATE ##############################
 class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
@@ -40,30 +45,38 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['update'] = 1
+        
+        related_brands = self.get_object().brand_suppliers.values_list('brand', flat=True)
+        avaliable_brands = Brand.objects.filter(id__in=related_brands)
+        context['brandsSelected'] = avaliable_brands  # Obtén todas las marcas
         context['bank_form'] = BankForm
         context['update_create'] = f'Actualizar proveedor: {self.get_object().name.upper()}'
         return context
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
-        supplier = form.save()
+        supplier = form.instance
 
-        selected_brands = form.cleaned_data['brand']
+        selected_brands = form.cleaned_data['brandsSelected']  # Usa brandsSelected en lugar de brands
         existing_brands = supplier.brand_suppliers.all()
 
-        # Elimina relaciones existentes que ya no están seleccionadas
-        for brand_suppliers in existing_brands: # brand_suppliers es la tabla intermedia (relacion inversa)
+        for brand_suppliers in existing_brands:  # brand_suppliers es la tabla intermedia (relación inversa)
             if brand_suppliers.brand not in selected_brands:
-                supplier.brand_suppliers.get(brand=brand_suppliers.brand).delete()
+                brand_suppliers.delete()
 
-        # Crea nuevas relaciones solo para características no existentes
         for brand in selected_brands:
-            if brand not in existing_brands.values_list('brand', flat=True): # Si NO existe ya un producto relacionado con el proveedor, crea la relacion
-                Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made = self.request.user)
+            if not supplier.brand_suppliers.filter(brand=brand).exists():
+                Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made=self.request.user)
 
-        return super().form_valid(form)
+        supplier.save()
+        
+        return HttpResponseRedirect(reverse_lazy('suppliers_app:supplier_detail', kwargs = {'pk':supplier.pk}))
+    
+    
 
 
+################################# LIST ##############################
 class SuppliersListView(CustomUserPassesTestMixin, ListView):
     model = Supplier
     template_name = 'suppliers/supplier_list_page.html'
@@ -76,9 +89,7 @@ class SuppliersListView(CustomUserPassesTestMixin, ListView):
         return context
 
 
-from django.shortcuts import render
-from django.views.generic import DetailView
-
+################################# DETAIL ##############################
 class SupplierDetailView(DetailView):
     model = Supplier
     template_name = 'suppliers/supplier_page.html'
@@ -102,6 +113,7 @@ class SupplierDetailView(DetailView):
         context['related_brands'] = brands
         return context
 
+################################# DELETE ##############################
 class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
     model = Supplier
     template_name = 'suppliers/supplier_delete_page.html'

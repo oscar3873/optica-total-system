@@ -1,13 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
     const promotionInput = document.getElementById('id_type_discount');
     const discountInput = document.getElementById('id_discount');
-    
-    if(promotionInput.value == 1){
+    let optionIndex = promotionInput.selectedIndex;
+
+    if(promotionInput.options[optionIndex].text.includes('2x1')){
         discountInput.setAttribute('disabled', 'true');
     }
     promotionInput.addEventListener('click', function () {
-        if(promotionInput.value == 1){
+        optionIndex = promotionInput.selectedIndex
+        if(promotionInput.options[optionIndex].text.includes('2x1')){
             discountInput.setAttribute('disabled', 'true');
+            discountInput.value = '0';
         }
         else{
             discountInput.removeAttribute("disabled");

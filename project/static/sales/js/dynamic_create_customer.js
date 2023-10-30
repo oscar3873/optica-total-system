@@ -1,4 +1,8 @@
 var button_serviceOrder = document.querySelector("[data-bs-target='#serviceOrder']");
+
+let has_cristal = false;
+
+
 document.addEventListener('DOMContentLoaded', function() {
     const saveCustomer = document.getElementById('save-customer');
 
@@ -48,10 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     let payment_method = document.getElementById('id_payment_method');
 
-                    if (customer_data.has_credit_account) {
-                        
-                        button_serviceOrder.hidden = false;
-                
+                    if (customer_data.has_credit_account) {                
                         var searchText = "Cuenta Corriente";
                         // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                         for (var i = 0; i < payment_method.options.length; i++) {
@@ -62,12 +63,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }else{
                         payment_method.options[0].selected = true;
-
-                        button_serviceOrder.hidden = true;
                     }
 
                     // Cierra el modal al guardar exitosamente
                     $('#New-customer').modal('hide');
+
+                    if (has_cristal){
+                        button_serviceOrder.hidden = false;
+                    }
+
                 } else if ('error' in data) {
                     // Ha ocurrido un error al guardar el cliente
                     // let error_customer = document.getElementById('???');

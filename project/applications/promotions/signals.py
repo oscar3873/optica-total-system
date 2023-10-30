@@ -6,7 +6,7 @@ def auto_set_promotions(sender, **kwargs):
     promo_count = TypePromotion.objects.count()
 
     if promo_count == 0:
-        for type in ['2x1', '2da un', 'Descuento']:
+        for type in ['2x1', '2da unididad', 'Descuento']:
             TypePromotion.objects.create(
                 name = type,
             )

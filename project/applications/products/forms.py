@@ -224,7 +224,7 @@ class ProductForm(ValidationFormMixin):
     
     def clean_cost_price(self):
         price = self.cleaned_data.get('cost_price')
-        if price is not None and price < Decimal('0.00'):
+        if price and price < Decimal('0.00'):
             raise forms.ValidationError('El precio no puede ser un número negativo.')
         return price
 
@@ -233,6 +233,12 @@ class ProductForm(ValidationFormMixin):
         name_formated = name.capitalize()
         self.validate_length(name_formated, 3, 'La categoria debe tener al menos 3 caracteres.')
         return name_formated
+
+    def clean_stock(self):
+        stock = self.cleaned_data.get('stock')
+        if stock and stock < 0:
+            raise forms.ValidationError('El valor de Stock debe ser un numero positivo.')
+        return stock
 
 
 class FeatureForm(ValidationFormMixin):
@@ -340,63 +346,6 @@ FeatureFormSet = forms.inlineformset_factory(
     can_delete=False
     )
 
-
-# ###################### Form Actualizar Precio
-from django import forms
-from .models import Brand, Category
-
-class PriceUpdateForm(forms.Form):
-    search_type = forms.ChoiceField(
-        label='Tipo de Búsqueda',
-        choices=(('brand', 'Marca'), ('category', 'Categoría')),
-        widget=forms.RadioSelect,
-        required=True,
-        initial='brand',  # Marca seleccionada por defecto
-    )
-    percentage = forms.DecimalField(
-        label='Porcentaje de Aumento',
-        min_value=0,
-        max_value=100,
-        decimal_places=2,
-    )
-    brand = forms.ModelChoiceField(
-        queryset=Brand.objects.all(),
-        required=False,
-        widget=forms.RadioSelect,
-        empty_label='Todas las Marcas',
-    )
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        required=False,
-        widget=forms.RadioSelect,
-        empty_label='Todas las Categorías',
-    )
-
-############# Actualizacion avanzada
-# En forms.py
-from django import forms
-
-class AdvancedSearchForm(forms.Form):
-    search_type = forms.ChoiceField(
-        label='Tipo de Búsqueda',
-        choices=(('brand', 'Marca'), ('category', 'Categoría')),
-        widget=forms.RadioSelect,
-        required=True,
-        initial='brand',  # Marca seleccionada por defecto
-    )
-    search_term = forms.CharField(
-        label='Búsqueda por Marca o Categoría',
-        max_length=100,
-        required=True,
-    )
-    percentage = forms.DecimalField(
-        label='Porcentaje de Aumento',
-        max_digits=5,
-        decimal_places=2,
-        required=True,
-        initial=0.0,  # Puedes establecer un valor inicial aquí
-    )
-
 class UpdatePriceForm(forms.Form):
     percentage = forms.DecimalField(
         label='Porcentaje de Aumento',
@@ -422,6 +371,6 @@ class UpdatePriceForm(forms.Form):
 
     def clean_percentage(self):
         percentage = self.cleaned_data['percentage']
-        if not percentage > 0:
+        if percentage and percentage > 0:
             raise forms.ValidationError('El porcentaje debe ser positivo')
         return percentage

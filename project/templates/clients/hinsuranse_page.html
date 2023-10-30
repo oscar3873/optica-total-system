@@ -58,9 +58,6 @@
                             type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
                                 class="d-none d-sm-inline-block ms-1">Nueva Obra Social</span></a>
                         {% endif %}
-                        <button class="btn btn-falcon-default btn-sm ms-1" type="button"><span
-                                class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
-                                class="d-none d-sm-inline-block ms-1">Exportar</span></button>
                     </div>
                 </div>
             </div>
@@ -88,7 +85,13 @@
                             <th class="align-middle white-space-nowrap name">{{ h_insurance.user_made }}</th>
                             <th class="align-middle white-space-nowrap name">{{ h_insurance.name }}</th>
                             <td class="align-middle white-space-nowrap cuit">{{ h_insurance.cuit }}</td>
-                            <td class="align-middle white-space-nowrap phone">{{ h_insurance.phone_number }}</td>
+                            <td class="align-middle white-space-nowrap phone">
+                                <span>
+                                    <a href="https://wa.me/+54{{h_insurance.phone_number}}">
+                                        +54{{h_insurance.phone_number}}
+                                    </a>
+                                </span>
+                            </td>
                             <td class="align-middle white-space-nowrap acciones">
                                 <div class="dropstart font-sans-serif position-static d-inline-block">
                                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"

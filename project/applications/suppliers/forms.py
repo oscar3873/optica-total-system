@@ -56,26 +56,37 @@ class SupplierForm(ValidationFormMixin):
                 }
         )
     )
-    brands = forms.ModelMultipleChoiceField(
+    address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Domicilio',
+                'type': 'text',
+            }
+        ),
+    )
+    brandsSelected = forms.ModelMultipleChoiceField(
         queryset=Brand.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(),
         required=False
-        )
+    )
+    
     class Meta:
         model = Supplier
-        fields = ('name','phone_number','phone_code','email')
+        fields = ('name', 'phone_number', 'phone_code', 'email', 'address', 'brandsSelected')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         if self.instance.pk:  # Update
             related_brands = self.instance.brand_suppliers.values_list('brand__id', flat=True)
-            self.fields['brands'].initial = related_brands
+            self.fields['brandsSelected'].initial = related_brands
 
     def clean_name(self):
         name = self.cleaned_data['name']
-        self.validate_length(name, 3, 'El nombre del proveedor debe tener al menos 3 carácteres.')
-        return name
+        name_formated = name.title()
+        self.validate_length(name_formated, 3, 'El nombre del proveedor debe tener al menos 3 carácteres.')
+        return name_formated
 
 class BankForm(ValidationFormMixin):
 
@@ -88,3 +99,9 @@ class BankForm(ValidationFormMixin):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
+
+    def clean_bank_name(self):
+        name = self.cleaned_data['bank_name']
+        name_formated = name.title()
+        self.validate_length(name_formated, 3, 'El nombre debe tener al menos 3 caracteres.')
+        return name_formated

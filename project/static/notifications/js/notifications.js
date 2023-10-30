@@ -7,18 +7,30 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNotifications(); // Cargar notificaciones al cargar la página
 
     function loadNotifications() {
-        fetch('/notifications/load/') // Reemplaza con la URL correcta de tu vista AJAX
+        fetch('/notifications/load/')
             .then((response) => response.json())
             .then((data) => {
-                // Procesa los datos y agrega las notificaciones a la lista
                 notificationList.innerHTML = '';
+    
+                if ('notifications' in data) {
+                    data.notifications.forEach((notification) => {
+                        appendNotification(notification);
+                    });
+                } else if ('nothing' in data) {
+                    // Manejar errores, por ejemplo, mostrar un mensaje de error en la página.
+                    var nothingNotif = document.createElement('p'); // Crea un nuevo elemento div
+                    nothingNotif.textContent = data.nothing; // Establece el texto del elemento
+                    nothingNotif.classList.add('text-center', 'm-2'); // Agrega las clases 'text-center' y 'm-2' al elemento
 
-                data.notifications.forEach((notification) => {
-                    appendNotification(notification);
-                });
-
+                    notificationList.appendChild(nothingNotif);
+                }
+    
                 // Verificar si hay nuevas notificaciones
                 checkForNewNotifications(data.notifications);
+            })
+            .catch((error) => {
+                // Manejar errores de red u otros problemas.
+                console.error(error);
             });
     }
 

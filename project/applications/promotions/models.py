@@ -29,7 +29,7 @@ class Promotion(BaseAbstractWithUser):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
 
     def __str__(self):
-        return f'{self.name}\n{self.description}\nDescuento: {self.discount}%'
+        return f'{self.name}-{self.description}-Descuento: {self.discount}%'
 
     
 
