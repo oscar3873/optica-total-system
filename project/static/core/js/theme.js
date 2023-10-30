@@ -7121,15 +7121,15 @@ var leadConversionInit = function leadConversionInit() {
 
 /* -------------------------------------------------------------------------- */
 
-
+// successful_payments primera grafica del reporte diario
 var linePaymentChartInit = function linePaymentChartInit() {
   var $echartsLinePaymentChart = document.querySelector('.echart-line-payment');
   var dataset = {
-    all: [4, 1, 6, 2, 7, 12, 4, 6, 5, 4, 5, 10],
-    successful: [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8],
-    failed: [1, 0, 2, 1, 2, 1, 1, 0, 0, 1, 0, 2]
+    all: [4, 1, 6, 2, 7, 12, 4, 6, 5, 4, 5, 10, 5, NaN],
+    successful: [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 10, 13],
+    failed: [1, 0, 2, 1, 2, 1, 1, 0, 0, 1, 0, 2, 0, 0]
   };
-  var labels = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM'];
+  var labels = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
   if ($echartsLinePaymentChart) {
     var userOptions = utils.getData($echartsLinePaymentChart, 'options');
@@ -7148,7 +7148,7 @@ var linePaymentChartInit = function linePaymentChartInit() {
           borderWidth: 1,
           transitionDuration: 0,
           formatter: function formatter(params) {
-            return "".concat(params[0].axisValue, " - ").concat(params[0].value, " USD");
+            return "".concat(params[0].axisValue, " Hs - $").concat(params[0].value, "");
           },
           textStyle: {
             fontWeight: 500,
