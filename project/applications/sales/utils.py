@@ -168,7 +168,11 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
         """Si el CLIETNE NO REGISTRA"""
         set_movement(total,  payment_methods.type_method, None, request)
 
-    sale.branch = request.user.branch
+    # Modificamos la forma de obtener la sucursal
+    branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
+    branch_actualy = Branch.objects.get(id=branch_actualy)
+
+    sale.branch = branch_actualy
     sale.user_made = request.user
     sale.save()
 
