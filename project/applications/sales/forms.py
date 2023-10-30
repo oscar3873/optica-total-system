@@ -127,7 +127,7 @@ class PaymentMethodForm(forms.ModelForm):
     )
     
     type_method = forms.ModelChoiceField(
-        queryset=PaymentType.objects.exclude(name__in=['Efectivo', 'Transferencia']), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        queryset=PaymentType.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
         widget=forms.Select(
             attrs={
                 'class': 'form-control'

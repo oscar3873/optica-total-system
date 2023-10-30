@@ -123,7 +123,7 @@ def generate_proof(proof_type): # generar factura o recibo
     print('IMPRIMIENDO %s' % proof_type)
 
 
-def process_customer(customer, sale, payment_methods, total, product_cristal, amount, user):
+def process_customer(customer, sale, payment_methods, total, product_cristal, amount, request):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
@@ -153,27 +153,27 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
             if missing_balance > 0:
                 customer.credit_balance += missing_balance
                 customer.save()
-            # set_movement(payment_total, payment_methods.type_method, customer, user)
+            # set_movement(payment_total, payment_methods.type_method, customer, request)
 
         elif product_cristal: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
             missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
             sale.missing_balance = missing_balance
-            set_movement(payment_total, payment_methods.type_method, customer, user)
+            set_movement(payment_total, payment_methods.type_method, customer, request)
 
         else:
             """Si el cliente NO CUENTA CORRIENTE pero paga el total de la compra - NO CRISTAL"""
-            set_movement(total, payment_methods.type_method, customer, user)
+            set_movement(total, payment_methods.type_method, customer, request)
     else:
         """Si el CLIETNE NO REGISTRA"""
-        set_movement(total,  payment_methods.type_method, None, user)
+        set_movement(total,  payment_methods.type_method, None, request)
 
-    sale.branch = user.branch
-    sale.user_made = user
+    sale.branch = request.user.branch
+    sale.user_made = request.user
     sale.save()
 
     Payment.objects.create(
-        user_made = user,
+        user_made = request.user,
         amount = amount if amount > 0 else total,
         payment_method = payment_methods,
         description = f"Pago de venta Nro: {sale.pk}",
@@ -181,18 +181,22 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     )
 
 
-def set_movement(total, type_method, customer, user):
+def set_movement(total, type_method, customer, request):
     description = "Venta de productos"
     if customer and not 'Anonimo' in customer.first_name:
         description += " a %s" % customer.get_full_name()
 
+    # Modificamos la forma de obtener la sucursal
+    branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
+    branch_actualy = Branch.objects.get(id=branch_actualy)
+
     Movement.objects.create(
-        user_made = user,
+        user_made = request.user,
         payment_method = type_method,
         amount = total,
         cash_register = CashRegister.objects.filter(
             is_close = False,
-            branch = user.branch,
+            branch = branch_actualy,
             ).last(),
         description = description,
         currency = Currency.objects.first(),

@@ -56,6 +56,15 @@ class SupplierForm(ValidationFormMixin):
                 }
         )
     )
+    address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Domicilio',
+                'type': 'text',
+            }
+        ),
+    )
     brandsSelected = forms.ModelMultipleChoiceField(
         queryset=Brand.objects.all(),
         widget=forms.CheckboxSelectMultiple(),
@@ -64,7 +73,7 @@ class SupplierForm(ValidationFormMixin):
     
     class Meta:
         model = Supplier
-        fields = ('name', 'phone_number', 'phone_code', 'email', 'brandsSelected')
+        fields = ('name', 'phone_number', 'phone_code', 'email', 'address', 'brandsSelected')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

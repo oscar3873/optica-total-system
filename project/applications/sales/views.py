@@ -112,7 +112,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         if proof_type:
             generate_proof(proof_type)
 
-        process_customer(customer, sale, payment_methods, subtotal, product_cristal, amount, self.request.user)
+        process_customer(customer, sale, payment_methods, subtotal, product_cristal, amount, self.request)
 
         for order in order_details:
             order.sale = sale

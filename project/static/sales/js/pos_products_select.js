@@ -39,13 +39,12 @@ document.addEventListener('DOMContentLoaded', function() {
             promotion.setAttribute('data-promotion',`none`);
             promotion.setAttribute('data-discount','0');
         }       
-    
-        const buttonRemove = document.createElement('a');
-        buttonRemove.classList.add('text-danger');
-        buttonRemove.href = '#';
+
+        const buttonRemove = document.createElement('button');
+        buttonRemove.classList.add('text-danger', 'boton-Quitar');
         buttonRemove.textContent = 'Quitar';
         buttonRemove.addEventListener('click', function () {
-            removeProduct(product.id); // Llama a la función removeProduct pasando la fila del producto
+            removeProduct(product.id);
             
             if (product.category.toLowerCase().includes('cristal')){
                 button_serviceOrder.hidden = true;
