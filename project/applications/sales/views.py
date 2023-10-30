@@ -2,6 +2,7 @@ import copy
 import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render
 from django.views.generic import *
 from django.db import transaction
 from django.urls import reverse_lazy
@@ -119,8 +120,20 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.save()
 
         if product_cristal and not 'anonimo' in customer.first_name.lower():
-            process_service_order(self.request, customer)
+            service_order = process_service_order(self.request, customer)
             # renderizar html de service_order sin return para que continue la funcion form_valid
+
+            context = {
+                'customer': customer,
+                'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
+                'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
+                'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
+                'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
+                'seler': self.request.user,
+            }
+
+            messages.success(self.request, "Se ha generado la venta con éxito!")
+            return render(self.request, 'sales/components/comprobante_pago.html', context)
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
