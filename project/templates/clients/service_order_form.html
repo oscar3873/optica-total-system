@@ -32,12 +32,12 @@
                         data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
                             class="nav-item-circle-parent"><span class="nav-item-circle"><span
                                     class="fas fa-money-bill-wave"></span></span></span><span
-                            class="d-none d-md-block mt-1 fs--1">CorreciÃ³n</span></a></li>
+                            class="d-none d-md-block mt-1 fs--1">Correción</span></a></li>
                 <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab2"
                         data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
                             class="nav-item-circle-parent"><span class="nav-item-circle"><span
                                     class="fas fa-credit-card"></span></span></span><span
-                            class="d-none d-md-block mt-1 fs--1">Caracteristicas</span></a></li>
+                            class="d-none d-md-block mt-1 fs--1">Características</span></a></li>
                 <li class="nav-item"><a class="nav-link fw-semi-bold" href="#bootstrap-wizard-validation-tab3"
                         data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
                             class="nav-item-circle-parent"><span class="nav-item-circle"><span
@@ -52,7 +52,7 @@
                         data-bs-toggle="tab" data-wizard-step="data-wizard-step"><span
                             class="nav-item-circle-parent"><span class="nav-item-circle"><span
                                     class="fas fa-check-double"></span></span></span><span
-                            class="d-none d-md-block mt-1 fs--1">Confirmacion</span></a></li>
+                            class="d-none d-md-block mt-1 fs--1">Confirmación</span></a></li>
             </ul>
         </div>
         <!-- Card body -->
@@ -77,8 +77,9 @@
                                 <thead>
                                     <tr class="btn-reveal-trigger">
                                         <th scope="col"></th>
-                                        <th class="text-center" scope="col">Cilindrico</th>
                                         <th class="text-center" scope="col">Esferico</th>
+                                        <th class="text-center" scope="col">Cilindrico</th>
+                                        
                                         <th class="text-center" scope="col">Eje</th>
                                     </tr>
                                 </thead>
@@ -116,8 +117,8 @@
                                 <thead>
                                     <tr class="btn-reveal-trigger">
                                         <th scope="col"></th>
-                                        <th class="text-center" scope="col">Cilindrico</th>
                                         <th class="text-center" scope="col">Esferico</th>
+                                        <th class="text-center" scope="col">Cilindrico</th>
                                         <th class="text-center" scope="col">Eje</th>
                                     </tr>
                                 </thead>
@@ -294,6 +295,9 @@
             </div>
         </div>
     </div>
-    <a class="btn btn-secondary btn-sm px-5 px-sm-6" href="{% url 'clients_app:customer_detail' customer.id %}">
+    <a class="btn btn-secondary px-5 px-sm-6" href="{% url 'clients_app:customer_detail' customer.id %}">
         Cancelar
+    </a>
+    
+</div>
 {% endblock %}

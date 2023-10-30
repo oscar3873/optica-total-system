@@ -206,7 +206,8 @@ class SalesListView(ListView):
             "deleted_at", 
             "discount",
             "created_at",
-            "updated_at", 
+            "updated_at",
+            "subtotal", 
             )
         
         return context
