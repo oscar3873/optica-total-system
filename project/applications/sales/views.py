@@ -252,7 +252,7 @@ def show_invoice(request, pk_sale):
 
     payment = Payment.objects.get(sale=sale)
 
-    order_details = sale.order_detaill.filter()
+    order_details = sale.order_detaill.filter(sale=sale)
     order_details_template = []
 
     for order in list(order_details):
