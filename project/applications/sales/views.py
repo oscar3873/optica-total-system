@@ -14,7 +14,7 @@ from applications.branches.models import Branch
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
-from project.settings.base import DATE_NOW
+from applications.core.mixins import CustomUserPassesTestMixin
 
 from .utils import *
 from .models import *
@@ -90,12 +90,14 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             
             if formset.is_valid():
                 subtotal += get_total_and_products(formset, all_products_to_sale)
-                order_details.append(process_formset(formset, promotional_products))
 
                 product_cristal = find_cristal_product(all_products_to_sale)
                 if product_cristal and not customer:
                     messages.error(self.request, "Seleccione un cliente antes de Vender Cristales")
                     return super().form_invalid(form)
+                order_details.append(process_formset(formset, promotional_products))
+                
+                
 
         promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
@@ -112,6 +114,10 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         sale.total = Decimal(subtotal - discount_promo) * Decimal(1 - discount_sale/100)
         print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
+        if product_cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
+            messages.error(self.request, "El pago debe ser mayor al 50% del total.")
+            return super().form_invalid(form)
+        
         has_proof = saleform.cleaned_data.pop('has_proof') or None
         proof_type = switch_invoice_receipt(has_proof, sale)
         if proof_type:
@@ -139,8 +145,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
                 'seler': self.request.user,
                 'total_discount': f'{discount_promo:.2f}',  # Muestra discount_promo con 2 decimales
-                'date':DATE_NOW.date(),
-                'hora':DATE_NOW.time()
             }
 
             messages.success(self.request, "Se ha generado la venta con éxito!")
@@ -236,6 +240,21 @@ class SalesListView(ListView):
         
         return context
     
+
+class SaleDetailView(CustomUserPassesTestMixin, DetailView):
+    template_name = 'sales/sale_detail_page.html'
+    model = Sale
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #detalles de venta en la venta que viene por url
+        context['sale'] = Sale.objects.get(id=self.kwargs['pk'])
+        context['sale_subtotal'] = context['sale'].total
+        context['sale_discount_amount'] = context['sale_subtotal'] * context['sale'].discount
+        context['sale_total'] = context['sale_subtotal'] - context['sale_discount_amount']
+        # Ordenes de detalle de la venta ...
+        context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
+        return context
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 

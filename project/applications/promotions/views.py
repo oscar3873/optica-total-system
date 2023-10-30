@@ -161,6 +161,8 @@ def ajax_promotional_products(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         
         promotions = Promotion.objects.filter(branch=branch, is_active=True)  # Obtén todas las promociones
+        print("Obtén todas las promociones")
+        print(promotions)
         list_promotion = {}
 
         for promotion in promotions:
