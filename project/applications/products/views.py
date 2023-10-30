@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_http_methods
+
 from django.views.generic import (
     FormView,
     UpdateView,
@@ -717,3 +719,20 @@ def ajax_search_products(request):
             'in_promo': 1 if product.promotions.count() > 0 else 0,
         } for product in products]
         return JsonResponse({'data': data})
+
+
+@require_http_methods(["GET"])
+def obtener_stock(request):
+    if request.is_ajax():
+        producto_id = request.GET.get('producto_id', None)
+        if producto_id is not None:
+            try:
+                producto = Product.objects.get(id=producto_id)
+                stock = producto.stock
+                return JsonResponse({'stock': stock})
+            except Product.DoesNotExist:
+                return JsonResponse({'error': 'Producto no encontrado'}, status=404)
+        else:
+            return JsonResponse({'error': 'ID de producto no proporcionada'}, status=400)
+    else:
+        return JsonResponse({'error': 'Esta no es una solicitud AJAX'}, status=400)
