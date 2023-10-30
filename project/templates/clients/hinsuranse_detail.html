@@ -16,7 +16,13 @@
         <dd class="col-sm-9">{{ h_insurance.name }}</dd>
 
         <dt class="col-sm-3">Teléfono:</dt>
-        <dd class="col-sm-9">{{ h_insurance.phone_number }}</dd>
+        <dd class="col-sm-9">
+            <span class="">
+                <a href="https://wa.me/+54{{h_insurance.phone_number}}">
+                    +54{{h_insurance.phone_number}}
+                </a>
+            </span>
+        </dd>
 
         <dt class="col-sm-3">CUIT:</dt>
         <dd class="col-sm-9">{{ h_insurance.cuit }}</dd>

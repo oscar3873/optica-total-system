@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("pasa por aca");
     function configureSearch(searchInput, searchResults) {
         searchInput.addEventListener('input', (event) => {
             const searchTerm = event.target.value.trim().toLowerCase();

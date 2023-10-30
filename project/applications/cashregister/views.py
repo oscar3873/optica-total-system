@@ -58,7 +58,7 @@ class CashRegisterCreateView(LoginRequiredMixin, FormView):
         messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
         return super().form_invalid(form)
 
-class CashRegisterView(CustomUserPassesTestMixin, TemplateView):
+class CashRegisterView(LoginRequiredMixin, TemplateView):
     template_name = 'cashregister/cashregister_page.html'
     model = CashRegister
     form_class = CloseCashRegisterForm
@@ -76,7 +76,7 @@ class CashRegisterView(CustomUserPassesTestMixin, TemplateView):
         return context
 
 
-class CashRegisterListView(CustomUserPassesTestMixin, ListView):
+class CashRegisterListView(LoginRequiredMixin, ListView):
     template_name = 'cashregister/cashregister_list_page.html'
     model = CashRegister
     
@@ -106,7 +106,7 @@ class CashRegisterListView(CustomUserPassesTestMixin, ListView):
         return context
 
 
-class CashRegisterDetailView(CustomUserPassesTestMixin, DetailView):
+class CashRegisterDetailView(LoginRequiredMixin, DetailView):
     template_name = 'cashregister/cashregister_detail_page.html'
     model = CashRegister
     
@@ -287,7 +287,7 @@ def archingTicket(request, pk):
     return render(request, 'cashregister/components/ticket_arching.html')
 
 
-class MovementsView(CustomUserPassesTestMixin, TemplateView):
+class MovementsView(LoginRequiredMixin, TemplateView):
     template_name = 'cashregister/movements_page.html'
     paginate_by = 25
     

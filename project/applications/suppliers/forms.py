@@ -56,21 +56,22 @@ class SupplierForm(ValidationFormMixin):
                 }
         )
     )
-    brands = forms.ModelMultipleChoiceField(
+    brandsSelected = forms.ModelMultipleChoiceField(
         queryset=Brand.objects.all(),
-        widget=forms.CheckboxSelectMultiple,
+        widget=forms.CheckboxSelectMultiple(),
         required=False
-        )
+    )
+    
     class Meta:
         model = Supplier
-        fields = ('name','phone_number','phone_code','email')
+        fields = ('name', 'phone_number', 'phone_code', 'email', 'brandsSelected')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        
+
         if self.instance.pk:  # Update
             related_brands = self.instance.brand_suppliers.values_list('brand__id', flat=True)
-            self.fields['brands'].initial = related_brands
+            self.fields['brandsSelected'].initial = related_brands
 
     def clean_name(self):
         name = self.cleaned_data['name']
