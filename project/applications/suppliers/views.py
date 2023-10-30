@@ -29,7 +29,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         supplier.user_made = self.request.user
         supplier.save()
         
-        selected_brands = form.cleaned_data.get('bransSelected')
+        selected_brands = form.cleaned_data.get('brandsSelected')
         for brand in selected_brands:  # Usa brandsSelected en lugar de brands
             Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made=self.request.user)
         

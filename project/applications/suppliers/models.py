@@ -15,10 +15,11 @@ class Supplier(BaseAbstractWithUser):
     """ # Para validar un número de telefono
     phoneNumberRegex = RegexValidator(regex = r"^\+?1?\d{8,15}$") """
     phone_code = models.CharField(max_length=10, blank=True, null=True, verbose_name="COD.Pais")
-    phone_number = models.BigIntegerField(unique=True ,verbose_name='Telefono de contacto')
-    name = models.CharField(max_length=50, verbose_name='Nombre')
+    phone_number = models.BigIntegerField(unique=True ,verbose_name='Telefono de contacto', null=True, blank=True)
+    name = models.CharField(max_length=50, verbose_name='Razón Social', null=True, blank=True)
     email = models.EmailField(verbose_name='Correo electronico', null=True, blank=True)
-
+    address = models.CharField(max_length=50, verbose_name='Dirección', null=True, blank=True)
+    
     objects = SupplierManager()
 
     class Meta:

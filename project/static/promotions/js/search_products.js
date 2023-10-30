@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
 
                     products.forEach(product => {
-                        if(!setProductIds.has(product.id) && !product.in_promo){
+                        if(!setProductIds.has(product.id)){
                             const item = document.createElement('li');
                             item.style.zIndex = "3";
                             item.style.cursor = 'pointer';
