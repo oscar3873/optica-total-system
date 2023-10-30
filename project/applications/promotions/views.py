@@ -161,11 +161,14 @@ def ajax_promotional_products(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         
         promotions = Promotion.objects.filter(branch=branch, is_active=True)  # Obtén todas las promociones
+        print("Obtén todas las promociones")
+        print(promotions)
         list_promotion = {}
 
         for promotion in promotions:
             # Obtén los productos asociados a cada promoción
             associated_products = promotion.promotion_products.values_list('product__id', flat=True)
-            list_promotion[promotion.name] = (promotion.type_prom.name, promotion.discount, list(associated_products))
-
+            list_promotion['{name}-{type_name}'.format(name=promotion.name, type_name= promotion.type_prom.name)] = (promotion.type_prom.name, promotion.discount, list(associated_products))
+        print("#################################################")
+        print(list_promotion)
         return JsonResponse({'promotions': list_promotion})

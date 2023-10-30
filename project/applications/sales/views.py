@@ -12,6 +12,7 @@ from applications.branches.models import Branch
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
+from applications.core.mixins import CustomUserPassesTestMixin
 
 from .utils import *
 from .models import *
@@ -202,6 +203,21 @@ class SalesListView(ListView):
         
         return context
     
+
+class SaleDetailView(CustomUserPassesTestMixin, DetailView):
+    template_name = 'sales/sale_detail_page.html'
+    model = Sale
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        #detalles de venta en la venta que viene por url
+        context['sale'] = Sale.objects.get(id=self.kwargs['pk'])
+        context['sale_subtotal'] = context['sale'].total
+        context['sale_discount_amount'] = context['sale_subtotal'] * context['sale'].discount
+        context['sale_total'] = context['sale_subtotal'] - context['sale_discount_amount']
+        # Ordenes de detalle de la venta ...
+        context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
+        return context
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
