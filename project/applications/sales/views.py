@@ -118,7 +118,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
-        if product_cristal and customer:
+        if product_cristal and not 'anonimo' in customer.first_name.lower():
             process_service_order(self.request, customer)
             # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
 

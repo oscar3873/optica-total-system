@@ -324,8 +324,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (product.category.toLowerCase().includes('cristal')){
                     has_cristal = true;
                 }
-                if (has_cristal && document.getElementById('id_customer')){
-                    button_serviceOrder.hidden = false;
+
+                let customer_selected = document.getElementById('selecter_customer_title');
+                if (customer_selected) {
+                    if (has_cristal && !customer_selected.textContent.includes('nonimo')){
+                        button_serviceOrder.hidden = false;
+                    }
                 }
 
             } else {
