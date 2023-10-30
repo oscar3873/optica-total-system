@@ -1,8 +1,7 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
-from django.contrib import messages
+from django.template import loader
 
-from project.settings.base import DATE_NOW
 from applications.cashregister.models import CashRegister, Currency, Movement
 
 from applications.clients.forms import *
@@ -140,7 +139,10 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     else:
         sale.state = Sale.STATE[0][0] # "COMPLETO"
 
-    if not 'anonimo' in customer.first_name.lower():
+    if not customer:
+        customer = Customer.objects.filter(first_name__icontains='Anonimo')
+
+    if customer and not 'Anonimo' in customer.first_name:
         if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
             customer.credit_balance += total * Decimal(1 - sale.discount / 100)

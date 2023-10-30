@@ -120,8 +120,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         if product_cristal and not 'anonimo' in customer.first_name.lower():
             process_service_order(self.request, customer)
-            # return HttpResponseRedirect(reverse_lazy('clients_app:service_order_new', kwargs={'pk': customer.pk}))
-
+            # renderizar html de service_order sin return para que continue la funcion form_valid
+        
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(self.success_url)
 

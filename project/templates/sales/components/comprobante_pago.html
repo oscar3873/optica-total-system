@@ -206,44 +206,49 @@
         </tfoot>
     </table>
         <!-- Detalles del pago -->
+
+        
+        {% if service %}
         <p class="payments">ORDEN DE SERVICIO</p>
         <table>
             <tbody>
                 <tr>
                     <td><strong>OD. LEJOS</strong></td>
-                    <td colspan="2">-5,50 -1,00x18</td>
+                    <td colspan="2">{{od_lejos}}</td>
                 </tr>
                 <tr>
                     <td><strong>OI. LEJOS</strong></td>
-                    <td colspan="2">-6,00 -2,00x18</td>
+                    <td colspan="2">{{oi_lejos}}</td>
                 </tr>
                 <tr>
                     <td><strong>OD. CERCA</strong></td>
-                    <td colspan="2"></td>
+                    <td colspan="2">{{od_cerca}}</td>
                 </tr>
                 <tr>
                     <td><strong>OD. CERCA</strong></td>
-                    <td colspan="2"></td>
+                    <td colspan="2">{{oi_cerca}}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <td><strong>TIPO</strong></td>
-                    <td colspan="2">LEJOS</td>
+                    <td colspan="2">{{type}}</td>
                 </tr>
                 <tr>
                     <td><strong>O. SOCIAL</strong></td>
-                    <td colspan="2"> COSEGURO</td>
-                </tr>
+                    <td colspan="2"> COSEGURO </td>
+                </tr> 
                 <tr>
                     <td><strong>MEDICO</strong></td>
                     <td colspan="2">Dr. Añazgo</td>
-                </tr>
+                </tr> -->
             </tbody>
         </table>
+        {% endif %}
+            
 
     <!-- Firma y aclaración -->
     <div class="footer">
         <span class="seller">Vendedor</span>
-        <span><strong>Carlos</strong></span>
+        <span><strong>{{seler}}</strong></span>
     </div>
     <div class="thanks">
         <small>!Muchas gracias por elegirnos¡</small>
@@ -255,6 +260,24 @@
         <br>
         <br>
     </div>
+
+
+    <script>
+        // Espera a que el documento esté listo
+        document.addEventListener('DOMContentLoaded', function () {
+            // Crear una nueva ventana o pestaña
+            var newTab = window.open('', '_blank');
+
+            // Obtén el contenido HTML de la página actual
+            var htmlContent = document.documentElement.innerHTML;
+
+            // Renderizar el contenido en la nueva ventana o pestaña
+            newTab.document.open();
+            newTab.document.write(htmlContent);
+            newTab.document.close();
+        });
+    </script>
+
 
 </body>
 </html>
