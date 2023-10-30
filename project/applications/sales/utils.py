@@ -140,7 +140,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     else:
         sale.state = Sale.STATE[0][0] # "COMPLETO"
 
-    if customer:
+    if not 'anonimo' in customer.first_name.lower():
         if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
             customer.credit_balance += total * Decimal(1 - sale.discount / 100)
@@ -168,7 +168,11 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
         """Si el CLIETNE NO REGISTRA"""
         set_movement(total,  payment_methods.type_method, None, request)
 
-    sale.branch = request.user.branch
+    # Modificamos la forma de obtener la sucursal
+    branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
+    branch_actualy = Branch.objects.get(id=branch_actualy)
+
+    sale.branch = branch_actualy
     sale.user_made = request.user
     sale.save()
 
