@@ -24,3 +24,10 @@
     max-height: 500px;
     overflow-y: auto;
 }
+
+.boton-Quitar {
+    background-color: transparent;
+    border: none; /* Elimina el borde, si lo hubiera */
+    color: inherit; /* Usa el color de texto heredado */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
