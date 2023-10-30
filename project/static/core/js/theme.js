@@ -10052,7 +10052,7 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
 
 /* -------------------------------------------------------------------------- */
 
-// CAMBIAR AQUI PARA EL TOTAL SALES DEL DASHBOARD REPORTES GENERALES
+// CAMBIAR AQUI PARA EL TOTAL SALES / VENTAS TOTALES DEL DASHBOARD REPORTES GENERALES
 var totalSalesInit = function totalSalesInit() {
   var ECHART_LINE_TOTAL_SALES = '.echart-line-total-sales';
   var SELECT_MONTH = '.select-month';
@@ -10512,7 +10512,7 @@ var usersByTimeChartInit = function usersByTimeChartInit() {
 
 /* -------------------------------------------------------------------------- */
 
-
+// VENTAS DE LA SEMANA
 var weeklySalesInit = function weeklySalesInit() {
   var ECHART_BAR_WEEKLY_SALES = '.echart-bar-weekly-sales';
   var $echartBarWeeklySales = document.querySelector(ECHART_BAR_WEEKLY_SALES);
@@ -10520,7 +10520,7 @@ var weeklySalesInit = function weeklySalesInit() {
   if ($echartBarWeeklySales) {
     // Get options from data attribute
     var userOptions = utils.getData($echartBarWeeklySales, 'options');
-    var data = [120, 200, 150, 80, 70, 110, 120]; // Max value of data
+    var data = [300, 200, 150, 80, 70, 110, 120]; // Max value of data
 
     var yMax = Math.max.apply(Math, data);
     var dataBackground = data.map(function () {
