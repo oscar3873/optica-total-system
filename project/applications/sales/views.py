@@ -14,6 +14,7 @@ from applications.branches.models import Branch
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
+from project.settings.base import DATE_NOW
 
 from .utils import *
 from .models import *
@@ -122,7 +123,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         for order in order_details:
             order.sale = sale
             order.save()
-            order_details_template.append((order, order.price*(1-order.discount)))
+            order_details_template.append((order, f'{order.price*Decimal(1-order.discount/100):.2f}'))
 
         if product_cristal and not 'anonimo' in customer.first_name.lower():
             service_order = process_service_order(self.request, customer)
@@ -130,13 +131,16 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
             context = {
                 'customer': customer,
-                'total': sale.total,
-                'products': order_details_template,
+                'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
+                'order_details': order_details_template,
                 'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
                 'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
                 'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
                 'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
                 'seler': self.request.user,
+                'total_discount': f'{discount_promo:.2f}',  # Muestra discount_promo con 2 decimales
+                'date':DATE_NOW.date(),
+                'hora':DATE_NOW.time()
             }
 
             messages.success(self.request, "Se ha generado la venta con éxito!")
