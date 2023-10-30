@@ -1,29 +1,30 @@
 {% extends 'dashboard/dashboard_page.html' %}
 {% load static %}
 {% block content %}
-<div class="row g-3 mb-3">
-    {% include 'dashboard/components/dashboard/weekly_sales.html' %}
-    {% include 'dashboard/components/dashboard/weekly_total_sales.html' %}
-    {% include 'dashboard/components/dashboard/market_share.html' %}
+<div class="container">
+    <div class="row g-3 mb-3">
+        {% include 'dashboard/components/dashboard/weekly_sales.html' %}
+        {% include 'dashboard/components/dashboard/weekly_total_sales.html' %}
+        {% include 'dashboard/components/dashboard/market_share.html' %}
+    </div>
+    <div class="row mb-3">
+        {% include 'dashboard/components/dashboard/employee_objetives.html' %}
+        {% include 'dashboard/components/dashboard/total_sales.html' %}
+    </div>
+    <div class="row mb-3">
+        {% include 'dashboard/components/dashboard/stock_available.html' %}
+    </div>
+    <div class="row mb-3">
+        {% include 'dashboard/components/dashboard/best_selling_products.html' %}
+        {% include 'dashboard/components/dashboard/top_sales_brand.html' %}
+    </div>
+    <div class="row">
+        {% include 'dashboard/components/dashboard/active_users.html' %}
+        {% include 'dashboard/components/dashboard/complete_sales.html' %}
+    </div>
+    <div class="row px-md-2">
+        {% include 'dashboard/components/dashboard/top_products.html' %}
+    </div>
 </div>
-<div class="row">
-    {% include 'dashboard/components/dashboard/employee_objetives.html' %}
-    {% include 'dashboard/components/dashboard/total_sales.html' %}
-</div>
-<div class="row">
-    {% include 'dashboard/components/dashboard/stock_available.html' %}
-</div>
-<div class="row">
-    {% include 'dashboard/components/dashboard/best_selling_products.html' %}
-    {% include 'dashboard/components/dashboard/top_sales_brand.html' %}
-</div>
-<div class="row">
-    {% include 'dashboard/components/dashboard/active_users.html' %}
-    {% include 'dashboard/components/dashboard/complete_sales.html' %}
-</div>
-<div class="row">
-    {% include 'dashboard/components/dashboard/top_products.html' %}
-</div>
-
 
 {% endblock content %}
