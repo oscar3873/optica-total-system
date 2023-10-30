@@ -59,6 +59,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         saleform = SaleForm(self.request.POST)
         # payment_methods = PaymentMethodsFormset(self.request.POST)
 
+        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+
         if saleform.is_valid():
             sale = saleform.save(commit=False)
             customer = saleform.cleaned_data['customer']
@@ -69,7 +72,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 messages.error(self.request, "Descuento de venta Inválido. Ingrese solo valores positivos.")
                 return super().form_invalid(form)
 
-        promotions_active = Promotion.objects.filter(is_active=True)
+        promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
         
