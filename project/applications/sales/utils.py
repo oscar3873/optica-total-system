@@ -90,8 +90,8 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
             discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem)*(1-percentage_desc_promo/100))
         
-        else: # Decuento unitario
-            discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
+    elif 'descuento' in promotional_products[promotion].lower() and len(promotional_products[promotion]) > 0: # Decuento unitario
+        discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
 
 
 def switch_invoice_receipt(invoice_or_receipt, sale):

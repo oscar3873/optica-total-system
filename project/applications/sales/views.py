@@ -125,6 +125,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
             context = {
                 'customer': customer,
+                'total': sale.total,
+                'products': order_details,
                 'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
                 'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
                 'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
