@@ -83,6 +83,8 @@
                                     <div class="row">
                                         <div class="col-12 col-sm-7">
                                             <div class="input-group d-flex">
+                                                <input type="color" class=" form-control-color p-1 me-2" id="color-input-disabled" {% if form %}value="{{ form.color_value.initial }}"{% endif %}
+                                            title="Choose your color" disabled>
                                                 {{ form.label }}
                                                 {% if form.label.errors %}
                                                     <div class="text-danger fs--2">
@@ -97,7 +99,7 @@
                                             </div>
                                             <small>Seleccione <span class="text-warning">uno o agregue un nuevo.</span></small>
                                         </div>
-                                        <div>
+                                        <!-- <div>
                                             <label for="color-input-disabled"
                                                 class="col-12 col-form-label d-flex justify-content-start align-items-center mt-1">
                                                 <span>Color</span>
@@ -105,10 +107,7 @@
                                             <input type="color" class=" form-control-color" id="color-input-disabled" {% if form %}value="{{ form.color_value.initial }}"{% endif %}
                                             title="Choose your color" disabled>
                                         </div>
-                                        <small>Color que <span class="text-warning">tiene el tipo seleccionado.</span></small>
-                                        <div>
-                                            
-                                        </div>
+                                        <small>Color que <span class="text-warning">tiene el tipo seleccionado.</span></small> -->
                                     </div>
                                     
                                 </div>

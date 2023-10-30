@@ -92,7 +92,7 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
             discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem)*(1-percentage_desc_promo/100))
         
         else: # Decuento unitario
-            discount_promo.append(sum(promotional_products[promotion])*(1-percentage_desc_promo/100))
+            discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
 
 
 def switch_invoice_receipt(invoice_or_receipt, sale):
@@ -201,7 +201,7 @@ def set_movement(total, type_method, customer, user):
 
 
 def process_service_order(request, customer):
-    service_order = ServiceOrder(request.POST)
+    service_order = ServiceOrderForm(request.POST)
     correction_form = CorrectionForm(request.POST)
     material_form = MaterialForm(request.POST)
     color_form = ColorForm(request.POST)
@@ -210,6 +210,7 @@ def process_service_order(request, customer):
     pupilar_form = InterpupillaryForm(request.POST)
 
     if (
+        service_order.is_valid() and
         correction_form.is_valid() and
         material_form.is_valid() and 
         color_form.is_valid() and

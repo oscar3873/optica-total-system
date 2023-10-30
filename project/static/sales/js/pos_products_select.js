@@ -28,12 +28,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if(promotionLabelItem.length != 0){
             promotion.classList.remove('text-600');
             promotion.classList.add('text-success');
-            promotion.textContent = `Promo: ${promotionLabelItem[1]}`;
+            promotion.textContent = promotionLabelItem[2] > 0
+                                    ? `Promo: ${parseInt(promotionLabelItem[2])}% ${promotionLabelItem[1]}`
+                                    : `Promo: ${promotionLabelItem[1]}`;
             promotion.setAttribute('data-promotion',`${promotionLabelItem[1]}`);
             promotion.setAttribute('data-discount',`${promotionLabelItem[2]}`);
         }
         else{
-            promotion.textContent = `Sin promociones activas`;
+            // promotion.textContent = `Sin promociones activas`;
             promotion.setAttribute('data-promotion',`none`);
             promotion.setAttribute('data-discount','0');
         }       
@@ -195,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataType: 'json',
                 success : function (allPromotions) {
                     promotions = allPromotions.promotions;
+                    console.log(promotions);
                 }
             });
 
@@ -300,7 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if(promotionLabelItem.length != 0){ 
             const promLabel = document.createElement('div');
             promLabel.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-success');
-            promLabel.textContent = `${promotionLabelItem[0]}`;
+            const promNameAndType = promotionLabelItem[0].split('-');
+            promLabel.textContent = `${promNameAndType[0]}`;
             rightColumn.appendChild(promLabel);
         }
         
@@ -445,6 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let promDiscount = [];
             let promNone = [];
 
+            let promotionDiscount_2da = 0;
             let promotionDiscount = 0;
             // Recorro el array promotions para ver los productos y la promocion a la que pertenecen
             promotions.forEach(promotionElement => {
@@ -454,10 +459,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 let promType = promotionElement.getAttribute('data-promotion');
 
-                console.log(promType);
-
-                if(promType != '2x1'){
-                    promotionDiscount = promotionElement.getAttribute('data-discount');
+                switch (true) {
+                    case /2da/.test(promType):
+                        promotionDiscount_2da = promotionElement.getAttribute('data-discount');
+                        break;
+                    case /Descuento/.test(promType):
+                        promotionDiscount = promotionElement.getAttribute('data-discount');
+                        break;
+                    // Agrega más casos con expresiones regulares según sea necesario para otros tipos de promoción
+                    default:
+                        // Manejo por defecto si el tipo de promoción no coincide con ninguno de los casos anteriores
+                        break;
                 }
                 
                 let priceElement = buyDetail.querySelector(`#price-${prodId}`);
@@ -491,17 +503,20 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
                 else if(promType.includes('Descuento')){ // Si la promocion es Descuento por producto
-                    promDiscount.push(price - discount_2for);
+                    for(let i=0; i<quantityProduct; i++){
+                        promDiscount.push(price - discount_2for);
+                    }
                 }
 
                 else if(promType == 'none'){ // Sin promocion
                     promNone.push((price - discount_2for)*quantityProduct);
                 }
             });
+
             let importPromotion2x1 = promotionPrice(prom2x1, 0);
-            let importPromotion2ndUn = promotionPrice(prom2ndUn, promotionDiscount);
-            let importPromotionDesc = promotionPrice(promDiscount, promotionDiscount);
-            let importPromotionNone = promotionPrice(promNone, 0);
+            let importPromotion2ndUn = promotionPrice(prom2ndUn, promotionDiscount_2da);
+            let importPromotionDesc = processBasicsPromotion(promDiscount, promotionDiscount);
+            let importPromotionNone = processBasicsPromotion(promNone, 0);
 
             console.log('Importe a pagar en productos de promo 2x1: ',importPromotion2x1);
             console.log(prom2x1);
@@ -574,10 +589,9 @@ document.addEventListener('DOMContentLoaded', function() {
         let sumSecondUnit = 0;
         let totalDiscount = 0;
         let size = list.length;
-
+        console.log(discount);
         // Controla si la cantidad de elementos es par y si es distinta de 0
         if(size!=0 && size%2==0){
-            console.log('ENTRA PAR');
             // Recorre la lista de precios hasta el final
             for(let i=0; i<size; i++){
                 // Pregunta si aún no llega a la mitad de la lista
@@ -595,7 +609,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         // Caso en que la cantidad es impar
         else if(size!=0){
-            console.log('ENTRA IMPAR');
             // Recorre la lista de precios hasta el final
             for(let i=0; i<=size; i++){
                 if(i<=size/2){
@@ -616,5 +629,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return totalToPay;
     };
 
+
+    function processBasicsPromotion(list, discount){
+        discount = parseFloat(discount);
+
+        let sumPrice = list.reduce((acumulador, numero) => acumulador + numero, 0);
+        return parseFloat(sumPrice * (1-discount/100));
+    }
 
 });
