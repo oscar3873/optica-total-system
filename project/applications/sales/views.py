@@ -113,7 +113,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         if proof_type:
             generate_proof(proof_type)
 
-        process_customer(customer, sale, payment_methods, subtotal, product_cristal, amount, self.request)
+        process_customer(customer, sale, payment_methods, sale.total, product_cristal, amount, self.request)
 
         for order in order_details:
             order.sale = sale
@@ -219,8 +219,7 @@ class SalesListView(ListView):
             "deleted_at", 
             "discount",
             "created_at",
-            "updated_at",
-            "subtotal", 
+            "updated_at", 
             )
         
         return context
