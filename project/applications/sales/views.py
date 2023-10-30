@@ -118,9 +118,11 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         process_customer(customer, sale, payment_methods, sale.total, product_cristal, amount, self.request)
 
+        order_details_template = []
         for order in order_details:
             order.sale = sale
             order.save()
+            order_details_template.append((order, order.price*(1-order.discount)))
 
         if product_cristal and not 'anonimo' in customer.first_name.lower():
             service_order = process_service_order(self.request, customer)
@@ -129,7 +131,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             context = {
                 'customer': customer,
                 'total': sale.total,
-                'products': order_details,
+                'products': order_details_template,
                 'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
                 'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
                 'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
