@@ -130,4 +130,11 @@ urlpatterns = [
         ajax_search_customers,
         name='ajax_search_customers'
     ),
+
+    ################# AJAX PRINT SERVICE ORDER #################
+    path(
+        'render_service_template',
+        render_service_template,
+        name='render_service_template'
+    )
 ]
