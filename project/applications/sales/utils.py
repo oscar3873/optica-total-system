@@ -162,7 +162,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
             if missing_balance > 0:
                 customer.credit_balance += missing_balance
                 customer.save()
-            # set_movement(payment_total, payment_methods.type_method, customer, request)
+            set_movement(payment_total, payment_methods.type_method, customer, request)
 
         elif product_cristal: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
