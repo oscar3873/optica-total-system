@@ -7121,15 +7121,15 @@ var leadConversionInit = function leadConversionInit() {
 
 /* -------------------------------------------------------------------------- */
 
-
+// successful_payments primera grafica del reporte diario
 var linePaymentChartInit = function linePaymentChartInit() {
   var $echartsLinePaymentChart = document.querySelector('.echart-line-payment');
   var dataset = {
-    all: [4, 1, 6, 2, 7, 12, 4, 6, 5, 4, 5, 10],
-    successful: [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8],
-    failed: [1, 0, 2, 1, 2, 1, 1, 0, 0, 1, 0, 2]
+    all: [4, 1, 6, 2, 7, 12, 4, 6, 5, 4, 5, 10, 5, NaN],
+    successful: [3, 1, 4, 1, 5, 9, 2, 6, 5, 3, 5, 8, 10, 13],
+    failed: [1, 0, 2, 1, 2, 1, 1, 0, 0, 1, 0, 2, 0, 0]
   };
-  var labels = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM'];
+  var labels = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
   if ($echartsLinePaymentChart) {
     var userOptions = utils.getData($echartsLinePaymentChart, 'options');
@@ -7148,7 +7148,7 @@ var linePaymentChartInit = function linePaymentChartInit() {
           borderWidth: 1,
           transitionDuration: 0,
           formatter: function formatter(params) {
-            return "".concat(params[0].axisValue, " - ").concat(params[0].value, " USD");
+            return "".concat(params[0].axisValue, " Hs - $").concat(params[0].value, "");
           },
           textStyle: {
             fontWeight: 500,
@@ -10052,12 +10052,12 @@ var totalSalesEcommerce = function totalSalesEcommerce() {
 
 /* -------------------------------------------------------------------------- */
 
-
+// CAMBIAR AQUI PARA EL TOTAL SALES / VENTAS TOTALES DEL DASHBOARD REPORTES GENERALES
 var totalSalesInit = function totalSalesInit() {
   var ECHART_LINE_TOTAL_SALES = '.echart-line-total-sales';
   var SELECT_MONTH = '.select-month';
   var $echartsLineTotalSales = document.querySelector(ECHART_LINE_TOTAL_SALES);
-  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
   function getFormatter(params) {
     var _params$ = params[0],
@@ -10071,6 +10071,7 @@ var totalSalesInit = function totalSalesInit() {
     // Get options from data attribute
     var userOptions = utils.getData($echartsLineTotalSales, 'options');
     var chart = window.echarts.init($echartsLineTotalSales);
+    // Valores de cada mes
     var monthsnumber = [[60, 80, 60, 80, 65, 130, 120, 100, 30, 40, 30, 70], [100, 70, 80, 50, 120, 100, 130, 140, 90, 100, 40, 50], [80, 50, 60, 40, 60, 120, 100, 130, 60, 80, 50, 60], [70, 80, 100, 70, 90, 60, 80, 130, 40, 60, 50, 80], [90, 40, 80, 80, 100, 140, 100, 130, 90, 60, 70, 50], [80, 60, 80, 60, 40, 100, 120, 100, 30, 40, 30, 70], [20, 40, 20, 50, 70, 60, 110, 80, 90, 30, 50, 50], [60, 70, 30, 40, 80, 140, 80, 140, 120, 130, 100, 110], [90, 90, 40, 60, 40, 110, 90, 110, 60, 80, 60, 70], [50, 80, 50, 80, 50, 80, 120, 80, 50, 120, 110, 110], [60, 90, 60, 70, 40, 70, 100, 140, 30, 40, 30, 70], [20, 40, 20, 50, 30, 80, 120, 100, 30, 40, 30, 70]];
 
     var getDefaultOptions = function getDefaultOptions() {
@@ -10511,7 +10512,7 @@ var usersByTimeChartInit = function usersByTimeChartInit() {
 
 /* -------------------------------------------------------------------------- */
 
-
+// VENTAS DE LA SEMANA
 var weeklySalesInit = function weeklySalesInit() {
   var ECHART_BAR_WEEKLY_SALES = '.echart-bar-weekly-sales';
   var $echartBarWeeklySales = document.querySelector(ECHART_BAR_WEEKLY_SALES);
@@ -10519,7 +10520,7 @@ var weeklySalesInit = function weeklySalesInit() {
   if ($echartBarWeeklySales) {
     // Get options from data attribute
     var userOptions = utils.getData($echartBarWeeklySales, 'options');
-    var data = [120, 200, 150, 80, 70, 110, 120]; // Max value of data
+    var data = [300, 200, 150, 80, 70, 110, 120]; // Max value of data
 
     var yMax = Math.max.apply(Math, data);
     var dataBackground = data.map(function () {
