@@ -246,15 +246,6 @@
                                             class="nav-link-text ps-1">Punto de venta</span>
                                     </div>
                                 </a>
-                                {% if   request.user.is_staff %}
-                                <!-- parent pages--><a class="nav-link" href="pages/starter.html" role="button"
-                                    aria-expanded="false" id="sales_new">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-plus-circle"></span></span><span
-                                            class="nav-link-text ps-1">Nueva venta</span>
-                                    </div>
-                                </a>
-                                {% endif %}
                                 <!-- parent pages--><a class="nav-link" href="{% url 'sales_app:sales_list_view' %}" role="button"
                                     aria-expanded="false" id="sales_history">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span

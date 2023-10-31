@@ -137,7 +137,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             # renderizar html de service_order sin return para que continue la funcion form_valid
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
-        return HttpResponseRedirect(reverse_lazy('sales_app:detail', kwargs={'pk': sale.id}))
+        return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
 
     def form_invalid(self, form):
         print(form.errors)
