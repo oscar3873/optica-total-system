@@ -3,7 +3,6 @@ Configuracion base que todos necesitan para funcionar.
 """
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
-from django.utils import timezone
 import json
 from pathlib import Path
 

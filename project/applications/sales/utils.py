@@ -149,7 +149,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     if not customer:
         customer = Customer.objects.get(id=1)
 
-    if customer and not 'Anonimo' in customer.first_name:
+    if customer and not 'consumidor' in customer.first_name.lower():
         if customer.has_credit_account and 'cuenta corriente' in payment_methods.name.lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
             customer.credit_balance += total * Decimal(1 - sale.discount / 100)
@@ -197,7 +197,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
 def set_movement(total, type_method, customer, request):
     description = "Venta de productos"
-    if customer and not 'Anonimo' in customer.first_name:
+    if customer and not 'consumidor' in customer.first_name.lower():
         description += " a %s" % customer.get_full_name()
 
     # Modificamos la forma de obtener la sucursal

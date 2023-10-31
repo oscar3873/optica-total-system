@@ -131,7 +131,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
-        if product_cristal and not 'anonimo' in customer.first_name.lower():
+        if product_cristal and not 'consumidor' in customer.first_name.lower():
             service_order = process_service_order(self.request, customer)
             service_order.sale = sale
             service_order.save()

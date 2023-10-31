@@ -7,10 +7,9 @@ def auto_set_payment_type(sender, **kwargs):
 
     if customer_count == 0:
         Customer.objects.create(
-            first_name = 'Anonimo',
-            last_name = 'Anonimo',
+            first_name = 'Consumidor',
+            last_name = 'Final',
             dni = '00000000',
-            email = 'cliente.anonimo@gmail.com',
         )
 
 post_migrate.connect(auto_set_payment_type)
