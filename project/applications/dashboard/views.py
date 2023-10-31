@@ -15,7 +15,7 @@ from collections import defaultdict
 from datetime import datetime, time
 
 # Create your views here.
-class DashboardView(TemplateView):
+class DailyReportsView(TemplateView):
     template_name = 'dashboard/daily_summary.html'
 
     def get_context_data(self, **kwargs):
@@ -27,7 +27,7 @@ class DashboardView(TemplateView):
         contex['employee_objectives'] = Objetives.objects.filter(to='EMPLEADOS')
 
         # Crea una lista de horas en el rango de 8 a.m. a 9 p.m.
-        horas = [datetime.combine(DATE_NOW.now(), time(i, 0)) for i in range(8, 21)]
+        horas = [datetime.combine(DATE_NOW.now(), time(i, 0)) for i in range(8, 22)]
 
         # Inicializa diccionarios para almacenar los montos recaudados en cada intervalo de una hora
         monto_por_rango_completado = {str(hora.hour): 0 for hora in horas}
@@ -81,7 +81,7 @@ class DashboardView(TemplateView):
 
         return contex
     
-class DailyReportsView(TemplateView):
+class DashboardView(TemplateView):
     template_name = 'dashboard/general_reports.html'
     
     def get_context_data(self, **kwargs):
