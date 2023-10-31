@@ -115,8 +115,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         sale.total = Decimal(real_price_promo) * Decimal(1 - discount_sale/100)
         print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
-        print(sale.prices)
-
         if product_cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.error(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
