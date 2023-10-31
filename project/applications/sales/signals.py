@@ -17,4 +17,9 @@ def auto_set_payment_type(sender, **kwargs):
                 name=method,
                 type_method=payment_type
                 )
+        PaymentMethod.objects.create(
+            name='Cuenta Corriente',
+            type_method=PaymentType.objects.get(name='Tarjeta de Credito')
+            )
+
 post_migrate.connect(auto_set_payment_type)

@@ -80,7 +80,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         order_details = []
         all_products_to_sale = []
-        discount_promo = []
+        real_price_promo = []
         subtotal = 0
 
         # Procesa los datos del formset
@@ -103,17 +103,19 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
         for promotion, products_with_discountPromo in promotional_products.items():
-            process_promotion(promotional_products_clone, promotion, products_with_discountPromo, discount_promo)
+            process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
         
-        print('\n\n\nLISTADO DE PROMOCIONES: ', promotional_products_clone)
-        print('LISTADO DE DESCUENTOS: ', discount_promo)
-        discount_promo = Decimal(sum(discount_promo))
+        print('\n\n\nLISTADO DE PROMOCIONES: ', promotional_products_clone, '\n')
+        print('LISTADO DE PRECIOS A COBRAR POR PROMO: ', real_price_promo)
+        real_price_promo = Decimal(sum(real_price_promo))
         print('SUBTOTAL (TOTAL EN PRODUCTOS): ', subtotal)
-        print('DESCUENTO TOTAL: ', discount_promo)
+        print('DESCUENTO TOTAL: ', subtotal - real_price_promo)
         print('DESCUENTO DE VENTA: %', discount_sale)
-        sale.subtotal = Decimal(subtotal - discount_promo)
-        sale.total = Decimal(subtotal - discount_promo) * Decimal(1 - discount_sale/100)
+        sale.subtotal = Decimal(real_price_promo)
+        sale.total = Decimal(real_price_promo) * Decimal(1 - discount_sale/100)
         print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
+
+        print(sale.prices)
 
         if product_cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.error(self.request, "El pago debe ser mayor al 50% del total.")
@@ -244,8 +246,8 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
-def show_invoice(request, pk_sale):
-    sale = Sale.objects.get(id=pk_sale)
+def show_invoice(request, pk):
+    sale = Sale.objects.get(id=pk)
     customer = sale.customer
 
     service_order = ServiceOrder.objects.get(sale=sale, is_done=False)
@@ -271,7 +273,7 @@ def show_invoice(request, pk_sale):
         'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
         'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
         'seler': sale.user_made,
-        'total_discount': f'{sale.discount:.2f}',  # Muestra discount_promo con 2 decimales
+        'total_discount': f'{sale.discount:.2f}',  # Muestra real_price_promo con 2 decimales
         'payment_method': payment.payment_method.name,
         'pay': f'{sale.total - sale.missing_balance:.2f}',
         'missing_balance': f'{sale.missing_balance:.2f}', # Saldo pendiente

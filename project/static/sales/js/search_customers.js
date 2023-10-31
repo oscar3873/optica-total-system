@@ -92,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function () {
             customerIdCheck.value = customerId;
             searchInput.closest('form').appendChild(customerIdCheck);
 
-            let payment_method = document.getElementById('id_payment_method');
             if (customerCredit == 1) {
                 var searchText = "Cuenta Corriente";
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
@@ -103,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
             }else{
-                payment_method.options[0].selected = true;
+                payment_method.options[selected_payment].selected = true;
             }
 
             if (has_cristal){

@@ -47,11 +47,12 @@ def process_formset(formset, promotional_products):
         return order_detail
 
 # Función para calcular la suma de los primeros N elementos de una lista
-def sumFirst_N_Elements(lst, n):
-    return sum(sorted(lst)[:n])
+def sumFirst_N_Elements(lst, n, reverse=True):
+    lst = sorted(lst,reverse=reverse)
+    return sum(lst[:n])
 
 # Función para procesar productos en una promoción
-def process_promotion(promotional_products, promotion, products_with_discountPromo, discount_promo):
+def process_promotion(promotional_products, promotion, products_with_discountPromo, real_price_promo):
     discounted_prices = [] 
 
     list_products = []
@@ -71,31 +72,33 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
     promotional_products[promotion] = discounted_prices
     promotional_products[promotion].sort()
 
-    print(promotion)
     if len(promotional_products[promotion]) > 1:
         if '2x1' in promotion.type_prom.name:
             quantity_elem = len(promotional_products[promotion])
             if quantity_elem % 2 != 0:
-                quantity_elem = quantity_elem // 2 - 1
+                quantity_elem = quantity_elem // 2 + 1
             else: 
                 quantity_elem = quantity_elem // 2
 
-            discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem))
+            real_price_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem))
 
         elif '2da' in promotion.type_prom.name:
-            quantity_elem = len(promotional_products[promotion])
-            if quantity_elem % 2 != 0:
-                quantity_elem = quantity_elem // 2 - 1
+            quantity_elem_org = len(promotional_products[promotion])
+            if quantity_elem_org % 2 != 0:
+                quantity_elem = quantity_elem_org // 2 + 1
             else: 
-                quantity_elem = quantity_elem // 2
+                quantity_elem = quantity_elem_org // 2
 
-            discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem)*(1-percentage_desc_promo/100))
+            total_sin_desc = sumFirst_N_Elements(promotional_products[promotion], quantity_elem)
+            resto = sumFirst_N_Elements(promotional_products[promotion], quantity_elem_org-quantity_elem, False)
+            resto = resto*(1-percentage_desc_promo/100)
+            real_price_promo.append(total_sin_desc+resto)
             
         else: 
-            discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
+            real_price_promo.append(sum(promotional_products[promotion])*(1-percentage_desc_promo/100))
 
     elif len(promotional_products[promotion]) > 0: # Decuento unitario
-        discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
+        real_price_promo.append(sum(promotional_products[promotion])*(1-percentage_desc_promo/100))
 
 
 def switch_invoice_receipt(invoice_or_receipt, sale):

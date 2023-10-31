@@ -2,6 +2,10 @@
 
 document.addEventListener('DOMContentLoaded', function() {
 
+    payment_method.addEventListener("change", function() {
+        // Obtener el valor seleccionado
+        selected_payment = payment_method.value;
+    });
 
     // cuando el usuario hace clic en el botón "add more" de las variantes
     function addFormset(product) {
@@ -336,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
 
-                if (product.category.toLowerCase().includes('cristal')){
+                if (product.category.toLowerCase().includes('cristal') || product.category.toLowerCase().includes('contacto')){
                     button_serviceOrder.hidden = true;
                     has_cristal = false;
                 }

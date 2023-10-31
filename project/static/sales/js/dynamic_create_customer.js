@@ -2,6 +2,9 @@ var button_serviceOrder = document.querySelector("[data-bs-target='#serviceOrder
 
 let has_cristal = false;
 
+let payment_method = document.getElementById('id_payment_method');
+let selected_payment = 1;
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const saveCustomer = document.getElementById('save-customer');
@@ -50,8 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         checkboxContainer.appendChild(label);
                     }
 
-                    let payment_method = document.getElementById('id_payment_method');
-
                     if (customer_data.has_credit_account) {                
                         var searchText = "Cuenta Corriente";
                         // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
@@ -62,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             }
                         }
                     }else{
-                        payment_method.options[0].selected = true;
+                        payment_method.options[selected_payment].selected = true;
                     }
 
                     // Cierra el modal al guardar exitosamente
