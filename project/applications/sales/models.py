@@ -65,6 +65,7 @@ class Sale(BaseAbstractWithUser):
     state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False, verbose_name='Estado')
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)
     discount = models.PositiveIntegerField(verbose_name='Descuento', default=0, null=True, blank=True)
+    discount_extra = models.PositiveIntegerField(verbose_name='Descuento', default=0, null=True, blank=True)
     missing_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0, blank=True, null=True, verbose_name="Saldo")
     subtotal = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Subtotal")
     total = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Total")

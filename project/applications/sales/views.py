@@ -111,6 +111,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         print('SUBTOTAL (TOTAL EN PRODUCTOS): ', subtotal)
         print('DESCUENTO TOTAL: ', subtotal - real_price_promo)
         print('DESCUENTO DE VENTA: %', discount_sale)
+        sale.discount_extra = subtotal - real_price_promo
         sale.subtotal = Decimal(real_price_promo)
         sale.total = Decimal(real_price_promo) * Decimal(1 - discount_sale/100)
         print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
@@ -235,8 +236,8 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
         #detalles de venta en la venta que viene por url
         context['sale'] = Sale.objects.get(id=self.kwargs['pk'])
-        context['sale_subtotal'] = context['sale'].total
-        context['sale_discount_amount'] = context['sale_subtotal'] * context['sale'].discount
+        context['sale_subtotal'] = context['sale'].subtotal
+        context['sale_discount_amount'] = context['sale_subtotal'] * Decimal(context['sale'].discount/100)
         context['sale_total'] = context['sale_subtotal'] - context['sale_discount_amount']
         # Ordenes de detalle de la venta ...
         context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
@@ -248,7 +249,7 @@ def show_invoice(request, pk):
     sale = Sale.objects.get(id=pk)
     customer = sale.customer
 
-    service_order = ServiceOrder.objects.get(sale=sale, is_done=False)
+    service_order = ServiceOrder.objects.get(sale=sale, is_done=False) or None
 
     payment = Payment.objects.get(sale=sale)
 
@@ -256,26 +257,31 @@ def show_invoice(request, pk):
     order_details_template = []
 
     for order in list(order_details):
-        order_details_template.append((order, f'{order.price*Decimal(1-order.discount/100):.2f}'))
+        order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
 
     # Convertir la cadena en un objeto de fecha
+    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+
     format = "%A, %d de %B de %Y"
-    sale_date = datetime.strptime(sale.created_at.date(), format)
+    sale_date_str = sale.created_at.strftime(format)
 
     context = {
         'customer': customer,
         'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
         'order_details': order_details_template,
+        'service_order': service_order,
         'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
         'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
         'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
         'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
         'seler': sale.user_made,
-        'total_discount': f'{sale.discount:.2f}',  # Muestra real_price_promo con 2 decimales
+        'promo': f'{sale.total}',
+        'discount': f'{sale.discount:.2f}',
+        'discount_extra': f'{sale.discount_extra:.2f}',
         'payment_method': payment.payment_method.name,
         'pay': f'{sale.total - sale.missing_balance:.2f}',
         'missing_balance': f'{sale.missing_balance:.2f}', # Saldo pendiente
-        'date': sale_date,
+        'date': sale_date_str,
         'time': sale.created_at.time()
     }
 
