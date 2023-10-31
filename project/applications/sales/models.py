@@ -59,7 +59,6 @@ class Sale(BaseAbstractWithUser):
         ('CANCELADO','CANCELADO')
     ]
 
-    date_time_sale = models.DateTimeField(auto_now_add=True, verbose_name='Fecha')
     invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     receipt = models.ForeignKey(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True, verbose_name='Cliente')

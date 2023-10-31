@@ -144,7 +144,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
         sale.state = Sale.STATE[0][0] # "COMPLETO"
 
     if not customer:
-        customer = Customer.objects.get(first_name__icontains='Anonimo')
+        customer = Customer.objects.get(id=1)
 
     if customer and not 'Anonimo' in customer.first_name:
         if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
@@ -180,6 +180,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
     sale.branch = branch_actualy
     sale.user_made = request.user
+    sale.customer = customer
     sale.save()
 
     Payment.objects.create(

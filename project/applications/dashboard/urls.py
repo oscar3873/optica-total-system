@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import DailyReportsView, DashboardView
+from .views import *
 
 app_name = 'dashboard_app'
 
@@ -14,6 +14,13 @@ urlpatterns = [
         'reports/daily',
         DailyReportsView.as_view(),
         name='daily_summary'
+    ),
+
+    ####### AJAX MOTHN DATA ########
+    path(
+        'sale_date_month',
+        sale_date_month,
+        name='sale_date_month'
     )
 ]
 
