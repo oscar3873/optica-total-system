@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from applications.products.models import Brand
 
-from project.settings.base import DATE_NOW
+from project.settings.base import DATE_NOW, ZONE_TIME
 from applications.sales.models import *
 
 from applications.core.models import Objetives
@@ -91,6 +91,7 @@ class DashboardView(TemplateView):
         branch_actualy = Branch.objects.get(id=branch_actualy)
 
         week_date = DATE_NOW.date() - timedelta(days=7)
+        print(week_date)
 
         sale = Sale.objects.filter(created_at__date__gte=week_date, created_at__date__lte=DATE_NOW.date(),
                                    branch=branch_actualy, deleted_at=None)
@@ -105,38 +106,74 @@ class DashboardView(TemplateView):
             'sun': [0, 0]
         }
         
+        import pytz
+
+        # Supongamos que 'created_at' es un objeto datetime en UTC
+        
         for day in week_sales:
             for s in sale:
-                dia_semana = s.created_at.strftime('%a').lower()
+                # Convierte la fecha y hora de UTC a la zona horaria de Argentina
+                created_at= s.created_at.astimezone(ZONE_TIME)
+
+                dia_semana = created_at.strftime('%a').lower()
                 if day in dia_semana.lower():
-                    week_sales[day][0] += s.total
-                    week_sales[day][1] += OrderDetail.objects.filter(sale=s).count()
+                    week_sales[day][0] += float(s.total)
+                    week_sales[day][1] += 1
 
         context['week_sales'] = week_sales
         print(week_sales)
 
 
 
-        fecha_hoy = datetime.now()
+        # Obtener la fecha actual
+        fecha_hoy = DATE_NOW
+
+        # Calcular la fecha de inicio de las últimas 4 semanas, incluyendo la actual
         fecha_inicio = fecha_hoy - timedelta(weeks=4)
 
+        # Lista para almacenar las ventas por semana
         ventas_por_semana = []
 
+        # Calcular las ventas de las 4 semanas, incluyendo la semana actual
         for i in range(4):
             fecha_inicio_semana = fecha_inicio + timedelta(weeks=i)
             fecha_fin_semana = fecha_inicio_semana + timedelta(weeks=1)
             ventas_semana = Sale.objects.filter(
-                created_at__date__range=(fecha_inicio_semana.date(), fecha_fin_semana.date())
+                created_at__date__range=(fecha_inicio_semana, fecha_fin_semana)
             ).count()
             ventas_por_semana.append((i + 1, ventas_semana))
-        print(ventas_por_semana)
+
+        # Calcular el total de ventas de las 4 semanas anteriores a las actuales
+        total_ventas_anteriores = sum(venta for _, venta in ventas_por_semana[:-1])
+
+        print("Ventas por semana:", ventas_por_semana)
+        print("Total de ventas de las 4 semanas anteriores:", total_ventas_anteriores)
+
+        context['ventas_por_semana'] = ventas_por_semana
+        context['total_ventas_anteriores'] = total_ventas_anteriores
 
 
+        # Obtener los productos más vendidos
         productos_mas_vendidos = Product.objects.annotate(
-                                num_sales=Count('order_detaill__sale')
-                            ).filter(num_sales__gt=0).order_by('-num_sales')[:5]
-        print(productos_mas_vendidos)
-        context['productos_mas_vendidos'] = productos_mas_vendidos # TOP PRODUCTOS +VENDIDOS
+            num_sales=Count('order_detaill__sale')
+        ).filter(num_sales__gt=0).order_by('-num_sales')[:5]
+
+        # Crear un diccionario para almacenar los resultados
+        top_productos_mas_vendidos = defaultdict(int)
+
+        # Llenar el diccionario con los nombres de productos y la cantidad de ventas
+        for producto in productos_mas_vendidos:
+            top_productos_mas_vendidos[producto.name] = producto.num_sales
+
+        # Ordenar el diccionario por la cantidad de ventas
+        top_productos_mas_vendidos = dict(sorted(top_productos_mas_vendidos.items(), key=lambda item: item[1], reverse=True))
+
+        # Imprimir el diccionario
+        print(top_productos_mas_vendidos)
+
+        # Agregar el diccionario al contexto
+        context['productos_mas_vendidos'] = top_productos_mas_vendidos
+
 
         brands_with_sales = Brand.objects.annotate(
                             num_sales=Count('product_brand__order_detaill__sale')

@@ -1,5 +1,4 @@
 import copy
-from datetime import datetime
 import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
@@ -16,6 +15,7 @@ from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
+from project.settings.base import ZONE_TIME
 
 from .utils import *
 from .models import *
@@ -131,7 +131,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
-        if product_cristal and not 'anonimo' in customer.first_name.lower():
+        if product_cristal and not 'consumidor' in customer.first_name.lower():
             service_order = process_service_order(self.request, customer)
             service_order.sale = sale
             service_order.save()
@@ -171,7 +171,8 @@ class PaymentMethodCreateView(FormView):
             return super().form_valid(form)
         
     def form_invalid(self, form):
-        
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'error', 'message':'Ya existe el Metodo de Pago.'})
         print("######################################################")
         print("El formulario es invalido")
         print(form.errors)
@@ -258,20 +259,25 @@ def show_invoice(request, pk):
 
     order_details = sale.order_detaill.filter(sale=sale)
     order_details_template = []
+    subtotal = []
 
     for order in list(order_details):
         order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
+        subtotal.append( order.price * order.quantity)
 
     # Convertir la cadena en un objeto de fecha
     locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
 
     format = "%A, %d de %B de %Y"
-    sale_date_str = sale.created_at.strftime(format)
+    
+    created_at = sale.created_at.astimezone(ZONE_TIME)
+    sale_date_str = created_at.strftime(format)
 
     context = {
         'customer': customer,
         'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
         'order_details': order_details_template,
+        'subtotal': sum(subtotal),
         'service_order': service_order if service_order else None,  # Incluye service_order solo si no es None
         'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}' if service_order else None,
         'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}' if service_order else None,
@@ -285,7 +291,7 @@ def show_invoice(request, pk):
         'pay': f'{sale.total - sale.missing_balance:.2f}',
         'missing_balance': f'{sale.missing_balance:.2f}',  # Saldo pendiente
         'date': sale_date_str,
-        'time': sale.created_at.time()
+        'time': created_at.time()
     }
 
     return render(request, 'sales/components/comprobante_pago.html', context)

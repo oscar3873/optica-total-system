@@ -17,6 +17,7 @@ class Employee(BaseAbstractWithUser):
         -employment_date: fecha del alta de relacion de dependencia.
     """
     objects = EmployeeManager()
+    jornada = models.CharField(max_length=50, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee_type', verbose_name="Nombre")
     # user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employees')
     employment_date = models.DateField(verbose_name='Fecha de contratación', null=True, blank=True)

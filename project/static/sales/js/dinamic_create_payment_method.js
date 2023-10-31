@@ -43,6 +43,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         idPaymentMethodSelect.appendChild(newOption);
                         newOption.selected = true;
                         closeModal();  // Cerrar el modal después de agregar la nueva categoría
+                    }else{
+                        console.log(data.message);
                     }
                 }
             });
