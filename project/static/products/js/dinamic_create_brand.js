@@ -42,8 +42,10 @@ document.addEventListener("DOMContentLoaded", function() {
                         idBrandSelect.appendChild(newOption);
                         newOption.selected = true;
                         closeModal_brand();  // Cerrar el modal después de agregar la nueva marca
+                    }else{
+                        console.log(data.message);
                     }
-                }
+                },
             });
         }
     });
