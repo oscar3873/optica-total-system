@@ -294,6 +294,10 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
         branch = user.branch
         customer = self.get_object()
 
+        if 'anonimo' in customer.first_name.lower() and customer.pk == 1:
+            messages.error(request, 'Lo sentimos, no puedes ver este cliente.')
+            return redirect('clients_app:customer_view')
+
         if not user.is_staff and not customer.branch == branch: 
             # El usuario no tiene permiso para ver este cliente (no corresponde a su Sucursal)
             messages.error(request, 'Lo sentimos, no puedes ver este cliente.')
@@ -404,6 +408,11 @@ class CustomerDeleteView(CustomUserPassesTestMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         customer = self.get_object()
+
+        if 'anonimo' in customer.first_name.lower() or customer.pk == 1:
+            messages.error(request, 'Lo sentimos, no puedes eliminar este cliente.')
+            return reverse_lazy('clients_app:customer_view')
+
         intermedia = Customer_HealthInsurance.objects.filter(customer=customer)
         for filas in intermedia:
             filas.delete()

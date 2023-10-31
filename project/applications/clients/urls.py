@@ -27,12 +27,12 @@ urlpatterns = [
         name='customer_update'
     ),
     path(
-        'service_order/update/<pk>',  # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
+        'service_order/update/<pk>/',  # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
         ServiceOrderUpdateView.as_view(), 
         name='service_order_update'
     ),
     path(
-        'health_insurance/update/<pk>',
+        'health_insurance/update/<pk>/',
         HealthInsuranceUpdateView.as_view(), 
         name='insurance_update'
     ),
@@ -56,17 +56,17 @@ urlpatterns = [
 
     ####### DETAIL #######
     path(
-        'detail/<pk>',
+        'detail/<pk>/',
         CustomerDetailView.as_view(),
         name='customer_detail'
     ),
     path(
-        'service_order/detail/<pk>', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase DetailView tomara como pk para matcheat con un objeto
+        'service_order/detail/<pk>/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase DetailView tomara como pk para matcheat con un objeto
         ServiceOrderDetailView.as_view(),
         name='service_order_detail'
     ),
     path(
-        'insurance/detail/<pk>',
+        'insurance/detail/<pk>/',
         HealthInsuranceDetailView.as_view(),
         name='hi_detail'
     ),
@@ -78,12 +78,12 @@ urlpatterns = [
         name='customer_delete'
     ),
     path(
-        'service_order/delete/<pk>',
+        'service_order/delete/<pk>/',
         ServiceOrderDeleteView.as_view(),
         name='service_order_delete'
     ),
     path(
-        'insurance/delete/<pk>',
+        'insurance/delete/<pk>/',
         HealthInsuranceDeleteView.as_view(),
         name='hi_delete'
     ),
@@ -97,21 +97,21 @@ urlpatterns = [
 
     ########### OPEN CREDIT ACCOUNT ############
     path(
-        'open_credit_account/<pk>',
+        'open_credit_account/<pk>/',
         open_credit_account,
         name='open_credit_account'
     ),
 
     ########### CLOSE CREDIT ACCOUNT ############
     path(
-        'close_credit_account/<pk>',
+        'close_credit_account/<pk>/',
         close_credit_account,
         name='close_credit_account'
     ),
 
     ########## PAY CREDITS EXCEL #########
     path(
-        'pay_credits/<pk>',
+        'pay_credits/<pk>/',
         pay_credits,
         name='pay_credits'
     ),

@@ -150,7 +150,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
         customer = Customer.objects.get(id=1)
 
     if customer and not 'Anonimo' in customer.first_name:
-        if customer.has_credit_account and 'cuenta corriente' in payment_methods.__str__().lower():
+        if customer.has_credit_account and 'cuenta corriente' in payment_methods.name.lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
             customer.credit_balance += total * Decimal(1 - sale.discount / 100)
             customer.save()
