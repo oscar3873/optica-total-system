@@ -249,7 +249,10 @@ def show_invoice(request, pk):
     sale = Sale.objects.get(id=pk)
     customer = sale.customer
 
-    service_order = ServiceOrder.objects.get(sale=sale, is_done=False) or None
+    try:
+        service_order = ServiceOrder.objects.get(sale=sale, is_done=False)
+    except ServiceOrder.DoesNotExist:
+        service_order = None
 
     payment = Payment.objects.get(sale=sale)
 
@@ -269,18 +272,18 @@ def show_invoice(request, pk):
         'customer': customer,
         'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
         'order_details': order_details_template,
-        'service_order': service_order,
-        'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}',
-        'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}',
-        'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}',
-        'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}',
+        'service_order': service_order if service_order else None,  # Incluye service_order solo si no es None
+        'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}' if service_order else None,
+        'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}' if service_order else None,
+        'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}' if service_order else None,
+        'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}' if service_order else None,
         'seler': sale.user_made,
         'promo': f'{sale.total}',
         'discount': f'{sale.discount:.2f}',
         'discount_extra': f'{sale.discount_extra:.2f}',
         'payment_method': payment.payment_method.name,
         'pay': f'{sale.total - sale.missing_balance:.2f}',
-        'missing_balance': f'{sale.missing_balance:.2f}', # Saldo pendiente
+        'missing_balance': f'{sale.missing_balance:.2f}',  # Saldo pendiente
         'date': sale_date_str,
         'time': sale.created_at.time()
     }
