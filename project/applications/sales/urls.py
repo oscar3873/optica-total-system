@@ -38,7 +38,7 @@ urlpatterns = [
 
     ######## MUESTRA TICKET DE VENTA Y ORDEN DE SERVICIO EN CASO DE HABER ########
     path(
-        'show_invoice',
+        'show_invoice/<pk>',
         show_invoice,
         name='show_invoice'
     )
