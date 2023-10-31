@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from applications.products.models import Brand
 
-from project.settings.base import DATE_NOW
+from project.settings.base import DATE_NOW, ZONE_TIME
 from applications.sales.models import *
 
 from applications.core.models import Objetives
@@ -91,6 +91,7 @@ class DashboardView(TemplateView):
         branch_actualy = Branch.objects.get(id=branch_actualy)
 
         week_date = DATE_NOW.date() - timedelta(days=7)
+        print(week_date)
 
         sale = Sale.objects.filter(created_at__date__gte=week_date, created_at__date__lte=DATE_NOW.date(),
                                    branch=branch_actualy, deleted_at=None)
@@ -105,14 +106,19 @@ class DashboardView(TemplateView):
             'sun': [0, 0]
         }
         
+        import pytz
+
+        # Supongamos que 'created_at' es un objeto datetime en UTC
+        
         for day in week_sales:
             for s in sale:
-                dia_semana = s.created_at.strftime('%a').lower()
-                print(dia_semana)
+                # Convierte la fecha y hora de UTC a la zona horaria de Argentina
+                created_at= s.created_at.astimezone(ZONE_TIME)
+
+                dia_semana = created_at.strftime('%a').lower()
                 if day in dia_semana.lower():
-                    print(s)
                     week_sales[day][0] += float(s.total)
-                    week_sales[day][1] += OrderDetail.objects.filter(sale=s).count()
+                    week_sales[day][1] += 1
 
         context['week_sales'] = week_sales
         print(week_sales)

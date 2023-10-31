@@ -1,10 +1,13 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
+from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import timezone
 import json
 from pathlib import Path
+
+import pytz
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # El directorio raiz de la aplicacion.
@@ -138,7 +141,8 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-DATE_NOW = timezone.datetime.now()
+ZONE_TIME = pytz.timezone('America/Argentina/Buenos_Aires')
+DATE_NOW = datetime.now(ZONE_TIME)
 
 # Separadores de miles y decimales
 # https://docs.djangoproject.com/en/4.2/ref/settings/#localization

@@ -1,5 +1,4 @@
 import copy
-from datetime import datetime
 import locale
 from django.db.models import Q
 from django.http import HttpResponseRedirect, JsonResponse
@@ -16,6 +15,7 @@ from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
+from project.settings.base import ZONE_TIME
 
 from .utils import *
 from .models import *
@@ -266,7 +266,9 @@ def show_invoice(request, pk):
     locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
 
     format = "%A, %d de %B de %Y"
-    sale_date_str = sale.created_at.strftime(format)
+    
+    created_at = sale.created_at.astimezone(ZONE_TIME)
+    sale_date_str = created_at.strftime(format)
 
     context = {
         'customer': customer,
@@ -285,7 +287,7 @@ def show_invoice(request, pk):
         'pay': f'{sale.total - sale.missing_balance:.2f}',
         'missing_balance': f'{sale.missing_balance:.2f}',  # Saldo pendiente
         'date': sale_date_str,
-        'time': sale.created_at.time()
+        'time': created_at.time()
     }
 
     return render(request, 'sales/components/comprobante_pago.html', context)
