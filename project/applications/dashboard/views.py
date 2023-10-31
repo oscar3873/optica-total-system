@@ -126,7 +126,7 @@ class DashboardView(TemplateView):
 
 
         # Obtener la fecha actual
-        fecha_hoy = datetime.now().date()
+        fecha_hoy = DATE_NOW
 
         # Calcular la fecha de inicio de las últimas 4 semanas, incluyendo la actual
         fecha_inicio = fecha_hoy - timedelta(weeks=4)
