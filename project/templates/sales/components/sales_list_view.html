@@ -114,21 +114,22 @@
     {% else %}
     <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
         <!--Card-->
-        <div class="card bg-transparent-50 overflow-hidden">
-        <div class="card-header position-relative">
+        <!-- <div class="card bg-transparent-50 overflow-hidden"> -->
+        <div class="card overflow-hidden">
+        <div class="card-header position-relative bg-light">
             <div class="bg-holder d-none d-md-block bg-card z-index-1"
             style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
             </div>
             <!--/.bg-holder-->
             <div class="position-relative z-index-2">
             <div>
-                <h5 class="text-primary mb-1">No hay ventas registradoras</h5>
+                <h5 class="text-primary mb-1">No hay ventas registradas</h5>
             </div>
             </div>
         </div>
         <div class="card-body">
             <div class="d-flex py-3 justify-content-start">
-            <a href="{% url 'sales_app:point_of_sale_view' %}" class="btn btn-secondary me-2" type="submit">Ir al Punto de venta</a>
+            <a href="{% url 'sales_app:point_of_sale_view' %}" class="btn btn-primary me-2" type="submit">Ir al Punto de venta</a>
             </div>
         </div>
         </div>

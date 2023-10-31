@@ -37,7 +37,7 @@
   <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
     <!--Card-->
     <div class="card z-index-1 mb-3" id="recentPurchaseTable" data-list='{"valueNames":["user_made","date_open","initial_balance","final_balance","is_close", "observations"],"page":25,"pagination":true}'>
-      <div class="card-header">
+      <div class="card-header bg-light">
         <div class="row justify-content-start">
             <div class="col-12">
                 <p class="fs--2 mb-3">Solo verá una caja <span class="text-warning">activa</span>. No esta <span class="text-warning">permitido</span> mas de una a la vez.</p>
@@ -117,8 +117,9 @@
   {% else %}
   <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
     <!--Card-->
-    <div class="card bg-transparent-50 overflow-hidden">
-      <div class="card-header position-relative">
+    <!-- <div class="card bg-transparent-50 overflow-hidden"> -->
+    <div class="card overflow-hidden">
+      <div class="card-header position-relative bg-light">
         <div class="bg-holder d-none d-md-block bg-card z-index-1"
           style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
         </div>
@@ -131,7 +132,7 @@
       </div>
       <div class="card-body">
         <div class="d-flex py-3 justify-content-start">
-          <a href="{% url 'cashregister_app:cashregister_create_view' %}" class="btn btn-secondary me-2" type="submit">Abrir caja</a>
+          <a href="{% url 'cashregister_app:cashregister_create_view' %}" class="btn btn-primary me-2" type="submit">Abrir caja</a>
           </div>
       </div>
     </div>
