@@ -108,8 +108,10 @@ class DashboardView(TemplateView):
         for day in week_sales:
             for s in sale:
                 dia_semana = s.created_at.strftime('%a').lower()
+                print(dia_semana)
                 if day in dia_semana.lower():
-                    week_sales[day][0] += s.total
+                    print(s)
+                    week_sales[day][0] += float(s.total)
                     week_sales[day][1] += OrderDetail.objects.filter(sale=s).count()
 
         context['week_sales'] = week_sales
