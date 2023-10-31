@@ -18,14 +18,29 @@ class EmployeeCreateForm(UserCreateForm):
             format='%Y-%m-%d'
         )
     )
+
+    jornada = forms.CharField(
+        max_length= 50,
+        widget= forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+
     class Meta:
         model = Employee
-        fields = ['employment_date',]
+        fields = ['employment_date', 'jornada']
 
     def clean_employment_date(self):
         employment_date = self.cleaned_data.get('employment_date')
         self.validate_date(employment_date)
         return employment_date
+    
+    def clean_jornada(self):
+        jornada = self.cleaned_data.get('jornada')
+        self.validate_length(jornada, 4, 'Debe contener por lo menos 4 carácteres.')
+        return jornada
     
     
 class EmployeeUpdateForm(PersonForm):
@@ -40,9 +55,18 @@ class EmployeeUpdateForm(PersonForm):
         )
     )
 
+    jornada = forms.CharField(
+        max_length= 50,
+        widget= forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+
     class Meta:
         model = Employee
-        fields = ('employment_date', )
+        fields = ('employment_date', 'jornada')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -56,3 +80,8 @@ class EmployeeUpdateForm(PersonForm):
         self.fields['birth_date'].initial = self.instance.user.birth_date
 
         self.fields['email'].required = False
+    
+    def clean_jornada(self):
+        jornada = self.cleaned_data.get('jornada')
+        self.validate_length(jornada, 4, 'Debe contener por lo menos 4 carácteres.')
+        return jornada
