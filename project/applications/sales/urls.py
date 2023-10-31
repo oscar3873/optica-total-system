@@ -26,8 +26,20 @@ urlpatterns = [
         name = 'sales_list_view'
     ),
     path(
+        'detail/<pk>',
+        SaleDetailView.as_view(),
+        name = 'sale_detail_view'
+    ),
+    path(
         'ajax_search_sales/',
         ajax_search_sales,
         name='ajax_search_sales'
     ),
+
+    ######## MUESTRA TICKET DE VENTA Y ORDEN DE SERVICIO EN CASO DE HABER ########
+    path(
+        'show_invoice',
+        show_invoice,
+        name='show_invoice'
+    )
 ]

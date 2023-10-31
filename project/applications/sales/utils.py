@@ -71,6 +71,7 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
     promotional_products[promotion] = discounted_prices
     promotional_products[promotion].sort()
 
+    print(promotion)
     if len(promotional_products[promotion]) > 1:
         if '2x1' in promotion.type_prom.name:
             quantity_elem = len(promotional_products[promotion])
@@ -89,8 +90,11 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
                 quantity_elem = quantity_elem // 2
 
             discount_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem)*(1-percentage_desc_promo/100))
-        
-    elif 'descuento' in promotional_products[promotion].lower() and len(promotional_products[promotion]) > 0: # Decuento unitario
+            
+        else: 
+            discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
+
+    elif len(promotional_products[promotion]) > 0: # Decuento unitario
         discount_promo.append(sum(promotional_products[promotion])*(percentage_desc_promo/100))
 
 
@@ -114,7 +118,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale):
 def find_cristal_product(all_products_to_sale):
     """Ecuentra un CRISTAL dentro de la orden de venta (productos)"""
     for product in all_products_to_sale:
-        if 'cristal' in product.category.name.lower():
+        if 'cristal' in product.category.name.lower() or 'contacto' in product.category.name.lower():
             return product
     return None
 
