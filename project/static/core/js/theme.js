@@ -10547,11 +10547,52 @@ var weeklySalesInit = function weeklySalesInit() {
   var ECHART_BAR_WEEKLY_SALES = '.echart-bar-weekly-sales';
   var $echartBarWeeklySales = document.querySelector(ECHART_BAR_WEEKLY_SALES);
 
+  var dataAttr = document.getElementById('data-weekly-sales').getAttribute('data-weekly-sales');
+  var contextWeeklySales = JSON.parse(dataAttr.replace(/'/g, '"'));
+
+  // Creo una lista en donde voy cargando los datos del contexto
+  let listWeeklySales = 0;
+  let listWeeklySalesQuantity = [];
+  let listWeeklyDays = [];
+  for (var key in contextWeeklySales) {
+    if (contextWeeklySales.hasOwnProperty(key)) {
+        var listValue = contextWeeklySales[key];
+        listWeeklySales = listWeeklySales + listValue[0];
+        listWeeklySalesQuantity.push(listValue[1]);
+        switch(key){
+          case 'mon':
+            listWeeklyDays.push('Lun');
+            break;
+          case 'tue':
+            listWeeklyDays.push('Mar');
+            break;
+          case 'wen':
+            listWeeklyDays.push('Mié');
+            break;
+          case 'thu':
+            listWeeklyDays.push('Jue');
+            break;
+          case 'fri':
+            listWeeklyDays.push('Vie');
+            break;
+          case 'sat':
+            listWeeklyDays.push('Sáb');
+            break;
+          case 'sun':
+            listWeeklyDays.push('Dom');
+            break;
+        }
+    }
+  }
+  const totalSales = document.getElementById('total-sales-import');
+  totalSales.innerText = listWeeklySales;
+
+
   if ($echartBarWeeklySales) {
     // Get options from data attribute
     var userOptions = utils.getData($echartBarWeeklySales, 'options');
-    var data = [300, 200, 150, 80, 70, 110, 120]; // Max value of data
-
+    // var data = [300, 200, 150, 80, 70, 110, 120]; // Max value of data
+    var data = listWeeklySalesQuantity;
     var yMax = Math.max.apply(Math, data);
     var dataBackground = data.map(function () {
       return yMax;
@@ -10577,7 +10618,8 @@ var weeklySalesInit = function weeklySalesInit() {
         },
         xAxis: {
           type: 'category',
-          data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'domingo'],
+          // data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'domingo'],
+          data: listWeeklyDays,
           boundaryGap: false,
           axisLine: {
             show: false
