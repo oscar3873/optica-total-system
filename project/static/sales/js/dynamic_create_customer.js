@@ -74,6 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                 } else if ('error' in data) {
+                    console.log(data.error);
                     // Ha ocurrido un error al guardar el cliente
                     // let error_customer = document.getElementById('???');
                     // error_customer.textContent = data.error; 

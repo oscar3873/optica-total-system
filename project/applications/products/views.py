@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.http import require_GET
@@ -47,6 +47,12 @@ class CategoryCreateView(CustomUserPassesTestMixin, FormView):
         else:
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+             return JsonResponse({'status': 'error', 'message':'Ya existe esa Categoria.'})
+        return super().form_invalid(form)
+
 
 class BrandCreateView(LoginRequiredMixin, FormView):
     """
@@ -71,6 +77,12 @@ class BrandCreateView(LoginRequiredMixin, FormView):
         else:
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'error', 'message':'Ya existe esa Marca.'})
+        return super().form_invalid(form)
+
 
 class FeatureCreateView(CustomUserPassesTestMixin, FormView):
     """
@@ -434,9 +446,9 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
         features_list = Product.objects.get_feature_types_and_values(self.get_object())
         context['features'] = features_list
         try:
-            context['suppliers'] = Brand_Supplier.objects.get(brand = self.get_object().brand)
+            context['supplier'] = Brand_Supplier.objects.filter(brand = self.get_object().brand).first().supplier.name
         except:
-            context['suppliers'] = None
+            context['supplier'] = None
             
         return context
     

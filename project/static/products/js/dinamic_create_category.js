@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         idCategorySelect.appendChild(newOption);
                         newOption.selected = true;
                         closeModal();  // Cerrar el modal después de agregar la nueva categoría
+                    }else{
+                        console.log(data.message);
                     }
                 }
             });

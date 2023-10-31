@@ -171,7 +171,8 @@ class PaymentMethodCreateView(FormView):
             return super().form_valid(form)
         
     def form_invalid(self, form):
-        
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'error', 'message':'Ya existe el Metodo de Pago.'})
         print("######################################################")
         print("El formulario es invalido")
         print(form.errors)
