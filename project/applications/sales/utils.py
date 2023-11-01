@@ -44,7 +44,8 @@ def process_formset(formset, promotional_products, wo_promo):
                 promotion = product.promotions.last().promotion
                 promotional_products[promotion].append((product, discount))
         else:
-            wo_promo.append(product.sale_price*Decimal(1-discount/100))
+            for _ in range(quantity):
+                wo_promo.append(product.sale_price*Decimal(1-discount/100))
 
         return order_detail
 

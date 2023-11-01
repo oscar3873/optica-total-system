@@ -71,6 +71,9 @@ class Sale(BaseAbstractWithUser):
     total = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Total")
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
 
+    def __str__(self):
+        return f"COD: {self.pk} - $ {self.total}"
+
 class OrderDetail(BaseAbstractWithUser):
     """
     Clase de Detalles de Venta
