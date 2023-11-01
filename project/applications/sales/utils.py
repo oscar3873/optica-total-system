@@ -23,7 +23,7 @@ def get_total_and_products(formset, all_products_to_sale):
     return total
 
 
-def process_formset(formset, promotional_products):
+def process_formset(formset, promotional_products, wo_promo):
     """Procesa el un producto que viene del formset y retorna un detalle de venta (order_detail)"""
     if formset.is_valid():
         product = formset.cleaned_data['product']
@@ -39,10 +39,12 @@ def process_formset(formset, promotional_products):
             discount=discount)
 
         promotion = product.promotions.exists()
-        if promotion:
+        if promotion: # si tiene promo
             for _ in range(quantity):
                 promotion = product.promotions.last().promotion
                 promotional_products[promotion].append((product, discount))
+        else:
+            wo_promo.append(product.sale_price*Decimal(1-discount/100))
 
         return order_detail
 
@@ -74,6 +76,7 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
     if len(promotional_products[promotion]) > 1:
         if '2x1' in promotion.type_prom.name:
+            print('2x1')
             quantity_elem = len(promotional_products[promotion])
             if quantity_elem % 2 != 0:
                 quantity_elem = quantity_elem // 2 + 1
@@ -83,6 +86,7 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
             real_price_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem))
 
         elif '2da' in promotion.type_prom.name:
+            print('2da1')
             quantity_elem_org = len(promotional_products[promotion])
             if quantity_elem_org % 2 != 0:
                 quantity_elem = quantity_elem_org // 2 + 1
@@ -97,9 +101,12 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
         else: 
             real_price_promo.append(sum(promotional_products[promotion])*(1-percentage_desc_promo/100))
 
-    elif len(promotional_products[promotion]) > 0: # Decuento unitario
+    elif 'Descuento' in promotion.type_prom.name and len(promotional_products[promotion]) > 0 : # Decuento unitario
         real_price_promo.append(sum(promotional_products[promotion])*(1-percentage_desc_promo/100))
 
+    else:
+        real_price_promo.append(sum(promotional_products[promotion]))
+        
 
 def switch_invoice_receipt(invoice_or_receipt, sale):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""

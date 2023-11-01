@@ -21,6 +21,7 @@ class EmployeeCreateForm(UserCreateForm):
 
     jornada = forms.CharField(
         max_length= 50,
+        required=False,
         widget= forms.TextInput(
             attrs={
                 'class': 'form-control',
@@ -57,6 +58,7 @@ class EmployeeUpdateForm(PersonForm):
 
     jornada = forms.CharField(
         max_length= 50,
+        required=False,
         widget= forms.TextInput(
             attrs={
                 'class': 'form-control',

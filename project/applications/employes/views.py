@@ -47,6 +47,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
+            jornada = form.cleaned_data.pop('jornada'),
             user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
             )
         return super().form_valid(form)

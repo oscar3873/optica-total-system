@@ -81,6 +81,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         order_details = []
         all_products_to_sale = []
         real_price_promo = []
+        wo_promo = []
         subtotal = 0
 
         # Procesa los datos del formset
@@ -96,24 +97,26 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 if product_cristal and not customer:
                     messages.error(self.request, "Seleccione un cliente antes de Vender Cristales")
                     return super().form_invalid(form)
-                order_details.append(process_formset(formset, promotional_products))
+                order_details.append(process_formset(formset, promotional_products, wo_promo))
                 
                 
-
         promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
         for promotion, products_with_discountPromo in promotional_products.items():
             process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
         
         print('\n\n\nLISTADO DE PROMOCIONES: ', promotional_products_clone, '\n')
-        print('LISTADO DE PRECIOS A COBRAR POR PROMO: ', real_price_promo)
+        print('LISTADO DE PRECIOS A COBRAR POR PROMO: ', real_price_promo) # precios a cobrar en promos
+        print(real_price_promo)
+        print(wo_promo)
+        wo_promo = sum(wo_promo)
         real_price_promo = Decimal(sum(real_price_promo))
         print('SUBTOTAL (TOTAL EN PRODUCTOS): ', subtotal)
-        print('DESCUENTO TOTAL: ', subtotal - real_price_promo)
+        print('DESCUENTO TOTAL: ', subtotal - real_price_promo - wo_promo)
         print('DESCUENTO DE VENTA: %', discount_sale)
         sale.discount_extra = subtotal - real_price_promo
-        sale.subtotal = Decimal(real_price_promo)
-        sale.total = Decimal(real_price_promo) * Decimal(1 - discount_sale/100)
+        sale.subtotal = Decimal(subtotal)
+        sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
         print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
         if product_cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
@@ -239,7 +242,7 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
         context['sale'] = Sale.objects.get(id=self.kwargs['pk'])
         context['sale_subtotal'] = context['sale'].subtotal
         context['sale_discount_amount'] = context['sale_subtotal'] * Decimal(context['sale'].discount/100)
-        context['sale_total'] = context['sale_subtotal'] - context['sale_discount_amount']
+        context['sale_total'] = context['sale'].total
         # Ordenes de detalle de la venta ...
         context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
         return context
