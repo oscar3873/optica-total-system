@@ -52,16 +52,19 @@ class DashboardView(TemplateView):
     
 
 
-def sale_date_month(request, numero_mes):
+def sale_date_month(request, month):
     from calendar import monthrange
     # Obtener el primer y último día del mes
-    _, ultimo_dia = monthrange(DATE_NOW.year, numero_mes)
+    if 1 <= int(month) <= 12:
+        _, ultimo_dia = monthrange(fecha_actual.year, month)
 
-    ventas_por_dia = []
+        ventas_por_dia = []
 
-    for dia in range(1, ultimo_dia + 1):
-        fecha_actual = datetime(DATE_NOW.now().year, numero_mes, dia)
-        ventas_dia = Sale.objects.filter(created_at__date=fecha_actual).count()
-        ventas_por_dia.append((dia, ventas_dia))
+        for dia in range(1, ultimo_dia + 1):
+            fecha_actual = datetime(fecha_actual.year, month, dia)
+            ventas_dia = Sale.objects.filter(created_at__date=fecha_actual).count()
+            ventas_por_dia.append((dia, ventas_dia))
 
-    return JsonResponse({'data': ventas_por_dia})
+        return JsonResponse({'status': 'success', 'data': ventas_por_dia})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'El mes proporcionado no existe.'})

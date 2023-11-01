@@ -18,7 +18,7 @@ urlpatterns = [
 
     ####### AJAX MOTHN DATA ########
     path(
-        'sale_date_month',
+        'sale_date_month/<month>/',
         sale_date_month,
         name='sale_date_month'
     )
