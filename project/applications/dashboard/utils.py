@@ -1,6 +1,6 @@
 from collections import defaultdict
 from datetime import timedelta
-from django.db.models import Sum, F, Value, Count
+from django.db.models import Sum, F
 from datetime import datetime, time
 
 from project.settings.base import DATE_NOW, ZONE_TIME
@@ -14,7 +14,7 @@ fecha_hoy = DATE_NOW.date()
 
 ##############################  REPORTES DE SEMANAS  #############################
 
-def week_status(context, branch_actualy):
+def week_status(branch_actualy):
     week_date = fecha_hoy - timedelta(weeks=1)
 
     sale = Sale.objects.filter(created_at__date__gte=week_date, created_at__date__lte=fecha_hoy,
@@ -44,7 +44,7 @@ def week_status(context, branch_actualy):
     return week_sales
 
 
-def week_sales(context, branch_actualy):
+def week_sales(branch_actualy):
     # Calcular la fecha de inicio de las últimas 4 semanas, incluyendo la actual
     fecha_inicio = fecha_hoy - timedelta(weeks=3)
     # Lista para almacenar las ventas por semana
@@ -70,7 +70,7 @@ def week_sales(context, branch_actualy):
     return ventas_por_semana, total_ventas_anteriores
 
 
-def top_prodcuts(context, branch_actualy):
+def top_prodcuts(branch_actualy):
     # Obtén un diccionario con el nombre del producto y la cantidad total vendida
     productos_mas_vendidos = Product.objects.annotate(
         total_quantity_vendida=Sum('order_detaill__quantity')
@@ -89,7 +89,7 @@ def top_prodcuts(context, branch_actualy):
     return top_productos_mas_vendidos
 
 
-def top_brands(context, branch_actualy):
+def top_brands(branch_actualy):
     # Obtén un diccionario con el nombre de la marca y la cantidad total vendida
     marcas_mas_vendidas = Brand.objects.annotate(
                 total_cantidad_vendida=Sum('product_brand__order_detaill__quantity')
@@ -114,7 +114,7 @@ def top_brands(context, branch_actualy):
 
 ######################## REPORTES DIARIOS #########################
 
-def dayli_sales(context, branch_actualy):
+def dayli_sales(branch_actualy):
     # Crea una lista de horas en el rango de 8 a.m. a 9 p.m.
     horas = [datetime.combine(DATE_NOW, time(i, 0)) for i in range(8, 22)]
     # Inicializa diccionarios para almacenar los montos recaudados en cada intervalo de una hora
@@ -154,26 +154,26 @@ def dayli_sales(context, branch_actualy):
     return monto_por_rango_completado, monto_por_rango_pendiente
 
 
-def dayli_customers(context, branch_actualy):
+def dayli_customers(branch_actualy):
     customers = Customer.objects.filter(created_at__date=fecha_hoy, branch=branch_actualy).count()
     print('\n\n\n\'',customers)
     return customers
 
 
-def dayli_sales_count(context, branch_actualy):
+def dayli_sales_count(branch_actualy):
     sales = Sale.objects.filter(created_at__date=fecha_hoy, branch=branch_actualy).count()
     print('\n\n\n\'',sales)
     return sales
 
 
-def dayli_sales_total(context, branch_actualy):
+def dayli_sales_total(branch_actualy):
     suma_total = Sale.objects.filter(created_at__date=datetime.now().date(), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
     print('\n\n\n\'', suma_total_ventas)
     return suma_total_ventas
 
 
-def list_sale_to_dayli(context, branch_actualy):
+def list_sale_to_dayli(branch_actualy):
     """
     IDEA: MOSTRAR COMO INDICA EN LA VARIABLE columns,
           link a el Cliente y a Venta
@@ -185,7 +185,7 @@ def list_sale_to_dayli(context, branch_actualy):
     return columns, sale
 
 
-def movs_to_dayli(context, branch_actualy):
+def movs_to_dayli(branch_actualy):
     columns = ['Fecha', 'Responsable', 'Descripción', 'Tipo', 'Monto'] # MODIFICAR 
 
     moviments = Movement.objects.filter(cash_register__branch=branch_actualy).order_by('-created_at')[:4]

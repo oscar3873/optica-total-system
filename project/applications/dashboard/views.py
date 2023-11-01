@@ -1,10 +1,8 @@
 from django.http import JsonResponse
 from django.views.generic import TemplateView
-from django.db.models import Sum, F
-
 
 from project.settings.base import DATE_NOW
-from applications.sales.models import *
+from applications.branches.models import Branch
 from applications.core.models import Objetives
 
 from .utils import *
@@ -55,16 +53,21 @@ class DashboardView(TemplateView):
 def sale_date_month(request, month):
     from calendar import monthrange
     # Obtener el primer y último día del mes
-    if 1 <= int(month) <= 12:
-        _, ultimo_dia = monthrange(fecha_actual.year, month)
 
-        ventas_por_dia = []
+    if request.method == 'GET':
+        if 1 <= int(month) <= 12:
+            _, ultimo_dia = monthrange(fecha_actual.year, month)
 
-        for dia in range(1, ultimo_dia + 1):
-            fecha_actual = datetime(fecha_actual.year, month, dia)
-            ventas_dia = Sale.objects.filter(created_at__date=fecha_actual).count()
-            ventas_por_dia.append((dia, ventas_dia))
+            ventas_por_dia = []
 
-        return JsonResponse({'status': 'success', 'data': ventas_por_dia})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'El mes proporcionado no existe.'})
+            branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
+            branch_actualy = Branch.objects.get(id=branch_actualy)
+
+            for dia in range(1, ultimo_dia + 1):
+                fecha_actual = datetime(fecha_actual.year, month, dia)
+                ventas_dia = Sale.objects.filter(created_at__date=fecha_actual, branch=branch_actualy).count()
+                ventas_por_dia.append((dia, ventas_dia))
+
+            return JsonResponse({'status': 'success', 'data': ventas_por_dia})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'El mes proporcionado no existe.'})
