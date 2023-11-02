@@ -1,7 +1,3 @@
-var button_serviceOrder = document.querySelector("[data-bs-target='#serviceOrder']");
-
-let has_cristal = false;
-
 let payment_method = document.getElementById('id_payment_method');
 let selected_payment = 1;
 
@@ -68,10 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     // Cierra el modal al guardar exitosamente
                     $('#New-customer').modal('hide');
-
-                    if (has_cristal){
-                        button_serviceOrder.hidden = false;
-                    }
 
                 } else if ('error' in data) {
                     console.log(data.error);

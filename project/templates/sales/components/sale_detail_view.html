@@ -47,26 +47,282 @@
         <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(../../../assets/img/icons/spot-illustrations/corner-4.png);opacity: 0.7;">
         </div>
         <!--/.bg-holder-->
-
-        <div class="card-body position-relative">
-            <h5>Detalle de venta: #{{sale.pk}}</h5>
-            <p class="fs--1">{{sale.created_at}}</p>
-            <div>
-                <strong class="me-2">Estado: </strong>
-                {% if sale.state == 'COMPLETADO' %}
+        <div class="row card-body position-relative">
+            <div class=" col-6">
+                <h5>Detalle de venta: #{{sale.pk}}</h5>
+                <p class="fs--1">{{sale.created_at}}</p>
+                <div>
+                    <strong class="me-2">Estado: </strong>
+                    {% if sale.state == 'COMPLETADO' %}
                     <div class="badge rounded-pill badge-soft-success fs--2">
                         Completada
                         <span class="fas fa-check ms-1" data-fa-transform="shrink-2"></span>
                     </div>
-                {% elif sale.state == 'PENDIENTE' %}
+                    {% elif sale.state == 'PENDIENTE' %}
                     <div class="badge rounded-pill badge-soft-secondary fs--2">
                         Pendiente
                         <span class="fas fa-clock ms-1" data-fa-transform="shrink-2"></span>
                     </div>
-                {% else %}
-                {% endif %}
+                    {% else %}
+                    {% endif %}
+                </div>
             </div>
+            
+            <!-- Si la venta contiene un cristal o lente de contacto, muestra el boton de para agregar orden de servicio -->
+            {% if cristales %} 
+                <div class="col-6">
+                    <!--Boton modal de orden de servicio-->
+                    <button type="button" class="btn btn-info" data-bs-target="#serviceOrder" data-bs-toggle="modal">Orden de servicio</button>                
+                    <!--Modal orden de servicio-->
+                    <div class="mt-1">
+                        {% if order_serivices %}
+                            {% for service in order_serivices %}
+                                <p>
+                                    <a href="{% url 'clients_app:service_order_detail' service.pk %}">{{service}}</a>
+                                </p>
+                            {% endfor %}
+                        {% endif %}
+                            
+                    </div>
+                    <form action="{% url 'sales_app:order_service' sale.pk %}" method="post">
+                        {% csrf_token %}
+                        <div class="modal fade" id="serviceOrder" aria-hidden="true" aria-labelledby="serviceOrderLabel" tabindex="-1">
+                            <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="serviceOrder">Generar orden de servicio</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <!--Correccion-->
+                                            <div class="px-sm-3 px-md-5">
+                                                <div class="text-center">
+                                                    <h4>Lejos</h4>
+                                                </div>
+                                                <div class="table-responsive scrollbar">
+                                                    <table class="table table-bordered overflow-hidden table-fixed" id="table_from_correction">
+                                                        <colgroup>
+                                                            <col class="col-3"/>
+                                                            <col class="col-3"/>
+                                                            <col class="col-3"/>
+                                                            <col class="col-3"/>
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr class="btn-reveal-trigger">
+                                                                <th scope="col"></th>
+                                                                <th class="text-center" scope="col">Esferico</th>
+                                                                <th class="text-center" scope="col">Cilindrico</th>
+                                                                <th class="text-center" scope="col">Eje</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="btn-reveal-trigger">
+                                                                <td>
+                                                                    <p><strong>Derecho</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.correction.lej_od_cilindrico }}</td>
+                                                                <td>{{ order_servise.correction.lej_od_esferico }}</td>
+                                                                <td>{{ order_servise.correction.lej_od_eje }}</td>
+                                                            </tr>
+                                                            <tr class="btn-reveal-trigger">
+                                                                <td>
+                                                                    <p><strong>Izquierdo</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.correction.lej_oi_esferico }}</td>
+                                                                <td>{{ order_servise.correction.lej_oi_cilindrico }}</td>
+                                                                <td>{{ order_servise.correction.lej_oi_eje }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="text-center">
+                                                    <h4>Cerca</h4>
+                                                </div>
+                                                <div class="table-responsive scrollbar">
+                                                    <table class="table table-bordered overflow-hidden" id="table_from_correction">
+                                                        <colgroup>
+                                                            <col class="col-3"/>
+                                                            <col class="col-3"/>
+                                                            <col class="col-3"/>
+                                                            <col class="col-3"/>
+                                                        </colgroup>
+                                                        <thead>
+                                                            <tr class="btn-reveal-trigger">
+                                                                <th scope="col"></th>
+                                                                <th class="text-center" scope="col">Esferico</th>
+                                                                <th class="text-center" scope="col">Cilindrico</th>
+                                                                <th class="text-center" scope="col">Eje</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr class="btn-reveal-trigger">
+                                                                <td>
+                                                                    <p><strong>Derecho</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.correction.cer_od_cilindrico }}</td>
+                                                                <td>{{ order_servise.correction.cer_od_esferico }}</td>
+                                                                <td>{{ order_servise.correction.cer_od_eje }}</td>
+                                                            </tr>
+                                                            <tr class="btn-reveal-trigger">
+                                                                <td>
+                                                                    <p><strong>Izquierdo</strong></p>
+                                                                </td>
+                                                                <td>{{ order_servise.correction.cer_oi_esferico }}</td>
+                                                                <td>{{ order_servise.correction.cer_oi_cilindrico }}</td>
+                                                                <td>{{ order_servise.correction.cer_oi_eje }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <!-- </form> -->
+                                            </div>
+                                            <hr>
+                                            <!--Caracteristicas-->
+                                            <div class="px-sm-3 px-md-5">
+                                                <!-- <form> -->
+                                                <div class="row">
+                                                    <div class="col position-relative text-start">
+                                                        <div class="row">
+                                                            <h5 class="mt-2 mb-5">Materiales</h5>
+                                                        </div>
+                                                        <div class="text-start">{{ order_servise.material.material_choice }}</div>
+                                                    </div>
+                                                    <div class="col form-check-reverse text-start">
+                                                        <div class="row">
+                                                            <h5 class="mt-2 mb-5">Color</h5>
+                                                        </div>
+                                                        <div class="text-start">{{ order_servise.color.color_choice }}</div>
+                                                    </div>
+                                                    <div class="col text-start">
+                                                        <div class="row">
+                                                            <h5 class="mt-2 mb-5">Cristales</h5>
+                                                        </div>
+                                                        <div class="text-start">{{ order_servise.cristal.cristal_choice }}</div>
+                                                        
+                                                    </div>
+                                                    <div class="col text-start">
+                                                        <div class="row">
+                                                            <h5 class="mt-2 mb-4">Tratamiento de Cristales</h5>
+                                                        </div>
+                                                        <div class="text-start">{{ order_servise.tratamiento.tratamient_choice }}</div>
+                                                        
+                                                    </div>
+                                                </div>
+                                                <!-- </form> -->
+                                            </div>
+                                            <!--Pupilar-->
+                                            <hr>
+                                            <div class="px-sm-3 px-md-5">
+                                                <!-- <form class="form-validation"> -->
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="text-center">
+                                                            <h4>Lejos</h4>
+                                                        </div>
+                                                        <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col"></th>
+                                                                    <th scope="col">Izquierdo</th>
+                                                                    <th scope="col">Derecho</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <p><strong>Nanopupilar</strong></p>
+                                                                    </td>
+                                                                    <td>{{ order_servise.pupilar.lej_oi_nanopupilar }}</td>
+                                                                    <td>{{ order_servise.pupilar.lej_od_nanopupilar }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <p><strong>Pelicula</strong></p>
+                                                                    </td>
+                                                                    <td>{{ order_servise.pupilar.lej_oi_pelicula }}</td>
+                                                                    <td>{{ order_servise.pupilar.lej_od_pelicula }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <p><strong>Total</strong>
+                                                                    </td>
+                                                                    <td colspan="2">{{ order_servise.pupilar.lej_total }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="text-center">
+                                                            <h4>Cerca</h4>
+                                                        </div>
+                                                        <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col"></th>
+                                                                    <th scope="col">Izquierdo</th>
+                                                                    <th scope="col">Derecho</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <p><strong>Nanopupilar</strong></p>
+                                                                    </td>
+                                                                    <td>{{ order_servise.pupilar.cer_oi_nanopupilar }}</td>
+                                                                    <td>{{ order_servise.pupilar.cer_od_nanopupilar }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <p><strong>Pelicula</strong></p>
+                                                                    </td>
+                                                                    <td>{{ order_servise.pupilar.cer_oi_pelicula }}</td>
+                                                                    <td>{{ order_servise.pupilar.cer_od_pelicula }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td scope="row">
+                                                                        <p><strong>Total</strong></p>
+                                                                    </td>
+                                                                    <td colspan="2">{{ order_servise.pupilar.cer_total }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <!-- </form> -->
+                                            </div>
+                                            <hr>
+                                            <!--Diagnostico-->
+                                            <div class="px-sm-3 px-md-5">
+                                                <div class="row justify-content-sm-center pb-2">
+                                                        <div class="container mb-2">
+                                                            <label for="id_diagnostic" class="form-label">Diagnostico</label>
+                                                            {{order_servise.service.diagnostic}}
+                                                        </div>
+                                                        <div class="container mb-2">
+                                                            <label for="id_armazon" class="form-label">Armazones</label>
+                                                            {{order_servise.service}}
+                                                        </div>
+                                                        <div class="container">
+                                                            <label for="id_observation" class="form-label">Observaciones</label>
+                                                            {{order_servise.service.observations}}
+                                                        </div>
+                                                </div>  
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary" type="submit" data-bs-toggle="modal">Guardar Orden de Servicio</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
         </div>
+                
     </div>
     <div class="card mb-3">
     <div class="card-body">
@@ -75,8 +331,8 @@
             <h5 class="mb-3 fs-0">Cliente</h5>
             <h6 class="mb-2">{% if sale.customer %}{{sale.customer}}{% else %}Sin cliente asignado{% endif %}</h6>
             <p class="mb-1 fs--1">{{sale.customer.address}}</p>
-            <p class="mb-0 fs--1"> <strong>Correo: </strong><a href="mailto:{{sale.customer.email}}">{{sale.customer.email}}</a></p>
-            <p class="mb-0 fs--1"> <strong>Telefono: </strong><a href="tel:{{sale.customer.phone_code}}{{sale.customer.phone_number}}">{{sale.customer.phone_code}}{{sale.customer.phone_number}}</a></p>
+            <p class="mb-0 fs--1"> <strong>Correo: </strong>{% if sale.customer.phone_code %}<a href="mailto:{{sale.customer.email}}">{{sale.customer.email}}</a>{% else %} Sin datos {% endif %}</p>
+            <p class="mb-0 fs--1"> <strong>Telefono: </strong>{% if sale.customer.phone_code %}<a href="tel:{{sale.customer.phone_code}}{{sale.customer.phone_number}}">{{sale.customer.phone_code}}{{sale.customer.phone_number}}</a>{% else %} Sin datos {% endif %}</p>
         </div>
         <div class="col-md-6 col-lg-4">
             <h5 class="mb-3 fs-0">Metodo de pago</h5>

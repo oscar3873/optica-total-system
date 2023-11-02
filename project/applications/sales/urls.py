@@ -41,5 +41,12 @@ urlpatterns = [
         'show_invoice/<pk>/',
         show_invoice,
         name='show_invoice'
+    ),
+
+    ######## ORDEN DE SERVICIO EN DETALLE DE VENTA ########
+    path(
+        'order_service/<pk>/',
+        set_serviceOrder_onSale,
+        name='order_service'
     )
 ]

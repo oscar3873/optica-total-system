@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', function() {
 
     payment_method.addEventListener("change", function() {
@@ -49,11 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonRemove.textContent = 'Quitar';
         buttonRemove.addEventListener('click', function () {
             removeProduct(product.id);
-            
-            if (product.category.toLowerCase().includes('cristal')){
-                button_serviceOrder.hidden = true;
-                has_cristal = false;
-            }
         });
     
         const pricerow = document.createElement('th');
@@ -324,26 +317,9 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isChecked) {
                 let formset = addFormset(product);
                 selectedProducts.push(formset);
-
-                if (product.category.toLowerCase().includes('cristal')){
-                    has_cristal = true;
-                }
-
-                let customer_selected = document.getElementById('selecter_customer_title');
-                if (customer_selected) {
-                    if (has_cristal && !customer_selected.textContent.includes('nonimo')){
-                        button_serviceOrder.hidden = false;
-                    }
-                }
-
             } else {
                 // Elimina el formset generado con la id del producto
                 removeProduct(product.id);
-
-                if (product.category.toLowerCase().includes('cristal') || product.category.toLowerCase().includes('contacto')){
-                    button_serviceOrder.hidden = true;
-                    has_cristal = false;
-                }
             }
             CalculateSubtotal();
         });

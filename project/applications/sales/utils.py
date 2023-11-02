@@ -18,7 +18,9 @@ def get_total_and_products(formset, all_products_to_sale):
     for _ in range(quantity):
         total += product.sale_price
 
-    product.stock -= quantity
+    print(product.category.name)
+    if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower():
+        product.stock -= quantity
     product.save()
     return total
 
@@ -244,7 +246,6 @@ def process_service_order(request, customer):
         tratamiento_form.is_valid() and 
         pupilar_form.is_valid()
         ):
-
         # Create the main form instance
         service = ServiceOrder.objects.create_lab(
             request.user, service_order, correction_form, material_form,
