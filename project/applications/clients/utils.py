@@ -21,3 +21,9 @@ def form_in_out_insurances(form, customer, user):
                 if created:
                     intermedia.user_made = user
                     intermedia.save()
+
+def obtener_clave_por_subcadena(diccionario, subcadena):
+        for clave in diccionario.keys():
+            if subcadena in clave:
+                return clave
+        return None

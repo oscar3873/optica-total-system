@@ -130,4 +130,11 @@ urlpatterns = [
         ajax_search_customers,
         name='ajax_search_customers'
     ),
+
+    ############# IMPRESION DE ORDEN DE SERVICIO ###########
+    path(
+        'service_order/print_service_order/<pk>/',
+        print_service_order,
+        name='print_service_order'
+    )
 ]

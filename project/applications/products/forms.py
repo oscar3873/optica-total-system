@@ -109,6 +109,7 @@ class ProductForm(ValidationFormMixin):
         )
     )
     sale_price = forms.DecimalField(
+        required=False,
         label='Precio de venta',
         max_digits=10,
         decimal_places=2,
@@ -184,20 +185,11 @@ class ProductForm(ValidationFormMixin):
         required=False,
     )
 
-    has_eyeglass_frames = forms.BooleanField(
-        label="¿Armazon?",
-        required=False,
-        widget= forms.CheckboxInput(
-            attrs={
-                'class':'form-check-input mb-2',
-            }
-        )
-    )
 
     class Meta:
         model = Product
         #necesario para el front 
-        fields = ('name', 'barcode', 'cost_price', 'sale_price', 'description', 'stock', 'category', 'brand', 'has_eyeglass_frames')
+        fields = ('name', 'barcode', 'cost_price', 'sale_price', 'description', 'stock', 'category', 'brand')
 
     def __init__(self, branch=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -218,7 +210,7 @@ class ProductForm(ValidationFormMixin):
 
     def clean_sale_price(self):
         price = self.cleaned_data.get('sale_price')
-        if price is not None and price < Decimal('0.00'):
+        if price and price < Decimal('0.00'):
             raise forms.ValidationError('El precio no puede ser un número negativo.')
         return price
     

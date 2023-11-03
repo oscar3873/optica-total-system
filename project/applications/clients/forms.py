@@ -459,7 +459,11 @@ class ServiceOrderForm(forms.ModelForm):
     armazon = forms.ModelChoiceField(
         required = False,
         queryset = Product.objects.filter(category__name__icontains='Armazon'),
-        widget = forms.CheckboxInput()
+        widget = forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        )
     )
 
     diagnostic = forms.CharField(
@@ -488,3 +492,12 @@ class ServiceOrderForm(forms.ModelForm):
     class Meta:
         model = ServiceOrder
         fields = ['diagnostic', 'armazon', 'observations']
+
+    def __init__(self, *args, **kwargs):
+        armazon = kwargs.pop('kwargs', None)
+        super().__init__(*args, **kwargs)
+
+        if armazon:
+            print(kwargs)
+            self.fields['armazon'].queryset = armazon
+            self.fields['armazon'].initial = armazon

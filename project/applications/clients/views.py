@@ -15,7 +15,7 @@ from project.settings.base import DATE_NOW
 
 from .models import *
 from .forms import *
-from .utils import form_in_out_insurances
+from .utils import *
 
 
 ########################### CREATE ####################################
@@ -29,7 +29,7 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context['form'] = ServiceOrderForm()
         context['customer'] =  Customer.objects.get(pk=self.kwargs['pk'])
-        context['named_formsets'] = {
+        context['order_service'] = {
             'pupilar': InterpupillaryForm,
             'correction': CorrectionForm,
             'material': MaterialForm,
@@ -179,7 +179,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['customer'] =  self.get_object().customer
-        context['named_formsets'] = {
+        context['order_service'] = {
             'correction': CorrectionForm(instance=self.object.correction),
             'material': MaterialForm(instance=self.object.material),
             'color': ColorForm(instance=self.object.color),
@@ -188,6 +188,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
             'pupilar': InterpupillaryForm(instance=self.object.interpupillary),
         }
         return context
+
     
     def form_valid(self, form):
         try:
@@ -195,7 +196,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
         except Customer.DoesNotExist:
             raise ValueError('El ID del cliente con nuestro registro')
         
-        named_formsets = self.get_context_data()['named_formsets']
+        named_formsets = self.get_context_data()['order_service']
 
         if form.is_valid():
             service_order = form.save(commit=False)
@@ -203,7 +204,15 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
                 instance = formset.instance
                 new_formset = formset.__class__(self.request.POST, instance=instance)
                 if new_formset.is_valid():
-                    new_formset.save()
+                    subcadena = '_choice'
+                    key = obtener_clave_por_subcadena(new_formset.cleaned_data, subcadena)
+                    if key:
+                        obj = new_formset.instance
+                        to_check = new_formset.cleaned_data.get(key)
+                        # new_formset.cleaned_data[to_check] = True
+                        setattr(obj, to_check, True)
+                        obj.save()
+
             service_order.save()
         messages.success(self.request, 'Se ha acutalizado la orden de servicio con exito.')
         if customer:
@@ -685,3 +694,16 @@ def ajax_search_customers(request):
         } for customer in customers]
         print(data)
         return JsonResponse({'data': data})
+    
+
+def print_service_order(request, pk): # pk de la orden
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+        service = ServiceOrder.objects.get(pk=pk)
+        # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
+        html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
+
+        # Devuelve el HTML como respuesta
+        return HttpResponse(html_content, content_type="text/html")
+    else:
+        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
+        return JsonResponse({'error': 'Solicitud no válida'}, status=400)

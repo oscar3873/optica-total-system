@@ -1,3 +1,4 @@
+let armazonSelected = false;
 document.addEventListener('DOMContentLoaded', function() {
     
     let typesContainer = document.getElementById('types-container');
@@ -274,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
           }
     });
     
-    const is_armazon = document.getElementById('id_has_eyeglass_frames');
+    const is_armazon = document.getElementById('id_category');
     const cost_price = document.getElementById("id_cost_price");
     const suggested_price = document.getElementById("id_suggested_price");
     const sale_price = document.getElementById("id_sale_price");
@@ -284,6 +285,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let multiplicador = 3;
 
     is_armazon.addEventListener("change", function() {
+        var selectedOption = is_armazon.options[is_armazon.selectedIndex];
+        var selectedText = selectedOption.text;
+        if (selectedText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") == 'armazon'){
+            console.log('CATEGORIA ARMAZON SELECCIONADA');
+            armazonSelected = true;
+        }else{
+            armazonSelected = false;
+        }
+
         updatePrices();
     });
 
@@ -294,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updatePrices() {
         const costValue = parseFloat(cost_price.value);
         if (costValue){
-            if (is_armazon.checked) {
+            if (armazonSelected) {
                 const costWithExtra = parseFloat(((costValue * percentage_gral) * multiplicador) + packaging).toFixed(2);
                 displaySuggestedPrice(costWithExtra);
                 roundToNearest50(costWithExtra);

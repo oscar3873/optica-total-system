@@ -83,10 +83,16 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             if formset.is_valid():
                 subtotal += get_total_and_products(formset, all_products_to_sale)
 
-                product_cristal = find_cristal_product(all_products_to_sale)
-                if product_cristal and not customer:
-                    messages.error(self.request, "Seleccione un cliente antes de Vender Cristales")
+                cristal = find_cristal_product(all_products_to_sale)
+                armazon = find_armazons_product(all_products_to_sale)
+                if cristal and armazon:
+                    if cristal and not customer:
+                        messages.error(self.request, "Seleccione un Cliente antes de vender un Cristal.")
+                        return super().form_invalid(form)
+                elif cristal and not armazon:
+                    messages.error(self.request, "Seleccione un Armazon antes de vender un Cristal.")
                     return super().form_invalid(form)
+                
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
                 
                 
@@ -109,7 +115,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
         print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
-        if product_cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
+        if cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.error(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
         
@@ -118,7 +124,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         if proof_type:
             generate_proof(proof_type)
 
-        process_customer(customer, sale, payment_methods, sale.total, product_cristal, amount, self.request)
+        process_customer(customer, sale, payment_methods, sale.total, cristal, amount, self.request)
 
         for order in order_details:
             order.sale = sale
@@ -230,8 +236,12 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
         # Ordenes de detalle de la venta ...
         context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
 
-        context['order_servise'] = {
-            'service': ServiceOrderForm,
+        context['cristales'] = find_cristal_product(None, sale)
+        
+        armazones = find_armazons_product(None, sale)
+
+        context['order_service'] = {
+            'service': ServiceOrderForm(kwargs = armazones),
             'pupilar': InterpupillaryForm,
             'correction': CorrectionForm,
             'material': MaterialForm,
@@ -241,11 +251,6 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
         }
 
         context['order_serivices'] = sale.service_order.all()
-        context['cristales'] = Product.objects.filter(
-                                    Q(order_detaill__sale=sale) &
-                                    Q(category__name__icontains='cristal') | 
-                                    Q(category__name__icontains='contacto')
-                                )
 
         return context
 
