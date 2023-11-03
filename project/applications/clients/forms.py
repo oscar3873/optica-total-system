@@ -1,9 +1,11 @@
 from typing import Any
 from django import forms
 
+
 from .models import *
 from applications.core.forms import PersonForm
 from applications.core.mixins import ValidationFormMixin
+from applications.products.models import Product
 
 
 class CustomerForm(PersonForm):
@@ -454,15 +456,10 @@ class InterpupillaryForm(forms.ModelForm):
         exclude = ['user_made', 'deleted_at']
 
 class ServiceOrderForm(forms.ModelForm):
-    armazon = forms.CharField(
-        required=False,
-        widget = forms.Textarea(
-            attrs={
-            'class' : 'form-control',
-            'placeholder' : 'Armazon',
-            'rows' : '3',
-            }
-        )
+    armazon = forms.ModelChoiceField(
+        required = False,
+        queryset = Product.objects.filter(category__name__icontains='Armazon'),
+        widget = forms.CheckboxInput()
     )
 
     diagnostic = forms.CharField(

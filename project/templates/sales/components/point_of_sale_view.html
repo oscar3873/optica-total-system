@@ -141,7 +141,7 @@
                                 <div class="modal-body">
 
                                     <div class="row justify-content-sm-center pb-2">
-                                        <div class="col-12 pt-3">
+                                        <div class="col-12">
                                             <label for="{{ sale_form.amount.id_for_label }}" class="form-label col-form-label">Monto recibido</label>
                                             {{sale_form.amount}}
                                             <small>Ingrese el <span class="text-warning">monto</span>con el que confirmara la venta</small>
@@ -152,15 +152,10 @@
                                             <small>Se puede dejar un detalle al <span class="text-warning">finalizar</span> la venta</small>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <button type="submit" class="btn btn-success mt-4">Realizar venta</button>
-                                        <!--Boton modal de orden de servicio-->
-                                        <button type="button" class="btn btn-warning mt-4" data-bs-target="#serviceOrder" data-bs-toggle="modal" hidden>Orden de servicio</button>
-                                    </div>
-
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                                <div class="modal-footer justify-content-between">
+                                        <button type="submit" class="btn btn-success">Realizar venta</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
                                 </div>
                             </div>
                         </div>

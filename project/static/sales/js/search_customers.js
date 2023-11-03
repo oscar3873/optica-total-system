@@ -105,10 +105,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 payment_method.options[selected_payment].selected = true;
             }
 
-            if (has_cristal){
-                button_serviceOrder.hidden = false;
-            }
-
         });
     }
 

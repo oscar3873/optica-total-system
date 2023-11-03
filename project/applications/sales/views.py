@@ -1,8 +1,8 @@
 import copy
 import locale
 from django.db.models import Q
-from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect, render
 from django.views.generic import *
 from django.db import transaction
 from django.urls import reverse_lazy
@@ -42,16 +42,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         context['branch_selected'] = branch.name
         context['customer_form'] = CustomerForm
         context['payment_method_form'] = PaymentMethodForm
-
-        context['order_servise'] = {
-            'service': ServiceOrderForm,
-            'pupilar': InterpupillaryForm,
-            'correction': CorrectionForm,
-            'material': MaterialForm,
-            'color': ColorForm,
-            'cristal': CristalForm,
-            'tratamiento': TratamientForm,
-        }
         
         return context
 
@@ -134,12 +124,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
-        if product_cristal and not 'consumidor' in customer.first_name.lower():
-            service_order = process_service_order(self.request, customer)
-            service_order.sale = sale
-            service_order.save()
-            # renderizar html de service_order sin return para que continue la funcion form_valid
-        
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
 
@@ -239,12 +223,30 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         #detalles de venta en la venta que viene por url
-        context['sale'] = Sale.objects.get(id=self.kwargs['pk'])
+        context['sale'] = sale = Sale.objects.get(id=self.kwargs['pk'])
         context['sale_subtotal'] = context['sale'].subtotal
         context['sale_discount_amount'] = context['sale_subtotal'] * Decimal(context['sale'].discount/100)
         context['sale_total'] = context['sale'].total
         # Ordenes de detalle de la venta ...
         context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
+
+        context['order_servise'] = {
+            'service': ServiceOrderForm,
+            'pupilar': InterpupillaryForm,
+            'correction': CorrectionForm,
+            'material': MaterialForm,
+            'color': ColorForm,
+            'cristal': CristalForm,
+            'tratamiento': TratamientForm,
+        }
+
+        context['order_serivices'] = sale.service_order.all()
+        context['cristales'] = Product.objects.filter(
+                                    Q(order_detaill__sale=sale) &
+                                    Q(category__name__icontains='cristal') | 
+                                    Q(category__name__icontains='contacto')
+                                )
+
         return context
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
@@ -345,3 +347,14 @@ def ajax_search_sales(request):
         } for sale in sales]
         locale.setlocale(locale.LC_TIME, '')
         return JsonResponse({'data': data})
+    
+
+def set_serviceOrder_onSale(request, pk):
+    sale = Sale.objects.get(pk=pk)
+    customer = sale.customer
+
+    service_order = process_service_order(request, customer)
+    service_order.sale = sale
+    service_order.save()
+
+    return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': pk}))

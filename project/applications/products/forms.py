@@ -122,7 +122,7 @@ class ProductForm(ValidationFormMixin):
     )
     stock = forms.IntegerField(
         label='Stock',
-        max_value=10000000,
+        max_value=9999999,
         min_value=0,
         widget=forms.NumberInput(
             attrs={
