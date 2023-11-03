@@ -1,10 +1,9 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket Fiscal</title>
+    <title>Orden de servicio</title>
     <style>
         /* Estilos generales */
         body {
@@ -77,6 +76,7 @@
             padding: 3px 5px;
             text-align: left;
             line-height: 4; /* Ajusta este valor según tu preferencia */
+            border: 1px solid #000;
         }
 
         table th {
@@ -112,54 +112,68 @@
             <small class="time">00:00:00</small>
         </div>
         <div class="logo">
-            <img src="{% static 'core/img/logo_optica_light.png' %}" alt="Logo de la empresa">
-            <p class="title">ARQUEO DE CAJA</p>
+            <p class="sucursal">NOMBRE DE LA OPTICA<p> 
+            <p class="direccion">DIRECCION</p>
+            <p class="phone">TELÉFONO</p>
         </div>
     </div>
     <!-- Resumen de cuentas -->
-    <table>
-        <thead>
-            <tr>
-                <th>TIPO</th>
-                <th >MONTO</th>
-                <th >CONTEO</th>
-                <th >DIF.</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>EFECTIVO</td>
-                <td>$ 15000</td>
-                <td>$ 16000</td>
-                <td>$ 17000</td>
-            </tr>
-            <tr>
-                <td>T. CREDITO</td>
-                <td>$ 18000</td>
-                <td>$ 19000</td>
-                <td>$ 20000</td>
-            </tr>
-            <tr>
-                <td>T. DEBITO</td>
-                <td>$ 21000</td>
-                <td>$ 22000</td>
-                <td>$ 23000</td>
-            </tr>
-            <tr>
-                <td>TRANSFER.</td>
-                <td>$ 24000</td>
-                <td>$ 25000</td>
-                <td>$ 26000</td>
-            </tr>
-        </tbody>
-        <tfoot>
-            <tr>
-                <th colspan="3">TOTAL</th>
-                <th colspan="1">$ 27000</th>
-            </tr>
-        </tfoot>
+    <table class="correction">
+        <tr>
+            <th rowspan="2">DISTANCIA</th>
+            <th rowspan="2">OJO</th>
+        </tr>
+        <tr>
+            <th>ESFERICO</th>
+            <th>CILINDRICO</th>
+            <th>EJE</th>
+        </tr>
+        <tr>
+            <td rowspan="2">LEJOS</td>
+            <td>OD</td>
+            <td>INFO</td>
+            <td>INFO</td>
+            <td>INFO</td>
+        </tr>
+        <tr>
+            <td>OI</td>
+            <td>INFO</td>
+            <td>INFO</td>
+            <td>INFO</td>
+        </tr>
+        <tr>
+            <td rowspan="2">CERCA</td>
+            <td>OD</td>
+            <td>INFO</td>
+            <td>INFO</td>
+            <td>INFO</td>
+        </tr>
+        <tr>
+            <td>OI</td>
+            <td>INFO</td>
+            <td>INFO</td>
+            <td>INFO</td>
+        </tr>
     </table>
     <br>
+    <table>
+        <tr>
+          <th rowspan="1" style="text-align: center; vertical-align: middle; padding: 0.0001rem; width: 50px">Tipo De Cristal</th>
+        </tr>
+        <tr>
+          <td>monofocal</td>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+          <td>progresivo</td>
+        </tr>
+      </table>
+      
+      
+      
+      
+      
     <br>
     <!-- Firma y aclaración -->
     <div class="footer">

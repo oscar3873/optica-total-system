@@ -224,7 +224,7 @@ class SalesListView(ListView):
             "branch",
             "deleted_at", 
             "discount",
-            "created_at",
+            "discount_extra",
             "updated_at",
             "subtotal",
             )
