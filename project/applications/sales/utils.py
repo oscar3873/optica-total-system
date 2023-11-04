@@ -128,10 +128,24 @@ def switch_invoice_receipt(invoice_or_receipt, sale):
     else:
         return None
 
-def find_cristal_product(all_products_to_sale):
+def find_cristal_product(all_products_to_sale, sale=None):
     """Ecuentra un CRISTAL dentro de la orden de venta (productos)"""
+    if sale:
+        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale)
+
     for product in all_products_to_sale:
         if 'cristal' in product.category.name.lower() or 'contacto' in product.category.name.lower():
+            return product
+    return None
+
+def find_armazons_product(all_products_to_sale, sale=None):
+    """Ecuentra un Armazon dentro de la orden de venta (productos)"""
+    if sale:
+        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale, category__name__icontains='armazon')
+        return all_products_to_sale
+
+    for product in all_products_to_sale:
+        if 'armazon' in product.category.name.lower():
             return product
     return None
 
@@ -252,5 +266,13 @@ def process_service_order(request, customer):
             color_form, cristal_form, tratamiento_form, pupilar_form,
             customer
         )
+
+    print(service_order.errors,
+    correction_form.errors,
+    material_form.errors,
+    color_form.errors,
+    cristal_form.errors,
+    tratamiento_form.errors,
+    pupilar_form.errors)
 
     return service

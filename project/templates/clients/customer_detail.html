@@ -322,8 +322,10 @@
                                                         <a class="dropdown-item"
                                                             href="{% url 'clients_app:service_order_detail' service_order.id %}">Detalle</a>
                                                             {% if request.user.is_staff %}
-                                                            <a class="dropdown-item"
+                                                        <a class="dropdown-item"
                                                             href="{% url 'clients_app:service_order_update' service_order.id %}">Editar</a>
+                                                        <button class="dropdown-item" id="printer" data-id="{{service_order.id}}"
+                                                            href="{% url 'clients_app:print_service_order' service_order.id %}">Imprimir</button>
                                                         <a class=" dropdown-item text-danger"
                                                         href="{% url 'clients_app:service_order_delete' service_order.id %}">Eliminar</a>
                                                         {% endif %}
@@ -365,4 +367,5 @@
 {% endblock main %}
 
 {% block extra_js %}
+<script src="{% static 'clients/js/print_service_order.js' %}"></script>
 {% endblock extra_js %}

@@ -26,7 +26,7 @@ class ValidationFormMixin(forms.ModelForm):
         if birth_date :
             if birth_date >= DATE_NOW.date() - timedelta(days=2*365):
                 raise forms.ValidationError('La fecha establecida no puede registrarse.')
-            age_limit = DATE_NOW.date() - timedelta(days=90*365)
+            age_limit = DATE_NOW.date() - timedelta(days=100*365)
             if birth_date <= age_limit:
                 raise forms.ValidationError('La fecha establecida no puede superar los 90 años.')
 

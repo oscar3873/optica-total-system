@@ -22,6 +22,7 @@
                 <p class="mb-0">Aquí puede modificar los datos del cliente</p>
             </div>
         </div>
+        
     </div>
 
     <div class="row justify-content-sm-center my-2">
@@ -216,7 +217,7 @@
                                             <div class="tab-content">
                                                 <div class="tab-pane active px-sm-3" role="tabpanel"
                                                     aria-labelledby="bootstrap-wizard-validation-tab1" id="bootstrap-wizard-validation-tab1">
-                                                    <form method="post" id="HI-form" class="row g-3 needs-validation align-items-center" novalidate="">
+                                                    <form method="post" id="HI-form">
                                                         {% csrf_token %}
                                                         <div class="row justify-content-sm-center pb-2">
                                                             <div class="col pt-3">
@@ -240,20 +241,10 @@
                                                                 <div class="invalid-feedback">Ingrese solo números.</div>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer row">
-                                                            <div class="mt-3">
-                                                                <div class="col-12">
-                                                                    <button type="button" class="btn btn-primary" id="save-hi">Añadir</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
                                                     </form>
-                                                    <div class="modal-footer">
-                                                        <div class="mt-3">
-                                                            <div class="col-12">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                                            </div>
-                                                        </div>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                                                        <button type="button" class="btn btn-primary" id="save-hi">Añadir</button>
                                                     </div>
                                                 </div>
                                             </div>

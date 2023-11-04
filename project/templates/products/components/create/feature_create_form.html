@@ -73,14 +73,12 @@
                   {% csrf_token %}
                   <label for="id_value" class="form-label">Tipo de caracteristica</label>
                 {{ form.name}}
-                  <!-- Agrega campos y etiquetas del formulario según tus necesidades -->
-                  <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
-                  <!-- Fin del formulario de creación de Tipo de Características -->
                 </form>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer justify-content-between">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
-              </div>
+                  <button class="btn btn-primary" type="button" id="save-ft">Guardar</button>
+            </div>
           </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+const payment = document.getElementById('payment-method-form');
+
 document.addEventListener("DOMContentLoaded", function() {
 
     // Función para abrir el modal
@@ -45,6 +47,11 @@ document.addEventListener("DOMContentLoaded", function() {
                         closeModal();  // Cerrar el modal después de agregar la nueva categoría
                     }else{
                         console.log(data.message);
+                        let error_pay = document.createElement('div');
+                        error_pay.innerHTML = data.message;
+                        error_pay.classList.add('text-center', 'text-danger');
+                        
+                        payment.appendChild(error_pay);
                     }
                 }
             });

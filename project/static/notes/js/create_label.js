@@ -1,10 +1,18 @@
+
+let errorMessage = document.createElement("div");
+const form_label = document.getElementById("id_label_form");
+let errorField = form_label.querySelector('div[id="new_label"]');
+let field = form_label.querySelector('input[id="id_label"]');
+
 document.addEventListener("DOMContentLoaded", function() {
     function closeModal(){
         $('#note-label-modal').modal('hide');
+        errorMessage.innerHTML = "";
+        field.value = '';
     }
 
     document.getElementById("save-label").addEventListener("click",function(){
-        var formData = new FormData(document.getElementById("id_label_form"));
+        let formData = new FormData(form_label);
         $.ajax({
             url: '/notes/new/label', // URL para enviar la solicitud POST
             method: 'POST',
@@ -14,11 +22,11 @@ document.addEventListener("DOMContentLoaded", function() {
             success: function(data) {
                 if(data.status === 'success') {
                     // Crear una nueva opción para agregar al select
-                    var newOption = new Option(data.new_type.label, data.new_type.id);
+                    let newOption = new Option(data.new_type.label, data.new_type.id);
                     
                     // Obtener el elemento select por su ID
-                    var idTypeSelect = document.getElementById("id_label");
-                    var colorPickerDisabled = document.getElementById("color-input-disabled");
+                    let idTypeSelect = document.getElementById("id_label");
+                    let colorPickerDisabled = document.getElementById("color-input-disabled");
                     // Agregar la nueva opción al select
                     idTypeSelect.appendChild(newOption);
                     colorPickerDisabled.value = data.new_type.color;
@@ -29,17 +37,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     closeModal();
                 } else {
                     // Manejar errores de validación si la solicitud no fue exitosa
-                    var errorField = document.getElementById("id_label");
-                    var errorMessage = document.createElement("div")
                     errorMessage.className = "text-danger";
-                    errorMessage.style.fontStyle = "italic";
                     errorMessage.textContent = "Este campo es requerido.";
                     
-                    // Resaltar el campo en rojo
-                    errorField.style.borderColor = "red";
-                    
                     // Agregar el mensaje de error debajo del campo
-                    errorField.parentNode.appendChild(errorMessage);
+                    errorField.appendChild(errorMessage);
                 }
             }
         });

@@ -68,25 +68,23 @@ class HealthInsuranceForm(ValidationFormMixin):
         )
     )
 
-    phone_number = forms.CharField( 
+    phone_number = forms.IntegerField( 
         label='Telefono de contacto',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control',
-                   'placeholder' : 'Telefono de contacto',
-                   'type' : 'numeric',
-                   'pattern' : '[0-9]+'
-                   }
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder' : 'Telefono de contacto',
+                }
         )
     )
 
-    cuit = forms.CharField( 
+    cuit = forms.IntegerField( 
         label='CUIT',
-        widget=forms.TextInput(
-            attrs={'class': 'form-control',
-                   'placeholder' : 'Clave Única de Identificación Tributaria',
-                   'type' : 'numeric',
-                   'pattern' : '[0-9]+'
-                   }
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder' : 'Clave Única de Identificación Tributaria',
+                }
         )
     )
 
@@ -97,7 +95,7 @@ class HealthInsuranceForm(ValidationFormMixin):
     def clean_name(self):
         name = self.cleaned_data['name']
         self.validate_length(name, 3, "El nombre de la sucursal debe contener al menos 3 caracteres.")
-        return name
+        return name.title()
 
     def clean_cuit(self):
         cuit = self.cleaned_data['cuit']
@@ -459,7 +457,11 @@ class ServiceOrderForm(forms.ModelForm):
     armazon = forms.ModelChoiceField(
         required = False,
         queryset = Product.objects.filter(category__name__icontains='Armazon'),
-        widget = forms.CheckboxInput()
+        widget = forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        )
     )
 
     diagnostic = forms.CharField(
@@ -488,3 +490,12 @@ class ServiceOrderForm(forms.ModelForm):
     class Meta:
         model = ServiceOrder
         fields = ['diagnostic', 'armazon', 'observations']
+
+    def __init__(self, *args, **kwargs):
+        armazon = kwargs.pop('kwargs', None)
+        super().__init__(*args, **kwargs)
+
+        if armazon:
+            print(kwargs)
+            self.fields['armazon'].queryset = armazon
+            self.fields['armazon'].initial = armazon

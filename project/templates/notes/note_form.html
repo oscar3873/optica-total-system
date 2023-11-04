@@ -154,7 +154,7 @@
                     <div class="row">
 
                         <div class="pb-3 pb-sm-4 ">
-                            <div class="col-12">
+                            <div class="col-12" id="new_label">
                                 <label for="{{ label_form.label.id_for_label }}" class="form-label">Tipo:</label>
                                 {{ label_form.label }}
                             </div>
@@ -167,11 +167,11 @@
                         </div>
                         
                     </div>
-                    <button class="btn btn-primary" type="button" id="save-label">Guardar</button>
                 </form>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-between">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                <button class="btn btn-primary" type="button" id="save-label">Guardar</button>
             </div>
         </div>
     </div>

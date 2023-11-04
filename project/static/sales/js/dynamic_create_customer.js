@@ -1,5 +1,6 @@
 let payment_method = document.getElementById('id_payment_method');
 let selected_payment = 1;
+const customer_modal = document.getElementById('New-customer-form');
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -7,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     saveCustomer.addEventListener('click', function() {
-        const formData = new FormData(document.getElementById('New-customer-form'));
+        const formData = new FormData(customer_modal);
 
         $.ajax({
             url: '/customers/new/',
@@ -67,9 +68,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 } else if ('error' in data) {
                     console.log(data.error);
-                    // Ha ocurrido un error al guardar el cliente
-                    // let error_customer = document.getElementById('???');
-                    // error_customer.textContent = data.error; 
+                    let error_div = document.createElement('div');
+                    error_div.innerHTML = data.error;
+                    error_div.classList.add('text-center', 'text-danger');
+                    
+                    customer_modal.appendChild(error_div);
                 }
             }
         });

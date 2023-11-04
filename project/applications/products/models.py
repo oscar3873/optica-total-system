@@ -43,7 +43,7 @@ class Product(BaseAbstractWithUser):
     branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch',verbose_name="Sucursal")
     promotion = models.ForeignKey('promotions.Promotion', on_delete=models.PROTECT, null=True, blank=True, related_name="product_promotion", verbose_name="Promoción")
 
-    has_eyeglass_frames = models.BooleanField(default=False, verbose_name="Armazón") 
+    has_eyeglass_frames = models.BooleanField(default=False, verbose_name="Armazón")
 
     objects = ProductManager()
 

@@ -20,6 +20,18 @@
                 class="text-warning">{{service_order.customer}}</span></a> realizado el {{service_order.created_at | date:"j \d\e F \d\e\l Y"}}</p>
         </div>
     </div>
+    
+    <!-- Editar boton - Boton para editar Orden de Servicio -->
+    
+    {% if request.user.is_staff %}
+        <a class="btn btn-info" href="{% url 'clients_app:service_order_update' service_order.pk %}">Editar</a>
+    {% endif %}
+
+    <button id="printer" data-id="{{service_order.pk}}" class="btn btn-success">
+        Imprimir Orden de servicio
+    </button>
+        
+
 
     <div class="card mb-3">
         <div class="container justify-content-center">
@@ -500,4 +512,5 @@
 {% endblock main %}
 
 {% block extra_js %}
+<script src="{% static 'clients/js/print_service_order.js' %}"></script>
 {% endblock extra_js %}
