@@ -257,54 +257,53 @@ class SaleDetailView(CustomUserPassesTestMixin, DetailView):
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
 def show_invoice(request, pk):
-    sale = Sale.objects.get(id=pk)
-    customer = sale.customer
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+        sale = Sale.objects.get(id=pk)
+        customer = sale.customer
 
-    try:
-        service_order = ServiceOrder.objects.get(sale=sale, is_done=False)
-    except ServiceOrder.DoesNotExist:
-        service_order = None
+        payment = Payment.objects.get(sale=sale)
 
-    payment = Payment.objects.get(sale=sale)
+        order_details = sale.order_detaill.filter(sale=sale)
+        order_details_template = []
+        subtotal = []
 
-    order_details = sale.order_detaill.filter(sale=sale)
-    order_details_template = []
-    subtotal = []
+        for order in list(order_details):
+            order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
+            subtotal.append(order.price * order.quantity)
 
-    for order in list(order_details):
-        order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
-        subtotal.append( order.price * order.quantity)
+        # Convertir la cadena en un objeto de fecha
+        locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
 
-    # Convertir la cadena en un objeto de fecha
-    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+        format = "%A, %d de %B de %Y"
+        
+        created_at = sale.created_at.astimezone(ZONE_TIME)
+        sale_date_str = created_at.strftime(format)
 
-    format = "%A, %d de %B de %Y"
-    
-    created_at = sale.created_at.astimezone(ZONE_TIME)
-    sale_date_str = created_at.strftime(format)
+        context = {
+            'customer': customer,
+            'total': f'{sale.total:.2f}',
+            'order_details': order_details_template,
+            'subtotal': sum(subtotal),
+            'seler': sale.user_made,
+            'promo': f'{sale.total}',
+            'discount': f'{sale.discount:.2f}',
+            'discount_extra': f'{sale.discount_extra:.2f}',
+            'payment_method': payment.payment_method.name,
+            'pay': f'{sale.total - sale.missing_balance:.2f}',
+            'missing_balance': f'{sale.missing_balance:.2f}',
+            'date': sale_date_str,
+            'time': created_at.time()
+        }
 
-    context = {
-        'customer': customer,
-        'total': f'{sale.total:.2f}',  # Muestra sale.total con 2 decimales
-        'order_details': order_details_template,
-        'subtotal': sum(subtotal),
-        'service_order': service_order if service_order else None,  # Incluye service_order solo si no es None
-        'od_lejos': f'{service_order.correction.lej_od_esferico} {service_order.correction.lej_od_cilindrico} {service_order.correction.lej_od_eje}' if service_order else None,
-        'oi_lejos': f'{service_order.correction.lej_oi_esferico} {service_order.correction.lej_oi_cilindrico} {service_order.correction.lej_oi_eje}' if service_order else None,
-        'od_cerca': f'{service_order.correction.cer_od_esferico} {service_order.correction.cer_od_cilindrico} {service_order.correction.cer_od_eje}' if service_order else None,
-        'oi_cerca': f'{service_order.correction.cer_oi_esferico} {service_order.correction.cer_oi_cilindrico} {service_order.correction.cer_oi_eje}' if service_order else None,
-        'seler': sale.user_made,
-        'promo': f'{sale.total}',
-        'discount': f'{sale.discount:.2f}',
-        'discount_extra': f'{sale.discount_extra:.2f}',
-        'payment_method': payment.payment_method.name,
-        'pay': f'{sale.total - sale.missing_balance:.2f}',
-        'missing_balance': f'{sale.missing_balance:.2f}',  # Saldo pendiente
-        'date': sale_date_str,
-        'time': created_at.time()
-    }
+        # Genera el HTML en lugar de renderizarlo
+        template = loader.get_template('sales/components/comprobante_pago.html')
+        html_content = template.render(context)
 
-    return render(request, 'sales/components/comprobante_pago.html', context)
+        # Devuelve el HTML como respuesta
+        return HttpResponse(html_content, content_type="text/html")
+    else:
+        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
+        return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
 
 ################ SEARCH MOVEMENTS AJAX ################

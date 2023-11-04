@@ -5,7 +5,7 @@ const serviceId = button_print.getAttribute('data-id');
 document.addEventListener('DOMContentLoaded', () => {
     button_print.addEventListener('click', () =>{
         $.ajax({
-            url: `/sales/print_invoice/${serviceId}/`, // Reemplaza con la URL correcta de tu servidor
+            url: `/sales/show_invoice/${serviceId}/`, // Reemplaza con la URL correcta de tu servidor
             method: 'GET',
             dataType: 'html', // Indica que esperas HTML en la respuesta
             success: function(data) {
