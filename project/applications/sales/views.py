@@ -165,7 +165,7 @@ class PaymentMethodCreateView(FormView):
         
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return JsonResponse({'status': 'error', 'message':'Ya existe el Metodo de Pago.'})
+            return JsonResponse({'status': 'error', 'message':'Por favor, verifique los campos.'})
         print("######################################################")
         print("El formulario es invalido")
         print(form.errors)
@@ -363,3 +363,15 @@ def set_serviceOrder_onSale(request, pk):
     service_order.save()
 
     return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': pk}))
+
+def print_invoice(request, pk): # pk de la orden
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+        service = Sale.objects.get(pk=pk)
+        # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
+        html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
+
+        # Devuelve el HTML como respuesta
+        return HttpResponse(html_content, content_type="text/html")
+    else:
+        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
+        return JsonResponse({'error': 'Solicitud no válida'}, status=400)

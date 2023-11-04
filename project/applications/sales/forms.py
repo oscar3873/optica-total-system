@@ -113,7 +113,7 @@ class PaymentMethod(BaseAbstractWithUser):
 
 """
 
-class PaymentMethodForm(forms.ModelForm):
+class PaymentMethodForm(ValidationFormMixin):
     
     name = forms.CharField(
         required=True,
@@ -127,7 +127,7 @@ class PaymentMethodForm(forms.ModelForm):
     )
     
     type_method = forms.ModelChoiceField(
-        queryset=PaymentType.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        queryset = PaymentType.objects.exclude(name__in=['Efectivo', 'Transferencia']),
         widget=forms.Select(
             attrs={
                 'class': 'form-control'
@@ -138,6 +138,10 @@ class PaymentMethodForm(forms.ModelForm):
         model = PaymentMethod
         fields = ['name', 'type_method']
 
-# PaymentMethodsFormset = forms.formset_factory(
-#     PaymentMethodForm, extra=1
-# )
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if name:
+            self.validate_length(name, 3, 'Ingrese un nombre válido.')
+            if PaymentMethod.objects.filter(name=name.lower()).exists():
+                raise forms.ValidationError('Ya existe el Metodo de Pago.')
+        return name.capitalize()

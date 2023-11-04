@@ -48,5 +48,12 @@ urlpatterns = [
         'order_service/<pk>/',
         set_serviceOrder_onSale,
         name='order_service'
+    ),
+
+    ########### IMPRIMIR FACTURA #########
+    path(
+        'print_invoice/<pk>/',
+        print_invoice,
+        name='print_invoice'
     )
 ]

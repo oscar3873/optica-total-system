@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, UpdateView, DeleteView
 from django.db import transaction
@@ -58,6 +58,7 @@ class LabelCreateView(CustomUserPassesTestMixin, FormView):
     Crear una nueva label
     '''
     form_class = LabelCreateForm
+    template_name = 'notes/note_form.html'	
 
     def form_valid(self,form):
         label = form.save(commit=False)
@@ -71,6 +72,11 @@ class LabelCreateView(CustomUserPassesTestMixin, FormView):
             }
                 # Si es una solicitud AJAX, devuelve una respuesta JSON
             return JsonResponse({'status': 'success', 'new_type': new_label_data})
+    
+    def form_invalid(self, form):
+        if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX
+            return JsonResponse({'error': form.errors})
+        return super().form_invalid(form)
 
 ################## LIST ######################
 

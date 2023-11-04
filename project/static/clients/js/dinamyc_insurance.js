@@ -1,11 +1,20 @@
+const hi_form = document.getElementById("HI-form");
+var errorMessage = document.createElement("div");
+
+
 document.addEventListener("DOMContentLoaded", function() {
     
     function closeModal() {
         $('#HI-modal').modal('hide');
+        document.getElementById('id_name').value = '';
+        document.getElementById('id_cuit').value = '';
+        let phone = hi_form.querySelector('input[name="phone_number"]');
+        phone.value = '';
+        errorMessage.innerHTML = '';
     }
     // Manejar la creación de un nuevo Tipo de Características
     document.getElementById("save-hi").addEventListener("click", function() {
-        var formData = new FormData(document.getElementById("HI-form"));
+        var formData = new FormData(hi_form);
 
         var checkboxes = document.querySelectorAll('[id^="id_h_insurance_"]');
         var countchecks = checkboxes.length;
@@ -43,19 +52,11 @@ document.addEventListener("DOMContentLoaded", function() {
                     name_modal.textContent = '';
                     cuit_modal.textContent = '';
 
-                } else {
-                    var errorField = document.getElementById("        ID DE DONDE VALLA EL ERROR A MOSTRAR          "); // Reemplaza "id_name" con el ID de tu campo
-                    var errorMessage = document.createElement("div");
-                    errorMessage.className = "text-danger text-center";
-                    errorMessage.style.fontSize = "0.8rem";
-                    errorMessage.style.fontStyle = "italic"; // Estilo en cursiva
-                    errorMessage.textContent = "Hubo un error en la carga, porfavor verifique los datos ingresados.";
+                } else if (data.error){
+                    errorMessage.className = "text-danger text-center my-2";
+                    errorMessage.innerHTML = data.error;
                 
-                    // Resaltar el campo en rojo
-                    errorField.style.borderColor = "red";
-                
-                    // Agregar el mensaje de error debajo del campo
-                    errorField.parentNode.appendChild(errorMessage);
+                    hi_form.appendChild(errorMessage);
                 }
                 
             }

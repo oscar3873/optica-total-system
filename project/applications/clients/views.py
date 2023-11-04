@@ -162,7 +162,7 @@ class HealthInsuranceCreateView(LoginRequiredMixin, FormView):
     
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # ERROR DE NUEVA OBRA SOCIAL DURANTE CREACION DE CLIENTE (PETICION FETCH)
-            return JsonResponse({'status': 'error'})
+            return JsonResponse({'error':'Por favor, verifique los campos'})
         else:
             messages.error(self.request, 'Por favor, verifique los campos.')
             return super().form_invalid(form)
@@ -228,11 +228,12 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
 class CustomerUpdateView(LoginRequiredMixin, UpdateView):
     model = Customer
     form_class = CustomerForm
-    template_name = 'clients/customer_update.html'
+    template_name = 'clients/customer_form.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['h_insurance'] = HealthInsuranceForm
+        context['update'] = 1
         return context
 
     def form_valid(self, form):

@@ -20,7 +20,7 @@ class HealthInsurance(BaseAbstractWithUser):
         verbose_name_plural = "Obras Socailes"
 
     def __str__(self) -> str:
-        return f'{self.name} - CUIT: {self.cuit}'
+        return f'{self.name}'
 
 
 class Customer(Person, BaseAbstractWithUser):
