@@ -474,10 +474,12 @@ def pay_credits(request, pk):
         total += transaction.sale.amount
         transaction.sale.save()
 
+    cashregister = user.branch.cashregister_set.filter(is_close=False).last(),
+
     Movement.objects.create(
         amount = total,
         date_movement = DATE_NOW.date(),
-        cash_register = user.branch.cashregister_set.filter(is_close=False).last(),
+        cash_register = cashregister,
         description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
         currency = Currency.objects.get(name__icontains='PESO'),
         type_operation = 'Ingreso',

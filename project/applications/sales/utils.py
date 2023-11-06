@@ -141,7 +141,7 @@ def find_cristal_product(all_products_to_sale, sale=None):
 def find_armazons_product(all_products_to_sale, sale=None):
     """Ecuentra un Armazon dentro de la orden de venta (productos)"""
     if sale:
-        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale, category__name__icontains='armazon')
+        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale, category__name__icontains='Armazon')
         return all_products_to_sale
 
     for product in all_products_to_sale:
