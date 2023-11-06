@@ -1,7 +1,7 @@
 #
 from django.urls import path
 # Views basadas en clases
-from .views import HomePageView
+from .views import *
 
 app_name = 'core_app'
 
@@ -11,4 +11,9 @@ urlpatterns = [
         name='home'
     ),
 
+    path(
+        'objetives/new/', 
+        ObjetiveCreateView.as_view(), 
+        name='objetive_new'
+    )
 ] 
