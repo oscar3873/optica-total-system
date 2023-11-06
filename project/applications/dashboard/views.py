@@ -20,8 +20,6 @@ class DailyReportsView(TemplateView):
         branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
         branch_actualy = Branch.objects.get(id=branch_actualy)
         
-        context['employee_objectives'] = Objetives.objects.filter(to='EMPLEADOS')
-
         context['monto_por_rango_completado'], context['monto_por_rango_pendiente'] = dayli_sales(branch_actualy) # 8am a 9pm : $ventas
         context['customers'] = dayli_customers(branch_actualy) # clientes registrados del dia
         context['sales'] = dayli_sales_count(branch_actualy) # cantidad de ventas del dia
@@ -41,10 +39,11 @@ class DashboardView(TemplateView):
         branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
         branch_actualy = Branch.objects.get(id=branch_actualy)
 
-        context['week_sales'] = week_status(branch_actualy) # devuleve un diccionario con las ventas de la semana
+        context['ventas_semanales'] = week_status(branch_actualy) # devuleve un diccionario con las ventas de la semana
         context['ventas_por_semana'], context['total_ventas_anteriores'] = week_sales(branch_actualy) # devuleve un diccionario con las ventas de la semana
         context['productos_mas_vendidos'] = top_prodcuts(branch_actualy) # devuleve un diccionario con el TOP de prodcutos mas vendidos
         context['marcas_mas_vendidos'] = top_brands(branch_actualy) # devuleve un diccionario con el TOP de marcas mas vendidas
+        context['objetivos_emp'], context['objetivos_suc'] = objetives(branch_actualy) # VER MODELO PARA ACCEDER A LOS CAMPOS NECESARIOS!!!
 
         return context
     

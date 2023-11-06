@@ -2,7 +2,6 @@ import copy
 import locale
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
 from django.views.generic import *
 from django.db import transaction
 from django.urls import reverse_lazy
@@ -15,7 +14,7 @@ from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
-from project.settings.base import ZONE_TIME
+from project.settings.base import DATE_NOW, ZONE_TIME
 
 from .utils import *
 from .models import *
@@ -129,6 +128,14 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         for order in order_details:
             order.sale = sale
             order.save()
+
+        employee = self.request.user
+        if not employee.is_staff: # es empleado
+            objetives = employee.employee_objetives.filter(is_completed=False, objetives__exp_date__lte=DATE_NOW.date())
+            for objetive in objetives:
+                if not objetive.is_completed:
+                    objetive.accumulated += sale.total
+                    objetive.save()
 
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))

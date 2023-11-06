@@ -8,6 +8,8 @@ from applications.products.models import Brand, Product
 from applications.clients.models import Customer
 from applications.sales.models import Sale
 from applications.cashregister.models import Movement
+from applications.employes.models import Employee_Objetives
+from applications.branches.models import Branch_Objetives
 
 fecha_hoy = DATE_NOW.date()
 
@@ -111,6 +113,11 @@ def top_brands(branch_actualy):
     return top_marcas_mas_vendidas # TOP MARCAS +VENDIDAS
 
 
+def objetives(branch_actualy):
+    obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy)
+    obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy)
+
+    return obj_employee, obj_branch
 
 ######################## REPORTES DIARIOS #########################
 

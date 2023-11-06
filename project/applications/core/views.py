@@ -19,7 +19,8 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
     def form_valid(self, form):
         if form.is_valid():
             tipo = form.cleaned_data.pop('tipo')
-            objetive = form.save(commit=False)
+            # objetive = form.save(commit=False)
+            objetive = form.save()
             
             branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
             branch_actualy = Branch.objects.get(id=branch_actualy)
@@ -39,6 +40,5 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
                         branch = branch,
                         objetive = objetive,
                     )
-
 
         return super().form_valid(form)
