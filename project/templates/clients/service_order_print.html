@@ -1,188 +1,294 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orden de servicio</title>
-    <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Arial', sans-serif;
-            width: 300px; /* Aproximadamente 80mm */
-            margin: auto ;
-            padding: 10px;
-            border: 1px dashed #ccc;
-            box-sizing: border-box;
-        }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Orden de servicio</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            /* Estilos generales */
+            body {
+                font-family: 'Arial', sans-serif;
+                width: 300px; /* Aproximadamente 80mm */
+                margin: auto ;
+                padding: 10px;
+                border: 1px dashed #ccc;
+                box-sizing: border-box;
+            }
+            .small-text {
+                font-size: 8px; /* Ajusta el tamaño de fuente según tus necesidades */
+                margin:0;
+            }
+            .custom-row {
+                height: 15px; /* Ajusta la altura según tus necesidades */
+            }
+            .custom-row-tit {
+                height: 30px; /* Ajusta la altura según tus necesidades */
+            }
+            .custom-row-45 {
+                height: 45px; /* Ajusta la altura según tus necesidades */
+            }
+            .custom-row-cristal {
+                margin: 0px;
+                height: 90px; /* Ajusta la altura según tus necesidades */
+            }
+        </style>
+    </head>
+    <body>
 
-        /* Logo y nombre */
-        .header {
-            text-align: start;
-            margin-bottom: 10px;
-        }
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="datetime d-flex justify-content-between">
+                        <small class="date">15 de agosto de 2023</small>
+                        <small class="time">00:00:00</small>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        .header img {
-            display: block;
-            width: 50%;
-            margin: auto auto 10px;
-        }
+        <div class="container">
+            <div class="row mt-3 border custom-row">
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">DISTANCIA</p>
+                </div>
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">OJO</p>
+                </div>
+                <div class="col-3 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">ESFERICO</p>
+                </div>
+                <div class="col-3 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">CILINDRICO</p>
+                </div>
+                <div class="col-2 d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">EJE</p>
+                </div>
+            </div>
+            <div class="row border custom-row-tit">
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">LEJOS</p>
+                </div>
+                <div class="col-2 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OD</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OI</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">1</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">2</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">3</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">4</p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">5</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">6</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row border custom-row-tit">
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">CERCA</p>
+                </div>
+                <div class="col-2 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OD</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OI</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">1</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">2</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">3</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">4</p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">5</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">6</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
 
-        .header .datetime{
-            font-size: .6rem;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-        .header .title{
-            font-size: .8rem;
-            text-align: center;
-        }
-        .tax-payer{
-            font-size: .7rem;
-            text-align: center;
-        }
-        .branch-info{
-            text-align: center;
-            font-size: .7rem;
-        }
-        .branch{
-            font-size: .7rem;
-        }
-        .contact{
-            font-weight: bold;
-        }
-        .client-data{
-            margin: 0rem 1rem;
-            display: flex;
-            flex-direction: column;
-            font-size: .7rem;
-        }
-        .row{
-            display: flex;
-            justify-content: space-between;
-        }
-        .col{
-            text-align: start;
-        }
-        /* Detalles del ticket */
-        table {
-            font-size: .6rem;
-            width: 100%;
-            border-collapse: collapse;
-            line-height: 1.5; /* Ajusta este valor según tu preferencia */
-        }
+        <div class="row custom-row-cristal col-5 border">
+            <div class="col-4 p-0">
+                <div class="col-12 border-bottom p-0">
+                    <p class="small-text d-flex align-items-center justify-content-center text-center border-right">TIPO DE CRISTAL</p>
+                </div>
+                <div class="col-10 p-0 boder">
+                    <div class="custom-row border d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">Monofocal</p>
+                </div>
+                    <div class="custom-row-45 border">
+                        <div class="custom-row">
+                            <p class="small-text">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FV</p>
+                        </div>
+                        <div class="custom-row">
+                            <p class="small-text">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bifocal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;K</p>
+                        </div>
+                        <div class="custom-row">
+                            <p class="small-text">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;PI</p>
+                        </div>
+                    </div>
+                    <div class="custom-row border d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">Progresivo</p>
+                    </div>
+                </div>
+                <div class="col-2 p-0">
+                    <div class="custom-row border-right border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">X</p>
+                    </div>
+                    <div class="custom-row border-right border-bottom border-top d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">X</p>
+                    </div>
+                    <div class="custom-row border-right border-bottom border-top d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">X</p>
+                    </div>
+                    <div class="custom-row border-right border-bottom border-top d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">X</p>
+                    </div>
+                    <div class="custom-row border-right border-bottom border-top d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">X</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+</html>
 
-        table th, table td {
-            padding: 3px 5px;
-            text-align: left;
-            line-height: 4; /* Ajusta este valor según tu preferencia */
-            border: 1px solid #000;
-        }
-
-        table th {
-            background-color: #f2f2f2;
-        }
-        .payments{
-            font-size: .8rem;
-            text-align: center;
-            font-weight: bold;
-        }
-        /* Detalles del cierre */
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            margin: 10px .5rem 0px .5rem;
-            font-size: .8rem;
-        }
-        .thanks{
-            text-align: center;
-            background-color: #f2f2f2;
-            margin-top: 2rem;
-            font-size: .7rem;
-        }
-    </style>
-</head>
-<body>
 
     <!-- Cabecera con logo y nombre -->
-    <div class="header">
-        <div class="datetime">
-            <small class="date">martes, 15 de agosto de 2023</small>
-            <small class="time">00:00:00</small>
+    <!--<div class="container">
+        <div class="row mt-3">
+            <div class="col">
+                <div class="datetime">
+                    <small class="date">martes, 15 de agosto de 2023</small>
+                    <small class="time">00:00:00</small>
+                </div>
+            </div>
         </div>
-        <div class="logo">
-            <p class="sucursal">NOMBRE DE LA OPTICA<p> 
-            <p class="direccion">DIRECCION</p>
-            <p class="phone">TELÉFONO</p>
+        <div class="row">
+            <div class="col-6">
+                <p class="sucursal">NOMBRE DE LA OPTICA</p>
+                <p class="direccion">DIRECCION</p>
+                <p class="phone">TELÉFONO</p>
+            </div>
         </div>
     </div>
-    <!-- Resumen de cuentas -->
-    <table class="correction">
-        <tr>
-            <th rowspan="2">DISTANCIA</th>
-            <th rowspan="2">OJO</th>
-        </tr>
-        <tr>
-            <th>ESFERICO</th>
-            <th>CILINDRICO</th>
-            <th>EJE</th>
-        </tr>
-        <tr>
-            <td rowspan="2">LEJOS</td>
-            <td>OD</td>
-            <td>INFO</td>
-            <td>INFO</td>
-            <td>INFO</td>
-        </tr>
-        <tr>
-            <td>OI</td>
-            <td>INFO</td>
-            <td>INFO</td>
-            <td>INFO</td>
-        </tr>
-        <tr>
-            <td rowspan="2">CERCA</td>
-            <td>OD</td>
-            <td>INFO</td>
-            <td>INFO</td>
-            <td>INFO</td>
-        </tr>
-        <tr>
-            <td>OI</td>
-            <td>INFO</td>
-            <td>INFO</td>
-            <td>INFO</td>
-        </tr>
-    </table>
+    Resumen de cuentas 
+    <div class="container mt-3">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th rowspan="2">DISTANCIA</th>
+                    <th rowspan="2">OJO</th>
+                    <th colspan="3">ESFERICO</th>
+                    <th>EJE</th>
+                </tr>
+                <tr>
+                    <th>OD</th>
+                    <th>OI</th>
+                    <th>OD</th>
+                    <th>OI</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="2">LEJOS</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                </tr>
+                <tr>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">CERCA</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                </tr>
+                <tr>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                    <td>INFO</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <br>
-    <table>
-        <tr>
-          <th rowspan="1" style="text-align: center; vertical-align: middle; padding: 0.0001rem; width: 50px">Tipo De Cristal</th>
-        </tr>
-        <tr>
-          <td>monofocal</td>
-        </tr>
-        <tr>
-        </tr>
-        <tr>
-          <td>progresivo</td>
-        </tr>
-      </table>
-      
-      
-      
-      
-      
+    <div class="container">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align: center; vertical-align: middle; width: 50px">Tipo De Cristal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>monofocal</td>
+                </tr>
+                <tr>
+                    <td>progresivo</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <br>
-    <!-- Firma y aclaración -->
-    <div class="footer">
+    Firma y aclaración
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col">
+                <span class="seller">Firma</span>
+            </div>
+        </div>
+    </div> #}
+    Firma y aclaración
+    {# <div class="footer">
         <span class="seller">Firma</span>
         <br>
         <br>
         <br>
         <br>
-    </div>
+    </div> -->
 
-</body>
-</html>
+
