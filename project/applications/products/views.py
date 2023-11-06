@@ -705,7 +705,7 @@ def ajax_search_products(request):
         search_term = request.GET.get('search_term', '')
 
         if not search_term:
-            # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
+            # En caso de que search_term esté vacío, muestra la cantidad de productos por defecto
             paginate_by = ProductListView().paginate_by
             products = Product.objects.get_products_branch(branch)[:paginate_by]
         else:
@@ -717,7 +717,7 @@ def ajax_search_products(request):
                 Q(category__name__icontains=search_term) |
                 Q(brand__name__icontains=search_term)
             )[:25]
-        # Crear una lista de diccionarios con los datos de los empleados
+        # Crear una lista de diccionarios con los datos de los productos
         data = [{
             'id': product.id,
             'name': product.name,

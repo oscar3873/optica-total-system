@@ -213,3 +213,104 @@ class ObjetiveForm(forms.ModelForm):
                 }
             )
             }
+        
+
+
+class ObjetiveForm(ValidationFormMixin):
+    PARA= [
+        ('EMPLEADOS', 'EMPLEADOS'),
+        ('SUCURSAL', 'SUCURSAL'),
+    ]
+
+    TIPO = [
+        ('VENTA', 'VENTA'),
+    ]
+
+    to = forms.ChoiceField(
+        choices=PARA,
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    tipo = forms.ChoiceField(
+        choices=TIPO,
+        required=True,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    title = forms.CharField(
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    description = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    start_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',
+                'class': 'form-control',
+            }
+        )
+    )
+    exp_date = forms.DateField(
+        required=True,
+        widget=forms.DateInput(
+            attrs={
+                'type': 'date',
+                'class': 'form-control',
+            }
+        )
+    )
+    quantity = forms.IntegerField(
+        min_value=1,
+        max_value=9999999999,
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+
+    class Meta:
+        model = Objetives
+        fields = ['to', 'title', 'description', 'start_date', 'exp_date', 'quantity']
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        self.validate_length(title, 3, "El Titulo debe contener al menos 3 carácteres.")
+        return title.title()
+    
+    def clean_description(self):
+        description = self.cleaned_data['description']
+        self.validate_length(description, 3, "La Descripcion debe contener al menos 3 carácteres.")
+        return description.title()
+
+    def clean_quantity(self):
+        quantity = self.cleaned_data['quantity']
+        if quantity and quantity <= 0:
+            raise forms.ValidationError("Ingrese una Cantidad válida.")
+        return quantity
+
+    def clean(self):
+        start_date = self.cleaned_data['start_date']
+        end_date = self.cleaned_data['exp_date']
+        if start_date and end_date and start_date < end_date:
+            raise forms.ValidationError("La Fecha de Finalizacion no puede ser anterior a la Fecha de Inicio.")
+        return self.cleaned_data
