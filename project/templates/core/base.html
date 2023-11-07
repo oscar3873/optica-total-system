@@ -262,9 +262,9 @@
                                     </div>
                                 </a>
                                 <ul class="nav collapse false" id="authentication">
-                                    {% if   request.user.is_staff %}
-                                    <li class="nav-item"><a class="nav-link dropdown-sales_objetives" href="#authentication-modal"
-                                            data-bs-toggle="modal" aria-expanded="false" id="sales_objetives_new">
+                                    {% if request.user.is_staff %}
+                                    <li class="nav-item"><a class="nav-link dropdown-sales_objetives" href="{% url 'core_app:objetive_new' %}"
+                                            aria-expanded="false" id="sales_objetives_new">
                                             <div class="d-flex align-items-center"><span
                                                     class="nav-link-text ps-1">Establecer objetivo de venta</span>
                                             </div>
