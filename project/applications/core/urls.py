@@ -15,5 +15,11 @@ urlpatterns = [
         'objetives/new/', 
         ObjetiveCreateView.as_view(), 
         name='objetive_new'
+    ),
+
+    path(
+        'objetives/update/<pk>/', 
+        ObjetiveUpdateView.as_view(),
+        name='objetive_update'
     )
 ] 

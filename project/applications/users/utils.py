@@ -1,11 +1,13 @@
-from django.contrib.auth.models import User  # O utiliza tu propio modelo de usuario si tienes uno personalizado
 from PIL import Image, ImageDraw, ImageFont
 import io
+
+from applications.employes.models import Employee_Objetives
+from applications.branches.models import Branch_Objetives
 
 def generate_profile_img_and_assign(user):
     # Definir el tamaño y el fondo de la imagen
     width, height = 200, 200
-    background_color=(42, 123, 228)
+    background_color = (42, 123, 228)
 
     # Crear una nueva imagen
     image = Image.new('RGB', (width, height), background_color)
@@ -17,9 +19,9 @@ def generate_profile_img_and_assign(user):
     initials = user.first_name[0].upper() + user.last_name[0].upper()
     font_size = 100
 
-    # Definir el tipo de fuente
+    # Utilizar la fuente "DejaVu Sans"
     try:
-        font = ImageFont.truetype('arial.ttf', font_size)
+        font = ImageFont.truetype('DejaVuSans.ttf', font_size)
     except OSError:
         font = ImageFont.load_default()
 
@@ -31,10 +33,11 @@ def generate_profile_img_and_assign(user):
     text_height = text_bbox[3] - text_bbox[1]
 
     # Calcular la posición del texto en el centro de la imagen
-    x = (width - text_width) // 2
+    x = (width - text_width) // 1.5
     y = (height - text_height) // 2
-    # Dibujar el texto en la imagen con el color especificado, esta hardcodeado ...  (ESTOY CANSADO VIEJOOOO)
-    draw.text(((width-x)/2 - 14, (height-y)/2 - 14), initials, fill=(255, 255, 255), font=font, align='center')
+
+    # Dibujar el texto en la imagen con el color especificado
+    draw.text(((width - x) / 2 - 14, (height - y) / 2 - 14), initials, fill=(255, 255, 255), font=font, align='center')
 
     # Guardar la imagen en un búfer de memoria
     image_buffer = io.BytesIO()
@@ -46,6 +49,8 @@ def generate_profile_img_and_assign(user):
 
     # Guardar el usuario para actualizar la imagen en la base de datos
     user.save()
+
+
 
 
 
@@ -97,3 +102,13 @@ myImage.save('hello_world.png', "PNG")
 
 
 """
+
+
+def get_emp_branch_objetives(branch, employee_objetives=None):
+    employees_obj = Employee_Objetives.objects.filter(deleted_at=None, employee__user__branch=branch)
+    branch_obj = Branch_Objetives.objects.filter(deleted_at=None, branch=branch)
+
+    if employee_objetives is not None:
+        employees_obj = employees_obj.exclude(id__in=employee_objetives.values('id'))
+
+    return employees_obj, branch_obj

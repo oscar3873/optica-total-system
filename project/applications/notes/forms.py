@@ -1,4 +1,4 @@
-from .models import Note, Branch, Label
+from .models import Note, Label
 from django import forms
 from applications.core.mixins import ValidationFormMixin
 

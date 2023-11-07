@@ -38,7 +38,7 @@ class CashRegister(BaseAbstractWithUser):
     counted_balance = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Monto de la caja fisica")
     difference = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Diferencia")
     observations = models.TextField(null=True, blank=True, verbose_name="Observaciones")
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Sucursal")
+    branch = models.ForeignKey('branches.Branch', on_delete=models.CASCADE, blank=True, null=True, verbose_name="Sucursal")
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, blank=True, null=True, verbose_name="Divisa")
     is_close = models.BooleanField(default=False, verbose_name="Estado")
     
@@ -71,7 +71,7 @@ class Transaction(BaseAbstractWithUser):
     transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE, null=True, blank=True)
     date_transaction = models.DateTimeField(auto_now_add=True)
     description = models.TextField(null=True, blank=True)
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True)
+    branch = models.ForeignKey('branches.Branch', on_delete=models.CASCADE, null=True, blank=True)
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True, blank=True)
     object_id = models.PositiveIntegerField(null=True, blank=True)
     content_object = GenericForeignKey('content_type', 'object_id')

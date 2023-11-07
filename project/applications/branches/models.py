@@ -4,6 +4,7 @@ from django_timestamps.softDeletion import SoftDeletionModel
 from django_timestamps.timestamps import TimestampsModel
 
 from applications.branches.managers import ObjectiveActiveBranchManager
+from applications.core.models import BaseAbstractWithUser
 
 
 # Create your models here.
@@ -26,7 +27,7 @@ class Branch(SoftDeletionModel, TimestampsModel):
         return f'{self.name}\n- {self.address}\nHorarios: {self.open_hs} - {self.close_hs}'
     
 
-class Branch_Objetives(SoftDeletionModel, TimestampsModel):
+class Branch_Objetives(BaseAbstractWithUser): 
     """
     Clase intermedia para involuclar X cantidad de objetivos con una sucursal.
         is_completed: Indicador de Objetivo completado o no.
