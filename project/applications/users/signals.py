@@ -5,7 +5,7 @@ from .models import User
 from .utils import generate_profile_img_and_assign
 
 
-@receiver(post_save, sender=User)
-def set_imagen_user(instance, created, **kwargs):
+def set_imagen_user(instance, **kwargs):
     if not instance.imagen:
         generate_profile_img_and_assign(instance)
+post_save.connect(set_imagen_user, sender=User)

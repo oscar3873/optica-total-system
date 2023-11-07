@@ -138,9 +138,17 @@ class AccountView(LoginRequiredMixin, UpdateView):
     form_class = UserUpdateForm
 
     def get_context_data(self, **kwargs):
+        user = self.get_object()
+
         context = super().get_context_data(**kwargs)
         context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
         context['change_image'] = ImagenChangeForm
+        
+        if not user.is_staff:
+            context['objetives'] = user.employee_objetives.all()
+        
+        context['sales'] = user.sale_set.all()
+
         return context
 
     # def get(self, request, *args, **kwargs):

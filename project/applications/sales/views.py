@@ -30,15 +30,13 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        try:
-            branch_actualy = self.request.session.get('branch_actualy')
-            branch = Branch.objects.get(id=branch_actualy)
-        except Branch.DoesNotExist:
-            branch = self.request.user.branch
+
+        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
+        branch_actualy = Branch.objects.get(id=branch_actualy)
 
         context['sale_form'] = SaleForm
         # context['payment_form'] = PaymentMethodsFormset
-        context['branch_selected'] = branch.name
+        context['branch_selected'] = branch_actualy.name
         context['customer_form'] = CustomerForm
         context['payment_method_form'] = PaymentMethodForm
         
@@ -49,12 +47,20 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         formsets = form
         saleform = SaleForm(self.request.POST)
         # payment_methods = PaymentMethodsFormset(self.request.POST)
+                
+        order_details = []
+        all_products_to_sale = []
+        real_price_promo = []
+        wo_promo = []
+        subtotal = 0
 
         branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
         branch_actualy = Branch.objects.get(id=branch_actualy)
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
+            sale.branch = branch_actualy
+
             customer = saleform.cleaned_data['customer']
             payment_methods = saleform.cleaned_data.pop('payment_method')
             amount = saleform.cleaned_data.pop('amount')
@@ -65,13 +71,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
-
-        
-        order_details = []
-        all_products_to_sale = []
-        real_price_promo = []
-        wo_promo = []
-        subtotal = 0
 
         # Procesa los datos del formset
         for formset in formsets:
@@ -93,49 +92,33 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                     return super().form_invalid(form)
                 
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
-                
-                
+
         promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
         for promotion, products_with_discountPromo in promotional_products.items():
             process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
         
-        print('\n\n\nLISTADO DE PROMOCIONES: ', promotional_products_clone, '\n')
-        print('LISTADO DE PRECIOS A COBRAR POR PROMO: ', real_price_promo) # precios a cobrar en promos
-        print(real_price_promo)
-        print(wo_promo)
         wo_promo = sum(wo_promo)
         real_price_promo = Decimal(sum(real_price_promo))
-        print('SUBTOTAL (TOTAL EN PRODUCTOS): ', subtotal)
-        print('DESCUENTO TOTAL: ', subtotal - real_price_promo - wo_promo)
-        print('DESCUENTO DE VENTA: %', discount_sale)
+
         sale.discount_extra = subtotal - real_price_promo
         sale.subtotal = Decimal(subtotal)
         sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
-        print('=> TOTAL aplicando descuento: ', sale.total, '\n\n')
 
         if cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
-            messages.error(self.request, "El pago debe ser mayor al 50% del total.")
+            messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
-        
-        has_proof = saleform.cleaned_data.pop('has_proof') or None
-        proof_type = switch_invoice_receipt(has_proof, sale)
-        if proof_type:
-            generate_proof(proof_type)
 
         process_customer(customer, sale, payment_methods, sale.total, cristal, amount, self.request)
+        up_objetives(self.request.user, sale)
+
+        proof_type = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale)
+        if proof_type:
+            generate_proof(proof_type)
 
         for order in order_details:
             order.sale = sale
             order.save()
-
-        employee = self.request.user
-        if not employee.is_staff: # es empleado
-            objetives = employee.employee_objetives.filter(is_completed=False, objetives__exp_date__lte=DATE_NOW.date())
-            for objetive in objetives:
-                if not objetive.is_completed:
-                    objetive.accumulated += sale.total
-                    objetive.save()
 
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
@@ -205,13 +188,11 @@ class SalesListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        try:
-            branch_actualy = self.request.session.get('branch_actualy')
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None).order_by('-created_at')
-        except CashRegister.DoesNotExist:
-            sales = None
-            messages.error(self.request, 'No hay ventas registradas para esta sucursal')
+        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
+        branch_actualy = Branch.objects.get(id=branch_actualy)
+
+        sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None)
+
         context['sales'] = sales
         context['table_column'] = obtener_nombres_de_campos(Sale,
             "id",
@@ -318,9 +299,7 @@ def show_invoice(request, pk):
 def ajax_search_sales(request):
     # branch = request.user.branch
 
-    # branch_actualy = request.session.get('branch_actualy')
-    # if request.user.is_staff and branch_actualy:
-    #     branch = Branch.objects.get(id=branch_actualy)
+    branch_actualy = request.session.get('branch_actualy') or request.user.branch
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
@@ -334,7 +313,7 @@ def ajax_search_sales(request):
             sales = Sale.objects.all().filter(deleted_at = None)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla
-            sales = Sale.objects.all().filter(deleted_at = None).filter(
+            sales = Sale.objects.all().filter(deleted_at = None, branch=branch_actualy).filter(
                 Q(total__icontains=search_term) |
                 Q(date_time_sale__icontains=search_term) |
                 Q(state__icontains=search_term) |

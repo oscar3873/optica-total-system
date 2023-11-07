@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.template import loader
 
 from applications.cashregister.models import CashRegister, Currency, Movement
-
+from project.settings.base import DATE_NOW
 from applications.clients.forms import *
 from .models import *
 
@@ -212,7 +212,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
     Payment.objects.create(
         user_made = request.user,
-        amount = amount if amount > 0 else total,
+        amount = payment_total if payment_total > 0 else total,
         payment_method = payment_methods,
         description = f"Pago de venta Nro: {sale.pk}",
         sale = sale,
@@ -276,3 +276,12 @@ def process_service_order(request, customer):
     pupilar_form.errors)
 
     return service
+
+
+def up_objetives(user, sale):
+    if not user.is_staff: # es empleado
+        objetives = user.employee_objetives.filter(is_completed=False, objetives__exp_date__lte=DATE_NOW.date())
+        for objetive in objetives:
+            if not objetive.is_completed:
+                objetive.accumulated += sale.total
+                objetive.save()
