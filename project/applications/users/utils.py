@@ -1,6 +1,8 @@
-from django.contrib.auth.models import User  # O utiliza tu propio modelo de usuario si tienes uno personalizado
 from PIL import Image, ImageDraw, ImageFont
 import io
+
+from applications.employes.models import Employee_Objetives
+from applications.branches.models import Branch_Objetives
 
 def generate_profile_img_and_assign(user):
     # Definir el tamaño y el fondo de la imagen
@@ -97,3 +99,13 @@ myImage.save('hello_world.png', "PNG")
 
 
 """
+
+
+def get_emp_branch_objetives(branch, employee_objetives=None):
+    employees_obj = Employee_Objetives.objects.filter(deleted_at=None, employee__user__branch=branch)
+    branch_obj = Branch_Objetives.objects.filter(deleted_at=None, branch=branch)
+
+    if employee_objetives is not None:
+        employees_obj = employees_obj.exclude(id__in=employee_objetives.values('id'))
+
+    return employees_obj, branch_obj

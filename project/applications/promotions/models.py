@@ -1,10 +1,7 @@
 from django.db import models
-from django.utils import timezone
-
 
 from applications.core.models import BaseAbstractWithUser
 from applications.products.models import Product
-from applications.branches.models import Branch
 
 # Create your models here.
 class TypePromotion(BaseAbstractWithUser):
@@ -26,7 +23,7 @@ class Promotion(BaseAbstractWithUser):
     end_date = models.DateField(verbose_name='Fin', null=True, blank=True)
     discount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, default=0, verbose_name="Descuento")
     is_active = models.BooleanField(default=False, verbose_name='Estado')
-    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
+    branch = models.ForeignKey('branches.Branch', on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
 
     def __str__(self):
         return f'{self.name}-{self.description}-Descuento: {self.discount}%'

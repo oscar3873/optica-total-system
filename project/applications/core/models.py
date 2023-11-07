@@ -4,7 +4,6 @@ from django_timestamps.timestamps import TimestampsModel
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from applications.branches.models import Branch
 from datetime import date
 
 # Create your models here.
@@ -20,7 +19,7 @@ class Person(SoftDeletionModel, TimestampsModel):
     birth_date = models.DateField(null=True, blank=True, verbose_name="Fecha")
     address = models.CharField(max_length=120, blank=True, null=True, verbose_name="Domicilio")
     email = models.EmailField(unique=True, null=True, blank=True, verbose_name="Correo")
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sucursal")
+    branch = models.ForeignKey('branches.Branch', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sucursal")
 
     class Meta:
         abstract = True
@@ -55,7 +54,7 @@ class SaveGeneriModel(SoftDeletionModel, TimestampsModel):
         abstract = True
     
 
-class Objetives(SoftDeletionModel, TimestampsModel):
+class Objetives(BaseAbstractWithUser):
     """
     Clase para los objetivos que tendran las Scursales y los empleados.
         title: Asunto del objetivo

@@ -1,7 +1,6 @@
 from django.db import models
 
 from applications.core.models import BaseAbstractWithUser
-from applications.branches.models import Branch
 from .managers import *
 
 # Create your models here.
@@ -40,7 +39,7 @@ class Product(BaseAbstractWithUser):
     stock = models.PositiveBigIntegerField()
     category = models.ForeignKey(Category, on_delete=models.PROTECT, null=True, blank=True, related_name='product_category',verbose_name="Categoria")
     brand = models.ForeignKey(Brand, on_delete=models.PROTECT, null=True, blank=True, related_name='product_brand',verbose_name="Marca")
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch',verbose_name="Sucursal")
+    branch = models.ForeignKey('branches.Branch', on_delete=models.PROTECT, null=True, blank=True, related_name='product_branch',verbose_name="Sucursal")
     promotion = models.ForeignKey('promotions.Promotion', on_delete=models.PROTECT, null=True, blank=True, related_name="product_promotion", verbose_name="Promoción")
 
     has_eyeglass_frames = models.BooleanField(default=False, verbose_name="Armazón")

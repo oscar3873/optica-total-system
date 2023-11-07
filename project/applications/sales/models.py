@@ -3,7 +3,6 @@ from django.db import models
 from applications.clients.models import Customer
 from applications.products.models import Product
 from applications.core.models import BaseAbstractWithUser
-from applications.branches.models import Branch
 from .managers import PaymentManager
 
 # Create your models here.
@@ -69,7 +68,7 @@ class Sale(BaseAbstractWithUser):
     missing_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0, blank=True, null=True, verbose_name="Saldo")
     subtotal = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Subtotal")
     total = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Total")
-    branch = models.ForeignKey(Branch, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
+    branch = models.ForeignKey('branches.Branch', on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
 
     def __str__(self):
         return f"COD: {self.pk} - $ {self.total}"

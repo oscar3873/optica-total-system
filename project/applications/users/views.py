@@ -11,10 +11,12 @@ from django.views.generic import FormView, DetailView, UpdateView
 from applications.core.models import Objetives
 from django.utils import timezone
 
+
+from project.settings.base import DATE_NOW
 from .forms import UserCreateForm
 from .models import User
 from .forms import *
-from .utils import fix_image_orientation, generate_profile_img_and_assign
+from .utils import *
 from applications.branches.models import Branch, Branch_Objetives
 from applications.employes.models import Employee_Objetives
 from applications.core.mixins import CustomUserPassesTestMixin
@@ -25,21 +27,11 @@ class AdminProfileView(CustomUserPassesTestMixin, DetailView):
     model = User
     template_name = 'users/profile_admin.html'
     context_object_name = 'admin'
-
-    def get_object(self, queryset=None):
-        pk = self.request.user.pk  # Obtén la pk del usuario
-        try:
-            admin = User.objects.get(pk=pk)
-            #busco en la tabla user de la base de datos un usuario con pk=pk,is_staff=False,is_superuser=False,role='EMPLEADO'
-        except User.DoesNotExist:
-            #si no encuentro lo pongo en None para manejar las vistas en los templates
-            admin = None
-        return admin
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        current_date = timezone.now().date()
+        current_date = DATE_NOW.date()
         active_objetives = Objetives.objects.filter(start_date__lte=current_date,exp_date__gte=current_date)
         context['branch_objectives'] = Branch_Objetives.objects.filter(objetive__in=active_objetives)
         #context['branch_objectives'] = Branch_Objetives.active_objectives.all()
@@ -110,28 +102,6 @@ class LogoutView( View):
         return render(request, template_name='users/logout.html', context={})
     
 
-# class UpdatePasswordView(LoginRequiredMixin, FormView):
-#     template_name = "users/update_password.html"
-#     form_class = UpdatePasswordForm
-#     success_url = reverse_lazy('users_app:login')
-#     login_url = reverse_lazy('users_app:login')
-    
-#     def form_valid(self, form):
-#         usuario = self.request.user
-#         user = authenticate(
-#             username=usuario.email,
-#             password=form.cleaned_data['passwordCurrent']
-#         )
-        
-#         if user:
-#             new_password = form.cleaned_data['password2']
-#             usuario.set_password(new_password)
-#             usuario.save()
-        
-#         logout(self.request)
-#         return super().form_valid(form)
-    
-    
 class AccountView(LoginRequiredMixin, UpdateView):
     template_name = 'users/user_account_page.html'
     model = User
@@ -139,6 +109,8 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         user = self.get_object()
+        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
+        branch_actualy = Branch.objects.get(pk=branch_actualy)
 
         context = super().get_context_data(**kwargs)
         context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
@@ -147,20 +119,12 @@ class AccountView(LoginRequiredMixin, UpdateView):
         if not user.is_staff:
             context['objetives'] = user.employee_objetives.all()
         
+        context['employee_objetives'], context['branch_objetives'] = get_emp_branch_objetives(branch_actualy, context['objetives']) 
+        
         context['sales'] = user.sale_set.all()
 
         return context
 
-    # def get(self, request, *args, **kwargs):
-    #     user = self.request.user
-    #     user_get = self.get_object()
-        
-    #     if user_get is None:
-    #         return render(request, 'core/error_404_page.html')
-    #     if not user.is_staff and user != user_get:
-    #         return render(request, 'users/denied_permission.html')
-    #     return super().get(request, *args, **kwargs)
-    
     def form_valid(self, form):
         return super().form_valid(form)
 

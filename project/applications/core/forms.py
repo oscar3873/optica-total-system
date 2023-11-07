@@ -266,7 +266,8 @@ class ObjetiveForm(ValidationFormMixin):
             attrs={
                 'type': 'date',
                 'class': 'form-control',
-            }
+            },
+            format='%Y-%m-%d',
         )
     )
     exp_date = forms.DateField(
@@ -275,7 +276,8 @@ class ObjetiveForm(ValidationFormMixin):
             attrs={
                 'type': 'date',
                 'class': 'form-control',
-            }
+            },
+            format='%Y-%m-%d',
         )
     )
     quantity = forms.IntegerField(

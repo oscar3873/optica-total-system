@@ -14,7 +14,7 @@ def auto_set_branch(sender, **kwargs):
             close_hs=DATE_NOW.time(),
             phone='111111111'
         )
-post_migrate.connect(auto_set_branch, sender=Branch)
+post_migrate.connect(auto_set_branch)
 
 
 def objetive_completed(instance, created, **kwargs):

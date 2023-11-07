@@ -26,7 +26,7 @@ urlpatterns = [
         name = 'sales_list_view'
     ),
     path(
-        'detail/<pk>',
+        'detail/<pk>/',
         SaleDetailView.as_view(),
         name = 'sale_detail_view'
     ),
