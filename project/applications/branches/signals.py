@@ -1,8 +1,7 @@
-from django.db.models.signals import post_migrate
+from django.db.models.signals import post_migrate, pre_save
 
 from project.settings.base import DATE_NOW
-from .models import Branch
-
+from .models import Branch, Branch_Objetives
 
 def auto_set_branch(sender, **kwargs):
     branch_count = Branch.objects.count()
@@ -15,4 +14,11 @@ def auto_set_branch(sender, **kwargs):
             close_hs=DATE_NOW.time(),
             phone='111111111'
         )
-post_migrate.connect(auto_set_branch)
+post_migrate.connect(auto_set_branch, sender=Branch)
+
+
+def objetive_completed(instance, created, **kwargs):
+    if not created:
+        if instance.accumulated >= instance.objetive.quantity:
+            instance.is_completed = True
+pre_save.connect(objetive_completed, sender=Branch_Objetives)
