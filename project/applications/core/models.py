@@ -73,7 +73,7 @@ class Objetives(BaseAbstractWithUser):
     start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
     exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
     quantity = models.PositiveIntegerField(null=True, blank=True, verbose_name='Objetivo')
-
+    branch = models.ForeignKey('branches.Branch', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sucursal")
 
     def __str__(self) ->str:
         return f'{self.title} - {self.start_date} a {self.exp_date} para {self.to}'
