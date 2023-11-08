@@ -38,17 +38,14 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         user = self.request.user
         form.cleaned_data.pop('password2')
         
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-        if user.is_staff and branch_actualy:
-            branch = Branch.objects.get(id=branch_actualy)
-        else:
-            branch = self.request.user.branch
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
             jornada = form.cleaned_data.pop('jornada'),
-            user = User.objects.create_user(**form.cleaned_data, branch=branch) # Funcion que crea EMPLEADOS
+            user = User.objects.create_user(**form.cleaned_data, branch=branch_actualy) # Funcion que crea EMPLEADOS
             )
         return super().form_valid(form)
     
@@ -126,12 +123,11 @@ class EmployeeListView(LoginRequiredMixin, ListView):
         user = self.request.user
         branch = user.branch
 
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-        if  self.request.user.is_staff and branch_actualy:
-            branch = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
             # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,        
         # En otros casos, filtra por la sucursal del usuario
-        return Employee.objects.get_employees_branch(branch).filter(deleted_at=None)
+        return Employee.objects.get_employees_branch(branch_actualy).filter(deleted_at=None)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -179,11 +175,10 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
 def export_employee_list_to_excel(request):
     branch = request.user.branch
 
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
     
-    queryset = Employee.objects.get_employees_branch(branch).filter(deleted_at=None)
+    queryset = Employee.objects.get_employees_branch(branch_actualy).filter(deleted_at=None)
 
     # Crear un libro de trabajo de Excel
     workbook = Workbook()
@@ -235,9 +230,8 @@ def export_employee_list_to_excel(request):
 def ajax_search_employee(request):
     branch = request.user.branch
 
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
@@ -247,10 +241,10 @@ def ajax_search_employee(request):
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = EmployeeListView().paginate_by
-            employees = Employee.objects.get_employees_branch(branch)[:paginate_by]
+            employees = Employee.objects.get_employees_branch(branch_actualy)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
-            employees = Employee.objects.get_employees_branch(branch).filter(
+            employees = Employee.objects.get_employees_branch(branch_actualy).filter(
                 Q(user__first_name__icontains=search_term) |
                 Q(user__last_name__icontains=search_term) |
                 Q(user__phone_number__icontains=search_term) |

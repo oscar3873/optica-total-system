@@ -9,16 +9,11 @@ from django.views.generic import View
 from django.views.generic import FormView, DetailView, UpdateView
 
 from applications.core.models import Objetives
-from django.utils import timezone
-
-
-from project.settings.base import DATE_NOW
 from .forms import UserCreateForm
 from .models import User
 from .forms import *
 from .utils import *
-from applications.branches.models import Branch, Branch_Objetives
-from applications.employes.models import Employee_Objetives
+from applications.branches.models import Branch
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
@@ -31,11 +26,17 @@ class AdminProfileView(CustomUserPassesTestMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        current_date = DATE_NOW.date()
-        active_objetives = Objetives.objects.filter(start_date__lte=current_date,exp_date__gte=current_date)
-        context['branch_objectives'] = Branch_Objetives.objects.filter(objetive__in=active_objetives)
-        #context['branch_objectives'] = Branch_Objetives.active_objectives.all()
-        context['employees_objectives'] = Employee_Objetives.objects.filter(objetive__in=active_objetives)
+        user = self.get_object()
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
+
+        employee_data = None
+        if not user.is_staff:
+            employee_data = user.employee_objetives.all()
+            context['objetives'] = employee_data
+        
+        context['employee_objetives'], context['branch_objetives'] = get_emp_branch_objetives(branch_actualy, employee_data) 
+        
         return context
 
 
@@ -56,8 +57,9 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
 
         form.cleaned_data.pop('password2')
         form.cleaned_data.pop('phone_code')
-        branch_actualy = self.request.session.get('branch_actualy')
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
+
         user = User.objects.create_admin(**form.cleaned_data, branch=branch_actualy) # Funcion que crea ADMINIS
 
         if not form.cleaned_data.get('imagen'):
@@ -109,17 +111,10 @@ class AccountView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         user = self.get_object()
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-        branch_actualy = Branch.objects.get(pk=branch_actualy)
 
         context = super().get_context_data(**kwargs)
         context['form2'] = UpdatePasswordForm # Agregamos el segundo formulario al contexto
         context['change_image'] = ImagenChangeForm
-        
-        if not user.is_staff:
-            context['objetives'] = user.employee_objetives.all()
-        
-        context['employee_objetives'], context['branch_objetives'] = get_emp_branch_objetives(branch_actualy, context['objetives']) 
         
         context['sales'] = user.sale_set.all()
 

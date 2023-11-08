@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 #Importaciones de la app
-from applications.branches.models import Branch
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
@@ -31,8 +30,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         context['sale_form'] = SaleForm
         # context['payment_form'] = PaymentMethodsFormset
@@ -54,8 +53,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         wo_promo = []
         subtotal = 0
 
-        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
@@ -129,7 +128,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         return super().form_invalid(form)
 
 
-class PaymentMethodCreateView(FormView):
+class PaymentMethodCreateView(CustomUserPassesTestMixin, FormView):
     """
     Crear una catogoria nueva para el producto
     """
@@ -152,7 +151,8 @@ class PaymentMethodCreateView(FormView):
         else:
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
-        
+    
+    @transaction.atomic
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return JsonResponse({'status': 'error', 'message':'Por favor, verifique los campos.'})
@@ -164,7 +164,7 @@ class PaymentMethodCreateView(FormView):
         return super().form_invalid(form)
     
     
-class PaymentMethodView(ListView):
+class PaymentMethodView(CustomUserPassesTestMixin, ListView):
     """
     Listar todas las categorias de productos
     """
@@ -180,7 +180,7 @@ class PaymentMethodView(ListView):
     
 ######################## SALES #############################
 
-class SalesListView(ListView):
+class SalesListView(LoginRequiredMixin, ListView):
     template_name = 'sales/sale_page.html'
     model = Sale
     paginate_by = 25
@@ -188,8 +188,8 @@ class SalesListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None)
 
@@ -210,7 +210,7 @@ class SalesListView(ListView):
         return context
     
 
-class SaleDetailView(CustomUserPassesTestMixin, DetailView):
+class SaleDetailView(LoginRequiredMixin, DetailView):
     template_name = 'sales/sale_detail_page.html'
     model = Sale
     
@@ -299,7 +299,8 @@ def show_invoice(request, pk):
 def ajax_search_sales(request):
     # branch = request.user.branch
 
-    branch_actualy = request.session.get('branch_actualy') or request.user.branch
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
@@ -348,6 +349,7 @@ def set_serviceOrder_onSale(request, pk):
     service_order.save()
 
     return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': pk}))
+
 
 def print_invoice(request, pk): # pk de la orden
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":

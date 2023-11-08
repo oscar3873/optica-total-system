@@ -23,8 +23,8 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
         
         user = self.request.user
         # Modificamos la forma de obtener la sucursal
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
         
         # Asignamos la sucursal a la promoción
         promotion.branch = branch_actualy
@@ -123,10 +123,8 @@ class PromotionListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        user = self.request.user
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         return Promotion.objects.filter(branch=branch_actualy)
 
@@ -154,9 +152,8 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
 def ajax_promotional_products(request):
     branch = request.user.branch
 
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         

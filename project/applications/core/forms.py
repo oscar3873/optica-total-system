@@ -313,6 +313,6 @@ class ObjetiveForm(ValidationFormMixin):
     def clean(self):
         start_date = self.cleaned_data['start_date']
         end_date = self.cleaned_data['exp_date']
-        if start_date and end_date and start_date < end_date:
+        if start_date and end_date and start_date > end_date:
             raise forms.ValidationError("La Fecha de Finalizacion no puede ser anterior a la Fecha de Inicio.")
         return self.cleaned_data

@@ -207,15 +207,11 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
     
     def get_form_kwargs(self):
         user = self.request.user
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-        if user.is_staff and branch_actualy:
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = branch_actualy
-        else:
-            branch = user.branch
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         kwargs = super().get_form_kwargs()
-        kwargs['branch'] = branch
+        kwargs['branch'] = branch_actualy
         return kwargs
 
     @transaction.atomic
@@ -223,12 +219,8 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         user = self.request.user
 
         if form.is_valid():
-            if user.is_staff:
-                branch_actualy = self.request.session.get('branch_actualy')  or user.branch.pk
-                branch_actualy = Branch.objects.get(id=branch_actualy)
-                branch = branch_actualy
-            else:
-                branch = user.branch
+            from applications.branches.utils import set_branch_session
+            branch_actualy = set_branch_session(self.request)
             
             percentage = 1.26
             multiplicador = 3
@@ -244,7 +236,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             product.sale_price = sale_price
 
             product.user_made = self.request.user
-            product.branch = branch
+            product.branch = branch_actualy
             product.save()
             form_in_out_features(form, product, self.request.user)
 
@@ -356,15 +348,10 @@ class ProductListView(LoginRequiredMixin, ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_staff:
-            branch_actualy = self.request.session.get('branch_actualy')  or user.branch.pk
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = branch_actualy
-        else:
-            branch = user.branch
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
-        return Product.objects.filter(branch=branch, deleted_at=None)
+        return Product.objects.filter(branch=branch_actualy, deleted_at=None)
 
     def get_context_data(self, **kwargs):
         pk=self.request.user.pk
@@ -521,12 +508,8 @@ class ProductSearchView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        branch_actualy = self.request.session.get('branch_actualy')  or user.branch.pk
-        if user.is_staff and branch_actualy:
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch = branch_actualy
-        else:
-            branch = user.branch
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         query = self.request.GET.get('q')
         if query:
@@ -541,7 +524,7 @@ class ProductSearchView(ListView):
                 Q(name__icontains=query.lower()) |
                 Q(name__icontains=query.title()) |
                 Q(barcode__icontains=query),
-                branch=branch)
+                branch=branch_actualy)
         else:
             queryset = Product.objects.all()
 
@@ -625,14 +608,10 @@ def export_products_list_to_excel(request):
     from openpyxl.styles import Font, PatternFill
     from django.http import HttpResponse
     
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch_actualy = Branch.objects.get(id=branch_actualy)
-        branch = branch_actualy
-    else:
-        branch = request.user.branch
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
     
-    list_products = Product.objects.get_products_branch(branch)
+    list_products = Product.objects.get_products_branch(branch_actualy)
 
     if not list_products:
         raise ValueError('No hay productos para exportar.') # modificar error
@@ -683,7 +662,7 @@ def export_products_list_to_excel(request):
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Lista de productos - Sucursal %s.xlsx' %(branch.name)
+    response['Content-Disposition'] = 'attachment; filename=Lista de productos - Sucursal %s.xlsx' %(branch_actualy.name)
 
     workbook.save(response)
 
@@ -695,9 +674,8 @@ def export_products_list_to_excel(request):
 def ajax_search_products(request):
     branch = request.user.branch
 
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
@@ -707,10 +685,10 @@ def ajax_search_products(request):
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de productos por defecto
             paginate_by = ProductListView().paginate_by
-            products = Product.objects.get_products_branch(branch)[:paginate_by]
+            products = Product.objects.get_products_branch(branch_actualy)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla
-            products = Product.objects.get_products_branch(branch).filter(
+            products = Product.objects.get_products_branch(branch_actualy).filter(
                 Q(name__icontains=search_term) |
                 Q(barcode__icontains=search_term) |
                 Q(description__icontains=search_term) |
