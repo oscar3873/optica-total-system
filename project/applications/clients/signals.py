@@ -11,5 +11,4 @@ def auto_set_payment_type(sender, **kwargs):
             last_name = 'Final',
             dni = '00000000',
         )
-
 post_migrate.connect(auto_set_payment_type)

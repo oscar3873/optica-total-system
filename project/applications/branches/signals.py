@@ -17,8 +17,7 @@ def auto_set_branch(sender, **kwargs):
 post_migrate.connect(auto_set_branch)
 
 
-def objetive_completed(instance, created, **kwargs):
-    if not created:
-        if instance.accumulated >= instance.objetive.quantity:
-            instance.is_completed = True
+def objetive_completed(instance, **kwargs):
+    if instance.accumulated >= instance.objetive.quantity:
+        instance.is_completed = True
 pre_save.connect(objetive_completed, sender=Branch_Objetives)

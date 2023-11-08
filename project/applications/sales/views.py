@@ -9,7 +9,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 #Importaciones de la app
-from applications.branches.models import Branch
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
@@ -152,7 +151,8 @@ class PaymentMethodCreateView(CustomUserPassesTestMixin, FormView):
         else:
             # Si no es una solicitud AJAX, llama al método form_valid del padre para el comportamiento predeterminado
             return super().form_valid(form)
-        
+    
+    @transaction.atomic
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return JsonResponse({'status': 'error', 'message':'Por favor, verifique los campos.'})

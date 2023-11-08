@@ -4,7 +4,6 @@ from django.dispatch import receiver
 from .models import Objetives
 from applications.branches.models import Branch, Branch_Objetives
 from applications.employes.models import Employee, Employee_Objetives
-from project.settings.base import DATE_NOW
 
 def create_objective_receiver(instance, created, **kwargs):
     if created:
@@ -13,13 +12,13 @@ def create_objective_receiver(instance, created, **kwargs):
             for employee in employees:
                 Employee_Objetives.objects.create(
                     employee=employee,
-                    objective=instance
+                    objetive=instance
                 )
         elif instance.to == "SUCURSAL":
             branches = Branch.objects.all()
             for branch in branches:
                 Branch_Objetives.objects.create(
                     branch=branch,
-                    objective=instance
+                    objetive=instance
                 )
 post_save.connect(create_objective_receiver, sender=Objetives)
