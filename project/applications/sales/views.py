@@ -3,6 +3,7 @@ import locale
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.generic import *
+from django.template import loader
 from django.db import transaction
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -14,7 +15,7 @@ from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.notifications.utils import set_notification
-from project.settings.base import ZONE_TIME
+from project.settings.base import DATE_NOW, ZONE_TIME
 
 from .utils import *
 from .models import *

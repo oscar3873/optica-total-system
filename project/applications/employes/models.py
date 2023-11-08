@@ -40,5 +40,8 @@ class Employee_Objetives(BaseAbstractWithUser):
     """
     is_completed = models.BooleanField(default=False, null=True, blank=True, verbose_name='Completado')
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Empleado', related_name='employee_objetives')
-    objetive = models.ForeignKey(Objetives, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Objetivo')
+    objetive = models.ForeignKey(Objetives, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Objetivo', related_name='to_employees')
     accumulated = models.PositiveIntegerField(default= 0, null=True, blank=True, verbose_name='Acumulado')
+
+    def __str__(self) -> str:
+        return f'{self.objetive} - {self.is_completed}'

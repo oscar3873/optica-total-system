@@ -37,10 +37,10 @@ class Branch_Objetives(BaseAbstractWithUser):
     """
     is_completed = models.BooleanField(default=False, blank=True, verbose_name='Completado')
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Sucursal')
-    objetive = models.ForeignKey(Objetives, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Objetivo')
+    objetive = models.ForeignKey(Objetives, on_delete=models.CASCADE, null=True, blank=True, related_name='to_branch', verbose_name='Objetivo')
     accumulated = models.PositiveIntegerField(default= 0, null=True, blank=True, verbose_name='Acumulado')
 
     active_objectives = ObjectiveActiveBranchManager()
 
-    def ___str__(self) ->str:
+    def __str__(self) -> str:
         return f'{self.objetive} - {self.is_completed}'

@@ -29,4 +29,9 @@ urlpatterns = [
         name='objetive_list'
     ),
 
+    path(
+        'objetives/delete/<pk>/',
+        ObjetiveDelete.as_view(),
+        name='objetive_delete'
+    )
 ] 

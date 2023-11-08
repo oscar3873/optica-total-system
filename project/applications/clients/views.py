@@ -388,12 +388,9 @@ class ServiceOrderDeleteView(CustomUserPassesTestMixin, DeleteView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        try:
-            customer = self.get_object().customer
-            context['customer'] = customer
-            return context
-        except:
-            return context
+        
+        context['customer'] = self.get_object().customer
+        return context
 
     def get_success_url(self):
         try:

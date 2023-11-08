@@ -1,8 +1,8 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
-from django.template import loader
 
 from applications.cashregister.models import CashRegister, Currency, Movement
+from applications.branches.models import Branch_Objetives
 from project.settings.base import DATE_NOW
 from applications.clients.forms import *
 from .models import *
@@ -289,8 +289,14 @@ def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
 
 def up_objetives(user, sale):
     if not user.is_staff: # es empleado
-        objetives = user.employee_type.employee_objetives.filter(is_completed=False, objetive__exp_date__lte=DATE_NOW.date())
-        for objetive in objetives:
-            if not objetive.is_completed:
-                objetive.accumulated += sale.total
-                objetive.save()
+        self_objetives = user.employee_type.employee_objetives.filter(is_completed=False, objetive__exp_date__lte=DATE_NOW.date())
+        accumulate_objectives(self_objetives, sale)
+        
+        objetives = Branch_Objetives.objects.filter(is_completed=False, objetive__exp_date__lte=DATE_NOW.date())
+        accumulate_objectives(objetives, sale)
+
+def accumulate_objectives(objetives, sale):
+    for objetive in objetives:
+        if not objetive.is_completed:
+            objetive.accumulated += sale.total
+            objetive.save()
