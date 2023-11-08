@@ -30,7 +30,7 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
             from applications.branches.utils import set_branch_session
             branch_actualy = set_branch_session(self.request)
             
-            tipo = form.cleaned_data.pop('tipo')
+            # tipo = form.cleaned_data.pop('tipo')
             objetive = form.save(commit=False)
             objetive.branch = branch_actualy
             objetive.user_made = self.request.user
