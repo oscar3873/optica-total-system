@@ -222,9 +222,9 @@ class ObjetiveForm(ValidationFormMixin):
         ('SUCURSAL', 'SUCURSAL'),
     ]
 
-    TIPO = [
-        ('VENTA', 'VENTA'),
-    ]
+    # TIPO = [
+    #     ('VENTA', 'VENTA'),
+    # ]
 
     to = forms.ChoiceField(
         choices=PARA,
@@ -235,15 +235,15 @@ class ObjetiveForm(ValidationFormMixin):
             }
         )
     )
-    tipo = forms.ChoiceField(
-        choices=TIPO,
-        required=True,
-        widget=forms.Select(
-            attrs={
-                'class': 'form-control',
-            }
-        )
-    )
+    # tipo = forms.ChoiceField(
+    #     choices=TIPO,
+    #     required=True,
+    #     widget=forms.Select(
+    #         attrs={
+    #             'class': 'form-control',
+    #         }
+    #     )
+    # )
     title = forms.CharField(
         required=True,
         widget=forms.TextInput(

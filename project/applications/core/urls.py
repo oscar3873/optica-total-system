@@ -21,5 +21,12 @@ urlpatterns = [
         'objetives/update/<pk>/', 
         ObjetiveUpdateView.as_view(),
         name='objetive_update'
-    )
+    ),
+
+    path(
+        'objetives/list/',
+        ObjetivesListView.as_view(),
+        name='objetive_list'
+    ),
+
 ] 
