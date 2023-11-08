@@ -1,5 +1,4 @@
 from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from .models import Objetives
 from applications.branches.models import Branch, Branch_Objetives

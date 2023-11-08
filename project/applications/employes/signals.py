@@ -9,8 +9,7 @@ def set_imagen_user(instance, created, **kwargs):
 post_save.connect(set_imagen_user, sender=Employee)
 
 
-def objetive_completed(instance, created, **kwargs):
-    if not created:
-        if instance.accumulated >= instance.objetive.quantity:
-            instance.is_completed = True
-pre_save.connect(set_imagen_user, sender=Employee_Objetives)
+def objetive_completed(instance, **kwargs):
+    if instance.accumulated >= instance.objetive.quantity:
+        instance.is_completed = True
+pre_save.connect(objetive_completed, sender=Employee_Objetives)
