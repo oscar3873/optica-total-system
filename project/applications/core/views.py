@@ -22,8 +22,8 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
 
     def form_valid(self, form):
         if form.is_valid():
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
+            from applications.branches.utils import set_branch_session
+            branch_actualy = set_branch_session(self.request)
             
             tipo = form.cleaned_data.pop('tipo')
             objetive = form.save(commit=False)

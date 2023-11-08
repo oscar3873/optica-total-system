@@ -17,8 +17,8 @@ class DailyReportsView(TemplateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
 
-        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
         
         context['monto_por_rango_completado'], context['monto_por_rango_pendiente'] = dayli_sales(branch_actualy) # 8am a 9pm : $ventas
         context['customers'] = dayli_customers(branch_actualy) # clientes registrados del dia
@@ -36,8 +36,8 @@ class DashboardView(TemplateView):
 
         context = super().get_context_data(**kwargs)
 
-        branch_actualy = self.request.session.get('branch_actualy') or self.request.user.branch.pk
-        branch_actualy = Branch.objects.get(id=branch_actualy)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
 
         context['ventas_semanales'] = week_status(branch_actualy) # devuleve un diccionario con las ventas de la semana
         context['ventas_por_semana'], context['total_ventas_anteriores'] = week_sales(branch_actualy) # devuleve un diccionario con las ventas de la semana
@@ -59,8 +59,8 @@ def sale_date_month(request, month):
 
             ventas_por_dia = []
 
-            branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
-            branch_actualy = Branch.objects.get(id=branch_actualy)
+            from applications.branches.utils import set_branch_session
+            branch_actualy = set_branch_session(request)
 
             for dia in range(1, ultimo_dia + 1):
                 fecha_actual = datetime(fecha_actual.year, month, dia)

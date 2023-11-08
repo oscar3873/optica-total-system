@@ -202,8 +202,8 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
         set_movement(total,  payment_methods.type_method, None, request)
 
     # Modificamos la forma de obtener la sucursal
-    branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
-    branch_actualy = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
 
     sale.branch = branch_actualy
     sale.user_made = request.user
@@ -225,8 +225,8 @@ def set_movement(total, type_method, customer, request):
         description += " a %s" % customer.get_full_name()
 
     # Modificamos la forma de obtener la sucursal
-    branch_actualy = request.session.get('branch_actualy') or request.user.branch.pk
-    branch_actualy = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
 
     Movement.objects.create(
         user_made = request.user,
@@ -280,7 +280,7 @@ def process_service_order(request, customer):
 
 def up_objetives(user, sale):
     if not user.is_staff: # es empleado
-        objetives = user.employee_objetives.filter(is_completed=False, objetives__exp_date__lte=DATE_NOW.date())
+        objetives = user.employee_type.employee_objetives.filter(is_completed=False, objetive__exp_date__lte=DATE_NOW.date())
         for objetive in objetives:
             if not objetive.is_completed:
                 objetive.accumulated += sale.total

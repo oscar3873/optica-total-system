@@ -102,12 +102,10 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
             customer = form.save(commit=False)
             customer.user_made = self.request.user
 
-            branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-            if user.is_staff and branch_actualy:
-                branch_actualy = Branch.objects.get(id=branch_actualy)
-                customer.branch = branch_actualy
-            else:
-                customer.branch = self.request.user.branch
+            from applications.branches.utils import set_branch_session
+            branch_actualy = set_branch_session(self.request)
+
+            customer.branch = branch_actualy
             customer.save()
 
             for insurance in form.cleaned_data['h_insurance']:
@@ -360,16 +358,10 @@ class CustomerListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        user = self.request.user
-        branch = user.branch
-        branch_actualy = self.request.session.get('branch_actualy') or user.branch.pk
-        if  self.request.user.is_staff and branch_actualy:
-            branch_actualy = Branch.objects.get(id=branch_actualy)
-            # Si el usuario es administrador y hay una sucursal seleccionada en la sesiÃ³n,
-            return Customer.objects.filter(branch=branch_actualy, deleted_at=None)
-        
-        # En otros casos, filtra por la sucursal del usuario
-        return Customer.objects.filter(branch=branch, deleted_at=None)
+        from applications.branches.utils import set_branch_session
+        branch_actualy = set_branch_session(self.request)
+
+        return Customer.objects.filter(branch=branch_actualy, deleted_at=None)
 
 
 class ServiceOrderListView(LoginRequiredMixin, ListView):
@@ -591,14 +583,10 @@ def export_customer_list_to_excel(request):
     from openpyxl.styles import Font, PatternFill
     from django.http import HttpResponse
     
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch_actualy = Branch.objects.get(id=branch_actualy)
-        branch = branch_actualy
-    else:
-        branch = request.user.branch
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
     
-    list_customer = Customer.objects.get_customers_branch(branch)
+    list_customer = Customer.objects.get_customers_branch(branch_actualy)
 
     if not list_customer:
         raise ValueError('No hay clientes para exportar.') # modificar error
@@ -643,7 +631,7 @@ def export_customer_list_to_excel(request):
 
     # Crear una respuesta HTTP con el archivo Excel adjunto
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=Lista de clientes - Sucursal %s.xlsx' %(branch.name)
+    response['Content-Disposition'] = 'attachment; filename=Lista de clientes - Sucursal %s.xlsx' %(branch_actualy.name)
 
     workbook.save(response)
 
@@ -661,9 +649,8 @@ def ajax_search_customers(request):
     print(branch)
     print("################################################")
     print("Entre aqui")
-    branch_actualy = request.session.get('branch_actualy')
-    if request.user.is_staff and branch_actualy:
-        branch = Branch.objects.get(id=branch_actualy)
+    from applications.branches.utils import set_branch_session
+    branch_actualy = set_branch_session(request)
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
@@ -671,10 +658,10 @@ def ajax_search_customers(request):
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = CustomerListView().paginate_by
-            customers = Customer.objects.get_customers_branch(branch).filter(deleted_at=None)[:paginate_by]
+            customers = Customer.objects.get_customers_branch(branch_actualy).filter(deleted_at=None)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
-            customers = Customer.objects.get_customers_branch(branch).filter(
+            customers = Customer.objects.get_customers_branch(branch_actualy).filter(
                 Q(first_name__icontains=search_term) |
                 Q(last_name__icontains=search_term) |
                 Q(phone_number__icontains=search_term) |

@@ -104,7 +104,7 @@ myImage.save('hello_world.png', "PNG")
 """
 
 
-def get_emp_branch_objetives(branch, employee_objetives=None):
+def get_emp_branch_objetives(branch, employee_objetives):
     employees_obj = Employee_Objetives.objects.filter(deleted_at=None, employee__user__branch=branch)
     branch_obj = Branch_Objetives.objects.filter(deleted_at=None, branch=branch)
 
