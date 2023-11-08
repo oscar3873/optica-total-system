@@ -8,7 +8,8 @@ from applications.employes.models import Employee, Employee_Objetives
 def create_objective_receiver(instance, created, **kwargs):
     if created:
         if instance.to == "EMPLEADO":
-            employees = Employee.objects.all()
+            employees = Employee.objects.filter(user__branch=instance.branch)
+            print('\n\n\n',employees,'\n\n\n')
             for employee in employees:
                 Employee_Objetives.objects.create(
                     employee=employee,

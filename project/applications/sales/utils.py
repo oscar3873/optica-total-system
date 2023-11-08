@@ -278,6 +278,15 @@ def process_service_order(request, customer):
     return service
 
 
+def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
+    wo_promo = sum(wo_promo)
+    real_price_promo = Decimal(sum(real_price_promo))
+
+    sale.discount_extra = subtotal - real_price_promo
+    sale.subtotal = Decimal(subtotal)
+    sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
+
+
 def up_objetives(user, sale):
     if not user.is_staff: # es empleado
         objetives = user.employee_type.employee_objetives.filter(is_completed=False, objetive__exp_date__lte=DATE_NOW.date())

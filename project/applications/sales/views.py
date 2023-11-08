@@ -13,7 +13,8 @@ from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
-from project.settings.base import DATE_NOW, ZONE_TIME
+from applications.notifications.utils import set_notification
+from project.settings.base import ZONE_TIME
 
 from .utils import *
 from .models import *
@@ -86,6 +87,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                     if cristal and not customer:
                         messages.error(self.request, "Seleccione un Cliente antes de vender un Cristal.")
                         return super().form_invalid(form)
+                    
                 elif cristal and not armazon:
                     messages.error(self.request, "Seleccione un Armazon antes de vender un Cristal.")
                     return super().form_invalid(form)
@@ -97,12 +99,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         for promotion, products_with_discountPromo in promotional_products.items():
             process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
         
-        wo_promo = sum(wo_promo)
-        real_price_promo = Decimal(sum(real_price_promo))
-
-        sale.discount_extra = subtotal - real_price_promo
-        sale.subtotal = Decimal(subtotal)
-        sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
+        set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
 
         if cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
@@ -119,6 +116,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
+        set_notification(sale)
+        
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
 
