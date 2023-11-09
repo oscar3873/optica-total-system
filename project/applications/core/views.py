@@ -19,6 +19,7 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ObjetiveForm
     template_name = 'core/objetive_page.html'
     success_url = reverse_lazy('core_app:objetive_list')
+    context_object_name = 'objetive'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -45,6 +46,7 @@ class ObjetiveUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Objetives
     template_name = 'core/objetive_page.html'
     success_url = reverse_lazy('core_app:objetive_list')
+    context_object_name = 'objetive'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,12 +58,14 @@ class ObjetivesListView(ListView):
     model = Objetives
     template_name = 'core/objetives_view.html'
     paginator = 5
+    context_object_name = 'objetives'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
         context['table_column'] = obtener_nombres_de_campos(Objetives,
             "id",
+            "user_made",
             "deleted_at", 
             "created_at", 
             "updated_at",
@@ -71,7 +75,8 @@ class ObjetivesListView(ListView):
     
 class ObjetiveDetail(DetailView):
     model = Objetives
-    template_name = 'core/objetives_detail.html'
+    template_name = 'core/objetive_detail_page.html'
+    context_object_name = 'objetive'
 
 
 class ObjetiveDelete(DeleteView):
@@ -81,7 +86,6 @@ class ObjetiveDelete(DeleteView):
 
     def form_valid(self, form):
         objetive = self.get_object()
-        print('\n\n\n', objetive)
         to = objetive.to_branch.all() or objetive.to_employees.all()
         for un in to:
             un.delete()

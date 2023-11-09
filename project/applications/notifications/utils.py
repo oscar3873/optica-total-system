@@ -1,3 +1,5 @@
+from django.contrib.contenttypes.models import ContentType
+
 from applications.core.consumers import send_notifications
 from applications.notifications.models import Notifications
 from applications.sales.models import Sale
@@ -20,9 +22,12 @@ def get_notifications_JSON(notifications):
 
 
 def set_notification(sale):
+    content_type = ContentType.objects.get_for_model(Sale)
+    
     notification = Notifications.objects.create(
-        content_type = Sale,
+        content_type = content_type,
         object_id = sale.id,
-        details = 'Venta'
+        details = '',
+        user_made = sale.user_made
     )
     send_notifications(get_notifications_JSON([notification]))
