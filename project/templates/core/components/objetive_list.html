@@ -1,0 +1,165 @@
+{% load static %}
+{% load humanize %}
+
+
+<div class="container py-4">
+
+    {% include 'core/components/messages.html' %}
+
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="d-flex mb-4">
+            <span class="fa-stack me-2 ms-n1">
+                <i class="fas fa-circle fa-stack-2x text-300"></i>
+                <i class="fa-inverse fa-stack-1x text-primary fas fa-boxes"></i>
+            </span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span
+                        class="bg-200 dark__bg-1100 pe-3">Objetivos</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Aquí puede vizualizar todos los objetivos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+    {% if objetives %}
+    <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
+        <!--Card-->
+        <div class="card z-index-1 mb-3" id="recentPurchaseTable"
+            data-list='{"valueNames":["user_made", "name","barcode","sale_price","description","stock","category","brand","branch"],"page":25,"pagination":true}'>
+            <div class="card-header">
+                <div class="row flex-between-center">
+                    <div class="col-12 text-center col-sm-auto d-flex align-items-center pe-0">
+                        <div>
+                            <form id="searchForm" method="GET"
+                                data-ajax-search-url="{% url 'products_app:ajax_search_products' %}">
+                                <div class="input-group">
+                                    <input maxlength="50" class="form-control form-control-sm shadow-none search"
+                                        id="searchInput" type="search" placeholder="Buscar" aria-label="search" />
+                                    <div class="input-group-text bg-transparent"><span
+                                            class="fa fa-search fs--1 text-600"></span></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-12 text-center col-sm-auto ms-auto sm-text-end ps-0">
+                        <div id="table-purchases-replace-element">
+
+                            {% if request.user.is_staff %}
+                            <a href="{% url 'products_app:new_product' %}" class="btn btn-falcon-default btn-sm me-1"
+                                type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Nuevo Objetivo</span></a>
+                            <!-- <a href="{% url '' %}"
+                                class="btn btn-falcon-default btn-sm ms-1" type="button"><span
+                                    class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
+                                    class="d-none d-sm-inline-block ms-1">Exportar</span></a> -->
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body px-0 py-0">
+                <div class="table-responsive scrollbar">
+                    <!-- TABLA -->
+                    <table class="table table-sm fs--1 mb-0 overflow-hidden">
+                        <!-- HEAD TABLA -->
+                        <thead class="bg-200 text-900">
+                            <tr>
+                                {% for column in table_column %}
+                                <th class="sort pe-1 align-middle white-space-nowrap {% if column.1 != 'Nombre' and column.1 != 'Precio' %}d-none d-md-table-cell{% endif %}"
+                                    data-sort="{{column.0}}">{{column.1}}</th>
+                                {% endfor %}
+                                <th class="no-sort pe-1 align-start data-table-row-action"> Acciones</th>
+                            </tr>
+                        </thead>
+                        <!-- BODY TABLA -->
+                        <tbody class="list" id="table-purchase-body">
+
+                            {% for objetive in objetives %}
+                            <tr class="btn-reveal-trigger">
+                                <!-- <th class="align-middle white-space-nowrap name"><a href="app/e-commerce/customer-details.html">Sylvia Plath</a></th> -->
+                                <!-- <td class="align-middle white-space-nowrap email">john@gmail.com</td> -->
+                                <!-- <td class="align-middle white-space-nowrap product">Slick - Drag &amp;</td> -->
+                                <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
+                </td> -->
+                                <!-- <td class="align-start user_made">{{product.user_made}}</td> -->
+                                <td class="align-start name">{{product.name}}</td>
+                                <td class="align-start d-none d-md-table-cell barcode">{{product.barcode}}</td>
+                                <td class="align-start sale_price"><span
+                                        class="badge badge-soft-success rounded-pill">${{product.sale_price}}</span>
+                                </td>
+                                <td class="align-start d-none d-md-table-cell description">{{product.description}}</td>
+                                <td class="align-start d-none d-md-table-cell stock">{{product.stock}}</td>
+                                <td class="align-start d-none d-md-table-cell category">{{product.category.name}}</td>
+                                <td class="align-start d-none d-md-table-cell brand">{{product.brand.name}}</td>
+                                <!-- <td class="align-start branch">{{product.branch.name}}</td> -->
+                                <td class="align-start white-space-nowrap text-start">
+                                    <div class="dropstart font-sans-serif position-static d-inline-block">
+                                        <button
+                                            class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                            type="button" id="dropdown0" data-bs-toggle="dropdown"
+                                            data-boundary="window" aria-haspopup="true" aria-expanded="false"
+                                            data-bs-reference="parent"><span
+                                                class="fas fa-ellipsis-h fs--1"></span></button>
+                                        <div class="dropdown-menu dropdown-menu-end border py-2"
+                                            aria-labelledby="dropdown0">
+                                            <a class="dropdown-item"
+                                                href="{% url 'products_app:product_detail' product.id %}">Detalle</a>
+
+                                            {% if request.user.is_staff %}
+                                            <a class="dropdown-item"
+                                                href="{% url 'products_app:update_product' product.id %}">Editar</a>
+                                            <a class=" dropdown-item text-danger"
+                                                href="{% url 'products_app:product_delete' product.id %}">Eliminar</a>
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!--Card-->
+        <div class="card overflow-hidden">
+            <div class="card-header bg-light position-relative">
+                <div class="bg-holder d-none d-md-block bg-card z-index-1"
+                    style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+                </div>
+                <!--/.bg-holder-->
+
+                <div class="position-relative z-index-2">
+                    <div>
+                        <h5 class="text-primary mb-1">No hay objetivos</h5>
+                    </div>
+                </div>
+            </div>
+            {% if request.user.is_staff %}
+            <div class="card-body">
+                <a class="btn btn-primary mt-3" href="{% url 'core_app:objetive_new' %}">Nuevo objetivo</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+
+    <!-- ===============================================-->
+    <!--   Fin Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+    {% endif %}
+</div>
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->
