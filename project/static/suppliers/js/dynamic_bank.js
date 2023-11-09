@@ -2,11 +2,9 @@
 console.log("Script ejecutado1");
 document.addEventListener("DOMContentLoaded", function() {
 
-    console.log("Script ejecutado1");
     function closeModal() {
         $('#bankModal').modal('hide');
     }
-    console.log("Script ejecutado2");
     // Manejar la creación de un nuevo banco
     document.getElementById("save-bank").addEventListener("click", function() {
         var formData = new FormData(document.getElementById("bank-form"));
@@ -19,11 +17,13 @@ document.addEventListener("DOMContentLoaded", function() {
             contentType: false,
             success: function(data) {
                 if (data.status === 'success') {
+                    data = data.data;
                     var div_checksbox = document.createElement('div');
                     var newLabel = document.createElement('label');
                     var newCheckbox = document.createElement("input");
                     newCheckbox.type = "checkbox";
                     newCheckbox.name = "bank"; // Asegúrate de asignar el nombre correcto
+                    newCheckbox.hidden = true;
                     newCheckbox.value = data.id;
                     newCheckbox.className = "form-check-input";
                     newCheckbox.checked = true; // Define si está marcado o no
@@ -51,9 +51,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     errorMessage.style.fontStyle = "italic";
                     errorMessage.textContent = "Hubo un error en la carga, por favor verifique los datos ingresados.";
                     console.log("Script ejecutado7");
-                    // Resalta el campo en rojo
-                    errorField.style.borderColor = "red";
-                    console.log("Script ejecutado8");
+
                     // Agrega el mensaje de error debajo del campo
                     errorField.parentNode.appendChild(errorMessage);
                 }

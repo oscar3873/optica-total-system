@@ -46,12 +46,10 @@ class SupplierForm(ValidationFormMixin):
                 }
         )
     )
-    email=forms.CharField(
+    email=forms.EmailField(
         widget=forms.EmailInput(
             attrs={
                 'placeholder': 'Correo electrónico',
-                'type': 'email',
-                'pattern': '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
                 'class':'form-control'
                 }
         )
@@ -70,10 +68,16 @@ class SupplierForm(ValidationFormMixin):
         widget=forms.CheckboxSelectMultiple(),
         required=False
     )
+
+    banks = forms.ModelMultipleChoiceField(
+        queryset=Bank.objects.all(),
+        widget=forms.CheckboxSelectMultiple(),
+        required=False
+    )
     
     class Meta:
         model = Supplier
-        fields = ('name', 'phone_number', 'phone_code', 'email', 'address', 'brandsSelected')
+        fields = ('name', 'phone_number', 'phone_code', 'email', 'address')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
