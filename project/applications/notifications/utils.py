@@ -27,7 +27,7 @@ def set_notification(sale):
     notification = Notifications.objects.create(
         content_type = content_type,
         object_id = sale.id,
-        details = 'Venta',
+        details = '',
         user_made = sale.user_made
     )
     send_notifications(get_notifications_JSON([notification]))

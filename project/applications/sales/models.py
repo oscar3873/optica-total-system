@@ -74,7 +74,7 @@ class Sale(BaseAbstractWithUser):
         return f"COD: {self.pk} - $ {self.total}"
     
     class Meta:
-        verbose_name = 'Ventas'
+        verbose_name = 'Venta'
         verbose_name_plural = 'Ventas'
 
 class OrderDetail(BaseAbstractWithUser):
