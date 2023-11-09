@@ -282,7 +282,7 @@ def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
     wo_promo = sum(wo_promo)
     real_price_promo = Decimal(sum(real_price_promo))
 
-    sale.discount_extra = subtotal - real_price_promo
+    sale.discount_extra = subtotal - real_price_promo - wo_promo
     sale.subtotal = Decimal(subtotal)
     sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
 

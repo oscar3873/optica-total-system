@@ -72,6 +72,10 @@ class Sale(BaseAbstractWithUser):
 
     def __str__(self):
         return f"COD: {self.pk} - $ {self.total}"
+    
+    class Meta:
+        verbose_name = 'Ventas'
+        verbose_name_plural = 'Ventas'
 
 class OrderDetail(BaseAbstractWithUser):
     """
