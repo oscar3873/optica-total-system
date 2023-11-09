@@ -31,7 +31,7 @@ class Supplier(BaseAbstractWithUser):
     
 
 
-class Brand_Supplier(models.Model):
+class Brand_Supplier(BaseAbstractWithUser):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='brand_suppliers', null=True, verbose_name='Proveedor')
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name='brand_suppliers', null=True, verbose_name='Marca')
 
@@ -43,7 +43,6 @@ class Brand_Supplier(models.Model):
     
 
 class Bank(BaseAbstractWithUser):
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='banks')
     cbu = models.CharField(max_length=20, verbose_name='CBU')
     bank_name = models.CharField(max_length=50, verbose_name='Nombre del Banco')
     cuit = models.CharField(max_length=20, verbose_name='CUIT', blank=True, null=True)
@@ -54,3 +53,11 @@ class Bank(BaseAbstractWithUser):
 
     def __str__(self) -> str:
         return f'{self.bank_name} | {self.cbu}'
+    
+
+class Supplier_Bank(BaseAbstractWithUser):
+    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='banks', null=True, verbose_name='Proveedor')
+    bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='supplier', null=True, verbose_name='Banco')
+
+    def __str__(self) -> str:
+        return f'{self.supplier.name} | {self.bank.bank_name} - ALIAS/CBU: {self.bank.cbu}'

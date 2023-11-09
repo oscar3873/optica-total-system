@@ -129,11 +129,8 @@ def set_bank_supplier(request):
     if request.method == 'POST':
         bank_form = BankForm(request.POST)
         if bank_form.is_valid():
-            supplier_id = request.POST.get('supplier_id')  # Asegúrate de tener el campo supplier_id en tu formulario
-            supplier = Supplier.objects.get(pk=supplier_id)
             bank = bank_form.save(commit=False)
             bank.user_made = request.user
-            bank.supplier = supplier
             bank.save()
 
             if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -143,7 +140,7 @@ def set_bank_supplier(request):
                     'cbu': bank.cbu,
                     'cuit': bank.cuit
                 }
-                return JsonResponse(bank_data)
+                return JsonResponse({'status':'success', 'data': bank_data})
 
     return JsonResponse({'error': 'No se pudo guardar el banco'})
 
