@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, UpdateView, ListView, DetailView, DeleteView
 from django.db import transaction
@@ -17,7 +18,7 @@ class HomePageView(LoginRequiredMixin , TemplateView):
 class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
     form_class = ObjetiveForm
     template_name = 'core/objetive_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('core_app:objetive_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -43,7 +44,7 @@ class ObjetiveUpdateView(CustomUserPassesTestMixin, UpdateView):
     form_class = ObjetiveForm
     model = Objetives
     template_name = 'core/objetive_page.html'
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('core_app:objetive_list')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -76,14 +77,13 @@ class ObjetiveDetail(DetailView):
 class ObjetiveDelete(DeleteView):
     model = Objetives
     template_name = 'core/objetive_delete_page.html'
-    success_url = reverse_lazy('core_app:objetive_list')
     context_object_name = 'objetive'
 
-    def delete(self, request, *args, **kwargs):
+    def form_valid(self, form):
         objetive = self.get_object()
         print('\n\n\n', objetive)
-        to = objetive.to_branch.all() | objetive.to_employees.all()
+        to = objetive.to_branch.all() or objetive.to_employees.all()
         for un in to:
             un.delete()
 
-        return super().delete(request, *args, **kwargs)
+        return HttpResponseRedirect(reverse_lazy('core_app:objetive_list'))
