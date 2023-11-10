@@ -97,6 +97,7 @@ class CBUForm(ValidationFormMixin):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
+
         self.fields['bank'].queryset = Bank.objects.all()
 
 

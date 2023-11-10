@@ -62,7 +62,7 @@ class Cbu(BaseAbstractWithUser):
         verbose_name = "ALIAS / CBU / CVU"
 
     def __str__(self) -> str:
-        return f'{self.bank.bank_name} | {self.cbu}'
+        return f'{self.bank.__str__()} | {self.cbu}'
 
 
 class Supplier_Bank(BaseAbstractWithUser):

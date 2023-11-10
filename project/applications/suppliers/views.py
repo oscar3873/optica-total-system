@@ -1,7 +1,10 @@
+from typing import Any
+from django.http import Http404
 from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView,DeleteView)
-from django.db import IntegrityError
+from django.views.generic import UpdateView, DeleteView, ListView, DetailView, FormView,DeleteView
+from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import *
@@ -25,7 +28,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         return context
 
     def form_valid(self, form):
-
+        print(self.kwargs('pk_s'))
         supplier = form.save(commit=False)
         supplier.user_made = self.request.user
         supplier.save()
@@ -87,8 +90,17 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
         
         return HttpResponseRedirect(reverse_lazy('suppliers_app:supplier_detail', kwargs = {'pk':supplier.pk}))
     
-    
+ 
+class BankUpdateView(UpdateView):
+    model = Cbu
+    form_class = CBUForm
+    template_name = 'suppliers/cbu_update_page.html'
+    context_object_name = 'cbu'
 
+    def get_success_url(self):
+        self.kwargs['pk_s']
+        return reverse_lazy('suppliers_app:supplier_detail', kwargs = {'pk':self.kwargs['pk_s']})
+    
 
 ################################# LIST ##############################
 class SuppliersListView(CustomUserPassesTestMixin, ListView):
@@ -139,6 +151,7 @@ class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
+################################# AJAX #################################
 def set_bank_supplier(request):
     if request.method == 'POST':
         bank_form = CBUForm(request.POST)

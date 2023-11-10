@@ -1,0 +1,12 @@
+<form method="post">
+    {% csrf_token %}
+    {{object.bank.bank_name}}
+
+    <p>{{form.bank.label}}{{form.bank}}</p>
+
+    <p>{{form.cbu.label}}{{form.cbu}}</p>
+
+    {{form.cuit.label}}{{form.cuit}}
+
+    <button type="submit">Actualizar</button>
+</form>

@@ -29,6 +29,12 @@ urlpatterns = [
         SupplierDeleteView.as_view(),
         name='supplier_delete'
     ),
+
+    path(
+        'detail/<pk_s>/bank/update/<pk>/',
+        BankUpdateView.as_view(),
+        name='bank_update'
+    ),
     
     ### AJAX PARA CREAR BANCO PARA SUPPLIER
     path(

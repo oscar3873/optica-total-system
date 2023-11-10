@@ -85,12 +85,15 @@
                 <div class="row">
                   <div class="col mt-4 d-flex flex-column flex-sm-row align-content-center">
                     <h5 class="mb-3">Bancos:&nbsp;</h5>
-                    <div class="d-inline-flex">
-                      {% for bank in supplier.banks.all %}
-                        <p class="ms-sm-2 text-900 fw-bold d-inline">{{ bank.bank_name }}</p>
-                      {% endfor %}
-                    </div>
-                    {% if not supplier.banks.all %}
+                    {% if supplier.banks.all %}
+                      <div class="d-inline-flex">
+                        {% for bank in supplier.banks.all %}
+                          <a href="{% url 'suppliers_app:bank_update' supplier.pk bank.bank.pk %}">
+                            <p class="ms-sm-2 text-900 fw-bold d-inline">{{ bank.bank }}</p>
+                          </a>
+                        {% endfor %}
+                      </div>
+                    {% else %}
                       <p class="fw-lighter fst-italic">No hay bancos registrados</p>
                     {% endif %}
                   </div>

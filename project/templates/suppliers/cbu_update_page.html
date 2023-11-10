@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+ {% include 'suppliers/components/bank_form.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="{% static 'suppliers/js/ajax_bank_new.js' %}"></script>
+{% endblock extra_js %}
