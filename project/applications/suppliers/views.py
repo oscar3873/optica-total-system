@@ -1,11 +1,10 @@
-from typing import Any
 from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import (UpdateView, DeleteView, ListView, DetailView, FormView,DeleteView)
-from django.shortcuts import render
+from django.db import IntegrityError
 
 from applications.core.mixins import CustomUserPassesTestMixin
-from .forms import BankForm, SupplierForm
+from .forms import *
 from .models import *
 #from .core.utils import obtener_nombres_de_campos
 from applications.employes.utils import obtener_nombres_de_campos
@@ -20,18 +19,32 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['brandsSelected'] = Brand.objects.all()  # Obtén todas las marcas
-        context['bank_form'] = BankForm
+        context['bank_form'] = CBUForm
+        context['bank'] = BankForm
         context['update_create'] = 'Registrar un proveedor'
         return context
 
     def form_valid(self, form):
+
         supplier = form.save(commit=False)
         supplier.user_made = self.request.user
         supplier.save()
-        
+
+        banks = form.cleaned_data.get('cbu')
+        for bank in banks:
+            Supplier_Bank.objects.create(
+                supplier=supplier,
+                bank=bank,
+                user_made=self.request.user
+            )
+
         selected_brands = form.cleaned_data.get('brandsSelected')
         for brand in selected_brands:  # Usa brandsSelected en lugar de brands
-            Brand_Supplier.objects.create(supplier=supplier, brand=brand, user_made=self.request.user)
+            Brand_Supplier.objects.create(
+                supplier=supplier, 
+                brand=brand, 
+                user_made=self.request.user
+            )
         
         return super().form_valid(form)
 
@@ -50,7 +63,8 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
         related_brands = self.get_object().brand_suppliers.values_list('brand', flat=True)
         avaliable_brands = Brand.objects.filter(id__in=related_brands)
         context['brandsSelected'] = avaliable_brands  # Obtén todas las marcas
-        context['bank_form'] = BankForm
+        context['bank_form'] = CBUForm
+        context['bank'] = BankForm
         context['update_create'] = f'Actualizar proveedor: {self.get_object().name.upper()}'
         return context
 
@@ -127,7 +141,7 @@ class SupplierDeleteView(CustomUserPassesTestMixin,DeleteView):
 
 def set_bank_supplier(request):
     if request.method == 'POST':
-        bank_form = BankForm(request.POST)
+        bank_form = CBUForm(request.POST)
         if bank_form.is_valid():
             bank = bank_form.save(commit=False)
             bank.user_made = request.user
@@ -136,13 +150,31 @@ def set_bank_supplier(request):
             if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
                 bank_data = {
                     'id': bank.pk,
-                    'name': bank.bank_name,
+                    'name': bank.bank.bank_name,
                     'cbu': bank.cbu,
                     'cuit': bank.cuit
                 }
                 return JsonResponse({'status':'success', 'data': bank_data})
+    return JsonResponse({'error': 'Por favor, verifique los campos.'})
 
-    return JsonResponse({'error': 'No se pudo guardar el banco'})
+
+def ajax_bank_new(request):
+    if request.method == 'POST':
+        bank_form = BankForm(request.POST)
+        if bank_form.is_valid():
+            bank = bank_form.save()
+            bank_data = {
+                'id': bank.pk,
+                'name': bank.bank_name,
+            }
+            return JsonResponse({'status': 'success', 'bank_data': bank_data})
+        else:
+            error = bank_form.errors.get('bank_name', [None])[0]
+            return JsonResponse({'status': 'error', 'error': error})
+    else:
+        error = 'Método de solicitud no válido.'
+    return JsonResponse({'error': error})
+
 
 def ajax_search_brands(request):
     search_term = request.GET.get('search_term', '')

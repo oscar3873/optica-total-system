@@ -1,9 +1,8 @@
 from django import forms
 
-from .models import Bank, Brand_Supplier, Supplier#, Product_Supplier
-from applications.products.models import Brand, Product
+from .models import *
+from applications.products.models import Brand
 from applications.core.mixins import ValidationFormMixin
-from django.core.validators import RegexValidator
 
 
 class SupplierForm(ValidationFormMixin):
@@ -14,11 +13,8 @@ class SupplierForm(ValidationFormMixin):
             attrs={
                 'class':'form-control',
                 'placeholder': 'Nombre del proveedor',
-                'type': 'text',
-                'pattern': '.{3,}',  # Mínimo 3 caracteres
                 }
         ),
-        validators=[RegexValidator(r'^[a-zA-Z\s]+$', 'El nombre solo puede contener letras y espacios.')]
     )
 
     PHONE_CODE_CHOICES = (
@@ -38,10 +34,9 @@ class SupplierForm(ValidationFormMixin):
     )
 
     phone_number = forms.IntegerField(
-        widget=forms.TextInput(
+        widget=forms.NumberInput(
             attrs={
                 'placeholder': 'Telefono de contacto',
-                'type': 'number',
                 'class':'form-control'
                 }
         )
@@ -59,7 +54,6 @@ class SupplierForm(ValidationFormMixin):
             attrs={
                 'class':'form-control',
                 'placeholder': 'Domicilio',
-                'type': 'text',
             }
         ),
     )
@@ -69,8 +63,8 @@ class SupplierForm(ValidationFormMixin):
         required=False
     )
 
-    banks = forms.ModelMultipleChoiceField(
-        queryset=Bank.objects.all(),
+    cbu = forms.ModelMultipleChoiceField(
+        queryset=Cbu.objects.all(),
         widget=forms.CheckboxSelectMultiple(),
         required=False
     )
@@ -92,20 +86,44 @@ class SupplierForm(ValidationFormMixin):
         self.validate_length(name_formated, 3, 'El nombre del proveedor debe tener al menos 3 carácteres.')
         return name_formated
 
-class BankForm(ValidationFormMixin):
+class CBUForm(ValidationFormMixin):
 
     class Meta:
-        model = Bank
-        fields = ['cbu', 'bank_name', 'cuit']
-        
+        model = Cbu
+        fields = ['bank', 'cbu', 'cuit']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['required'] = ''
+        self.fields['bank'].queryset = Bank.objects.all()
 
+
+class BankForm(ValidationFormMixin):
+    bank_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder': 'Ej: Banco Nación',
+            }
+        ),
+    )
+
+    class Meta:
+        model = Bank
+        fields = ['bank_name',]
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['required'] = ''
+            
     def clean_bank_name(self):
         name = self.cleaned_data['bank_name']
-        name_formated = name.title()
+        name_formated = name.capitalize()
         self.validate_length(name_formated, 3, 'El nombre debe tener al menos 3 caracteres.')
+
         return name_formated

@@ -1,4 +1,5 @@
 const payment = document.getElementById('payment-method-form');
+let error_pay = document.createElement('div');
 
 document.addEventListener("DOMContentLoaded", function() {
 
@@ -47,9 +48,8 @@ document.addEventListener("DOMContentLoaded", function() {
                         closeModal();  // Cerrar el modal después de agregar la nueva categoría
                     }else{
                         console.log(data.message);
-                        let error_pay = document.createElement('div');
                         error_pay.innerHTML = data.message;
-                        error_pay.classList.add('text-center', 'text-danger');
+                        error_pay.className = "text-danger text-center";
                         
                         payment.appendChild(error_pay);
                     }

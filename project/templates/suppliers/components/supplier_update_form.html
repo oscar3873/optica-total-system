@@ -47,7 +47,7 @@
                       class="form-label"
                       >Proveedor</label>
                     {{form.name}}
-                    <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                    <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
                     {% if form.name.errors %} 
 											{% for error in form.name.errors %}
 											<div class="text-danger fs--2">{{error}}</div>

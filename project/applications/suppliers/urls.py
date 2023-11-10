@@ -40,6 +40,12 @@ urlpatterns = [
     path(
         'brands/ajax_search_brands/', 
         ajax_search_brands, 
-        name='ajax_search_brands'),
+        name='ajax_search_brands'
+    ),
 
+    path(
+        'ajax_bank_new',
+        ajax_bank_new,
+        name='ajax_bank_new'
+    )
 ]
