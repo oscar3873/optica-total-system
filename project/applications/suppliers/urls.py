@@ -38,7 +38,7 @@ urlpatterns = [
     
     ### AJAX PARA CREAR BANCO PARA SUPPLIER
     path(
-        'ajax_bank_supplier',
+        'ajax-bank-supplier',
         set_bank_supplier,
         name='set_bank_supplier'
     ),
@@ -50,8 +50,14 @@ urlpatterns = [
     ),
 
     path(
-        'ajax_bank_new',
-        ajax_bank_new,
-        name='ajax_bank_new'
+        'ajax-bank-new',
+        ajax_new_bank,
+        name='ajax-new-bank'
+    ),
+
+    path(
+        'ajax-delete-bank/<pk>/',
+        ajax_delete_bank,
+        name='ajax_delete_bank'
     )
 ]

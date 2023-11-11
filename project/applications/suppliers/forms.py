@@ -87,18 +87,35 @@ class SupplierForm(ValidationFormMixin):
         return name_formated
 
 class CBUForm(ValidationFormMixin):
-
+    bank = forms.ModelChoiceField(
+        queryset=Bank.objects.all().order_by('bank_name'),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    cbu = forms.CharField(
+        min_length=5,
+        max_length=50,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
+    cuit = forms.CharField(
+        min_length=8,
+        max_length=15,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
     class Meta:
         model = Cbu
         fields = ['bank', 'cbu', 'cuit']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
-            field.widget.attrs['required'] = ''
-
-        self.fields['bank'].queryset = Bank.objects.all()
 
 
 class BankForm(ValidationFormMixin):
@@ -124,7 +141,6 @@ class BankForm(ValidationFormMixin):
             
     def clean_bank_name(self):
         name = self.cleaned_data['bank_name']
-        name_formated = name.capitalize()
+        name_formated = name.title()
         self.validate_length(name_formated, 3, 'El nombre debe tener al menos 3 caracteres.')
-
         return name_formated

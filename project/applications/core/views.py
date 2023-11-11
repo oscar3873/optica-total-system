@@ -89,5 +89,6 @@ class ObjetiveDelete(DeleteView):
         to = objetive.to_branch.all() or objetive.to_employees.all()
         for un in to:
             un.delete()
+        objetive.delete()
 
         return HttpResponseRedirect(reverse_lazy('core_app:objetive_list'))

@@ -67,7 +67,7 @@ class Cbu(BaseAbstractWithUser):
 
 class Supplier_Bank(BaseAbstractWithUser):
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, related_name='banks', null=True, verbose_name='Proveedor')
-    bank = models.ForeignKey(Cbu, on_delete=models.CASCADE, related_name='supplier', null=True, verbose_name='Banco asociado')
+    bank = models.OneToOneField(Cbu, on_delete=models.CASCADE, related_name='suppliers', null=True, verbose_name='Banco asociado')
 
     def __str__(self) -> str:
         return f'{self.supplier.name} | {self.bank.__str__()}'

@@ -24,7 +24,7 @@ class CategoryForm(ValidationFormMixin):
     
     def clean_name(self):
         name = self.cleaned_data['name']
-        name_formated = name.capitalize()
+        name_formated = name.title()
         try:
             Category.objects.get(name=name_formated)
             raise forms.ValidationError("Ya existe una categoria con ese nombre.")
@@ -50,7 +50,7 @@ class BrandForm(ValidationFormMixin):
     
     def clean_name(self):
         name = self.cleaned_data['name']
-        name_formated = name.capitalize()
+        name_formated = name.title()
         try:
             Brand.objects.get(name=name_formated)
             raise forms.ValidationError("Ya existe una marca con ese nombre.")

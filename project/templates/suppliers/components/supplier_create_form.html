@@ -75,7 +75,8 @@
                                     {{ form.address }}
                                 </div>
                               </div>
-                              <div class="row">
+                            
+                                <div class="row">
                                 <div class="col-12 col-sm pt-2">
                                     <div class="row align-items-center">
                                         <label for="id_h_insurance"
@@ -86,23 +87,39 @@
                                                 <svg class="svg-inline--fa fa-circle fa-w-16 fa-stack-2x text-primary" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path></svg>
                                                 <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"></path></svg>
                                             </span>
+
+                                            {% if cbus %}
+                                                {% for cbu in cbus %}
+                                                        <div class="input-group" id="{{cbu.pk}}">
+                                                            {{cbu}}
+                                                            <button class="btn btn-danger" data-cbu-id="{{cbu.pk}}" id="delete-button"
+                                                                    data-bs-toggle="modal" type="button" data-bs-target="#deleteModal"
+                                                                    data-info="{{cbu}}">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        </div>
+                                                {% endfor %}
+                                            {% endif %}
+
+
+
                                         </label>
                                     </div>
                                     <div id="banks_asociate">
-
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 col-sm-4">
-                                        <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
-                                    </div>
+                        
+                            <div class="row">
+                                <div class="col-12 col-sm-4">
+                                    <button class="btn btn-primary d-block w-100 mt-3" type="submit" name="submit">Registrar</button>
                                 </div>
-                                  
-                              </div>
-                              <div class="row">
-                                    <h5 class = "mt-4">Marcas: </h5>
-                                    {{ form.brands }}
-                              </div>
+                            </div>
+                                
+                            </div>
+                            <div class="row">
+                                <h5 class = "mt-4">Marcas: </h5>
+                                {{ form.brands }}
+                            </div>
                                 <div class="row pt-1 pb-3">
                                     <div class="col-12 col-sm-6 form-group">
                                         <div class="d-flex flex-column">
@@ -198,3 +215,24 @@
       </div>
     </div>
   </div>
+
+<form method="post" id="delete-form">
+    {% csrf_token %}
+    <div class="modal fade" id="deleteModal" aria-hidden="true" aria-labelledby="deleteModalLabel" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bankModalLabel">Eliminar Cuenta Bancaria del proveedor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="delete-modal-body">
+                    
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-danger" type="button" id="delete-form-button">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

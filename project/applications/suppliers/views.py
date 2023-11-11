@@ -28,7 +28,6 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         return context
 
     def form_valid(self, form):
-        print(self.kwargs('pk_s'))
         supplier = form.save(commit=False)
         supplier.user_made = self.request.user
         supplier.save()
@@ -60,20 +59,29 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('suppliers_app:list_supplier')
     
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['update'] = 1
-        
-        related_brands = self.get_object().brand_suppliers.values_list('brand', flat=True)
+        context = super().get_context_data(**kwargs)        
+        supplier = self.get_object()
+        related_brands = supplier.brand_suppliers.values_list('brand', flat=True)
         avaliable_brands = Brand.objects.filter(id__in=related_brands)
+        
         context['brandsSelected'] = avaliable_brands  # Obtén todas las marcas
+        context['cbus'] = Cbu.objects.filter(suppliers__supplier=supplier)
         context['bank_form'] = CBUForm
         context['bank'] = BankForm
-        context['update_create'] = f'Actualizar proveedor: {self.get_object().name.upper()}'
+        context['update_create'] = f'Actualizar proveedor: {supplier.name.upper()}'
         return context
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
         supplier = form.instance
+
+        banks = form.cleaned_data.get('cbu')
+        for bank in banks:
+            Supplier_Bank.objects.create(
+                supplier=supplier,
+                bank=bank,
+                user_made=self.request.user
+            )
 
         selected_brands = form.cleaned_data['brandsSelected']  # Usa brandsSelected en lugar de brands
         existing_brands = supplier.brand_suppliers.all()
@@ -96,6 +104,11 @@ class BankUpdateView(UpdateView):
     form_class = CBUForm
     template_name = 'suppliers/cbu_update_page.html'
     context_object_name = 'cbu'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['bank'] = BankForm
+        return context
 
     def get_success_url(self):
         self.kwargs['pk_s']
@@ -171,7 +184,7 @@ def set_bank_supplier(request):
     return JsonResponse({'error': 'Por favor, verifique los campos.'})
 
 
-def ajax_bank_new(request):
+def ajax_new_bank(request):
     if request.method == 'POST':
         bank_form = BankForm(request.POST)
         if bank_form.is_valid():
@@ -183,7 +196,7 @@ def ajax_bank_new(request):
             return JsonResponse({'status': 'success', 'bank_data': bank_data})
         else:
             error = bank_form.errors.get('bank_name', [None])[0]
-            return JsonResponse({'status': 'error', 'error': error})
+            return JsonResponse({'error': error})
     else:
         error = 'Método de solicitud no válido.'
     return JsonResponse({'error': error})
@@ -193,3 +206,14 @@ def ajax_search_brands(request):
     search_term = request.GET.get('search_term', '')
     results = Brand.objects.filter(name__icontains=search_term).values('id', 'name')  # Filtrar las marcas que coincidan con el término de búsqueda
     return JsonResponse({'data': list(results)})
+
+
+def ajax_delete_bank(request, pk):
+    if request.method == 'POST':
+        try:
+            cbu = Cbu.objects.get(id=pk)
+            cbu.suppliers.delete()
+            cbu.delete()
+            return JsonResponse({'status': 'success'})
+        except Cbu.DoesNotExist:
+            return JsonResponse({'error':'El ID no corresponde a ninguna Cuenta Bancaria'})
