@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var formData_bank = new FormData(bank_name_modal);
         
         $.ajax({
-            url: `/suppliers/ajax-new-bank`,  // Asegúrate de usar la URL correcta
+            url: `/suppliers/ajax-new-bank/`,  // Asegúrate de usar la URL correcta
             method: 'POST',
             data: formData_bank,
             processData: false,

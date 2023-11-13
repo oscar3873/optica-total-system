@@ -38,21 +38,21 @@ urlpatterns = [
     
     ### AJAX PARA CREAR BANCO PARA SUPPLIER
     path(
-        'ajax-bank-supplier',
+        'ajax-bank-supplier/',
         set_bank_supplier,
         name='set_bank_supplier'
     ),
     
     path(
-        'brands/ajax_search_brands/', 
+        'brands/ajax-search-brands/', 
         ajax_search_brands, 
         name='ajax_search_brands'
     ),
 
     path(
-        'ajax-bank-new',
+        'ajax-new-bank/',
         ajax_new_bank,
-        name='ajax-new-bank'
+        name='ajax_new_bank'
     ),
 
     path(

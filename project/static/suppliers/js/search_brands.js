@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Realizar la búsqueda de marcas que coincidan con el término de búsqueda
             $.ajax({
-                url: `/suppliers/brands/ajax_search_brands/?search_term=${searchTerm}`,
+                url: `/suppliers/brands/ajax-search-brands/?search_term=${searchTerm}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
