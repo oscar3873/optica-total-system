@@ -1,4 +1,5 @@
 let payment_method = document.getElementById('id_payment_method');
+let error_div = document.createElement('div');
 let selected_payment = 1;
 const customer_modal = document.getElementById('New-customer-form');
 
@@ -68,9 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 } else if ('error' in data) {
                     console.log(data.error);
-                    let error_div = document.createElement('div');
                     error_div.innerHTML = data.error;
-                    error_div.classList.add('text-center', 'text-danger');
+                    error_div.className = "text-danger text-center";
                     
                     customer_modal.appendChild(error_div);
                 }

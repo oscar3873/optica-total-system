@@ -1,6 +1,6 @@
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.http import require_GET
@@ -206,7 +206,6 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         return context
     
     def get_form_kwargs(self):
-        user = self.request.user
         from applications.branches.utils import set_branch_session
         branch_actualy = set_branch_session(self.request)
 
@@ -235,15 +234,15 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
             sale_price = math.ceil(suggested_price / 50) * 50
             product.sale_price = sale_price
 
-            product.user_made = self.request.user
+            product.user_made = user
             product.branch = branch_actualy
             product.save()
-            form_in_out_features(form, product, self.request.user)
+            form_in_out_features(form, product, user)
 
         feature_formset = FeatureFormSet(self.request.POST, prefix='variants')
 
         if feature_formset.is_valid():
-            form_create_features_formset(self.request.user, product, feature_formset)
+            form_create_features_formset(user, product, feature_formset)
         
         source_route = self.request.GET.get('source_route', '')  # Obtén el valor del parámetro 'source_route' de la URL
         supplier_pk = self.request.GET.get('supplier_pk', '')  # Obtén el valor del parámetro 'supplier_pk' de la URL

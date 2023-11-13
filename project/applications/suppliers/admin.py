@@ -6,3 +6,5 @@ from .models import *
 admin.site.register(Supplier)
 admin.site.register(Brand_Supplier)
 admin.site.register(Bank)
+admin.site.register(Cbu)
+admin.site.register(Supplier_Bank)

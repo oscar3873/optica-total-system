@@ -29,10 +29,16 @@ urlpatterns = [
         SupplierDeleteView.as_view(),
         name='supplier_delete'
     ),
+
+    path(
+        'detail/<pk_s>/bank/update/<pk>/',
+        BankUpdateView.as_view(),
+        name='bank_update'
+    ),
     
     ### AJAX PARA CREAR BANCO PARA SUPPLIER
     path(
-        'ajax_bank_supplier',
+        'ajax-bank-supplier',
         set_bank_supplier,
         name='set_bank_supplier'
     ),
@@ -40,6 +46,18 @@ urlpatterns = [
     path(
         'brands/ajax_search_brands/', 
         ajax_search_brands, 
-        name='ajax_search_brands'),
+        name='ajax_search_brands'
+    ),
 
+    path(
+        'ajax-bank-new',
+        ajax_new_bank,
+        name='ajax-new-bank'
+    ),
+
+    path(
+        'ajax-delete-bank/<pk>/',
+        ajax_delete_bank,
+        name='ajax_delete_bank'
+    )
 ]

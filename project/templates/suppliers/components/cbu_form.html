@@ -1,0 +1,42 @@
+<form method="post">
+    {% csrf_token %}
+    {{object.bank.bank_name}}
+
+    <p>{{form.bank.label}}{{form.bank}}</p>
+    <button class="btn btn-falcon-default btn-sm" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" type="button">Open second modal</button>
+
+    <p>{{form.cbu.label}}{{form.cbu}}</p>
+
+    {{form.cuit.label}}{{form.cuit}}
+
+    <button type="submit">Actualizar</button>
+
+</form>
+
+
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggle2Label" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalToggle2Label">Nuevo Banco</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="bank-name-form" class="row g-3 needs-validation align-items-center">
+            {% csrf_token %}
+            <div class="row justify-content-sm-center pb-2">
+                <div class="col pt-3">
+                <label for="{{ bank.bank_name.id_for_label }}" class="form-label col-form-label">Nuevo Banco:</label>
+                {{ bank.bank_name }}
+                <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
+                </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+            <button id="save-bank-name" class="btn btn-primary" type="button">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>

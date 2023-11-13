@@ -116,8 +116,8 @@
             <h5 class="mb-3 fs-0">Cliente</h5>
             <h6 class="mb-2">{% if sale.customer %}{{sale.customer}}{% else %}Sin cliente asignado{% endif %}</h6>
             <p class="mb-1 fs--1">{{sale.customer.address}}</p>
-            <p class="mb-0 fs--1"> <strong>Correo: </strong><a href="mailto:{{sale.customer.email}}">{{sale.customer.email}}</a></p>
-            <p class="mb-0 fs--1"> <strong>Telefono: </strong><a href="tel:{{sale.customer.phone_code}}{{sale.customer.phone_number}}">{{sale.customer.phone_code}}{{sale.customer.phone_number}}</a></p>
+            <p class="mb-0 fs--1"> <strong>Correo: </strong>{% if sale.customer.email %}<a href="mailto:{{sale.customer.email}}">{{sale.customer.email}}</a>{% else %}Sin datos{% endif %}</p>
+            <p class="mb-0 fs--1"> <strong>Telefono: </strong>{% if sale.customer.phone_code %}<a href="tel:{{sale.customer.phone_code}}{{sale.customer.phone_number}}">{{sale.customer.phone_code}}{{sale.customer.phone_number}}{% else %}Sin datos{% endif %}</a></p>
         </div>
         <div class="col-md-6 col-lg-4">
             <h5 class="mb-3 fs-0">Metodo de pago</h5>
@@ -168,8 +168,12 @@
                 <td class="fw-semi-bold">${{sale_subtotal|floatformat:2|intcomma}}</td>
             </tr>
             <tr>
-                <th class="text-900">Descuento {{sale.discount}}%:</th>
-                <td class="fw-semi-bold">${{sale_discount_amount|floatformat:2|intcomma}}</td>
+                <th class="text-900">Descuento:</th>
+                <td class="fw-semi-bold">- ${{sale.discount_extra|floatformat:2|intcomma}}</td>
+            </tr>
+            <tr>
+                <th class="text-900">Descuento de venta {{sale.discount}}%:</th>
+                <td class="fw-semi-bold">- ${{sale_discount_amount|floatformat:2|intcomma}}</td>
             </tr>
             <tr class="border-top">
                 <th class="text-900">Total:</th>

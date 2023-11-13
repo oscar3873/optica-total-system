@@ -11,8 +11,7 @@ from django.http import JsonResponse
 
 #Importaciones de la app
 from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
-from applications.branches.models import Branch
-from applications.cashregister.models import CashRegister, CashRegisterDetail, PaymentType, Movement, Transaction, TransactionType
+from applications.cashregister.models import CashRegister, CashRegisterDetail, PaymentType, Movement
 from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailFormSet
 from applications.cashregister.utils import obtener_nombres_de_campos
 from django.views.generic import DetailView

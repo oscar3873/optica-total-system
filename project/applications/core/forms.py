@@ -108,12 +108,12 @@ class PersonForm(ValidationFormMixin):
     def clean_first_name(self):
         name = self.cleaned_data['first_name']
         self.validate_length(name, 3, "Ingrese un nombre válido.")
-        return name.capitalize()
+        return name.title()
     
     def clean_last_name(self):
         last_name = self.cleaned_data['last_name']
         self.validate_length(last_name, 3, "Ingrese un apellido válido.")
-        return last_name.capitalize()
+        return last_name.title()
 
     def clean_phone_number(self):
         phone_number = self.cleaned_data['phone_number']

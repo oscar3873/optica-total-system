@@ -49,7 +49,7 @@
                                     <div class="col-sm-6">
                                         <label for="{{ form.title.id_for_label }}" class="form-label">Nombre:</label>
                                         {{form.title}}
-                                        <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small>
+                                        <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
                                         {% if form.title.errors %}
                                             {% for error in form.title.errors %}
                                             <div class="text-danger fs--2">
@@ -92,7 +92,7 @@
                                     <div class="col-sm-6 pt-3 pt-sm-0">
                                         <label for="{{ form.exp_date.id_for_label }}" class="form-label">Fin:</label>
                                         {{form.exp_date}}
-                                        <!-- <small>Debe escribir <span class="text-warning">al menos 3 caracteres.</span></small> -->
+                                        <!-- <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small> -->
                                         {% if form.exp_date.errors %}
                                             {% for error in form.exp_date.errors %}
                                             <div class="text-danger fs--2">
