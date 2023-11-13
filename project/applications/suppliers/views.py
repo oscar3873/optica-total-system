@@ -181,6 +181,8 @@ def set_bank_supplier(request):
                     'cuit': bank.cuit
                 }
                 return JsonResponse({'status':'success', 'data': bank_data})
+        print(bank_form.errors.as_json())
+        return JsonResponse({'error': bank_form.errors.as_json()})
     return JsonResponse({'error': 'Por favor, verifique los campos.'})
 
 
