@@ -118,7 +118,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             order.sale = sale
             order.save()
 
-        #set_notification(sale)
+        # set_notification(sale)
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
@@ -192,7 +192,7 @@ class SalesListView(LoginRequiredMixin, ListView):
         from applications.branches.utils import set_branch_session
         branch_actualy = set_branch_session(self.request)
 
-        sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None)
+        sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None).order_by('-created_at')
 
         context['sales'] = sales
         context['table_column'] = obtener_nombres_de_campos(Sale,
@@ -268,6 +268,8 @@ def show_invoice(request, pk):
         created_at = sale.created_at.astimezone(ZONE_TIME)
         sale_date_str = created_at.strftime(format)
 
+        disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
+
         context = {
             'customer': customer,
             'total': f'{sale.total:.2f}',
@@ -275,8 +277,9 @@ def show_invoice(request, pk):
             'subtotal': sum(subtotal),
             'seler': sale.user_made,
             'promo': f'{sale.total}',
-            'discount': f'{sale.discount:.2f}',
-            'discount_extra': f'{sale.discount_extra:.2f}',
+            'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
+            'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
+            'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
             'payment_method': payment.payment_method.name,
             'pay': f'{sale.total - sale.missing_balance:.2f}',
             'missing_balance': f'{sale.missing_balance:.2f}',

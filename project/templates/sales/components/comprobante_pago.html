@@ -154,32 +154,12 @@
             </tr>
         </thead>
         <tbody>
-            <!--<tr>
-                <td>ProdA HD $ 77.250,00</td>
-                <td>50%</td>
-                <td>$ 38,625,00</td>
-                <td>$ 38,625,00</td>
-            </tr>
-            <tr>
-                <td>ProdA HD $ 77.250,00</td>
-                <td>50%</td>
-                <td>$ 38,625,00</td>
-                <td>$ 38,625,00</td>
-            </tr>-->
-
-            <!--<tr>
-                <td></td>
-                <td></td>
-                <td>%</td>
-                <td></td>
-            </tr>-->
-            
             {% for order, total in order_details %}          
                 <tr>
                     <td>{{order.product.name}}</td>
                     <td>{{order.quantity}}</td>
-                    <td>{{order.discount}}%</td>
-                    <td>$ {{total}}</td>
+                    <td>% {{order.discount}}</td>
+                    <td>$ {{order.product.sale_price}}</td>
                 </tr>
             {% endfor %}
                 
@@ -189,14 +169,19 @@
                 <th colspan="3">SUBTOTAL</th>
                 <th colspan="1">$ {{subtotal}}</th>
             </tr>
-            <tr>
-                <th colspan="3">DESCUENTO GRAL</th>
-                <th colspan="1">% {{discount}}</th>
-            </tr>
+            
+            {% if discount %}
+                <tr>
+                    <th colspan="2">DESCUENTO GRAL.</th>
+                    <th colspan="1">% {{discount}}</th>
+                    <th colspan="2">-$ {{discount_amount}}</th>
+                </tr>
+            {% endif %}
+                
             {% if discount_extra %}
             <tr>
                 <th colspan="3">DESCUENTO PROMOCION</th>
-                <th colspan="1">$ {{discount_extra}}</th>
+                <th colspan="1">-$ {{discount_extra}}</th>
             </tr>
             {% endif %}
             <tr>
