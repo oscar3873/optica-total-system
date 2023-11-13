@@ -1,4 +1,5 @@
 from django.db import models
+from django_afip.models import Receipt 
 
 from applications.clients.models import Customer
 from applications.products.models import Product
@@ -17,27 +18,27 @@ class InvoiceType(BaseAbstractWithUser):
     num_invoice = models.CharField(unique=True, db_index=True, null=True, blank=True)
     name = models.CharField(max_length=10, choices=TYPE, default=TYPE[0], null=True, blank=True)
 
-class Invoice(BaseAbstractWithUser):
-    """
-    Clase para Facturas
-        almacena faturas emitidas por la empresa
-    """
+# class Invoice(BaseAbstractWithUser):
+#     """
+#     Clase para Facturas
+#         almacena faturas emitidas por la empresa
+#     """
 
-    invoice_num = models.PositiveBigIntegerField(verbose_name='Numero de factura')
-    invoice_type = models.ForeignKey(InvoiceType, on_delete=models.SET_NULL, verbose_name='Tipo de factura', null=True , blank=True)
-    client = models.ForeignKey(Customer, on_delete=models.SET_NULL, related_name='invoice', null=True , blank=True)
+#     invoice_num = models.PositiveBigIntegerField(verbose_name='Numero de factura')
+#     invoice_type = models.ForeignKey(InvoiceType, on_delete=models.SET_NULL, verbose_name='Tipo de factura', null=True , blank=True)
+#     client = models.ForeignKey(Customer, on_delete=models.SET_NULL, related_name='invoice', null=True , blank=True)
 
 
-class Receipt(BaseAbstractWithUser):
-    """
-    Clase para Recibos/Comprobantes de venta
-        almacena recibos emitidos por la empresa
-    """ 
+# class Receipt(BaseAbstractWithUser):
+#     """
+#     Clase para Recibos/Comprobantes de venta
+#         almacena recibos emitidos por la empresa
+#     """ 
 
-    # receipt_type = models.CharField(max_length=20, verbose_name='Tipo de recibo')
-    client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='receipt', null=True , blank=True)
-    sale_num = models.IntegerField()
-    total = models.PositiveIntegerField()
+#     # receipt_type = models.CharField(max_length=20, verbose_name='Tipo de recibo')
+#     client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='receipt', null=True , blank=True)
+#     sale_num = models.IntegerField()
+#     total = models.PositiveIntegerField()
 
 
 class Sale(BaseAbstractWithUser):
@@ -58,8 +59,7 @@ class Sale(BaseAbstractWithUser):
         ('CANCELADO','CANCELADO')
     ]
 
-    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
-    receipt = models.ForeignKey(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
+    receipt = models.OneToOneField(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True, verbose_name='Cliente')
     state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False, verbose_name='Estado')
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)

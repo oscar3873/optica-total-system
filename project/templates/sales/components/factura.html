@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ticket</title>
+    <title>Factura</title>
     <style>
         /* Estilos generales */
         body {
@@ -99,6 +99,16 @@
             margin-top: 2rem;
             font-size: .7rem;
         }
+        .sin-border-top{
+            margin-top: 0;
+        }
+        .sin-border-bottom{
+            margin-bottom: 0;
+        }
+        .cod-fact{
+            font-size: .5rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -111,18 +121,22 @@
         </div>
         <div class="logo">
             <img src="../../../static/core/img/logo_optica_light.png" alt="Logo de la empresa">
-            <p class="title">COMPROBANTE DE PAGO</p>
+            <p class="title sin-border-bottom">{{receiptType.description}}</p>
+            <p class="cod-fact sin-border-top">COD. 00{{receiptType.code}}</p>
             <div class="tax-payer">
-                <small>Razon social</small>
-                <small class="name">Emmanuel Hernan PONCE</small>
+                <small>{{PointOfVentas.issuing_name}}</small>
+                <!--<small class="name">Emmanuel Hernan PONCE</small>-->
             </div>
             <div class="tax-payer">
-                <small>CUIT: </small>
-                <small class="name">20-33343434-2</small>
+                <small>Nº de Factura: {{PointOfVentas.number}}-{{receipt.receipt_number}}.</small><br>
+                <small>DNI/CUIL/CUIT:</small>
+                <small class="name">{{TaxPayer.cuit}}</small>
             </div>
             <div class="branch-info">
-                <span class="branch">BELGRANO 1152</span><br>
-                <span class="contact"> whatsapp 387-6847-345653 </span>
+                <span class="branch">{{PointOfVentas.issuing_address}}</span><br>
+                <span class="mail">{{PointOfVentas.eming_email}}</span><br>
+                <span class="condicion-iva">{{PointOfVentas.vat_condition}}</span><br>
+                <!--<span class="contact"> whatsapp 387-6847-345653 </span>-->
             </div>
         </div>
         <br>
@@ -132,7 +146,7 @@
                 <div class="col">{{customer}}</div>
             </div>
             <div class="row">
-                <div class="col"><strong>DNI/CUIL/CUIT</strong></div>
+                <div class="col"><strong>DNI</strong></div>
                 <div class="col">{{customer.dni}}</div>
             </div>
             <div class="row">
@@ -150,11 +164,11 @@
                 <th>Prod.</th>
                 <th >Cant.</th>
                 <th >Desc.</th>
-                <th >Precio un.</th>
+                <th >Total</th>
             </tr>
         </thead>
         <tbody>
-            <!--<tr>
+            <!-- <tr>
                 <td>ProdA HD $ 77.250,00</td>
                 <td>50%</td>
                 <td>$ 38,625,00</td>
@@ -165,14 +179,7 @@
                 <td>50%</td>
                 <td>$ 38,625,00</td>
                 <td>$ 38,625,00</td>
-            </tr>-->
-
-            <!--<tr>
-                <td></td>
-                <td></td>
-                <td>%</td>
-                <td></td>
-            </tr>-->
+            </tr> -->
             
             {% for order, total in order_details %}          
                 <tr>
@@ -193,10 +200,16 @@
                 <th colspan="3">DESCUENTO GRAL</th>
                 <th colspan="1">% {{discount}}</th>
             </tr>
+            <tr>
+                <th colspan="2">IVA</th>
+                <th colspan="1">21%</th>
+                <th colspan="1">${{iva}}</th>
+            </tr>
+
             {% if discount_extra %}
             <tr>
                 <th colspan="3">DESCUENTO PROMOCION</th>
-                <th colspan="1">$ {{discount_extra}}</th>
+                <th colspan="1">${{discount_extra}}</th>
             </tr>
             {% endif %}
             <tr>

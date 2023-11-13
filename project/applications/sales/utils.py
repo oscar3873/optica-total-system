@@ -1,5 +1,6 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
+from django_afip.models import *
 
 from applications.cashregister.models import CashRegister, Currency, Movement
 from applications.branches.models import Branch_Objetives
@@ -110,23 +111,62 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
     else:
         real_price_promo.append(sum(promotional_products[promotion]))
         
+        
+        
 
-def switch_invoice_receipt(invoice_or_receipt, sale):
+def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
-    if invoice_or_receipt == 'A':
-        return sale.invoice.create( # CREA UN OBJ DE FACTURA A
-            # consultar Campos
-        )
-    elif invoice_or_receipt == 'B':
-        return sale.invoice.create( # CREA UN OBJ DE FACTURA B
-            # consultar Campos
-        )
-    elif invoice_or_receipt == 'C':
-        return sale.receipt.create( # CREA UN OBJ DE COMPROBANTE / TICKET COMUN
-            # consultar Campos
-        )
-    else:
-        return None
+    if invoice_or_receipt in ['A', 'B']:
+        
+        if invoice_or_receipt == 'A':
+            document = DocumentType.objects.get(id=1)
+            receipt_type = ReceiptType.objects.get(id=1)
+            
+            if len(sale.customer.dni) < 11:
+                return 'El CUIT/CUIL del Cliente debe contener 11 digitos.'
+        
+        elif invoice_or_receipt == 'B':
+            document = DocumentType.objects.get(id=2) 
+            receipt_type = ReceiptType.objects.get(id=4)
+        
+        sale.receipt = Receipt.objects.create(
+            point_of_sales = pos_afip,
+            receipt_type = receipt_type,
+            concept = ConceptType.objects.get(id=1),
+            document_type = document,
+            document_number = sale.customer.dni,
+            issued_date = sale.created_at.date(),
+            total_amount = sale.total,
+            net_untaxed = 0,
+            net_taxed = Decimal(sale.total / Decimal(1.21)),
+            exempt_amount = 0,
+            )
+        sale.receipt.save()
+        sale.save()
+        
+        vat = Vat.objects.create(
+            vat_type = VatType.objects.get(id=3), # 21%
+            base_amount = sale.receipt.net_taxed,
+            amount = Decimal(sale.receipt.total_amount - sale.receipt.net_taxed),
+            receipt = sale.receipt
+            ) 
+        
+        
+        # Realiza la validación del recibo con la AFIP
+        validation_result = sale.receipt.validate()
+        
+        print(validation_result)
+        # if validation_result.result == 'A':
+        #     # Accede al CAE y su vencimiento
+
+        #     # Utiliza el CAE y su vencimiento como sea necesario, por ejemplo, en tu factura
+        #     print("CAE:", validation_result.cae)
+        #     print("Vencimiento del CAE:", validation_result.cae_expiration)
+        # else:
+        #     # Manejo de validación fallida
+        #     print("La validación falló. No se pudo obtener el CAE y su vencimiento.")
+        
+
 
 def find_cristal_product(all_products_to_sale, sale=None):
     """Ecuentra un CRISTAL dentro de la orden de venta (productos)"""

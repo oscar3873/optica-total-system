@@ -43,7 +43,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         return context
 
-    @transaction.atomic
+    #@transaction.atomic
     def form_valid(self, form):
         formsets = form
         saleform = SaleForm(self.request.POST)
@@ -109,15 +109,16 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         process_customer(customer, sale, payment_methods, sale.total, cristal, amount, self.request)
         up_objetives(self.request.user, sale)
 
-        proof_type = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale)
-        if proof_type:
-            generate_proof(proof_type)
+        error = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale, branch_actualy.pos_afip)
+        if error is str:
+            messages.error(self.request, error)
+            return super().form_invalid(form)
 
         for order in order_details:
             order.sale = sale
             order.save()
 
-        set_notification(sale)
+        #set_notification(sale)
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))

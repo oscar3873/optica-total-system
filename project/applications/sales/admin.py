@@ -7,7 +7,6 @@ from .models import *
 admin.site.register(Sale)
 admin.site.register(OrderDetail)
 # admin.site.register(PaymentMethod_Sale)
-admin.site.register(Invoice)
 admin.site.register(InvoiceType)
 
 
