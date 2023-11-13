@@ -120,7 +120,7 @@ class CBUForm(ValidationFormMixin):
     def clean_cbu(self):
         cbu = self.cleaned_data.get('cbu')
         try:
-            Cbu.objects.filter(cbu=cbu).exists()
+            Cbu.objects.get(cbu=cbu)
             raise forms.ValidationError('Ya existe el ALIAS/CBU/CVU asociado a un proveedor.')
         except Cbu.DoesNotExist:
             pass
