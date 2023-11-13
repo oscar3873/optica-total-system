@@ -117,6 +117,15 @@ class CBUForm(ValidationFormMixin):
         model = Cbu
         fields = ['bank', 'cbu', 'cuit']
 
+    def clean_cbu(self):
+        cbu = self.cleaned_data.get('cbu')
+        try:
+            Cbu.objects.get(cbu=cbu)
+            raise forms.ValidationError('Ya existe el ALIAS/CBU/CVU asociado a un proveedor.')
+        except Cbu.DoesNotExist:
+            pass
+        return cbu
+    
 
 class BankForm(ValidationFormMixin):
     bank_name = forms.CharField(
