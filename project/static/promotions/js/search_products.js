@@ -109,6 +109,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const searchInputA = form.querySelector(`#${fieldPrefix}-search-productA-input`);
         const searchResultsA = form.querySelector(`#${fieldPrefix}-search-productA-results`);
         configureSearch(searchInputA, searchResultsA, 'productA');
+        searchInputA.addEventListener("blur", function() {
+            searchInputA.value = "";
+            searchResultsA.innerHTML = '';
+        });
     }
 
 
