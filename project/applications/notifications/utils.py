@@ -9,12 +9,15 @@ def get_notifications_JSON(notifications):
         if notifications:
             notif_list = []
             for notification in notifications:
+                print(notification.content_object.get_absolute_url())
                 notif_list.append(
                     {
                     'details': notification.details,
                     'user_made': str(notification.user_made.get_full_name()),
+                    'avatarSrc': notification.user_made.imagen.url,
                     'reference_obj_verbose_name': str(notification.content_object.__class__._meta.verbose_name),
-                    'created_at': str(notification.created_at)
+                    'created_at': str(notification.created_at),
+                    'url': notification.content_object.get_absolute_url()
                     }
                 )
             return {'notifications': notif_list}

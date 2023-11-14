@@ -1,22 +1,18 @@
 from typing import Any
 from django.contrib import messages
-from django.forms.models import BaseModelForm
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView, UpdateView, FormView, ListView, DeleteView
 )
-from django.db import models, transaction
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db import transaction
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from applications.branches.models import Branch
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.users.models import User
 from applications.users.forms import *
-from applications.users.utils import generate_profile_img_and_assign
 
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
@@ -120,14 +116,9 @@ class EmployeeListView(LoginRequiredMixin, ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        user = self.request.user
-        branch = user.branch
-
         from applications.branches.utils import set_branch_session
         branch_actualy = set_branch_session(self.request)
-            # Si el usuario es administrador y hay una sucursal seleccionada en la sesión,        
-        # En otros casos, filtra por la sucursal del usuario
-        return Employee.objects.get_employees_branch(branch_actualy).filter(deleted_at=None)
+        return Employee.objects.filter(deleted_at=None, user__branch=branch_actualy)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -178,7 +169,7 @@ def export_employee_list_to_excel(request):
     from applications.branches.utils import set_branch_session
     branch_actualy = set_branch_session(request)
     
-    queryset = Employee.objects.get_employees_branch(branch_actualy).filter(deleted_at=None)
+    queryset = Employee.objects.filter(deleted_at=None, user__branch=branch_actualy)
 
     # Crear un libro de trabajo de Excel
     workbook = Workbook()
@@ -238,13 +229,15 @@ def ajax_search_employee(request):
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
 
+        all_employees = Employee.objects.filter(deleted_at=None, user__branch=branch_actualy)
+
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = EmployeeListView().paginate_by
-            employees = Employee.objects.get_employees_branch(branch_actualy)[:paginate_by]
+            employees = all_employees[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
-            employees = Employee.objects.get_employees_branch(branch_actualy).filter(
+            employees = all_employees.filter(
                 Q(user__first_name__icontains=search_term) |
                 Q(user__last_name__icontains=search_term) |
                 Q(user__phone_number__icontains=search_term) |

@@ -1,6 +1,5 @@
 from django.db import models
 
-from .managers import EmployeeManager
 from applications.core.models import BaseAbstractWithUser, Objetives
 from applications.users.models import User
 
@@ -16,7 +15,7 @@ class Employee(BaseAbstractWithUser):
         -user_made: usuario responsable de dar el alta la cuenta.
         -employment_date: fecha del alta de relacion de dependencia.
     """
-    objects = EmployeeManager()
+    # objects = EmployeeManager()
     jornada = models.CharField(max_length=50, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employee_type', verbose_name="Nombre")
     # user_made = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name='employees')

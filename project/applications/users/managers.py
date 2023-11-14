@@ -52,6 +52,3 @@ class UserManager(BaseUserManager):
         is_superuser = False
         role = 'ADMINISTRADOR'
         return self._create_user(first_name, last_name, username, email, password, is_staff, is_superuser, role, branch, **extra_fields)
-
-    def get_absolute_url(self):
-        return reverse('employees_app:profile_employee', kwargs={'pk': self.pk})

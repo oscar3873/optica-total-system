@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from applications.clients.models import Customer
 from applications.products.models import Product
@@ -72,6 +73,9 @@ class Sale(BaseAbstractWithUser):
 
     def __str__(self):
         return f"COD: {self.pk} - $ {self.total}"
+    
+    def get_absolute_url(self):
+        return reverse('sales_app:sale_detail_view', kwargs={'pk': self.pk})
     
     class Meta:
         verbose_name = 'Venta'
