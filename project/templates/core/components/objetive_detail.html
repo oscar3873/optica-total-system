@@ -1,0 +1,120 @@
+{% load static %}
+{% load humanize %}
+
+
+
+
+<div class="container py-4">
+
+    {% include 'core/components/messages.html' %}
+
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!-- Titulo del formulario wizard -->
+        <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+                    class="fa-inverse fa-stack-1x text-primary fas fa-box"></i></span>
+            <div class="col">
+                <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Detalle del
+                        objetivo</span><span
+                        class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+                <p class="mb-0">Aquí puede visualizar el detalle completo del objetivo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================================-->
+    <!--    Card con la presentacion de la caja-->
+    <!-- ===============================================-->
+
+    {% if objetive %}
+    <div class="card mb-3 col-sm-10 col-lg-6">
+        <div class="card-header bg-light">
+            <div class="row pb-md-0">
+                <div class="col-12 col-sm-12">
+                    <h5 class="mb-2"> {{objetive.title}}</h5>
+                    <p class="text-700 fs--2">{{objetive.description}}</p>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    {% if request.user.is_staff %}
+                    <a class="btn btn-falcon-default btn-sm" href="{% url 'core_app:objetive_new' %}">
+                        <span class="fas fa-plus fs--2 me-1"></span>
+                        Nuevo Objetivo
+                    </a>
+                    <button class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" type="button"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="fas fa-ellipsis-h"></span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{% url 'core_app:objetive_update' objetive.id %}">Editar</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger"
+                            href="{% url 'core_app:objetive_delete' objetive.id %}">Eliminar</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="card-body border-top">
+            <div class="row">
+                <div class="col-lg-6 mb-3 mb-sm-0">
+                    <div class="row">
+                        <div class="col-12">
+                            <h5 class="mb-3">Datos del objetivo</h5>
+                        </div>
+                        <div class="col-12 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">De:</p>
+                            <span class="ms-3 text-900 fw-bold">{{objetive.to}}</span>
+                        </div>
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">Nombre:</p>
+                            <span class="ms-3 text-800 fw-bold">{{objetive.title}}</span>
+                        </div>
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">Objetivo de venta:</p>
+                            <span class="ms-3 text-primary fw-bold">${{objetive.quantity}}</span>
+                        </div>
+                        
+
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">Inicio:</p>
+                            <span class="ms-3 text-800 fw-bold">{{objetive.start_date}}</span>
+                        </div>
+                        <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">
+                            <p class="fw-normal fw-semi-bold mb-1">Fin:</p>
+                            <span class="ms-3 text-800 fw-bold">{{objetive.exp_date}}</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% else %}
+    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <!--Card-->
+        <div class="card bg-transparent-50 overflow-hidden">
+            <div class="card-header position-relative">
+                <div class="bg-holder d-none d-md-block bg-card z-index-1"
+                    style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+                </div>
+                <div class="position-relative z-index-2">
+                    <div>
+                        <h3 class="text-primary mb-1">No se encontró el objetivo seleccionado.</h3>
+                    </div>
+                    <div class="d-flex py-3">
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-success d-block w-25 mx-5 mt-4 rounded"
+                    href="{% url 'core_app:objetive_new' %}">Nuevo
+                    Producto</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>

@@ -1,5 +1,6 @@
 let idProductGlobal;
 let setProductIds = new Set();
+let itemClicked = false;
 document.addEventListener("DOMContentLoaded", function () {
     const checkboxContainer = document.getElementById('products-selected');
     if(checkboxContainer.classList.contains('update')){
@@ -20,31 +21,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Realizar la búsqueda de productos que coincidan con el término de búsqueda
             $.ajax({
-                url: `/products/ajax_search_products/?search_term=${searchTerm}`,
+                
+                // url: `/products/ajax_search_products/?search_term=${searchTerm}`,
+                url: `/products/search_categories_or_brands/?search_term=${searchTerm}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    const products = data.data;
+                    //Data es un array de resultados de la busqueda de nombres de marcas y categorias
+                    console.log(data);
+                    
 
                     // Mostrar los resultados de búsqueda
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
+                    
 
-                    products.forEach(product => {
-                        if(!setProductIds.has(product.id)){
-                            const item = document.createElement('li');
-                            item.style.zIndex = "3";
-                            item.style.cursor = 'pointer';
-                            item.classList.add('list-group-item', 'products', 'list-group-item-secondary');
-                            item.dataset.productId = product.id;
-                            item.innerHTML = `
-                            <div class="d-flex justify-content-between">
-                                <h6>${product.name}</h6>
-                                <h6 class="font-weight-bold">&nbsp${product.barcode}</h6>
-                            </div>
+                    data.forEach(item => {
+                        const element = document.createElement('li');
+                        element.style.zIndex = "3";
+                        element.style.cursor = 'pointer';
+                        element.classList.add('list-group-item','searchType', 'list-group-item-secondary');
+                        element.dataset.itemId = item.id;
+                        element.setAttribute('name',`${item.name}`);
+                        let type;
+                        if(item.form_name == 'brand'){
+                            type = 'Marca:';
+                        }else{
+                            type = 'Categoría:';
+                        }
+                        element.innerHTML = `
+                        <div class="d-flex justify-content-between">
+                            <h6>${type} ${item.name}</h6>
+                        </div>
                         `;
-                        searchResults.appendChild(item);
-                        };
-                        
+
+                        // element.addEventListener('click', function () {
+                        //     itemClicked=true;
+                        //     console.log('hizo click en el elemento');
+                        // });
+                        searchResults.appendChild(element);
                     });
                 },
                 error: function(error) {
@@ -55,51 +69,67 @@ document.addEventListener("DOMContentLoaded", function () {
 
         searchResults.addEventListener('click', (event) => {
 
-            const item = event.target.closest('.products');
+            const item = event.target.closest('.searchType');
             if (!item) {
                 return;
             }
 
-            const productId = item.dataset.productId;
-            idProductGlobal=productId;
-            const productName = item.querySelector('h6').textContent;
+            $.ajax({
+                url: `/products/ajax_search_products/?search_term=${item.getAttribute('name')}`,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    const products = data.data;
+                    products.forEach(product => {
+                        if(!setProductIds.has(product.id)){
+                            const productId = product.id;
+                            idProductGlobal=product.id;
+                            const productName = product.name;
+                            const checkboxProduct = document.createElement("input");
+                            checkboxProduct.type = "checkbox";
+                            checkboxProduct.classList.add('form-check-input');
+                            checkboxProduct.name = "productsSelected"; 
+                            checkboxProduct.value = productId;
+                            checkboxProduct.id = `${productName}`;
+                            checkboxProduct.checked = true;
+                            const label = document.createElement("label");
+                            label.textContent = productName;
+                            label.classList.add('d-block');
 
-            // Rellenar el campo del producto seleccionado y ocultar los resultados de búsqueda
-            searchInput.value = '';
-            searchResults.innerHTML = '';
+                            label.appendChild(checkboxProduct);
+                            checkboxContainer.appendChild(label);
+                
+                            checkboxProduct.addEventListener("change", function () {
+                                if (!checkboxProduct.checked) {
+                                    // Si el checkbox se desmarca, elimina el checkbox y su etiqueta
+                                    checkboxContainer.removeChild(label);
+                                    setProductIds.delete(parseInt(checkboxProduct.value));    
+                                }
+                            });
+                            
+                            setProductIds.add(parseInt(productId));
+                            // Añadir el ID del producto al formulario
+                            const productIdCheck = document.createElement('input');
+                            productIdCheck.type = 'hidden';
+                            productIdCheck.name = `selected_product_id_${fieldIdentifier}`;
+                            productIdCheck.value = productId;
+                            searchInput.closest('form').appendChild(productIdCheck);
+                            
+                        }
+                        
 
-            const checkboxProduct = document.createElement("input");
-            checkboxProduct.type = "checkbox";
-            checkboxProduct.classList.add('form-check-input');
-            // Asegúrate de que todas las casillas de verificación tengan el mismo nombre
-            checkboxProduct.name = "productsSelected"; 
-            checkboxProduct.value = productId;
-            checkboxProduct.id = `${productName}`;
-            checkboxProduct.checked = true;
-            const label = document.createElement("label");
-            label.textContent = productName;
-            label.classList.add('d-block');
-
-
-            
-            label.appendChild(checkboxProduct);
-            checkboxContainer.appendChild(label);
-
-            checkboxProduct.addEventListener("change", function () {
-                if (!checkboxProduct.checked) {
-                    // Si el checkbox se desmarca, elimina el checkbox y su etiqueta
-                    checkboxContainer.removeChild(label);
-                    setProductIds.delete(parseInt(checkboxProduct.value));    
+                    });
+                },
+                error: function(error) {
+                    console.error('Error en la solicitud AJAX', error);
                 }
             });
 
-            setProductIds.add(parseInt(productId));
-            // Añadir el ID del producto al formulario
-            const productIdCheck = document.createElement('input');
-            productIdCheck.type = 'hidden';
-            productIdCheck.name = `selected_product_id_${fieldIdentifier}`;
-            productIdCheck.value = productId;
-            searchInput.closest('form').appendChild(productIdCheck);
+            // Rellenar el input y ocultar los resultados de búsqueda
+            searchInput.value = item.getAttribute('name');
+            searchResults.innerHTML = '';
+
+            
         });
     }
 
@@ -109,6 +139,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const searchInputA = form.querySelector(`#${fieldPrefix}-search-productA-input`);
         const searchResultsA = form.querySelector(`#${fieldPrefix}-search-productA-results`);
         configureSearch(searchInputA, searchResultsA, 'productA');
+        //evento para limpiar la lista cuando se hace click en otro lugar
+        // searchInputA.addEventListener("blur", function(item) {
+        //     if(!itemClicked){
+        //         searchInputA.value = "";
+        //         searchResultsA.innerHTML = '';
+        //         itemClicked=false;
+        //     }
+        //     else{
+        //         itemClicked=false;
+        //     }
+            
+        // });
     }
 
 
