@@ -116,28 +116,51 @@
                 
     </div>
     <div class="card mb-3">
-    <div class="card-body">
-        <div class="row">
-        <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
-            <h5 class="mb-3 fs-0">Cliente</h5>
-            <h6 class="mb-2">{% if sale.customer %}{{sale.customer}}{% else %}Sin cliente asignado{% endif %}</h6>
-            <p class="mb-1 fs--1">{{sale.customer.address}}</p>
-            <p class="mb-0 fs--1"> <strong>Correo: </strong>{% if sale.customer.email %}<a href="mailto:{{sale.customer.email}}">{{sale.customer.email}}</a>{% else %}Sin datos{% endif %}</p>
-            <p class="mb-0 fs--1"> <strong>Telefono: </strong>{% if sale.customer.phone_code %}<a href="tel:{{sale.customer.phone_code}}{{sale.customer.phone_number}}">{{sale.customer.phone_code}}{{sale.customer.phone_number}}{% else %}Sin datos{% endif %}</a></p>
-        </div>
-        <div class="col-md-6 col-lg-4">
-            <h5 class="mb-3 fs-0">Metodo de pago</h5>
-            <div class="d-flex gap-1">
-                <span class="fas fa-credit-card ms-1" data-fa-transform="shrink-2"></span>
-                <div class="flex-1">
-                    <h6 class="mb-0">{{sale.sale_payment.first.payment_method.name}}</h6>
-                    <p class="mb-0 fs--1"> <strong>Monto: </strong>{{sale.sale_payment.first.amount|floatformat:2|intcomma}}</p>
-            <p class="mb-0 fs--1"> <strong>Detalle en el pago: </strong>{{sale.sale_payment.first.description}}</p>
+        <div class="card-body">
+            <div class="row">
+                {% if sale.missing_balance > 0 %}
+                    <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                {% else %}
+                    <div class="col-md-6 col-lg-4 mb-4 mb-lg-0">
+                {% endif %}
+                    <h5 class="mb-3 fs-0">Cliente</h5>
+                    <h6 class="mb-2">{% if sale.customer %}{{sale.customer}}{% else %}Sin cliente asignado{% endif %}</h6>
+                    <p class="mb-1 fs--1">{{sale.customer.address}}</p>
+                    <p class="mb-0 fs--1"> <strong>Correo: </strong>{% if sale.customer.email %}<a href="mailto:{{sale.customer.email}}">{{sale.customer.email}}</a>{% else %}Sin datos{% endif %}</p>
+                    <p class="mb-0 fs--1"> <strong>Telefono: </strong>{% if sale.customer.phone_code %}<a href="tel:{{sale.customer.phone_code}}{{sale.customer.phone_number}}">{{sale.customer.phone_code}}{{sale.customer.phone_number}}{% else %}Sin datos{% endif %}</a></p>
                 </div>
+                {% if sale.missing_balance > 0 %}
+                    <div class="col-md-4 col-lg-4">
+                {% else %}
+                    <div class="col-md-6 col-lg-4">
+                {% endif %}
+                    <h5 class="mb-3 fs-0">Metodo de pago</h5>
+                    <div class="d-flex gap-1">
+                        <span class="fas fa-credit-card ms-1" data-fa-transform="shrink-2"></span>
+                        <div class="flex-1">
+                            <h6 class="mb-0">{{sale.sale_payment.first.payment_method.name}}</h6>
+                            <p class="mb-0 fs--1"> <strong>Monto: </strong>{{sale.sale_payment.first.amount|floatformat:2|intcomma}}</p>
+                            <p class="mb-0 fs--1"> <strong>Detalle en el pago: </strong>{{sale.sale_payment.first.description}}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if sale.missing_balance > 0 %}
+                    <div class="col-md-4 col-lg-4">
+                        <h5 class="mb-3 fs-0 text-danger">Pago adeudado</h5>
+                        <div class="d-flex gap-1">
+                            <span class="fas fa-credit-card ms-1" data-fa-transform="shrink-2"></span>
+                            <div class="flex-1">
+                                <p class="mb-0 fs--1"> <strong>Deuda: </strong>{{sale.missing_balance|floatformat:2|intcomma}}</p>
+                            </div>
+                        </div>
+                        <button id="pay-missing_balance" class="btn btn-warning" data-bs-target="#Pay" data-bs-toggle="modal">
+                            Pagar
+                        </button>
+                    </div>
+                {% endif %}
             </div>
         </div>
-        </div>
-    </div>
     </div>
     <div class="card mb-3">
     <div class="card-body">
@@ -198,3 +221,26 @@
 <!-- ===============================================-->
 <!--    Fin Contentenedor del block main-->
 <!-- ===============================================-->
+<form method="post" action="{% url 'sales_app:pay_missing_balance' sale.pk %}">
+    {% csrf_token %}        
+    <div class="modal fade" id="Pay" aria-hidden="true" aria-labelledby="PayLabel" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Pay">Pagar deuda de la venta #{{sale.pk}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="">
+                        Total a pagar: {{ sale.missing_balance }}
+                    </div>
+                    {{pay_form.as_p}}
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
+                    <button class="btn btn-warning" type="submit" data-bs-toggle="modal">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

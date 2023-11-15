@@ -16,8 +16,8 @@ class HealthInsurance(BaseAbstractWithUser):
     cuit = models.CharField(max_length=20, verbose_name="CUIT")
 
     class Meta:
-        verbose_name = "Obra Socail"
-        verbose_name_plural = "Obras Socailes"
+        verbose_name = "Obra Social"
+        verbose_name_plural = "Obras Sociales"
 
     def __str__(self) -> str:
         return f'{self.name}'

@@ -31,23 +31,22 @@ post_migrate.connect(auto_set_payment_type)
 
 
 @receiver(post_save, sender=Sale)
-def set_notification(sender, instance, **kwargs):
-    try:
-        content_type = ContentType.objects.get_for_model(Sale)
+def set_notification(sender, created, instance, **kwargs):
+    if created:
+        try:
+            content_type = ContentType.objects.get_for_model(Sale)
 
-        notification = Notifications.objects.create(
-            content_type=content_type,
-            object_id=instance.id,
-            details='',
-            user_made=instance.user_made
-        )
-        
-        # Try to send the notification via Redis
-        send_notifications(get_notifications_JSON([notification]))
+            notification = Notifications.objects.create(
+                content_type=content_type,
+                object_id=instance.id,
+                details='',
+                user_made=instance.user_made
+            )
+            
+            # Try to send the notification via Redis
+            send_notifications(get_notifications_JSON([notification]))
 
-    except Exception as e:
-        # Handle the exception (e.g., print a warning, log it, or perform alternative actions)
-        print(f"An error occurred while sending notification: {e}")
-
-# Connect the signal
+        except Exception as e:
+            # Handle the exception (e.g., print a warning, log it, or perform alternative actions)
+            print(f"An error occurred while sending notification: {e}")
 post_save.connect(set_notification, sender=Sale)

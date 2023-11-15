@@ -31,14 +31,14 @@ urlpatterns = [
         name = 'sale_detail_view'
     ),
     path(
-        'ajax_search_sales/',
+        'ajax-search-sales/',
         ajax_search_sales,
         name='ajax_search_sales'
     ),
 
     ######## MUESTRA TICKET DE VENTA Y ORDEN DE SERVICIO EN CASO DE HABER ########
     path(
-        'show_invoice/<pk>/',
+        'show-invoice/<pk>/',
         show_invoice,
         name='show_invoice'
     ),
@@ -51,15 +51,22 @@ urlpatterns = [
 
     ######## ORDEN DE SERVICIO EN DETALLE DE VENTA ########
     path(
-        'order_service/<pk>/',
+        'order-service/<pk>/',
         set_serviceOrder_onSale,
         name='order_service'
     ),
 
     ########### IMPRIMIR FACTURA #########
     path(
-        'print_invoice/<pk>/',
+        'print-invoice/<pk>/',
         print_invoice,
         name='print_invoice'
+    ),
+
+    ########### PAGAR DEUDA ACUMULADA DE UNA VENTA #########
+    path(
+        'pay-missing-balance/<pk>/',
+        pay_missing_balance,
+        name='pay_missing_balance'
     )
 ]
