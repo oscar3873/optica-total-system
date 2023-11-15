@@ -7,19 +7,17 @@ from project.settings.base import DATE_NOW
 from applications.clients.forms import *
 from .models import *
 
-def get_total_and_products(formset, all_products_to_sale):
+def get_total_and_products(formset):
     """Segun los prodcutos recibidos, se suma un total $$. 
     A demas de guardar dichos productos en una varaible all_products_to_sale"""
     total = 0
 
     product = formset.cleaned_data['product']
-    all_products_to_sale.append(product)
     quantity = formset.cleaned_data['quantity']
     for _ in range(quantity):
         total += product.sale_price
 
-    print(product.category.name)
-    if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower():
+    if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower() and not 'propio' in product.name.lower():
         product.stock -= quantity
     product.save()
     return total
@@ -79,7 +77,6 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
     if len(promotional_products[promotion]) > 1:
         if '2x1' in promotion.type_prom.name:
-            print('2x1')
             quantity_elem = len(promotional_products[promotion])
             if quantity_elem % 2 != 0:
                 quantity_elem = quantity_elem // 2 + 1
@@ -89,7 +86,6 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
             real_price_promo.append(sumFirst_N_Elements(promotional_products[promotion], quantity_elem))
 
         elif '2da' in promotion.type_prom.name:
-            print('2da1')
             quantity_elem_org = len(promotional_products[promotion])
             if quantity_elem_org % 2 != 0:
                 quantity_elem = quantity_elem_org // 2 + 1
@@ -141,11 +137,11 @@ def find_cristal_product(all_products_to_sale, sale=None):
 def find_armazons_product(all_products_to_sale, sale=None):
     """Ecuentra un Armazon dentro de la orden de venta (productos)"""
     if sale:
-        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale, category__name__icontains='Armazon')
+        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale, category__name__icontains='Armaz')
         return all_products_to_sale
 
     for product in all_products_to_sale:
-        if 'armazon' in product.category.name.lower():
+        if any(keyword in product.category.name.lower() for keyword in ['armazón', 'armazon', 'armazones']):
             return product
     return None
 

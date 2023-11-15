@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const productLink = document.createElement('a');
         productLink.classList.add('text-900');
         productLink.href = `/products/detail/product/${product.id}/`;
-        const truncatedProductName = truncateString(product.name, 20);
+        const truncatedProductName = truncateString(product.name, 30);
         productLink.textContent = truncatedProductName;
     
         productNameLink.appendChild(productLink);

@@ -2,6 +2,7 @@ import copy
 import locale
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect
 from django.views.generic import *
 from django.template import loader
 from django.db import transaction
@@ -10,6 +11,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 #Importaciones de la app
+from applications.branches.utils import set_branch_session
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import obtener_nombres_de_campos
@@ -32,7 +34,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         context['sale_form'] = SaleForm
@@ -55,7 +57,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         wo_promo = []
         subtotal = 0
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         if saleform.is_valid():
@@ -80,19 +82,23 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
             
             if formset.is_valid():
-                subtotal += get_total_and_products(formset, all_products_to_sale)
+                product = formset.cleaned_data['product']
+                all_products_to_sale.append(product)
 
-                cristal = find_cristal_product(all_products_to_sale)
-                armazon = find_armazons_product(all_products_to_sale)
-                if cristal and armazon:
-                    if cristal and not customer:
-                        messages.error(self.request, "Seleccione un Cliente antes de vender un Cristal.")
-                        return super().form_invalid(form)
-                    
-                elif cristal and not armazon:
-                    messages.error(self.request, "Seleccione un Armazon antes de vender un Cristal.")
-                    return super().form_invalid(form)
-                
+        cristal = find_cristal_product(all_products_to_sale)
+        armazon = find_armazons_product(all_products_to_sale)
+        if cristal and armazon:
+            if cristal and not customer:
+                messages.error(self.request, "Seleccione un Cliente antes de vender un Cristal.")
+                return super().form_invalid(form)
+            
+        elif cristal and not armazon:
+            messages.error(self.request, "Seleccione un Armazón antes de vender un Cristal.")
+            return super().form_invalid(form)
+
+        for formset in formsets:
+            if formset.is_valid():
+                subtotal += get_total_and_products(formset)
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
 
         promotional_products_clone = copy.copy(promotional_products)
@@ -188,7 +194,7 @@ class SalesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         sales = Sale.objects.filter(branch=branch_actualy, deleted_at=None).order_by('-created_at')
@@ -240,6 +246,7 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
 
         context['order_serivices'] = sale.service_order.all()
 
+        context['pay_form'] = TypePaymentMethodForm
         return context
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
@@ -302,7 +309,7 @@ def show_invoice(request, pk):
 def ajax_search_sales(request):
     # branch = request.user.branch
 
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -365,3 +372,45 @@ def print_invoice(request, pk): # pk de la orden
     else:
         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+
+
+def pay_missing_balance(request, pk):
+    if request.method == "POST":
+        branch_actualy = set_branch_session(request)
+        try:
+            sale = Sale.objects.get(pk=pk)
+            form = TypePaymentMethodForm(request.POST)
+            if form.is_valid():
+                Movement.objects.create(
+                    user_made = request.user,
+                    payment_method = form.cleaned_data['payment_method'].type_method,
+                    amount = sale.missing_balance,
+                    cash_register = CashRegister.objects.filter(
+                            is_close = False,
+                            branch = branch_actualy,
+                        ).last(),
+                    description = form.cleaned_data['description'],
+                    currency = Currency.objects.first(),
+                    type_operation = "Ingreso",
+                )
+
+                Payment.objects.create(
+                    user_made = request.user,
+                    amount = sale.missing_balance,
+                    payment_method = form.cleaned_data['payment_method'],
+                    description = f"Pago de duada de venta Nro: {sale.pk}",
+                    sale = sale,
+                )
+
+            sale.state = 'COMPLETADO'
+            sale.missing_balance = 0
+            sale.save()
+
+            messages.error(request, 'Pago realizado con éxito.')
+            return redirect('sales_app:sale_detail_view', pk=sale.pk)
+        
+        except Sale.DoesNotExist:
+            messages.error(request, 'Lo sentimos, no pudimos encontrar la Venta.')
+            return redirect('sales_app:sales_list_view')
+    messages.error(request, 'La petición no es válida.')
+    return redirect('sales_app:sale_detail_view', pk=pk)
