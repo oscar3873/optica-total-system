@@ -44,6 +44,10 @@
             text-align: center;
             font-size: .7rem;
         }
+        .cae-info{
+            text-align: center;
+            font-size: .7rem;
+        }
         .branch{
             font-size: .7rem;
         }
@@ -121,32 +125,37 @@
         </div>
         <div class="logo">
             <img src="../../../static/core/img/logo_optica_light.png" alt="Logo de la empresa">
-            <p class="title sin-border-bottom">{{receiptType.description}}</p>
-            <p class="cod-fact sin-border-top">COD. 00{{receiptType.code}}</p>
+            <p class="title sin-border-bottom">{{receipt.receipt_type.description}}</p>
+            <p class="cod-fact sin-border-top">COD. 00{{receipt.receipt_type.code}}</p>
             <div class="tax-payer">
-                <small>{{PointOfVentas.issuing_name}}</small>
+                <small>{{receipt.point_of_sales.issuing_name}}</small>
                 <!--<small class="name">Emmanuel Hernan PONCE</small>-->
             </div>
             <div class="tax-payer">
-                <small>Nº de Factura: {{PointOfVentas.number}}-{{receipt.receipt_number}}.</small><br>
-                <small>DNI/CUIL/CUIT:</small>
-                <small class="name">{{TaxPayer.cuit}}</small>
+                <small>Nº de Factura: {{receipt.point_of_sales.number}} - {{receipt.receipt_number}}</small><br>
+                <small>CUIT: </small>
+                <small class="name">{{receipt.point_of_sales.owner.cuit}}</small>
             </div>
             <div class="branch-info">
-                <span class="branch">{{PointOfVentas.issuing_address}}</span><br>
-                <span class="mail">{{PointOfVentas.eming_email}}</span><br>
-                <span class="condicion-iva">{{PointOfVentas.vat_condition}}</span><br>
-                <!--<span class="contact"> whatsapp 387-6847-345653 </span>-->
+                <span class="branch">{{receipt.point_of_sales.issuing_address}}</span><br>
+                <!--<span class="mail">{{receipt.point_of_sales.issuing_email}}</span><br>-->
+                <span class="condicion-iva">{{receipt.point_of_sales.vat_condition}}</span><br>
+                <!--<span class="contact"> whatsapp 387-6847-345653 </span>--><br>
+            </div>
+            <div class="cae-info">
+                <span>CAE: {{receipt.validation.cae}}</span>
+                <span>&nbsp;&nbsp;&nbsp;Vencimiento: {{receipt.validation.cae_expiration|date:"d/m/Y"}}</span>
             </div>
         </div>
         <br>
+        
         <div class="client-data">
             <div class="row">
                 <div class="col"><strong>CLIENTE</strong></div>
                 <div class="col">{{customer}}</div>
             </div>
             <div class="row">
-                <div class="col"><strong>DNI</strong></div>
+                <div class="col"><strong>DNI/CUIL/CUIT</strong></div>
                 <div class="col">{{customer.dni}}</div>
             </div>
             <div class="row">
@@ -194,16 +203,18 @@
         <tfoot>
             <tr>
                 <th colspan="3">SUBTOTAL</th>
-                <th colspan="1">$ {{subtotal}}</th>
+                <th colspan="1">$ {{receipt.net_taxed}}</th>
             </tr>
+            {% if discount %}
             <tr>
                 <th colspan="3">DESCUENTO GRAL</th>
                 <th colspan="1">% {{discount}}</th>
             </tr>
+            {% endif %}
             <tr>
                 <th colspan="2">IVA</th>
                 <th colspan="1">21%</th>
-                <th colspan="1">${{iva}}</th>
+                <th colspan="1">$ {{receipt.vat.first.amount}}</th>
             </tr>
 
             {% if discount_extra %}

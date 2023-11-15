@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const notif_href = document.createElement('a');
         notif_href.style.textDecoration = 'none';
-        notif_href.href = '/home'; // DEBE MANDAR A LA URL QUE DEBERIA PASARSE POR EL JSON (AGREGAR AL JSON PASADO POR VIEW 'url' : notification.content_object.get_absolute_url())
+        notif_href.href = notification.url; // DEBE MANDAR A LA URL QUE DEBERIA PASARSE POR EL JSON (AGREGAR AL JSON PASADO POR VIEW 'url' : notification.content_object.get_absolute_url())
 
         notif_href.appendChild(notificationItem);
 

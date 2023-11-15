@@ -15,7 +15,7 @@ Activar el entorno virtual:
 
 - **Linux o Mac**:
 
-source optica-total/bin/activate
+source venv-optica-total/bin/activate
 
 - **Windows**:
 

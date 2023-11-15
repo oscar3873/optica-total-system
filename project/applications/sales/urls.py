@@ -42,6 +42,12 @@ urlpatterns = [
         show_invoice,
         name='show_invoice'
     ),
+    
+    path(
+        'show_factura/<pk>/',
+        show_factura,
+        name='show_factura'
+    ),
 
     ######## ORDEN DE SERVICIO EN DETALLE DE VENTA ########
     path(

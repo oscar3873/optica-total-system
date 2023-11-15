@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.urls import reverse
 from .managers import UserManager
 from applications.core.models import Person
 
@@ -23,7 +24,14 @@ class User(Person, AbstractUser):
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
 
     objects = UserManager()
-
     
     def __str__(self):
         return f"{self.get_full_name()}"
+    
+    def get_absolute_url(self):
+        try:
+            employee = self.employee_type
+            return reverse('employees_app:profile_employee', kwargs={'pk': employee.pk})
+        except:
+            return reverse('employees_app:profile', kwargs={'pk': self.pk})
+

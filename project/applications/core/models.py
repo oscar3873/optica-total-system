@@ -67,11 +67,11 @@ class Objetives(BaseAbstractWithUser):
         ('SUCURSAL', 'SUCURSAL'),
     ]
 
-    to = models.CharField(max_length=9, choices=PARA, default="EMPLEADOS", null=True, blank=True)
-    title = models.CharField(max_length=25, null=True, blank=True)
-    description = models.CharField(max_length=150, null=True, blank=True, verbose_name='Detalle de Objetivo')
-    start_date = models.DateField(null=True, blank=True, verbose_name='Validez Inicio')
-    exp_date = models.DateField(null=True, blank=True, verbose_name='Validez Finalizacion')
+    to = models.CharField(max_length=9, choices=PARA, default="EMPLEADOS", null=True, blank=True, verbose_name='Para')
+    title = models.CharField(max_length=25, null=True, blank=True, verbose_name='Nombre')
+    description = models.CharField(max_length=150, null=True, blank=True, verbose_name='Descripción')
+    start_date = models.DateField(null=True, blank=True, verbose_name='Fecha de nicio')
+    exp_date = models.DateField(null=True, blank=True, verbose_name='Fecha de finalizacion')
     quantity = models.PositiveIntegerField(null=True, blank=True, verbose_name='Objetivo')
     branch = models.ForeignKey('branches.Branch', on_delete=models.PROTECT, null=True, blank=True, verbose_name="Sucursal")
 

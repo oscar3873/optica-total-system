@@ -297,6 +297,62 @@ def show_invoice(request, pk):
         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
+def show_factura(request, pk):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+        sale = Sale.objects.get(id=pk)
+        customer = sale.customer
+        receipt = sale.receipt
+
+        payment = Payment.objects.get(sale=sale)
+
+        order_details = sale.order_detaill.filter(sale=sale)
+        order_details_template = []
+        subtotal = []
+
+        for order in list(order_details):
+            order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
+            subtotal.append(order.price * order.quantity)
+
+        # Convertir la cadena en un objeto de fecha
+        locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+
+        format = "%A, %d de %B de %Y"
+        
+        created_at = sale.created_at.astimezone(ZONE_TIME)
+        sale_date_str = created_at.strftime(format)
+
+        disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
+
+        context = {
+            'customer': customer,
+            'total': f'{sale.total:.2f}',
+            'order_details': order_details_template,
+            'subtotal': sum(subtotal),
+            'seler': sale.user_made,
+            'promo': f'{sale.total}',
+            'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
+            'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
+            'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
+            'payment_method': payment.payment_method.name,
+            'pay': f'{sale.total - sale.missing_balance:.2f}',
+            'missing_balance': f'{sale.missing_balance:.2f}',
+            'date': sale_date_str,
+            'time': created_at.time(),
+            'receipt': receipt
+        }
+        
+        print(context)
+
+        # Genera el HTML en lugar de renderizarlo
+        template = loader.get_template('sales/components/factura.html')
+        html_content = template.render(context)
+
+        # Devuelve el HTML como respuesta
+        return HttpResponse(html_content, content_type="text/html")
+    else:
+        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
+        return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+
 
 ################ SEARCH MOVEMENTS AJAX ################
 
