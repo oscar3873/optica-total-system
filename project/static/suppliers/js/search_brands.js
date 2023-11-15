@@ -1,3 +1,5 @@
+let setBrandsSelected = new Set();
+
 document.addEventListener("DOMContentLoaded", function () {
     function configureSearch(searchInput, searchResults) {
         searchInput.addEventListener('input', (event) => {
@@ -19,15 +21,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     // Mostrar los resultados de búsqueda
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
-
+                    
                     brands.forEach(brand => {
-                        const item = document.createElement('li');
-                        item.style.zIndex = "3";
-                        item.style.cursor = 'pointer';
-                        item.classList.add('list-group-item', 'brands', 'list-group-item-secondary');
-                        item.dataset.brandId = brand.id;
-                        item.textContent = brand.name;
-                        searchResults.appendChild(item);
+                        if(!setBrandsSelected.has(brand.id)){
+                            const item = document.createElement('li');
+                            item.style.zIndex = "3";
+                            item.style.cursor = 'pointer';
+                            item.classList.add('list-group-item', 'brands', 'list-group-item-secondary');
+                            item.dataset.brandId = brand.id;
+                            item.textContent = brand.name;
+
+                            item.addEventListener('click', function () {
+                                createCheckbox(brand.name, brand.id)
+                            });
+                            searchResults.appendChild(item);
+                        }
                     });
                 },
                 error: function(error) {
@@ -36,21 +44,13 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
 
-        searchResults.addEventListener('click', (event) => {
-            const item = event.target.closest('.brands');
-            if (!item) {
-                return;
-            }
-
-            const brandId = item.dataset.brandId;
-            const brandName = item.textContent;
-
-            // Rellenar el campo de la marca seleccionada y ocultar los resultados de búsqueda
+        searchResults.addEventListener('click', () => {
+            //limpiar el input de busqueda y ocultar los resultados de búsqueda
             searchInput.value = '';
             searchResults.innerHTML = '';
-
-            // Aquí puedes realizar las acciones que desees con la marca seleccionada, como agregarla a una lista, etc.
         });
+
+        
     }
 
     // Configura el buscador de marcas
@@ -58,3 +58,32 @@ document.addEventListener("DOMContentLoaded", function () {
     const searchResultsBrands = document.getElementById('id_brands-search-results');
     configureSearch(searchInputBrands, searchResultsBrands);
 });
+
+
+function createCheckbox(name, itemId){
+    const checkboxContainer = document.getElementById('brands-selected');
+    setBrandsSelected.add(parseInt(itemId));
+
+    const checkboxProduct = document.createElement("input");
+    checkboxProduct.type = "checkbox";
+    checkboxProduct.classList.add('form-check-input');
+    checkboxProduct.name = "brandsSelected"; 
+    checkboxProduct.value = itemId;
+    checkboxProduct.id = `${name}`;
+    checkboxProduct.checked = true;
+    const label = document.createElement("label");
+    label.textContent = name;
+    label.classList.add('d-block');
+    label.appendChild(checkboxProduct);
+    checkboxContainer.appendChild(label);
+    checkboxProduct.addEventListener("change", function () {
+        if (!checkboxProduct.checked) {
+            // Si el checkbox se desmarca, elimina el checkbox y su etiqueta
+            checkboxContainer.removeChild(label);
+            setBrandsSelected.delete(parseInt(checkboxProduct.value));    
+        }
+    });
+
+
+};
+
