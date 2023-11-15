@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (product.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.className = 'dropdown-item';
-                                editLink.href = `/products/update/${product.id}`;
+                                editLink.href = `/products/update/product/${product.id}`;
                                 editLink.textContent = 'Editar';
                                 dropdownMenu.appendChild(editLink);
 

@@ -90,7 +90,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                         return super().form_invalid(form)
                     
                 elif cristal and not armazon:
-                    messages.error(self.request, "Seleccione un Armazon antes de vender un Cristal.")
+                    messages.error(self.request, "Seleccione un Armazón antes de vender un Cristal.")
                     return super().form_invalid(form)
                 
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
