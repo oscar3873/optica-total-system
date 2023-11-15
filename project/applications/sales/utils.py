@@ -19,7 +19,7 @@ def get_total_and_products(formset, all_products_to_sale):
         total += product.sale_price
 
     print(product.category.name)
-    if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower() and not 'propio' in product.category.name.lower():
+    if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower() and not 'propio' in product.name.lower():
         product.stock -= quantity
     product.save()
     return total
