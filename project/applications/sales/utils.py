@@ -7,13 +7,12 @@ from project.settings.base import DATE_NOW
 from applications.clients.forms import *
 from .models import *
 
-def get_total_and_products(formset, all_products_to_sale):
+def get_total_and_products(formset):
     """Segun los prodcutos recibidos, se suma un total $$. 
     A demas de guardar dichos productos en una varaible all_products_to_sale"""
     total = 0
 
     product = formset.cleaned_data['product']
-    all_products_to_sale.append(product)
     quantity = formset.cleaned_data['quantity']
     for _ in range(quantity):
         total += product.sale_price

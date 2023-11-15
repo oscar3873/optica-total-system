@@ -96,9 +96,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             messages.error(self.request, "Seleccione un Armazón antes de vender un Cristal.")
             return super().form_invalid(form)
 
-        for formset in formsets:            
+        for formset in formsets:
             if formset.is_valid():
-                subtotal += get_total_and_products(formset, all_products_to_sale)                
+                subtotal += get_total_and_products(formset)
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
 
         promotional_products_clone = copy.copy(promotional_products)
