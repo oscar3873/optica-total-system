@@ -318,7 +318,15 @@ def show_factura(request, pk):
         customer = sale.customer
         receipt = sale.receipt
 
-        payment = Payment.objects.get(sale=sale)
+        payments = Payment.objects.filter(sale=sale)
+
+        if payments.exists():
+            # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
+            payment = payments.first()
+            payment_method = payment.payment_method.name
+        else:
+            # Manejar el caso en el que no hay pagos
+            payment_method = None
 
         order_details = sale.order_detaill.filter(sale=sale)
         order_details_template = []
@@ -353,7 +361,8 @@ def show_factura(request, pk):
             'missing_balance': f'{sale.missing_balance:.2f}',
             'date': sale_date_str,
             'time': created_at.time(),
-            'receipt': receipt
+            'receipt': receipt,
+            'payments': payments
         }
         
         print(context)
