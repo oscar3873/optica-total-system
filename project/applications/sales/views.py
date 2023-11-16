@@ -395,11 +395,11 @@ def pay_missing_balance(request, pk):
             sale.missing_balance = 0
             sale.save()
 
-            messages.error(request, 'Pago realizado con éxito.')
+            messages.success(request, 'Pago realizado con éxito.')
             return redirect('sales_app:sale_detail_view', pk=sale.pk)
         
         except Sale.DoesNotExist:
-            messages.success(request, 'Lo sentimos, no pudimos encontrar la Venta.')
+            messages.error(request, 'Lo sentimos, no pudimos encontrar la Venta.')
             return redirect('sales_app:sales_list_view')
     messages.error(request, 'La petición no es válida.')
     return redirect('sales_app:sale_detail_view', pk=pk)
