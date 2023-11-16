@@ -2,8 +2,7 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 
 from project.settings.base import DATE_NOW
-from applications.branches.models import Branch
-from applications.core.models import Objetives
+from applications.branches.utils import set_branch_session
 
 from .utils import *
 
@@ -17,7 +16,7 @@ class DailyReportsView(TemplateView):
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
         
         context['monto_por_rango_completado'], context['monto_por_rango_pendiente'] = dayli_sales(branch_actualy) # 8am a 9pm : $ventas
@@ -36,7 +35,7 @@ class DashboardView(TemplateView):
 
         context = super().get_context_data(**kwargs)
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         context['ventas_semanales'] = week_status(branch_actualy) # devuleve un diccionario con las ventas de la semana
@@ -59,7 +58,7 @@ def sale_date_month(request, month):
 
             ventas_por_dia = []
 
-            from applications.branches.utils import set_branch_session
+            
             branch_actualy = set_branch_session(request)
 
             for dia in range(1, ultimo_dia + 1):

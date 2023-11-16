@@ -16,6 +16,7 @@ from django.views.generic import (
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.core.mixins import CustomUserPassesTestMixin
+from applications.branches.utils import set_branch_session
 from applications.suppliers.models import Brand_Supplier
 from .models import Brand, Category, Product
 from .forms import *
@@ -206,7 +207,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         return context
     
     def get_form_kwargs(self):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         kwargs = super().get_form_kwargs()
@@ -218,7 +219,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
         user = self.request.user
 
         if form.is_valid():
-            from applications.branches.utils import set_branch_session
+            
             branch_actualy = set_branch_session(self.request)
             
             percentage = 1.26
@@ -347,7 +348,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         return Product.objects.filter(branch=branch_actualy, deleted_at=None)
@@ -507,7 +508,7 @@ class ProductSearchView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         query = self.request.GET.get('q')
@@ -607,7 +608,7 @@ def export_products_list_to_excel(request):
     from openpyxl.styles import Font, PatternFill
     from django.http import HttpResponse
     
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
     
     list_products = Product.objects.get_products_branch(branch_actualy)
@@ -673,7 +674,7 @@ def export_products_list_to_excel(request):
 def ajax_search_products(request):
     branch = request.user.branch
 
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':

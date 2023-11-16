@@ -7,7 +7,7 @@ from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, 
 from django.contrib import messages
 
 from applications.core.mixins import CustomUserPassesTestMixin
-from applications.branches.models import Branch
+from applications.branches.utils import set_branch_session
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.cashregister.models import Currency, Movement, PaymentType
 from applications.sales.models import Payment
@@ -102,7 +102,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
             customer = form.save(commit=False)
             customer.user_made = self.request.user
 
-            from applications.branches.utils import set_branch_session
+            
             branch_actualy = set_branch_session(self.request)
 
             customer.branch = branch_actualy
@@ -358,7 +358,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         return Customer.objects.filter(branch=branch_actualy, deleted_at=None)
@@ -580,7 +580,7 @@ def export_customer_list_to_excel(request):
     from openpyxl.styles import Font, PatternFill
     from django.http import HttpResponse
     
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
     
     list_customer = Customer.objects.get_customers_branch(branch_actualy)
@@ -646,7 +646,7 @@ def ajax_search_customers(request):
     print(branch)
     print("################################################")
     print("Entre aqui")
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud

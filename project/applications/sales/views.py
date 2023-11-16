@@ -14,10 +14,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.branches.utils import set_branch_session
 from applications.clients.forms import *
 from applications.promotions.models import Promotion
-from applications.cashregister.utils import obtener_nombres_de_campos
+from applications.cashregister.utils import create_in_movement, obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
-from applications.notifications.utils import set_notification
-from project.settings.base import DATE_NOW, ZONE_TIME
+from project.settings.base import  ZONE_TIME
 
 from .utils import *
 from .models import *
@@ -381,18 +380,8 @@ def pay_missing_balance(request, pk):
             sale = Sale.objects.get(pk=pk)
             form = TypePaymentMethodForm(request.POST)
             if form.is_valid():
-                Movement.objects.create(
-                    user_made = request.user,
-                    payment_method = form.cleaned_data['payment_method'].type_method,
-                    amount = sale.missing_balance,
-                    cash_register = CashRegister.objects.filter(
-                            is_close = False,
-                            branch = branch_actualy,
-                        ).last(),
-                    description = form.cleaned_data['description'],
-                    currency = Currency.objects.first(),
-                    type_operation = "Ingreso",
-                )
+                
+                create_in_movement(branch_actualy, request.user, form.cleaned_data['payment_method'].type_method, form.cleaned_data['description'], sale.missing_balance)
 
                 Payment.objects.create(
                     user_made = request.user,
@@ -410,7 +399,7 @@ def pay_missing_balance(request, pk):
             return redirect('sales_app:sale_detail_view', pk=sale.pk)
         
         except Sale.DoesNotExist:
-            messages.error(request, 'Lo sentimos, no pudimos encontrar la Venta.')
+            messages.success(request, 'Lo sentimos, no pudimos encontrar la Venta.')
             return redirect('sales_app:sales_list_view')
     messages.error(request, 'La petición no es válida.')
     return redirect('sales_app:sale_detail_view', pk=pk)
