@@ -53,7 +53,7 @@ class Bank(BaseAbstractWithUser):
         return f'{self.bank_name}'
     
     
-class Cbu(BaseAbstractWithUser):
+class Cbu(models.Model):
     cbu = models.CharField(unique=True, max_length=20, verbose_name='ALIAS/CBU/CVU')
     cuit = models.CharField(max_length=20, blank=True, null=True, verbose_name='CUIT Proveedor')
     bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='cbu', blank=True, null=True, verbose_name='Banco')

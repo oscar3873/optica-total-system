@@ -223,11 +223,11 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         #detalles de venta en la venta que viene por url
         context['sale'] = sale = Sale.objects.get(id=self.kwargs['pk'])
-        context['sale_subtotal'] = context['sale'].subtotal
-        context['sale_discount_amount'] = context['sale_subtotal'] * Decimal(context['sale'].discount/100)
-        context['sale_total'] = context['sale'].total
+        context['sale_subtotal'] = sale.subtotal
+        context['sale_discount_amount'] = context['sale_subtotal'] * Decimal(sale.discount/100)
+        context['sale_total'] = sale.total
         # Ordenes de detalle de la venta ...
-        context['sale_details'] = OrderDetail.objects.filter(sale=context['sale'])
+        context['sale_details'] = OrderDetail.objects.filter(sale=sale)
 
         context['cristales'] = find_cristal_product(None, sale)
         
@@ -325,7 +325,7 @@ def ajax_search_sales(request):
             # Usando Q por todos los campos existentes en la tabla
             sales = Sale.objects.all().filter(deleted_at = None, branch=branch_actualy).filter(
                 Q(total__icontains=search_term) |
-                Q(date_time_sale__icontains=search_term) |
+                # Q(date_time_sale__icontains=search_term) |
                 Q(state__icontains=search_term) |
                 Q(user_made__first_name__icontains=search_term) |
                 Q(user_made__last_name__icontains=search_term) |
@@ -338,7 +338,7 @@ def ajax_search_sales(request):
             'id': sale.id,
             'total': sale.total,
             'missing_balance': sale.missing_balance,
-            'date_time_sale': sale.date_time_sale.strftime('%d %B %Y'),
+            # 'date_time_sale': sale.date_time_sale.strftime('%d %B %Y'),
             'state': sale.state,
             'customer': str(sale.customer),
             'customer_id': sale.customer.id,
@@ -381,7 +381,11 @@ def pay_missing_balance(request, pk):
             form = TypePaymentMethodForm(request.POST)
             if form.is_valid():
                 
-                create_in_movement(branch_actualy, request.user, form.cleaned_data['payment_method'].type_method, form.cleaned_data['description'], sale.missing_balance)
+                success = create_in_movement(branch_actualy, request.user, form.cleaned_data['payment_method'].type_method, form.cleaned_data['description'], sale.missing_balance)
+
+                if not success:
+                    messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
+                    return redirect('cashregister_app:cashregister_view')
 
                 Payment.objects.create(
                     user_made = request.user,

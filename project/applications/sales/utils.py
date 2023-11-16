@@ -1,7 +1,8 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
+from django.contrib import messages
+from django.shortcuts import redirect
 
-from applications.cashregister.models import CashRegister, Currency, Movement
 from applications.branches.utils import set_branch_session
 from applications.branches.models import Branch_Objetives
 from project.settings.base import DATE_NOW
@@ -208,6 +209,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
     Payment.objects.create(
         user_made = request.user,
+        customer = customer,
         amount = payment_total if payment_total > 0 else total,
         payment_method = payment_methods,
         description = f"Pago de venta Nro: {sale.pk}",
@@ -225,7 +227,11 @@ def set_movement(total, type_method, customer, request):
     # Modificamos la forma de obtener la sucursal
     branch_actualy = set_branch_session(request)
     
-    create_in_movement(branch_actualy, request.user, type_method, description, total)
+    success = create_in_movement(branch_actualy, request.user, type_method, description, total)
+
+    if not success:
+        messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
+        return redirect('cashregister_app:cashregister_view')
 
 
 def process_service_order(request, customer):

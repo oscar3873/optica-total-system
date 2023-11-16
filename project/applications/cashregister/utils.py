@@ -36,10 +36,15 @@ def obtener_nombres_de_campos(modelo, *campos_a_ignorar):
 # nombres_de_campos = obtener_nombres_de_campos(CashRegister, 'user_made', 'deleted_at')
 
 def create_in_movement(branch_actualy, user, type_method, description, amount):
-    cash_register = CashRegister.objects.filter(
+    try: 
+        cash_register = CashRegister.objects.filter(
                 is_close = False,
                 branch = branch_actualy,
             ).last()
+        print('\n\n\n\n')
+    except :
+        return False
+    
     type_operation = 'Ingreso'
 
     Movement.objects.create(
@@ -56,3 +61,4 @@ def create_in_movement(branch_actualy, user, type_method, description, amount):
     )
     print('\n\n\n\n\n', amount)
     Movement.objects.update_balance(cash_register, amount, type_operation)
+    return True

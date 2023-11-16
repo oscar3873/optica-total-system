@@ -318,7 +318,9 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
 
         service_order = Customer.objects.history(customer)
         context['service_orders'] = service_order
-        # AGREGAR MAS RELACIONES DEL CLIENTE: ejemplo: Ventas al cliente
+
+        context['sales'] = customer.sales.all().filter(state="PENDIENTE")
+
         return context
     
     

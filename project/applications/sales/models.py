@@ -130,3 +130,6 @@ class Payment(BaseAbstractWithUser):
     sale = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='sale_payment', null=True)
 
     objects = PaymentManager()
+
+    def __str__(self) -> str:
+        return f'Pago de Venta #{self.sale.pk}: Cliente: {self.customer} | Metodo de pago: {self.payment_method.name} | Monto: {self.amount}' 
