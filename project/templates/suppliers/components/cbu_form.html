@@ -1,42 +1,146 @@
-<form method="post">
-    {% csrf_token %}
-    {{object.bank.bank_name}}
+<div class="container mt-4">
+  {% include 'core/components/messages.html' %}
 
-    <p>{{form.bank.label}}{{form.bank}}</p>
-    <button class="btn btn-falcon-default btn-sm" data-bs-target="#exampleModalToggle2" data-bs-toggle="modal" type="button">Open second modal</button>
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Título del formulario wizard -->
+    <div class="d-flex mb-4">
+      <span class="fa-stack me-2 ms-n1">
+        <i class="fas fa-circle fa-stack-2x text-300"></i>
+        <i class="fa-inverse fa-stack-1x text-primary fas fa-money-check"></i>
+      </span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Editar banco</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aquí puede modificar los datos bancarios del proveedor.</p>
+      </div>
+    </div>
+  </div>
 
-    <p>{{form.cbu.label}}{{form.cbu}}</p>
-
-    {{form.cuit.label}}{{form.cuit}}
-
-    <button type="submit">Actualizar</button>
-
-</form>
 
 
-<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggle2Label" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalToggle2Label">Nuevo Banco</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+  <div class="card mb-3 col-sm-10 col-lg-6">
+    <div class="card-header bg-light pt-3 pb-2">
+      <div>
+        <h5 for="">Banco: {{object.bank.bank_name}}</h5>
+      </div>
+      <div class="row pb-md-0">
+        <div class="col-12 col-sm-6">
+          <h5 class="mb-2"></h5>
         </div>
-        <div class="modal-body">
-          <form method="post" id="bank-name-form" class="row g-3 needs-validation align-items-center">
+      </div>
+    </div>
+    <div class="card-body border-top">
+      <div class="row">
+        <div class="col-lg-6 mb-3 mb-sm-0">
+
+          <form method="post">
             {% csrf_token %}
-            <div class="row justify-content-sm-center pb-2">
-                <div class="col pt-3">
-                <label for="{{ bank.bank_name.id_for_label }}" class="form-label col-form-label">Nuevo Banco:</label>
-                {{ bank.bank_name }}
-                <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
+            <div class="row">
+              <div class="col-12 pt-3">
+                <label for="{{ form.bank.id_for_label}}" class="form-label col-form-label">Banco:</label>
+                <div class="input-group">
+                  {{ form.bank }}
+                  <span class="fa-stack me-2 ms-2" data-bs-toggle="modal" data-bs-target="#exampleModalToggle2"
+                    title="Agregar un banco" style="cursor: pointer">
+                    <svg class="svg-inline--fa fa-circle fa-w-16 fa-stack-2x text-primary" aria-hidden="true"
+                      focusable="false" data-prefix="fas" data-icon="circle" role="img"
+                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg="">
+                      <path fill="currentColor"
+                        d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8z"></path>
+                    </svg>
+                    <svg class="svg-inline--fa fa-plus fa-w-14 fa-inverse fa-stack-1x dark__text-white"
+                      aria-hidden="true" focusable="false" data-prefix="fas" data-icon="plus" role="img"
+                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
+                      <path fill="currentColor"
+                        d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z">
+                      </path>
+                    </svg>
+                  </span>
                 </div>
+              </div>
             </div>
+
+            <div class="row">
+              <div class="col-12 pt-3">
+                <label for="{{ form.cbu.id_for_label}}" class="form-label col-form-label">CUIT:</label>
+                <div class="input-group">
+                  {{form.cuit}}
+                </div>
+              </div>
+            </div>
+            
+
+            <div class="row">
+              <div class="col-12 pt-3">
+                <label for="{{ form.cbu.id_for_label}}" class="form-label col-form-label">CBU:</label>
+                <div class="input-group">
+                  {{form.cbu}}
+                </div>
+              </div>
+            </div>
+                
+            
+            <div class="col-12 pt-4">
+              <button class="btn btn-primary" type="submit">Guardar</button>
+            </div>
+              
+
+            
           </form>
-        </div>
-        <div class="modal-footer justify-content-between">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
-            <button id="save-bank-name" class="btn btn-primary" type="button">Guardar</button>
         </div>
       </div>
     </div>
   </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="exampleModalToggle2" aria-hidden="true" aria-labelledby="exampleModalToggle2Label"
+  tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalToggle2Label">Nuevo Banco</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="bank-name-form" class="row g-3 needs-validation align-items-center">
+          {% csrf_token %}
+          <div class="row justify-content-sm-center pb-2">
+            <div class="col pt-3">
+              <label for="{{ bank.bank_name.id_for_label }}" class="form-label col-form-label">Nuevo Banco:</label>
+              {{ bank.bank_name }}
+              <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button id="save-bank-name" class="btn btn-primary" type="button">Guardar</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
