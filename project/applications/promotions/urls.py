@@ -17,7 +17,7 @@ urlpatterns = [
     ),
 
     path(
-        'ajax_promotional_products',
+        'ajax-promotional-products',
         ajax_promotional_products,
         name = 'ajax_promotional_products'
     ),

@@ -26,7 +26,7 @@ urlpatterns = [
         name= 'new_feature'
     ),
     path(
-        'new/feature_type/',
+        'new/feature-type/',
         FeatureTypeCreateView.as_view(),
         name= 'new_feature_type'
     ),
@@ -36,7 +36,7 @@ urlpatterns = [
         name= 'new_feature_type'
     ),
     path(
-        'new/feature_unit/',
+        'new/feature-unit/',
         FeatureUnitCreateView.as_view(),
     ),
     ############### UPDATES
@@ -62,7 +62,7 @@ urlpatterns = [
         name= 'update_feature'
     ),
     path(
-        'update/feature_type/<pk>/',
+        'update/feature-type/<pk>/',
         FeatureTypeUpdateView.as_view(),
         name= 'update_feature_type'
     ),
@@ -90,7 +90,7 @@ urlpatterns = [
         name= 'feature_list'
     ),
     path(
-        'list/feature_type/',
+        'list/feature-type/',
         FeatureTypeListView.as_view(),
         name= 'homefeature_type_list'
     ),
@@ -146,7 +146,7 @@ urlpatterns = [
         name='update_price_advanced'
     ),
     path(
-        'search_categories_or_brands/', 
+        'search-categories-or-brands/', 
         search_categories_or_brands, 
         name='search_categories_or_brands'
     ), 
@@ -160,7 +160,7 @@ urlpatterns = [
 
     ########## SEARCH PRODUCTS LIST #########
     path(
-        'ajax_search_products/',
+        'ajax-search-products/',
         ajax_search_products,
         name='ajax_search_products'
     )

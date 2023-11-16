@@ -1,3 +1,5 @@
+import locale
+from django.template import loader
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
@@ -11,7 +13,7 @@ from applications.branches.models import Branch
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.cashregister.models import Currency, Movement, PaymentType
 from applications.sales.models import Payment
-from project.settings.base import DATE_NOW
+from project.settings.base import DATE_NOW, ZONE_TIME
 
 from .models import *
 from .forms import *
@@ -197,6 +199,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
         named_formsets = self.get_context_data()['order_service']
 
         if form.is_valid():
+            print("\n\n\n\n\n\n")
             service_order = form.save(commit=False)
             for prefix, formset in named_formsets.items():
                 instance = formset.instance
@@ -210,6 +213,7 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
                         # new_formset.cleaned_data[to_check] = True
                         setattr(obj, to_check, True)
                         obj.save()
+                    new_formset.save()
 
             service_order.save()
         messages.success(self.request, 'Se ha acutalizado la orden de servicio con exito.')
@@ -689,8 +693,27 @@ def print_service_order(request, pk): # pk de la orden
         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
         html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
 
+        # Convertir la cadena en un objeto de fecha
+        locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+        
+        format = "%A, %d de %B de %Y"
+        
+        created_at = service.created_at.astimezone(ZONE_TIME)
+        sale_date = created_at
+        
+        context = {
+            'service_order': service,
+            'sale_date': sale_date,
+        }
+
+        # Genera el HTML en lugar de renderizarlo
+        template = loader.get_template('clients/service_order_print.html')
+        html_content = template.render(context)
+        
         # Devuelve el HTML como respuesta
         return HttpResponse(html_content, content_type="text/html")
     else:
         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+    
+    

@@ -44,7 +44,7 @@ urlpatterns = [
     ),
     
     path(
-        'show_factura/<pk>/',
+        'show-factura/<pk>/',
         show_factura,
         name='show_factura'
     ),

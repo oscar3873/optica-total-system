@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // Realiza la solicitud AJAX y obtiene los datos de los productos
             $.ajax({
-                url: `/promotions/ajax_promotional_products`,
+                url: `/promotions/ajax-promotional-products`,
                 type: 'GET',
                 dataType: 'json',
                 success : function (allPromotions) {
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             $.ajax({
-                url: `/products/ajax_search_products/?search_term=${query}`,
+                url: `/products/ajax-search-products/?search_term=${query}`,
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {

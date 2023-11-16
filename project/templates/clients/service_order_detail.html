@@ -3,6 +3,13 @@
 {% block extra_css %}
 {% load static %}
 
+<style>
+    .custom-x-badge {
+        font-size: 45px; /* Ajusta el tamaño del texto según tus necesidades */
+    }
+</style>
+
+
 {% endblock extra_css %}
 
 {% block main %}
@@ -221,61 +228,61 @@
                     <tbody>
                         <tr>
                             <td>Antireflex</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.tratamient.antireflex %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Filtro Azul</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.tratamient.filtro_azul %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Fotocromático</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.tratamient.fotocromatico %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Ultravex</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.tratamient.ultravex %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Polarizado</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.tratamient.polarizado %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Neutrosolar</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.tratamient.neutrosolar %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
@@ -297,41 +304,41 @@
                     <tbody>
                         <tr>
                             <td>Policarbonato</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.material.policarbonato %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Organic</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.material.organic %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Mineral</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.material.mineral %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>M R8</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.material.m_r8 %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
@@ -355,41 +362,41 @@
                     <tbody>
                         <tr>
                             <td>White</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.color.white %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Full Gray</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.color.full_gray %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Gray Gradient</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.color.gray_gradient %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Flat Sepia</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.color.flat_sepia %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
@@ -411,51 +418,51 @@
                     <tbody>
                         <tr>
                             <td>Monofocal</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.type_cristal.monofocal %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Bifocal FV</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.type_cristal.bifocal_fv %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Bifocal K</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.type_cristal.bifocal_k %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Bifocal PI</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.type_cristal.bifocal_pi %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>
                         <tr>
                             <td>Progressive</td>
-                            <td>
+                            <td class="p-0 m-0">
                                 {% if service_order.type_cristal.progressive %}
-                                <p class="badge badge-success custom-badge h3 text-dark">Si</p>
+                                <p class="badge badge-success custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center custom-x-badge">X</p>
                                 {% else %}
-                                <p class="badge badge-success custom-badge h3 text-dark">No</p>
+                                <p class="badge badge-success custom-badge h3 text-dark">&nbsp;</p>
                                 {% endif %}
                             </td>
                         </tr>

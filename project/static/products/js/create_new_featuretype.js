@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var formData = new FormData(document.getElementById("Feature-Type-form"));
 
         $.ajax({
-            url: `/products/new/feature_type/`,
+            url: `/products/new/feature-type/`,
             method: 'POST',
             data: formData,
             processData: false,

@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Realizar una solicitud AJAX para obtener la factura
         $.ajax({
-            url: `/sales/show_factura/${saleId}/`, // Reemplaza con la ruta correcta
+            url: `/sales/show-factura/${saleId}/`, // Reemplaza con la ruta correcta
             method: 'GET',
             dataType: 'html',
             success: function(data) {

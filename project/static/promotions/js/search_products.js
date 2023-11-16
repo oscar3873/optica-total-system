@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $.ajax({
                 
                 // url: `/products/ajax_search_products/?search_term=${searchTerm}`,
-                url: `/products/search_categories_or_brands/?search_term=${searchTerm}`,
+                url: `/products/search-categories-or-brands/?search_term=${searchTerm}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             $.ajax({
-                url: `/products/ajax_search_products/?search_term=${item.getAttribute('name')}`,
+                url: `/products/ajax-search-products/?search_term=${item.getAttribute('name')}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {

@@ -257,8 +257,16 @@ def show_invoice(request, pk):
         sale = Sale.objects.get(id=pk)
         customer = sale.customer
 
-        payment = Payment.objects.get(sale=sale)
+        payments = Payment.objects.filter(sale=sale)
 
+        if payments.exists():
+            # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
+            payment = payments.first()
+            payment_method = payment.payment_method.name
+        else:
+            # Manejar el caso en el que no hay pagos
+            payment_method = None
+        
         order_details = sale.order_detaill.filter(sale=sale)
         order_details_template = []
         subtotal = []
@@ -291,7 +299,8 @@ def show_invoice(request, pk):
             'pay': f'{sale.total - sale.missing_balance:.2f}',
             'missing_balance': f'{sale.missing_balance:.2f}',
             'date': sale_date_str,
-            'time': created_at.time()
+            'time': created_at.time(),
+            'payments': payments,
         }
 
         # Genera el HTML en lugar de renderizarlo

@@ -10,12 +10,12 @@ urlpatterns = [
         name='customer_new'
     ),
     path(
-        'health_insurance/new/', # PARA REGISTRAR OBRAS SOCIALES
+        'health-insurance/new/', # PARA REGISTRAR OBRAS SOCIALES
         HealthInsuranceCreateView.as_view(),
         name='hi_new'
     ),
     path(
-        '<pk>/service_order/new/',  # ASIGNA EL PEDIDO DE LAB POR CREAR AL CLIENTE EN EL QUE ESTÁ
+        '<pk>/service-order/new/',  # ASIGNA EL PEDIDO DE LAB POR CREAR AL CLIENTE EN EL QUE ESTÁ
         ServiceOrderCreateView.as_view(), 
         name='service_order_new'
     ),
@@ -27,7 +27,7 @@ urlpatterns = [
         name='customer_update'
     ),
     path(
-        'service_order/update/<pk>/',  # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
+        'service-order/update/<pk>/',  # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase UpdateView tomara como pk para matcheat con un objeto
         ServiceOrderUpdateView.as_view(), 
         name='service_order_update'
     ),
@@ -61,7 +61,7 @@ urlpatterns = [
         name='customer_detail'
     ),
     path(
-        'service_order/detail/<pk>/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase DetailView tomara como pk para matcheat con un objeto
+        'service-order/detail/<pk>/', # <pk_c>: para customer y poder volver a su detail (succes) <pk>: la clase DetailView tomara como pk para matcheat con un objeto
         ServiceOrderDetailView.as_view(),
         name='service_order_detail'
     ),
@@ -78,7 +78,7 @@ urlpatterns = [
         name='customer_delete'
     ),
     path(
-        'service_order/delete/<pk>/',
+        'service-order/delete/<pk>/',
         ServiceOrderDeleteView.as_view(),
         name='service_order_delete'
     ),
@@ -133,7 +133,7 @@ urlpatterns = [
 
     ############# IMPRESION DE ORDEN DE SERVICIO ###########
     path(
-        'service_order/print_service_order/<pk>/',
+        'service-order/print-service-order/<pk>/',
         print_service_order,
         name='print_service_order'
     )

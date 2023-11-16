@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var countchecks = checkboxes.length;
 
         $.ajax({
-            url: `/customers/health_insurance/new/`,
+            url: `/customers/health-insurance/new/`,
             method: 'POST',
             data: formData,
             processData: false,

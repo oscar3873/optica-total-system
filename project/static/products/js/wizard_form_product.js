@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Realizar la solicitud AJAX
         $.ajax({
-            url: '/products/new/feature_unit/',
+            url: '/products/new/feature-unit/',
             method: 'POST',
             data: formData,
             processData: false,
