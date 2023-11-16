@@ -2,11 +2,11 @@
 
 {% block extra_css %}
 {% load static %}
-
+    <link rel="stylesheet" href="{% static 'suppliers/css/link-style.css' %}">
 {% endblock extra_css  %}
 
 {% block main %}
- {% include 'suppliers/components/supplier_view.html' %}
+    {% include 'suppliers/components/supplier_view.html' %}
 {% endblock main %}
 
 {% block extra_js %}
