@@ -32,12 +32,12 @@
     </div>
     <div class="card-body border-top">
       <div class="row">
-        <div class="col-lg-6 mb-3 mb-sm-0">
+        <div class=" mb-3 mb-sm-0">
 
           <form method="post">
             {% csrf_token %}
             <div class="row">
-              <div class="col-12 pt-3">
+              <div class="col-7 pt-3">
                 <label for="{{ form.bank.id_for_label}}" class="form-label col-form-label">Banco:</label>
                 <div class="input-group">
                   {{ form.bank }}
@@ -61,31 +61,21 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-12 pt-3">
+            <div class="row pt- pt-sm-3">
+              <div class="col-sm-6">
                 <label for="{{ form.cbu.id_for_label}}" class="form-label col-form-label">CUIT:</label>
-                <div class="input-group">
                   {{form.cuit}}
                 </div>
-              </div>
-            </div>
-            
-
-            <div class="row">
-              <div class="col-12 pt-3">
-                <label for="{{ form.cbu.id_for_label}}" class="form-label col-form-label">CBU:</label>
-                <div class="input-group">
-                  {{form.cbu}}
+                <div class="col-sm-6">
+                  <label for="{{ form.cbu.id_for_label}}" class="form-label col-form-label">CBU:</label>
+                    {{form.cbu}}
                 </div>
               </div>
             </div>
-                
             
             <div class="col-12 pt-4">
               <button class="btn btn-primary" type="submit">Guardar</button>
             </div>
-              
-
             
           </form>
         </div>
