@@ -1,7 +1,6 @@
 from typing import Any
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView, UpdateView, FormView, ListView, DeleteView
@@ -17,6 +16,7 @@ from applications.users.forms import *
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
 from .utils import obtener_nombres_de_campos
+from applications.branches.utils import set_branch_session
 from django.db.models import Q
 
 # Para la generacion de excel
@@ -34,7 +34,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         user = self.request.user
         form.cleaned_data.pop('password2')
         
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         Employee.objects.create(
@@ -116,7 +116,7 @@ class EmployeeListView(LoginRequiredMixin, ListView):
     paginate_by = 25
 
     def get_queryset(self):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
         return Employee.objects.filter(deleted_at=None, user__branch=branch_actualy)
 
@@ -166,7 +166,7 @@ class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
 def export_employee_list_to_excel(request):
     branch = request.user.branch
 
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
     
     queryset = Employee.objects.filter(deleted_at=None, user__branch=branch_actualy)
@@ -221,7 +221,7 @@ def export_employee_list_to_excel(request):
 def ajax_search_employee(request):
     branch = request.user.branch
 
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':

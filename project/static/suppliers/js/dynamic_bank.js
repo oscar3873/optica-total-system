@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (data.status === 'success') {
                     data = data.data;
                     var div_checksbox = document.createElement('div');
-                    var newLabel = document.createElement('label');
+                    var newLabel = document.createElement('span');
                     var newCheckbox = document.createElement("input");
                     newCheckbox.type = "checkbox";
                     newCheckbox.name = "cbu"; // Asegúrate de asignar el nombre correcto
@@ -29,8 +29,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     newCheckbox.className = "form-check-input";
                     newCheckbox.checked = true; // Define si está marcado o no
                     newLabel.htmlFor = newCheckbox.id;
-                    newLabel.textContent = data.name; // Usa textContent para establecer el contenido del label
-                    div_checksbox.classList = "form-check form-check-inline";
+                    // newLabel.textContent = data.name; // Usa textContent para establecer el contenido del label
+                    newLabel.innerHTML=`<span class="text-primary">• </span>${data.name}`;
+                    div_checksbox.classList = "form-check form-check-inline text-800 fw-bold d-inline-block";
                     newLabel.appendChild(newCheckbox);
                     div_checksbox.appendChild(newLabel);
                     var checkboxes_form = document.getElementById('banks_asociate');
@@ -42,10 +43,25 @@ document.addEventListener("DOMContentLoaded", function() {
                     cuit_modal.textContent = '';  // Esto podría necesitar ajustes, dependiendo de cómo quieras borrar los campos del formulario
 
                 } else {
-                    error_div.innerHTML = data.error;
-                    error_div.className = "text-danger text-center";
+                    let response = JSON.parse(data.error);
+                    const cbuErrorElement = document.getElementById('cbu-error');
+                    cbuErrorElement.innerText = '';
+                    const cuitErrorElement = document.getElementById('cuit-error');
+                    cuitErrorElement.innerText = '';
+
+                    if('cbu' in response){
+                        console.log("entra");
+                        cbuErrorElement.innerText = `${response.cbu[0].message}`;
+                        console.log(response.cbu[0].message);
+                    }
+                    if('cuit' in response){
+                        cuitErrorElement.innerText = `${response.cuit[0].message}`;
+                        console.log(response.cuit[0].message);
+                    }
+                    // error_div.innerHTML = data.error;
+                    // error_div.className = "text-danger text-center";
                     
-                    bank_modal.appendChild(error_div);
+                    // bank_modal.appendChild(error_div);
                 }
             }
         });

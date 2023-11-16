@@ -1,8 +1,10 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
 from django_afip.models import *
+from django.contrib import messages
+from django.shortcuts import redirect
 
-from applications.cashregister.models import CashRegister, Currency, Movement
+from applications.branches.utils import set_branch_session
 from applications.branches.models import Branch_Objetives
 from project.settings.base import DATE_NOW
 from applications.clients.forms import *
@@ -238,7 +240,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
         set_movement(total,  payment_methods.type_method, None, request)
 
     # Modificamos la forma de obtener la sucursal
-    from applications.branches.utils import set_branch_session
     branch_actualy = set_branch_session(request)
 
     sale.branch = branch_actualy
@@ -248,6 +249,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
     Payment.objects.create(
         user_made = request.user,
+        customer = customer,
         amount = payment_total if payment_total > 0 else total,
         payment_method = payment_methods,
         description = f"Pago de venta Nro: {sale.pk}",
@@ -256,26 +258,20 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
 
 
 def set_movement(total, type_method, customer, request):
+    from applications.cashregister.utils import create_in_movement
+    
     description = "Venta de productos"
     if customer and not 'consumidor' in customer.first_name.lower():
         description += " a %s" % customer.get_full_name()
 
     # Modificamos la forma de obtener la sucursal
-    from applications.branches.utils import set_branch_session
     branch_actualy = set_branch_session(request)
+    
+    success = create_in_movement(branch_actualy, request.user, type_method, description, total)
 
-    Movement.objects.create(
-        user_made = request.user,
-        payment_method = type_method,
-        amount = total,
-        cash_register = CashRegister.objects.filter(
-            is_close = False,
-            branch = branch_actualy,
-            ).last(),
-        description = description,
-        currency = Currency.objects.first(),
-        type_operation = "Ingreso",
-    )
+    if not success:
+        messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
+        return redirect('cashregister_app:cashregister_view')
 
 
 def process_service_order(request, customer):

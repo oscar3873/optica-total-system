@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 
 #Importaciones de la app
+from applications.branches.utils import set_branch_session
 from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 from applications.cashregister.models import CashRegister, CashRegisterDetail, PaymentType, Movement
 from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailFormSet
@@ -26,7 +27,6 @@ class CashRegisterCreateView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        from applications.branches.utils import set_branch_session
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False)
@@ -42,7 +42,7 @@ class CashRegisterCreateView(LoginRequiredMixin, FormView):
         user_made = self.request.user
         currency = form.cleaned_data['currency']
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
         try:
             CashRegister.objects.create_cash_register(initial_balance, branch_actualy, user_made, currency, final_balance)
@@ -64,7 +64,6 @@ class CashRegisterView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        from applications.branches.utils import set_branch_session
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False).last()
@@ -80,7 +79,7 @@ class CashRegisterListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs: Any):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
         try:
             cashregisters = CashRegister.objects.filter(branch=branch_actualy, deleted_at=None).order_by('-created_at')
@@ -155,7 +154,7 @@ class CashRegisterCloseView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
@@ -188,7 +187,7 @@ class CashRegisterArching(LoginRequiredMixin, View):
     template_name = 'cashregister/cashregister_arching_page.html'
     
     def get(self, request, *args, **kwargs):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(is_close=False, branch= branch_actualy).last() #pasar contexto de cashregiter
@@ -209,7 +208,7 @@ class CashRegisterArching(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(is_close=False, branch= branch_actualy).last() #pasar contexto de cashregiter
@@ -227,7 +226,7 @@ class CashRegisterArching(LoginRequiredMixin, View):
         print(formset.is_valid())
         print(formset.errors)
         if formset.is_valid():
-            from applications.branches.utils import set_branch_session
+            
             branch_actualy = set_branch_session(self.request)
             cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
             
@@ -291,7 +290,7 @@ class MovementsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Aquí se recupera la caja de la sucursal correspondiente al usuario logueado
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         cashregisters = CashRegister.objects.filter(branch=branch_actualy, deleted_at=None)
@@ -327,7 +326,7 @@ class MovementsCreateView(CustomUserPassesTestMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False).last()
@@ -339,7 +338,7 @@ class MovementsCreateView(CustomUserPassesTestMixin, FormView):
         return context
     
     def form_valid(self, form):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
         cash_register = CashRegister.objects.filter(branch=branch_actualy, is_close=False).last()
 
@@ -397,7 +396,7 @@ class MovementsUpdateView(CustomUserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False).last()
@@ -486,7 +485,7 @@ class CurrencyCreateView(CustomUserPassesTestMixin, FormView):
 def ajax_search_movements(request):
     # branch = request.user.branch
 
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':

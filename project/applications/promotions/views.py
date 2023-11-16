@@ -3,7 +3,8 @@ from django.shortcuts import redirect
 from django.views.generic import *
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import TemplateView
+
+from applications.branches.utils import set_branch_session
 from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 from .models import *
 from .forms import *
@@ -23,7 +24,6 @@ class PromotionCreateView(CustomUserPassesTestMixin, FormView):
         
         user = self.request.user
         # Modificamos la forma de obtener la sucursal
-        from applications.branches.utils import set_branch_session
         branch_actualy = set_branch_session(self.request)
         
         # Asignamos la sucursal a la promoción
@@ -123,7 +123,7 @@ class PromotionListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         return Promotion.objects.filter(branch=branch_actualy)
@@ -152,7 +152,7 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
 def ajax_promotional_products(request):
     branch = request.user.branch
 
-    from applications.branches.utils import set_branch_session
+    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':

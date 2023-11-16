@@ -1,10 +1,7 @@
-from datetime import date
 from collections import defaultdict
 from django.db import models
-from django.db.models import Count, Sum
 from django.db.models.functions import Trunc
 from django.utils import timezone
-from django.contrib.contenttypes.models import ContentType
 
 
 class CashRegisterManager(models.Manager):
@@ -100,7 +97,7 @@ class MovementManager(models.Manager):
         Actualiza el balance final de la caja.
         """
         amount = abs(amount)
-        
+        print('\n\n\n\n', operation)
         if operation == 'Ingreso':
             cash_register.final_balance += amount
         elif operation == 'Egreso':

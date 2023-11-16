@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import View
 from django.views.generic import FormView, DetailView, UpdateView
 
-from applications.core.models import Objetives
+from applications.branches.utils import set_branch_session
 from .forms import UserCreateForm
 from .models import User
 from .forms import *
@@ -27,7 +27,7 @@ class AdminProfileView(CustomUserPassesTestMixin, DetailView):
         context = super().get_context_data(**kwargs)
 
         user = self.get_object()
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         employee_data = None
@@ -57,7 +57,7 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
 
         form.cleaned_data.pop('password2')
         form.cleaned_data.pop('phone_code')
-        from applications.branches.utils import set_branch_session
+        
         branch_actualy = set_branch_session(self.request)
 
         user = User.objects.create_admin(**form.cleaned_data, branch=branch_actualy) # Funcion que crea ADMINIS

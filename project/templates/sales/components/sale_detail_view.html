@@ -138,9 +138,11 @@
                     <div class="d-flex gap-1">
                         <span class="fas fa-credit-card ms-1" data-fa-transform="shrink-2"></span>
                         <div class="flex-1">
-                            <h6 class="mb-0">{{sale.sale_payment.first.payment_method.name}}</h6>
-                            <p class="mb-0 fs--1"> <strong>Monto: </strong>{{sale.sale_payment.first.amount|floatformat:2|intcomma}}</p>
-                            <p class="mb-0 fs--1"> <strong>Detalle en el pago: </strong>{{sale.sale_payment.first.description}}</p>
+                            {% for payment in sale.sale_payment.all %}
+                                <h6 class="mb-0">{{payment.payment_method.name}}</h6>
+                                <p class="mb-0 fs--1"> <strong>Monto: </strong>{{payment.amount|floatformat:2|intcomma}}</p>
+                                <p class="mb-0 fs--1"> <strong>Detalle en el pago: </strong>{{payment.description}}</p>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
