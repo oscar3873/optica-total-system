@@ -52,7 +52,7 @@
 
 
 
-      <div class="card mb-3">
+      <!-- <div class="card mb-3">
         <div class="card-header bg-light d-flex justify-content-between">
           <h5 class="mb-0">Activity log</h5><a class="font-sans-serif" href="../../app/social/activity-log.html">All logs</a>
         </div>
@@ -110,38 +110,62 @@
           </a>
 
         </div>
-      </div>
+      </div> -->
 
-
-      <div class="col-lg-6">
-        <div class="card h-100" dir="ltr">
-          <div class="card-header">
-            <div class="row flex-between-end">
-              <div class="col-auto align-self-center">
-                <h5 class="mb-0" data-anchor="data-anchor">Doughnut Chart</h5>
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="card h-100" dir="ltr">
+            <div class="card-header bg-light">
+              <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                  <h5 class="mb-0">Objetivo del mes</h5>
+                </div>
+                <div class="col-auto ms-auto">
+                </div>
               </div>
-              <div class="col-auto ms-auto">
-                <div class="nav nav-pills nav-pills-falcon flex-grow-1" role="tablist">
-                  <button class="btn btn-sm active" data-bs-toggle="pill" data-bs-target="#dom-9fb7c54e-7e83-4043-bdbf-4c26ed424055" type="button" role="tab" aria-controls="dom-9fb7c54e-7e83-4043-bdbf-4c26ed424055" aria-selected="true" id="tab-dom-9fb7c54e-7e83-4043-bdbf-4c26ed424055">Preview</button>
-                  <button class="btn btn-sm" data-bs-toggle="pill" data-bs-target="#dom-f8264928-c9d6-4c95-a9fa-1946d64e78bf" type="button" role="tab" aria-controls="dom-f8264928-c9d6-4c95-a9fa-1946d64e78bf" aria-selected="false" id="tab-dom-f8264928-c9d6-4c95-a9fa-1946d64e78bf">Code</button>
+            </div>
+            <div class="card-body">
+              <div class="tab-content">
+                <!-- <canvas id="monthObjetive"></canvas> -->
+                <canvas id="monthObjetive" style="max-height: 250px;"></canvas>
+                <div class="text-center pt-3">
+                  <h4>$173.530/$800.000</h4>
                 </div>
               </div>
             </div>
           </div>
-          <div class="card-body bg-light">
-            <div class="tab-content">
-              <div class="tab-pane preview-tab-pane active" role="tabpanel" aria-labelledby="tab-dom-9fb7c54e-7e83-4043-bdbf-4c26ed424055" id="dom-9fb7c54e-7e83-4043-bdbf-4c26ed424055">
-                <!-- Find the JS file for the following chart at: src/js/charts/echarts/examples/doughnut-chart.js-->
-                <!-- If you are not using gulp based workflow, you can find the transpiled code at: public/assets/js/echarts-example.js-->
-                <div id="chartjs-doughnut-chart"  style="min-height: 320px;" data-echart-responsive="true"></div>
+        </div>
+  
+  
+  
+  
+        <div class="col-lg-6">
+          <div class="card h-100" dir="ltr">
+            <div class="card-header bg-light">
+              <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                  <h5 class="mb-0">Objetivo personal</h5>
+                </div>
+                <div class="col-auto ms-auto">
+                </div>
               </div>
-              <div class="tab-pane code-tab-pane" role="tabpanel" aria-labelledby="tab-dom-f8264928-c9d6-4c95-a9fa-1946d64e78bf" id="dom-f8264928-c9d6-4c95-a9fa-1946d64e78bf">
+            </div>
+            <div class="card-body">
+              <div class="tab-content">
+                <!-- <canvas id="personalObjetive"></canvas> -->
+                <canvas id="myPieGraph" style="max-height: 250px;"></canvas>
+                <div class="text-center pt-3">
+                  <h4>$173.530/$800.000</h4>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
+
+
+      </div>
+      
 
   {% else %}
 
@@ -162,7 +186,7 @@
 
 
 
-
+{% if false %}
 <div class="row g-0">
   <div class="col-lg-8 pe-lg-2">
     <div class="card mb-3">
@@ -203,3 +227,6 @@
     <!--/.bg-holder-->
   </div>
 </div>
+{% endif %}
+
+

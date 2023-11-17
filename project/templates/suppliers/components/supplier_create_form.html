@@ -86,9 +86,10 @@
                                 <div class="row">
                                     <div class="col-12 col-sm pt-2">
                                         <div class="row align-items-center pt-3">
-                                            <label for="id_h_insurance"
+                                            <div class="col-12">
+                                                <label for="id_h_insurance"
                                                 class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                                <h5 class="m-0">Bancos asociados </h5>
+                                                <h5 class="m-0">Bancos asociados</h5>
                                                 <span class="fa-stack me-2 ms-2" data-bs-toggle="modal"
                                                     data-bs-target="#bankModal" title="Seleccionar un banco"
                                                     style="cursor: pointer">
@@ -109,23 +110,21 @@
                                                         </path>
                                                     </svg>
                                                 </span>
-
+                                            </label>
+                                            </div>
+                                            <div class="col pt-3">
                                                 {% if cbus %}
                                                 {% for cbu in cbus %}
-                                                <div class="input-group" id="{{cbu.pk}}">
+                                                <div class="input-group py-2 align-items-center" id="{{cbu.pk}}">
                                                     {{cbu}}
-                                                    <button class="btn btn-danger" data-cbu-id="{{cbu.pk}}"
-                                                        id="delete-button" data-bs-toggle="modal" type="button"
-                                                        data-bs-target="#deleteModal" data-info="{{cbu}}">
-                                                        <i class="fa fa-trash"></i>
+                                                    <button class="btn btn-falcon-default btn-sm ms-2"  data-cbu-id="{{cbu.pk}}" type="button" id="delete-button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-info="{{cbu}}" title="Eliminar">
+                                                        <span class="fas fa-trash text-danger" data-fa-transform="shrink-3 down-2"></span>
                                                     </button>
                                                 </div>
                                                 {% endfor %}
                                                 {% endif %}
-
-
-
-                                            </label>
+                                            </div>
+                                            
                                         </div>
                                         <div id="banks_asociate">
                                         </div>
@@ -162,7 +161,17 @@
                                 <div class="row pt-4">
                                     <h5 class="mt-1">Marcas: </h5>
                                     <div id="brands-selected" class="form-check d-flex flex-column ms-3">
-                                        
+                                        {% if update %}
+                                            {% if brandsSelected %}
+                                                {% for brand in brandsSelected %}
+                                                    <label class="d-block">
+                                                        <input type="checkbox" name="brandsSelected" value="{{ brand.id }}" class="form-check-input"
+                                                            {% if brand.id in form.brandsSelected.value %}checked{% endif %}>
+                                                        {{ brand.name }}
+                                                    </label>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
