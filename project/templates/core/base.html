@@ -533,13 +533,13 @@
                                             class="nav-link-text ps-1">Ver notificaciones</span>
                                     </div>
                                 </a>
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                {% comment %} <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
                                     aria-expanded="false" id="notifications_config">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-cog"></span></span><span
                                             class="nav-link-text ps-1">Configurar notificaciones</span>
                                     </div>
-                                </a>
+                                </a> {% endcomment %}
                             </li>
                             {% endif %}
                             {% if   request.user.is_staff %}
