@@ -29,14 +29,14 @@
     </div>
     
     <!-- Editar boton - Boton para editar Orden de Servicio -->
-    
+    <button id="printer" data-id="{{service_order.pk}}" class="btn btn-primary">
+        Imprimir Orden de servicio
+    </button>
     {% if request.user.is_staff %}
         <a class="btn btn-info" href="{% url 'clients_app:service_order_update' service_order.pk %}">Editar</a>
     {% endif %}
 
-    <button id="printer" data-id="{{service_order.pk}}" class="btn btn-success">
-        Imprimir Orden de servicio
-    </button>
+    
         
 
 

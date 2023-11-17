@@ -132,7 +132,7 @@
                 <!--<small class="name">Emmanuel Hernan PONCE</small>-->
             </div>
             <div class="tax-payer">
-                <small>Nº de Factura: {{receipt.point_of_sales.number}} - {{receipt.receipt_number}}</small><br>
+                <small>Nº de Factura: {{receipt.formatted_number}}</small><br>
                 <small>CUIT: </small>
                 <small class="name">{{receipt.point_of_sales.owner.cuit}}</small>
             </div>
@@ -154,14 +154,16 @@
                 <div class="col"><strong>CLIENTE</strong></div>
                 <div class="col">{{customer}}</div>
             </div>
-            <div class="row">
-                <div class="col"><strong>DNI/CUIL/CUIT</strong></div>
-                <div class="col">{{customer.dni}}</div>
-            </div>
-            <div class="row">
-                <div class="col"><strong>CONTACTO</strong></div>
-                <div class="col">{{customer.phone_number}}</div>
-            </div>
+            {% if  customer.dni != "0" %}
+                <div class="row">
+                    <div class="col"><strong>DNI/CUIL/CUIT</strong></div>
+                    <div class="col">{{customer.dni}}</div>
+                </div>
+                <div class="row">
+                    <div class="col"><strong>CONTACTO</strong></div>
+                    <div class="col">{{customer.phone_number}}</div>
+                </div>
+            {% endif %}
         </div>
         <br>
     </div>

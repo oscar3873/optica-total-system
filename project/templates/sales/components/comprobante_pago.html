@@ -127,14 +127,16 @@
                 <div class="col"><strong>CLIENTE</strong></div>
                 <div class="col">{{customer}}</div>
             </div>
-            <div class="row">
-                <div class="col"><strong>DNI/CUIL/CUIT</strong></div>
-                <div class="col">{{customer.dni}}</div>
-            </div>
-            <div class="row">
-                <div class="col"><strong>CONTACTO</strong></div>
-                <div class="col">{{customer.phone_number}}</div>
-            </div>
+            {% if  customer.dni != "0" %}
+                <div class="row">
+                    <div class="col"><strong>DNI/CUIL/CUIT</strong></div>
+                    <div class="col">{{customer.dni}}</div>
+                </div>
+                <div class="row">
+                    <div class="col"><strong>CONTACTO</strong></div>
+                    <div class="col">{{customer.phone_number}}</div>
+                </div>
+            {% endif %}
         </div>
         <br>
     </div>
