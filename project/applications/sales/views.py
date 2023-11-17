@@ -30,12 +30,14 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
     form_class = OrderDetailFormset
     template_name = 'sales/point_of_sale_page.html'
     success_url = reverse_lazy('core_app:home')
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        
         branch_actualy = set_branch_session(self.request)
+
+        cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
+        if not cashregister:
+            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
 
         context['sale_form'] = SaleForm
         # context['payment_form'] = PaymentMethodsFormset
