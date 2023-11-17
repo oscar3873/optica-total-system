@@ -41,7 +41,6 @@ def create_in_movement(branch_actualy, user, type_method, description, amount):
                 is_close = False,
                 branch = branch_actualy,
             ).last()
-        print('\n\n\n\n')
     except :
         return False
     
@@ -51,14 +50,10 @@ def create_in_movement(branch_actualy, user, type_method, description, amount):
         user_made = user,
         payment_method = type_method,
         amount = amount,
-        cash_register = CashRegister.objects.filter(
-                is_close = False,
-                branch = branch_actualy,
-            ).last(),
+        cash_register = cash_register,
         description = description,
         currency = Currency.objects.first(),
         type_operation = type_operation,
     )
-    print('\n\n\n\n\n', amount)
     Movement.objects.update_balance(cash_register, amount, type_operation)
     return True
