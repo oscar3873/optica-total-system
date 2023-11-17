@@ -48,6 +48,12 @@ urlpatterns = [
         show_factura,
         name='show_factura'
     ),
+    
+    path(
+        'gen-factura/<pk>/<value>/',
+        gen_factura,
+        name='gen_factura'
+    ),
 
     ######## ORDEN DE SERVICIO EN DETALLE DE VENTA ########
     path(

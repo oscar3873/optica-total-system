@@ -129,7 +129,12 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
                 return 'El CUIT/CUIL del Cliente debe contener 11 digitos.'
         
         elif invoice_or_receipt == 'B':
-            document = DocumentType.objects.get(id=2) 
+            if len(sale.customer.dni) > 10:
+                document = DocumentType.objects.get(id=2) #es cuil
+            elif len(sale.customer.dni) < 2:
+                document = DocumentType.objects.get(id=36) #es del tipo otro
+            else:
+                document = DocumentType.objects.get(id=10) #es dni
             receipt_type = ReceiptType.objects.get(id=4)
         
         sale.receipt = Receipt.objects.create(

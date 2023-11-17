@@ -39,14 +39,23 @@
     <!--    Card con la presentacion del detalle de venta-->
     <!-- ===============================================-->
 
-    <button id="printer" data-id="{{sale.pk}}" class="btn btn-warning">
+    <button id="printer" data-id="{{sale.pk}}" class="btn btn-primary">
         Ver Comprobante de Pago
     </button>
     
-    {% if  sale.receipt%}
-        <button id="factura" data-id="{{sale.pk}}" class="btn btn-warning">
+    {% if sale.receipt %}
+        <button id="show-factura" data-id="{{sale.pk}}" class="btn btn-primary">
             Ver Factura
         </button>
+    {% else %}
+        <div id="contenedor-botones" class="col-2 my-2">
+            <!-- Selector -->
+            <select name="select-factura" id="select-factura" class="form-control">
+                <option value="0">---------</option>
+                <option value="1">Factura A</option>
+                <option value="2">Factura B</option>
+            </select>
+        </div>
     {% endif %}
 
     <div class="card mb-3">
@@ -184,7 +193,7 @@
                     <p class="mb-0">{{detaill.product.description}}</p>
                     </td>
                     <td class="align-middle text-center">{{detail.quantity}}</td>
-                    <td class="align-middle text-end">{{detail.discount}}</td>
+                    <td class="align-middle text-end">{{detail.discount}}&nbsp;%</td>
                     <td class="align-middle text-end">{{detail.price}}</td>
                 </tr>
             {% endfor %}
@@ -196,16 +205,20 @@
             <table class="table table-sm table-borderless fs--1 text-end">
             <tr>
                 <th class="text-900">Subtotal:</th>
-                <td class="fw-semi-bold">${{sale_subtotal|floatformat:2|intcomma}}</td>
+                <td class="fw-semi-bold">${{ sale_subtotal|floatformat:2|intcomma }}</td>
             </tr>
-            <tr>
-                <th class="text-900">Descuento:</th>
-                <td class="fw-semi-bold">- ${{sale.discount_extra|floatformat:2|intcomma}}</td>
-            </tr>
-            <tr>
-                <th class="text-900">Descuento de venta {{sale.discount}}%:</th>
-                <td class="fw-semi-bold">- ${{sale_discount_amount|floatformat:2|intcomma}}</td>
-            </tr>
+            {% if  sale.discount_extra%}
+                <tr>
+                    <th class="text-900">Descuento en productos individuales:</th>
+                    <td class="fw-semi-bold">- ${{sale.discount_extra|floatformat:2|intcomma}}</td>
+                </tr>
+            {% endif %}
+            {% if  sale.discount%}
+                <tr>
+                    <th class="text-900">Descuento en total de la venta {{sale.discount}}%:</th>
+                    <td class="fw-semi-bold">- ${{sale_discount_amount|floatformat:2|intcomma}}</td>
+                </tr>
+            {% endif %}
             <tr class="border-top">
                 <th class="text-900">Total:</th>
                 <td class="fw-semi-bold">${{sale_total|floatformat:2|intcomma}}</td>

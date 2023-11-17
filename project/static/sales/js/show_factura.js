@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Obtener referencia al botón para ver la factura
-    let buttonVerFactura = document.getElementById('factura');
+    let buttonVerFactura = document.getElementById('show-factura');
     
     // Agregar evento click al botón
     buttonVerFactura.addEventListener('click', () => {

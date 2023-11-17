@@ -128,7 +128,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         up_objetives(self.request.user, sale)
 
         error = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale, branch_actualy.pos_afip)
-        if error is str:
+        if error is not None:
             messages.error(self.request, error)
             return super().form_invalid(form)
 
@@ -242,7 +242,7 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         context['sale_total'] = sale.total
         # Ordenes de detalle de la venta ...
         context['sale_details'] = OrderDetail.objects.filter(sale=sale)
-
+        
         context['cristales'] = find_cristal_product(None, sale)
         
         armazones = find_armazons_product(None, sale)
@@ -313,6 +313,7 @@ def show_invoice(request, pk):
             'date': sale_date_str,
             'time': created_at.time(),
             'payments': payments,
+            'branch': sale.branch,
         }
 
         # Genera el HTML en lugar de renderizarlo
@@ -372,8 +373,8 @@ def show_factura(request, pk):
             'payment_method': payment.payment_method.name,
             'pay': f'{sale.total - sale.missing_balance:.2f}',
             'missing_balance': f'{sale.missing_balance:.2f}',
-            'date': sale_date_str,
-            'time': created_at.time(),
+            'date': datetime.now().strftime('%d/%m/%Y'),  # Formato: DD/MM/AAAA
+            'time': datetime.now().strftime('%H:%M'),     # Formato: HH:MM
             'receipt': receipt,
             'payments': payments
         }
@@ -390,6 +391,37 @@ def show_factura(request, pk):
         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
+
+from django.http import JsonResponse
+
+def gen_factura(request, pk, value):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+        sale = Sale.objects.get(id=pk)
+        customer = sale.customer
+        print(pk, int(value))
+        value = int(value)
+        print('\n\n\n\n\n\n')
+        if value == 1:
+            factura = 'A'
+        elif value == 2:
+            factura = 'B'
+        else:
+            return JsonResponse({'error': 'No se pudo generar la factura'})
+
+        try:
+            error = switch_invoice_receipt(factura, sale, sale.branch.pos_afip)
+
+            if error is not None:
+                messages.error(request, error)
+                return JsonResponse({'error': error})
+
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+        
+    return JsonResponse({'error': 'Invalid request'})
+
+    
 
 ################ SEARCH MOVEMENTS AJAX ################
 
