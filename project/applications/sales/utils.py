@@ -20,11 +20,16 @@ def get_total_and_products(formset):
     for _ in range(quantity):
         total += product.sale_price
 
+    return total
+
+
+def update_stock(formset):
+    product = formset.cleaned_data['product']
+    quantity = formset.cleaned_data['quantity']
     if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower() and not 'propio' in product.name.lower():
         product.stock -= quantity
     product.save()
-    return total
-
+    
 
 def process_formset(formset, promotional_products, wo_promo):
     """Procesa el un producto que viene del formset y retorna un detalle de venta (order_detail)"""
@@ -202,7 +207,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     #     payment_total += payment.amount
 
     payment_total = amount
-
     if Decimal(total) - Decimal(payment_total) > 0:
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
     else:
@@ -267,11 +271,7 @@ def set_movement(total, type_method, customer, request):
     # Modificamos la forma de obtener la sucursal
     branch_actualy = set_branch_session(request)
     
-    success = create_in_movement(branch_actualy, request.user, type_method, description, total)
-
-    if not success:
-        messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
-        return redirect('cashregister_app:cashregister_view')
+    create_in_movement(branch_actualy, request.user, type_method, description, total)
 
 
 def process_service_order(request, customer):
@@ -314,9 +314,10 @@ def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
     wo_promo = sum(wo_promo)
     real_price_promo = Decimal(sum(real_price_promo))
 
-    sale.discount_extra = subtotal - real_price_promo - wo_promo
+    sale.discount_extra = Decimal(subtotal - real_price_promo - wo_promo)
     sale.subtotal = Decimal(subtotal)
     sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
+    sale.total = round(sale.total, 2)
 
 
 def up_objetives(user, sale):

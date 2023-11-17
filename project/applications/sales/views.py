@@ -16,6 +16,7 @@ from applications.clients.forms import *
 from applications.promotions.models import Promotion
 from applications.cashregister.utils import create_in_movement, obtener_nombres_de_campos
 from applications.core.mixins import CustomUserPassesTestMixin
+from applications.cashregister.models import CashRegister
 from project.settings.base import  ZONE_TIME
 
 from .utils import *
@@ -46,6 +47,17 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
     #@transaction.atomic
     def form_valid(self, form):
+        branch_actualy = set_branch_session(self.request)
+
+        try: 
+            CashRegister.objects.filter(
+                is_close = False,
+                branch = branch_actualy,
+            ).last()
+        except CashRegister.DoesNotExist:
+            messages.error(self.request, 'Antes de realizar una Venta, debe Abrir una Caja.')
+            return redirect('cashregister_app:cashregister_view')
+
         formsets = form
         saleform = SaleForm(self.request.POST)
         # payment_methods = PaymentMethodsFormset(self.request.POST)
@@ -55,9 +67,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         real_price_promo = []
         wo_promo = []
         subtotal = 0
-
-        
-        branch_actualy = set_branch_session(self.request)
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
@@ -110,8 +119,12 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         if cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
+        
+        if not cristal and amount < sale.total:
+            messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales.")
+            return super().form_invalid(form)
 
-        process_customer(customer, sale, payment_methods, sale.total, cristal, amount, self.request)
+        process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, amount, self.request)
         up_objetives(self.request.user, sale)
 
         error = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale, branch_actualy.pos_afip)
