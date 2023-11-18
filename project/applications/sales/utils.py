@@ -1,7 +1,5 @@
 # Función para procesar un formulario individual
 from decimal import Decimal
-from django.contrib import messages
-from django.shortcuts import redirect
 
 from applications.branches.utils import set_branch_session
 from applications.branches.models import Branch_Objetives

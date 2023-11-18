@@ -50,11 +50,11 @@ urlpatterns = [
         name='order_service'
     ),
 
-    ########### IMPRIMIR FACTURA #########
+    ########### Generar FACTURA #########
     path(
-        'print-invoice/<pk>/',
-        print_invoice,
-        name='print_invoice'
+        'gen-factura/<pk>/',
+        gen_factura_v2,
+        name='gen_factura'
     ),
 
     ########### PAGAR DEUDA ACUMULADA DE UNA VENTA #########
@@ -62,5 +62,6 @@ urlpatterns = [
         'pay-missing-balance/<pk>/',
         pay_missing_balance,
         name='pay_missing_balance'
-    )
+    ),
+
 ]

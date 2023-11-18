@@ -256,10 +256,13 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
             'tratamiento': TratamientForm,
         }
 
+        context['select'] = SelectFacturaFrom
+
         context['order_serivices'] = sale.service_order.all()
 
         context['pay_form'] = TypePaymentMethodForm
         return context
+    
 
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
@@ -420,3 +423,11 @@ def pay_missing_balance(request, pk):
             return redirect('sales_app:sales_list_view')
     messages.error(request, 'La petición no es válida.')
     return redirect('sales_app:sale_detail_view', pk=pk)
+
+
+def gen_factura_v2(request, pk):
+    if request.method == "POST":
+        select = SelectFacturaFrom(request.POST)
+        if select.is_valid():
+            option = select.cleaned_data["select"]
+            # error = show_...
