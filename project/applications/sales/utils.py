@@ -46,7 +46,7 @@ def process_formset(formset, promotional_products, wo_promo):
             price=price, 
             discount=discount)
 
-        promotion = product.promotions.exists()
+        promotion = product.promotions.filter(promotion__is_active=True).exists()
         if promotion: # si tiene promo
             for _ in range(quantity):
                 promotion = product.promotions.last().promotion
@@ -119,9 +119,11 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
 def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
+    print("\n\n\n\n mierda")
     if invoice_or_receipt in ['A', 'B']:
         
         if invoice_or_receipt == 'A':
+            print("\n\n\n\n ES A")
             document = DocumentType.objects.get(id=1)
             receipt_type = ReceiptType.objects.get(id=1)
             
@@ -129,13 +131,15 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
                 return 'Para factura A, el CUIT del cliente debe contener 11 digitos.'
         
         elif invoice_or_receipt == 'B':
+            
+            receipt_type = ReceiptType.objects.get(id=4)
+            print("\n\n\n\n ES B")
             if len(sale.customer.dni) > 10:
                 document = DocumentType.objects.get(id=2) #es cuil
             elif len(sale.customer.dni) < 2:
                 document = DocumentType.objects.get(id=36) #es del tipo otro
             else:
                 document = DocumentType.objects.get(id=10) #es dni
-            receipt_type = ReceiptType.objects.get(id=4)
         
         sale.receipt = Receipt.objects.create(
             point_of_sales = pos_afip,
@@ -149,7 +153,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             net_taxed = Decimal(sale.total / Decimal(1.21)),
             exempt_amount = 0,
             )
-        sale.receipt.save()
+        #sale.receipt.save()
         sale.save()
         
         vat = Vat.objects.create(

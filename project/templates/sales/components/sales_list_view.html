@@ -102,16 +102,14 @@
                             {% if sale.state == "COMPLETADO" %}
                             <span class="badge rounded-pill badge-soft-success">Completa</span>
                             {% else %}
-                            <span class="badge rounded-pill badge-soft-secondary bg-danger text-white">Pendiente</span>
+                            <span class="badge rounded-pill badge-soft-danger">Pendiente</span>
                             {% endif %}
                         </td>
                         <td class="align-start missing_balance">{{sale.missing_balance}}</td>
                         <td class="align-start total">{{sale.total}}</td>
-                        <td class="align-middle white-space-nowrap text-end">
-                            <div class="d-flex gap-2 py-1">
-                                <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
-                                <a rel="noopener" target="_blank" href="" class="btn btn-sm btn-falcon-default"><span class="fas fa-print"></span></a>
-                            </div>
+                        <td class="align-middle white-space-nowrap py-1">
+                                <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Ver Detalle'><span class="fas fa-eye"></span></a>
+                                {% comment %} <a rel="noopener" target="_blank" href="" class="btn btn-sm btn-falcon-default"><span class="fas fa-print"></span></a> {% endcomment %}
                         </td>
                         <!-- <td class="align-middle white-space-nowrap text-start">
                         <div class="dropstart font-sans-serif position-static d-inline-block">

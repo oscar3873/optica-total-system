@@ -114,6 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         notificationItem.appendChild(notificationContent);
 
         const notif_href = document.createElement('a');
+        notif_href.className("my-2");
         notif_href.style.textDecoration = 'none';
         notif_href.href = notification.url; // DEBE MANDAR A LA URL QUE DEBERIA PASARSE POR EL JSON (AGREGAR AL JSON PASADO POR VIEW 'url' : notification.content_object.get_absolute_url())
 

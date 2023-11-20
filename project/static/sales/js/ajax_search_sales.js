@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const stateCell = document.createElement('td');
                                 stateCell.className = 'align-start state';
                                 const stateSpan = document.createElement('span');
-                                stateSpan.className = sale.state === 'COMPLETADO'?'badge rounded-pill badge-soft-success': 'badge rounded-pill badge-soft-secondary';
-                                const stateText = document.createTextNode(`${sale.state}`);
+                                stateSpan.className = sale.state === 'COMPLETADO'?'badge rounded-pill badge-soft-success': 'badge rounded-pill badge-soft-danger';
+                                const stateText = document.createTextNode(sale.state === 'COMPLETADO'?'Completa':'Pendiente');
                                 stateSpan.appendChild(stateText);
                                 stateCell.appendChild(stateSpan);
                                 row.appendChild(stateCell);

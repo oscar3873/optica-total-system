@@ -83,6 +83,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
 
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
+        print(promotions_active)
+        print("\n\n\n\n\n\n\n aca es")
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
         # Procesa los datos del formset
@@ -400,34 +402,17 @@ def show_factura(request, pk):
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
 
-from django.http import JsonResponse
-
-def gen_factura(request, pk, value):
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+def gen_factura(request, pk):
+    if request.method == "POST":
         sale = Sale.objects.get(id=pk)
-        customer = sale.customer
-        print(pk, int(value))
-        value = int(value)
-        print('\n\n\n\n\n\n')
-        if value == 1:
-            factura = 'A'
-        elif value == 2:
-            factura = 'B'
-        else:
-            return JsonResponse({'error': 'No se pudo generar la factura'})
-
-        try:
-            error = switch_invoice_receipt(factura, sale, sale.branch.pos_afip)
-
-            if error is not None:
-                messages.error(request, error)
-                return JsonResponse({'error': error})
-
-            return JsonResponse({'success': True})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
         
-    return JsonResponse({'error': 'Invalid request'})
+        select = SelectFacturaFrom(request.POST)
+        if select.is_valid():
+            option = select.cleaned_data["select"]
+            error = switch_invoice_receipt(option, sale, sale.branch.pos_afip)
+        else:
+            messages.error(request, 'Se produjo un error al generar la factura.')
+    return redirect('sales_app:sale_detail_view', pk=pk)
 
     
 
@@ -535,11 +520,3 @@ def pay_missing_balance(request, pk):
             return redirect('sales_app:sales_list_view')
     messages.error(request, 'La petición no es válida.')
     return redirect('sales_app:sale_detail_view', pk=pk)
-
-
-def gen_factura_v2(request, pk):
-    if request.method == "POST":
-        select = SelectFacturaFrom(request.POST)
-        if select.is_valid():
-            option = select.cleaned_data["select"]
-            # error = show_...
