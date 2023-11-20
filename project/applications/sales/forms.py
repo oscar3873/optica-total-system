@@ -147,3 +147,21 @@ class TypePaymentMethodForm(ValidationFormMixin):
     class Meta:
         model = Payment
         fields = ['payment_method', 'description'] 
+
+
+class SelectFacturaFrom(forms.Form):
+    TYPE = [
+        ('0', '---------'),
+        ('A', 'Factura A'),
+        ('B', 'Factura B'),
+    ]
+
+    select = forms.ChoiceField(
+        choices=TYPE,
+        initial=TYPE[0],
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
