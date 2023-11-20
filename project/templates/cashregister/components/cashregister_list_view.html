@@ -98,12 +98,9 @@
                   {% endif %}
                 </td>
                 <td class="align-middle white-space-nowrap text-end">
-                  <div class="dropstart font-sans-serif position-static d-inline-block">
-                    <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span></button>
-                    <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0"><a class="dropdown-item" href="{% url 'cashregister_app:cashregister_detail_view' cashregister.pk %}">Detalle</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item text-danger" rel="noopener" target="_blank" href="{% url 'cashregister_app:close_ticket_view' cashregister.id %}">Imprimir</a>
-                    </div>
+                  <div class="d-flex gap-2 py-1">
+                    <a  href="{% url 'cashregister_app:cashregister_detail_view' cashregister.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                    <a rel="noopener" target="_blank" href="{% url 'cashregister_app:close_ticket_view' cashregister.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-print"></span></a>
                   </div>
                 </td>
               </tr>
