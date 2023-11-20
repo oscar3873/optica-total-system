@@ -331,6 +331,9 @@ def show_invoice(request, pk):
 def show_factura(request, pk):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
         sale = Sale.objects.get(id=pk)
+        print("\n\n\n\n")
+        print(sale)
+        print("\n\n\n\n")
         customer = sale.customer
         receipt = sale.receipt
 
