@@ -101,7 +101,19 @@
                 <td class="align-start last_name">{{employee.user.last_name}}</td>
                 <td class="align-start phone_number d-none d-sm-table-cell"><a href="https://wa.me/{{employee.user.phone_code}}{{employee.user.phone_number}}">{{employee.user.phone_code}}{{employee.user.phone_number}}</a></td>
                 <td class="align-start email d-none d-sm-table-cell"><a href="mailto:{{employee.user.email}}">{{employee.user.email}}</a></td>
-                <td class="align-middle white-space-nowrap text-start">
+                
+                
+                <td class="align-middle white-space-nowrap text-end">
+                  <div class="d-flex gap-2 py-0">
+                      <a href="{% url 'employees_app:profile_employee' employee.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                      <a href="{% url 'employees_app:update_employee' employee.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
+                      <a href="{% url 'employees_app:employee_delete' employee.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-trash text-danger"></span></a>
+                  </div>
+              </td>
+                
+                
+                
+                <!-- <td class="align-middle white-space-nowrap text-start">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span>
                     </button>
@@ -119,7 +131,7 @@
                       {% comment %} <button class="dropdown-item text-danger" type="button" data-bs-toggle="modal" data-id="{{ employee.id }}" data-url="{% url 'employees_app:employee_delete' employee.id %}" data-bs-target="#delete-employee-modal">Borrar</button> {% endcomment %}
                     </div>
                   </div>
-                </td>
+                </td> -->
               </tr>
               {% endfor %}
             </tbody>

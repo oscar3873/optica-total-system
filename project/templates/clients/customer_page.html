@@ -82,7 +82,18 @@
                                     <td class="align-start user_mades d-none d-md-table-cell">{{ customer.user_made }}
                                     </td>
                                     <td class="align-start has_credit_account d-none d-md-table-cell"> {% if customer.has_credit_account %}<span class="badge rounded-pill badge-soft-success">Cuenta abierta</span>{% else %}<span class="badge rounded-pill badge-soft-secondary">Sin cuenta</span>{% endif %} </td>
-                                    <td class="align-middle white-space-nowrap text-start">
+                                    
+                                    
+                                    <td class="align-middle white-space-nowrap text-end">
+                                        <div class="d-flex gap-2 py-0">
+                                            <a href="{% url 'clients_app:customer_detail' customer.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                                            <a href="{% url 'clients_app:customer_update' customer.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
+                                            <a href="{% url 'clients_app:customer_delete' customer.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-trash text-danger"></span></a>
+                                        </div>
+                                    </td>
+                                    
+                                    
+                                    <!-- <td class="align-middle white-space-nowrap text-start">
                                         <div class="dropstart font-sans-serif position-static d-inline-block">
                                             <button
                                                 class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
@@ -99,7 +110,7 @@
                                                 {% endif %}
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 {% endfor %}
                             </tbody>

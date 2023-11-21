@@ -64,7 +64,17 @@
                                     <td class="align-middle white-space-nowrap open_hs">{{ branch.open_hs }}</td>
                                     <td class="align-middle white-space-nowrap close_hs">{{ branch.close_hs }}</td>
                                     <td class="align-middle white-space-nowrap phone">{{ branch.phone }}</td>
-                                    <td class="align-middle white-space-nowrap text-center">
+
+
+                                    <td class="align-middle white-space-nowrap text-end">
+                                        <div class="d-flex gap-2 py-0">
+                                            <a href="{% url 'branches_app:branch_detail' pk=branch.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                                            <a href="{% url 'branches_app:update_branch' pk=branch.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
+                                        </div>
+                                    </td>
+
+
+                                    <!-- <td class="align-middle white-space-nowrap text-center">
                                         <div class="dropstart font-sans-serif position-static d-inline-block">
                                             <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
                                                 <span class="fas fa-ellipsis-h fs--1"></span>
@@ -74,7 +84,7 @@
                                                 <a class="dropdown-item" href="{% url 'branches_app:update_branch' pk=branch.pk %}">Editar</a>
                                             </div>
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                                 {% endfor %}
                             </tbody>

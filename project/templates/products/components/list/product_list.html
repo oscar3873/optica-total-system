@@ -95,7 +95,21 @@
                 <td class="align-start d-none d-md-table-cell category">{{product.category.name}}</td>
                 <td class="align-start d-none d-md-table-cell brand">{{product.brand.name}}</td>
                 <!-- <td class="align-start branch">{{product.branch.name}}</td> -->
-                <td class="align-start white-space-nowrap text-start">
+
+
+              <td class="align-middle white-space-nowrap text-end">
+                <div class="d-flex gap-2 py-0">
+                  <a href="{% url 'products_app:product_detail' product.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                  {% if request.user.is_staff %}
+                    <a href="{% url 'products_app:update_product' product.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
+                    <a href="{% url 'products_app:product_delete' product.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-trash text-danger"></span></a>
+                  {% endif %}
+                </div>
+              </td>
+
+
+
+                <!-- <td class="align-start white-space-nowrap text-start">
                   <div class="dropstart font-sans-serif position-static d-inline-block">
                     <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs--1"></span></button>
                     <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
@@ -108,7 +122,10 @@
                         
                     </div>
                   </div>
-                </td>
+                </td> -->
+
+
+
               </tr>
               {% endfor %}
             </tbody>
