@@ -123,7 +123,7 @@ class SuppliersListView(CustomUserPassesTestMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","phone_code"]
+        exclude_fields = ["id", "deleted_at", "created_at", "updated_at","phone_code","user_made"]
         context['table_column'] = obtener_nombres_de_campos(Supplier, *exclude_fields)
         return context
 
