@@ -88,7 +88,16 @@
                                 {% else %}
                                     <td class="align-start is_active"><span class="badge badge-soft-secondary rounded-pill">Inactiva</span></td>
                                 {% endif %}
-                                <td class="align-middle white-space-nowrap text-start">
+
+                                <td class="align-middle white-space-nowrap text-end">
+                                    <div class="d-flex gap-2 py-0">
+                                        <a href="{% url 'promotions_app:promotion_detail' promotion.id %} " class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                                        <a href="{% url 'promotions_app:promotion_update' promotion.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
+                                        <a href="{% url 'promotions_app:promotion_delete' promotion.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-trash text-danger"></span></a>
+                                    </div>
+                                </td>
+
+                                <!-- <td class="align-middle white-space-nowrap text-start">
                                     <div class="dropstart font-sans-serif position-static d-inline-block">
                                         <button
                                             class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
@@ -110,7 +119,7 @@
 
                                         </div>
                                     </div>
-                                </td>
+                                </td> -->
                             </tr>
                             {% endfor %}
                         </tbody>
