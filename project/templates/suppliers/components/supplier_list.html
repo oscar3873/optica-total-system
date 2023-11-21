@@ -76,8 +76,12 @@
               {% for supplier in suppliers %}
               <tr class="btn-reveal-trigger">
                 <td class="align-start name">{{supplier.name}}</td>
-                <td class="align-start d-none d-md-table-cell phone_number">{{supplier.phone_code}}{{supplier.phone_number}}</td>
-                <td class="align-start d-none d-md-table-cell email">{{supplier.email}}</td>
+                <td class="align-start d-none d-md-table-cell phone_number">
+                  <a href="https://wa.me/{{supplier.phone_code}}{{supplier.phone_number}}">
+                    {{supplier.phone_code}}{{ supplier.phone_number }}
+                  </a>
+                </td>
+                <td class="align-start d-none d-md-table-cell email"><a href="mailto:{{supplier.email}}">{{supplier.email}}</a></td>
                 <td class="align-start d-none d-md-table-cell address">{{supplier.address}}</td>
 
                 <td class="align-middle white-space-nowrap text-end">
