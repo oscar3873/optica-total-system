@@ -19,29 +19,6 @@ class InvoiceType(BaseAbstractWithUser):
     num_invoice = models.CharField(unique=True, db_index=True, null=True, blank=True)
     name = models.CharField(max_length=10, choices=TYPE, default=TYPE[0], null=True, blank=True)
 
-# class Invoice(BaseAbstractWithUser):
-#     """
-#     Clase para Facturas
-#         almacena faturas emitidas por la empresa
-#     """
-
-#     invoice_num = models.PositiveBigIntegerField(verbose_name='Numero de factura')
-#     invoice_type = models.ForeignKey(InvoiceType, on_delete=models.SET_NULL, verbose_name='Tipo de factura', null=True , blank=True)
-#     client = models.ForeignKey(Customer, on_delete=models.SET_NULL, related_name='invoice', null=True , blank=True)
-
-
-# class Receipt(BaseAbstractWithUser):
-#     """
-#     Clase para Recibos/Comprobantes de venta
-#         almacena recibos emitidos por la empresa
-#     """ 
-
-#     # receipt_type = models.CharField(max_length=20, verbose_name='Tipo de recibo')
-#     client = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='receipt', null=True , blank=True)
-#     sale_num = models.IntegerField()
-#     total = models.PositiveIntegerField()
-
-
 class Sale(BaseAbstractWithUser):
     """
     Clase para venta

@@ -211,11 +211,12 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
     """
 
     payment_total = 0
-    # for payment in payment_methods:
-    #     payment.save(commit=False)
-    #     payment_total += payment.amount
+    # for methods in payment_methods:
+    #     methods.save(commit=False)
+    #     payment_total += methods.amount
 
     payment_total = amount
+    
     if Decimal(total) - Decimal(payment_total) > 0:
         sale.state = Sale.STATE[1][0] # "PENDIENTE"
     else:

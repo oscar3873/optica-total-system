@@ -83,8 +83,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 return super().form_invalid(form)
 
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
-        print(promotions_active)
-        print("\n\n\n\n\n\n\n aca es")
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
         # Procesa los datos del formset
@@ -129,7 +127,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             return super().form_invalid(form)
 
         process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, amount, self.request)
-        up_objetives(self.request.user, sale)
+        if sale.state == 'COMPLETADO':
+            up_objetives(sale.user_made, sale)
 
         error = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale, branch_actualy.pos_afip)
         if error is not None:
@@ -473,17 +472,17 @@ def set_serviceOrder_onSale(request, pk):
     return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': pk}))
 
 
-def print_invoice(request, pk): # pk de la orden
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
-        service = Sale.objects.get(pk=pk)
-        # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
-        html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
+# def print_invoice(request, pk): # pk de la orden
+#     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+#         service = Sale.objects.get(pk=pk)
+#         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
+#         html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
 
-        # Devuelve el HTML como respuesta
-        return HttpResponse(html_content, content_type="text/html")
-    else:
-        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
-        return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+#         # Devuelve el HTML como respuesta
+#         return HttpResponse(html_content, content_type="text/html")
+#     else:
+#         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
+#         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
 
 def pay_missing_balance(request, pk):
@@ -511,7 +510,8 @@ def pay_missing_balance(request, pk):
             sale.state = 'COMPLETADO'
             sale.missing_balance = 0
             sale.save()
-
+            
+            up_objetives(sale.user_made, sale)
             messages.success(request, 'Pago realizado con éxito.')
             return redirect('sales_app:sale_detail_view', pk=sale.pk)
         
