@@ -16,7 +16,7 @@ from applications.employes.utils import obtener_nombres_de_campos
 ################################# CREATE ##############################
 class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_create_page.html'
+    template_name = 'suppliers/supplier_form_page.html'
     success_url = reverse_lazy('suppliers_app:list_supplier')
 
     def get_context_data(self, **kwargs):
@@ -55,20 +55,22 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Supplier
     form_class = SupplierForm
-    template_name = 'suppliers/supplier_create_page.html'
+    template_name = 'suppliers/supplier_form_page.html'
     success_url = reverse_lazy('suppliers_app:list_supplier')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)        
         supplier = self.get_object()
-        related_brands = supplier.brand_suppliers.values_list('brand', flat=True)
+
+        related_brands = supplier.brand_suppliers.values_list('brand__id', flat=True)
         avaliable_brands = Brand.objects.filter(id__in=related_brands)
-        
+
         context['brandsSelected'] = avaliable_brands  # Obtén todas las marcas
         context['cbus'] = Cbu.objects.filter(suppliers__supplier=supplier)
         context['bank_form'] = CBUForm
         context['bank'] = BankForm
         context['update_create'] = f'Actualizar proveedor: {supplier.name.upper()}'
+        context['update'] = 1
         return context
 
     def form_valid(self, form):
