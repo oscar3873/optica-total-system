@@ -5,25 +5,6 @@ from applications.products.models import Product
 from .models import *
 
 class SaleForm(forms.ModelForm):
-    MODEL_CHOICES = (
-        ('D', 'No generar'),
-        ('A', 'Factura A'),
-        ('B', 'Factura B'),
-        ('C', 'Ticket comun'),
-    )
-
-    has_proof = forms.ChoiceField(
-        required= False,
-        choices = MODEL_CHOICES,
-        initial = MODEL_CHOICES[0],
-        widget = forms.Select(
-            attrs={
-                'class': 'form-control',
-                'placeholder': '0.00'
-                }
-        )
-    )
-
     description = forms.CharField(
         required = False,
         widget = forms.TextInput(

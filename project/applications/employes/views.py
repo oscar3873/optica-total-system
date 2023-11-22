@@ -96,6 +96,8 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk).order_by('created_at')
         context['objetives_branch'] = Branch_Objetives.objects.filter(branch=employee.user.branch).order_by('created_at')
 
+        print(context['objectives'], context['objetives_branch'])
+
         if not user_actual.is_staff and user_actual.employee_type != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
         return context
