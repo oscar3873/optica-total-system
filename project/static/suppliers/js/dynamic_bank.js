@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     newCheckbox.checked = true; // Define si está marcado o no
                     newLabel.htmlFor = newCheckbox.id;
                     // newLabel.textContent = data.name; // Usa textContent para establecer el contenido del label
-                    newLabel.innerHTML=`<span class="text-primary">• </span>${data.name}`;
+                    newLabel.innerHTML=`<span class="text-primary">• </span>${data.name} | ${data.cbu}`;
                     div_checksbox.classList = "form-check form-check-inline text-800 fw-bold d-inline-block";
                     newLabel.appendChild(newCheckbox);
                     div_checksbox.appendChild(newLabel);
