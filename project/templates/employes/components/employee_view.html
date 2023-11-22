@@ -47,40 +47,35 @@
       </div>
     </div>
 
-     
-    {% if objetives %}
-    <p>entra</p>
-    <div>{{objetives}}</div>
-    {% for item in objetives %}
-      <h4>$173.530/${{item.objetive.quantity}}</h4>
-    {% endfor %}
-  {% else %}
-    <p>no hay objetivos</p>
-  {% endif %}
 
       <div class="row">
-        <div class="col-lg-6">
-          <div class="card h-100" dir="ltr">
-            <div class="card-header bg-light">
-              <div class="row flex-between-end">
-                <div class="col-auto align-self-center">
-                  <h5 class="mb-0">Objetivo de Sucursal</h5>
+
+        {% if objetives_branch %}
+          {% for item in objetives_branch %}
+            <div class="col-lg-6">
+              <div class="card h-100" dir="ltr">
+                <div class="card-header bg-light">
+                  <div class="row flex-between-end">
+                    <div class="col-auto align-self-center">
+                      <h5 class="mb-0">Objetivo de Sucursal: <span class="text-primary">{{item.objetive.title}}</span></h5>
+                    </div>
+                    <div class="col-auto ms-auto">
+                    </div>
+                  </div>
                 </div>
-                <div class="col-auto ms-auto">
+                <div class="card-body">
+                  <div class="tab-content">
+                    <!-- <canvas id="monthObjetive"></canvas> -->
+                    <canvas id="monthObjetive" style="max-height: 250px;"></canvas>
+                    <div class="text-center pt-3">
+                      <h4>$<span id="branch-progress">{{item.accumulated}}</span>/$<span id="branch-objetive">{{item.objetive.quantity}}</span></h4>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <!-- <canvas id="monthObjetive"></canvas> -->
-                <canvas id="monthObjetive" style="max-height: 250px;"></canvas>
-                <div class="text-center pt-3">
-                  <h4>$173.530/$800.000</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          {% endfor %}
+        {% endif %}
   
   
   
