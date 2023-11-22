@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const employeeProgress = document.getElementById('employee-progress');
-  const employeeProgressValue = parseInt(employeeProgress.textContent);
-  const employeeObjetiveValue = parseInt(document.getElementById('employee-objetive').textContent);
-  const percentEmployeeProgress = (employeeProgressValue*100)/employeeObjetiveValue;
 
-  // Objetivo de sucursal
+  //                                                PARA OBJETIVOS DE SUCURSAL
+  const branchProgressValue = parseInt(document.getElementById('branch-progress').textContent);
+  const branchObjetiveValue = parseInt(document.getElementById('branch-objetive').textContent);
+  const percentBranchProgress = (branchProgressValue*100)/branchObjetiveValue;
+
   const pieMonthObjetiveData = {
     labels: [
       "Progreso",
       "Faltante",
     ],
     datasets: [{
-      data: [ 28 ,72 ],
+      data: [ `${percentBranchProgress.toFixed(1)}`, `${100-percentBranchProgress.toFixed(1)}` ],
       backgroundColor: [
         "#2c7be5",
         "#232e3c",
@@ -48,8 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
 
-
-                                              //Objetivo personal
+  //                                                PARA OBJETIVOS DE EMPLEADO
+  const employeeProgress = document.getElementById('employee-progress');
+  const employeeProgressValue = parseInt(employeeProgress.textContent);
+  const employeeObjetiveValue = parseInt(document.getElementById('employee-objetive').textContent);
+  const percentEmployeeProgress = (employeeProgressValue*100)/employeeObjetiveValue;
+  
   const pieData = {
     labels: [
       "Progreso",
