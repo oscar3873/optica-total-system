@@ -1,7 +1,8 @@
 import copy
 import locale
+from typing import Any
 from django.db.models import Q
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import *
 from django.template import loader
@@ -30,14 +31,19 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
     form_class = OrderDetailFormset
     template_name = 'sales/point_of_sale_page.html'
     success_url = reverse_lazy('core_app:home')
+
+    def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        branch_actualy = set_branch_session(self.request)
+        
+        cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
+        if not cashregister:
+            messages.error(self.request, 'Antes de realizar una Venta, debe Abrir una Caja.')
+            return redirect('cashregister_app:cashregister_view')
+        return super().get(request, *args, **kwargs)
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         branch_actualy = set_branch_session(self.request)
-
-        cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
-        if not cashregister:
-            messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
 
         context['sale_form'] = SaleForm
         # context['payment_form'] = PaymentMethodsFormset
@@ -47,7 +53,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         return context
 
-    #@transaction.atomic
+    @transaction.atomic
     def form_valid(self, form):
         branch_actualy = set_branch_session(self.request)
 
@@ -129,11 +135,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, amount, self.request)
         if sale.state == 'COMPLETADO':
             up_objetives(sale.user_made, sale)
-
-        error = switch_invoice_receipt(saleform.cleaned_data.pop('has_proof') or None, sale, branch_actualy.pos_afip)
-        if error is not None:
-            messages.error(self.request, error)
-            return super().form_invalid(form)
 
         for order in order_details:
             order.sale = sale
@@ -409,6 +410,9 @@ def gen_factura(request, pk):
         if select.is_valid():
             option = select.cleaned_data["select"]
             error = switch_invoice_receipt(option, sale, sale.branch.pos_afip)
+            if error is not None:
+                messages.error(request, error)
+                return redirect('sales_app:sale_detail_view', pk=pk)
         else:
             messages.error(request, 'Se produjo un error al generar la factura.')
     return redirect('sales_app:sale_detail_view', pk=pk)
