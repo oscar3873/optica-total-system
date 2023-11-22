@@ -194,7 +194,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form method="post" id="bank-form" class="row g-3 needs-validation align-items-center" novalidate="">
+                <form method="post" id="bank-form" class="row g-3 needs-validation align-items-center" novalidate="" data-id="{{object.id}}">
                     {% csrf_token %}
                     <div class="row justify-content-sm-center pb-2">
                         <div class="col pt-3">

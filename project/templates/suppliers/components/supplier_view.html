@@ -101,9 +101,9 @@
                 <div class="col mt-sm-0 d-flex flex-column flex-sm-row align-content-center">
                   <h5 class="mb-3">Bancos:&nbsp;</h5>
                 </div>
-                {% if supplier.banks.all %}
+                {% if banks %}
                 <div class="row">
-                  {% for bank in supplier.banks.all %}
+                  {% for bank in banks %}
                   <div class="col-12">
                     <span class="ms-3 text-800 fw-bold">
                       <a href="{% url 'suppliers_app:bank_update' supplier.pk bank.bank.pk %}">

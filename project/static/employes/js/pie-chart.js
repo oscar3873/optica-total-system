@@ -1,46 +1,140 @@
+document.addEventListener('DOMContentLoaded', () => {
 
-// Objetivo del mes
-const pieMonthObjetiveData = {
-  labels: [
-    "Progreso",
-    "Faltante",
-  ],
-  datasets: [{
-    data: [ 30, 70 ],
-    backgroundColor: [
-      "#2c7be5",
-      "#232e3c",
+  //                                                PARA OBJETIVOS DE SUCURSAL
+  if(document.getElementById('branch-progress') != null){
+    const branchProgressValue = parseInt(document.getElementById('branch-progress').textContent);
+  const branchObjetiveValue = parseInt(document.getElementById('branch-objetive').textContent);
+  const percentBranchProgress = (branchProgressValue*100)/branchObjetiveValue;
+
+  const pieMonthObjetiveData = {
+    labels: [
+      "Progreso",
+      "Faltante",
     ],
-    hoverOffset: 4,
-  }],
-};
+    datasets: [{
+      data: [ `${percentBranchProgress.toFixed(1)}`, `${100-percentBranchProgress.toFixed(1)}` ],
+      backgroundColor: [
+        "#2c7be5",
+        "#232e3c",
+      ],
+      hoverOffset: 4,
+    }],
+  };
 
-var pieCtx = monthObjetive.getContext('2d');
+  var pieCtx = monthObjetive.getContext('2d');
 
-var myPieChart = new Chart(pieCtx, {
-  /* IMPORTANTE: cargamos el complemento */
-  plugins: [ChartDataLabels],
-  type: 'pie',
-  data: pieMonthObjetiveData,
-  options: {
-    plugins: {
-      datalabels: {
-        /* anchor puede ser "start", "center" o "end" */
-        anchor: "center",
-        /* Podemos modificar el texto a mostrar */
-        formatter: (dato) => dato + "%",
-        /* Color del texto */
-        color: "white",
-        /* Formato de la fuente */
-        font: {
-          family: '"Poppins", Times, serif',
-          size: "20",
-          weight: "400",
-        },
+  var myPieChart = new Chart(pieCtx, {
+    /* IMPORTANTE: cargamos el complemento */
+    plugins: [ChartDataLabels],
+    type: 'pie',
+    data: pieMonthObjetiveData,
+    options: {
+      plugins: {
+        datalabels: {
+          /* anchor puede ser "start", "center" o "end" */
+          anchor: "center",
+          /* Podemos modificar el texto a mostrar */
+          formatter: (dato) => dato + "%",
+          /* Color del texto */
+          color: "white",
+          /* Formato de la fuente */
+          font: {
+            family: '"Poppins", Times, serif',
+            size: "20",
+            weight: "400",
+          },
+        }
       }
     }
+  });
   }
+  
+
+
+  //                                                PARA OBJETIVOS DE EMPLEADO
+
+  if(document.getElementById('employee-progress') != null){
+    const employeeProgress = document.getElementById('employee-progress');
+    const employeeProgressValue = parseInt(employeeProgress.textContent);
+    const employeeObjetiveValue = parseInt(document.getElementById('employee-objetive').textContent);
+    const percentEmployeeProgress = (employeeProgressValue*100)/employeeObjetiveValue;
+    
+
+    let pieData;
+    if(percentEmployeeProgress<=(100-percentEmployeeProgress)){
+      pieData = {
+        labels: [
+          "Progreso",
+          "Faltante",
+        ],
+        datasets: [{
+            data: [ `${percentEmployeeProgress.toFixed(1)}`, `${100-percentEmployeeProgress.toFixed(1)}` ],
+          backgroundColor: [
+            "#2c7be5",
+            "#232e3c",
+          ],
+          hoverOffset: 4,
+        }],
+      };
+    }
+    else{
+      pieData = {
+        labels: [
+          "Progreso",
+          "Faltante",
+        ],
+        datasets: [{
+            data: [ `${percentEmployeeProgress.toFixed(1)}`, 0 ],
+          backgroundColor: [
+            "#2c7be5",
+            "#232e3c",
+          ],
+          hoverOffset: 4,
+        }],
+      };
+    }
+    
+  
+    var pieCtx = myPieGraph.getContext('2d');
+  
+    var myPieChart = new Chart(pieCtx, {
+      /* IMPORTANTE: cargamos el complemento */
+      plugins: [ChartDataLabels],
+      type: 'pie',
+      data: pieData,
+      options: {
+        plugins: {
+          datalabels: {
+            /* anchor puede ser "start", "center" o "end" */
+            anchor: "center",
+            /* Podemos modificar el texto a mostrar */
+            formatter: (dato) => dato + "%",
+            /* Color del texto */
+            color: "white",
+            /* Formato de la fuente */
+            font: {
+              family: '"Poppins", Times, serif',
+              size: "20",
+              weight: "400",
+            },
+          },
+          legend: {
+            labels: {
+                color: '#5e6e82'  // Cambia el color de la letra de las etiquetas
+            }
+          }
+        }
+      }
+    });
+  }
+  
+
+
 });
+
+
+
+
 
 
 
@@ -75,50 +169,3 @@ var myPieChart = new Chart(pieCtx, {
 
 
 
-//Objetivo personal
-const pieData = {
-    labels: [
-      "Progreso",
-      "Faltante",
-    ],
-    datasets: [{
-      data: [ 72, 28 ],
-      backgroundColor: [
-        "#2c7be5",
-        "#232e3c",
-      ],
-      hoverOffset: 4,
-    }],
-  };
-  
-  var pieCtx = myPieGraph.getContext('2d');
-  
-  var myPieChart = new Chart(pieCtx, {
-    /* IMPORTANTE: cargamos el complemento */
-    plugins: [ChartDataLabels],
-    type: 'pie',
-    data: pieData,
-    options: {
-      plugins: {
-        datalabels: {
-          /* anchor puede ser "start", "center" o "end" */
-          anchor: "center",
-          /* Podemos modificar el texto a mostrar */
-          formatter: (dato) => dato + "%",
-          /* Color del texto */
-          color: "white",
-          /* Formato de la fuente */
-          font: {
-            family: '"Poppins", Times, serif',
-            size: "20",
-            weight: "400",
-          },
-        },
-        legend: {
-          labels: {
-              color: '#5e6e82'  // Cambia el color de la letra de las etiquetas
-          }
-        }
-      }
-    }
-  });

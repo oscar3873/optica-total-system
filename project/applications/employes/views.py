@@ -93,7 +93,7 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         employee = self.get_object()
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
-        context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk).order_by('created_at')
+        context['objetives'] = Employee_Objetives.objects.filter(employee_id=employee_pk).order_by('created_at')
         context['objetives_branch'] = Branch_Objetives.objects.filter(branch=employee.user.branch).order_by('created_at')
 
         print(context['objectives'], context['objetives_branch'])
