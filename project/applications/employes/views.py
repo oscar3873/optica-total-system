@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.users.models import User
 from applications.users.forms import *
+from applications.branches.models import Branch_Objetives
 
 from .forms import EmployeeCreateForm, EmployeeUpdateForm
 from .models import Employee, Employee_Objetives
@@ -89,9 +90,11 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         user_actual = self.request.user
         employee_pk = self.kwargs['pk']
+        employee = self.get_object()
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
-        context['objectives'] = context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk)
+        context['objectives'] = Employee_Objetives.objects.filter(employee_id=employee_pk).order_by('created_at')
+        context['objetives_branch'] = Branch_Objetives.objects.filter(branch=employee.user.branch).order_by('created_at')
 
         if not user_actual.is_staff and user_actual.employee_type != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
