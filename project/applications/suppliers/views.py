@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, DeleteView, ListView, DetailView, FormView,DeleteView
 from django.contrib import messages
 
+from applications.suppliers.utils import delete_banks_not_assoc
 from applications.core.mixins import CustomUserPassesTestMixin
 from .forms import *
 from .models import *
@@ -20,6 +21,7 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('suppliers_app:list_supplier')
 
     def get_context_data(self, **kwargs):
+        delete_banks_not_assoc()
         context = super().get_context_data(**kwargs)
         context['brandsSelected'] = Brand.objects.all()  # Obtén todas las marcas
         context['bank_form'] = CBUForm
@@ -28,6 +30,8 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         return context
 
     def form_valid(self, form):
+        delete_banks_not_assoc()
+
         supplier = form.save(commit=False)
         supplier.user_made = self.request.user
         supplier.save()
@@ -59,6 +63,8 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
     success_url = reverse_lazy('suppliers_app:list_supplier')
     
     def get_context_data(self, **kwargs):
+        delete_banks_not_assoc()
+
         context = super().get_context_data(**kwargs)        
         supplier = self.get_object()
 
@@ -74,6 +80,8 @@ class SupplierUpdateView(CustomUserPassesTestMixin, UpdateView):
         return context
 
     def form_valid(self, form):
+        delete_banks_not_assoc()
+
         form.instance.user_made = self.request.user
         supplier = form.instance
 
@@ -147,10 +155,10 @@ class SupplierDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         supplier = self.object  # Obtén el proveedor del contexto
-        
         # Obtén las marcas relacionadas al proveedor
         brands = supplier.brand_suppliers.all()
-        
+        print(supplier.banks.all())
+        context['banks'] = supplier.banks.filter(deleted_at=None)        
         context['related_brands'] = brands
         return context
 
@@ -171,6 +179,8 @@ def set_bank_supplier(request):
     if request.method == 'POST':
         bank_form = CBUForm(request.POST)
         if bank_form.is_valid():
+            delete_banks_not_assoc()
+            
             bank = bank_form.save(commit=False)
             bank.user_made = request.user
             bank.save()

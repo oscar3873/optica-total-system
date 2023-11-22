@@ -47,70 +47,16 @@
       </div>
     </div>
 
-
-
-
-
-
-      <!-- <div class="card mb-3">
-        <div class="card-header bg-light d-flex justify-content-between">
-          <h5 class="mb-0">Activity log</h5><a class="font-sans-serif" href="../../app/social/activity-log.html">All logs</a>
-        </div>
-        <div class="card-body fs--1 p-0">
-          <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="#!">
-            <div class="notification-avatar">
-              <div class="avatar avatar-xl me-3">
-                <div class="avatar-emoji rounded-circle "><span role="img" aria-label="Emoji">🎁</span></div>
-              </div>
-            </div>
-            <div class="notification-body">
-              <p class="mb-1"><strong>Jennifer Kent</strong> Congratulated <strong>Anthony Hopkins</strong></p>
-              <span class="notification-time">November 13, 5:00 Am</span>
-
-            </div>
-          </a>
-
-          <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="#!">
-            <div class="notification-avatar">
-              <div class="avatar avatar-xl me-3">
-                <div class="avatar-emoji rounded-circle "><span role="img" aria-label="Emoji">🏷️</span></div>
-              </div>
-            </div>
-            <div class="notification-body">
-              <p class="mb-1"><strong>California Institute of Technology</strong> tagged <strong>Anthony Hopkins</strong> in a post.</p>
-              <span class="notification-time">November 8, 5:00 PM</span>
-
-            </div>
-          </a>
-
-          <a class="border-bottom-0 notification rounded-0 border-x-0 border border-300" href="#!">
-            <div class="notification-avatar">
-              <div class="avatar avatar-xl me-3">
-                <div class="avatar-emoji rounded-circle "><span role="img" aria-label="Emoji">📋️</span></div>
-              </div>
-            </div>
-            <div class="notification-body">
-              <p class="mb-1"><strong>Anthony Hopkins</strong> joined <strong>Victory day cultural Program</strong> with <strong>Tony Stark</strong></p>
-              <span class="notification-time">November 01, 11:30 AM</span>
-
-            </div>
-          </a>
-
-          <a class="notification border-x-0 border-bottom-0 border-300 rounded-top-0" href="#!">
-            <div class="notification-avatar">
-              <div class="avatar avatar-xl me-3">
-                <div class="avatar-emoji rounded-circle "><span role="img" aria-label="Emoji">📅️</span></div>
-              </div>
-            </div>
-            <div class="notification-body">
-              <p class="mb-1"><strong>Massachusetts Institute of Technology</strong> invited <strong>Anthony Hopkin</strong> to an event</p>
-              <span class="notification-time">October 28, 12:00 PM</span>
-
-            </div>
-          </a>
-
-        </div>
-      </div> -->
+     
+    {% if objetives %}
+    <p>entra</p>
+    <div>{{objetives}}</div>
+    {% for item in objetives %}
+      <h4>$173.530/${{item.objetive.quantity}}</h4>
+    {% endfor %}
+  {% else %}
+    <p>no hay objetivos</p>
+  {% endif %}
 
       <div class="row">
         <div class="col-lg-6">
@@ -118,7 +64,7 @@
             <div class="card-header bg-light">
               <div class="row flex-between-end">
                 <div class="col-auto align-self-center">
-                  <h5 class="mb-0">Objetivo del mes</h5>
+                  <h5 class="mb-0">Objetivo de Sucursal</h5>
                 </div>
                 <div class="col-auto ms-auto">
                 </div>
@@ -138,29 +84,32 @@
   
   
   
-  
-        <div class="col-lg-6">
-          <div class="card h-100" dir="ltr">
-            <div class="card-header bg-light">
-              <div class="row flex-between-end">
-                <div class="col-auto align-self-center">
-                  <h5 class="mb-0">Objetivo personal</h5>
+        {% if objetives %}
+          {% for item in objetives %}
+            <div class="col-lg-6">
+              <div class="card h-100" dir="ltr">
+                <div class="card-header bg-light">
+                  <div class="row flex-between-end">
+                    <div class="col-auto align-self-center">
+                      <h5 class="mb-0">Objetivo personal: <span class="text-primary">{{item.objetive.title}}</span></h5>
+                    </div>
+                    <div class="col-auto ms-auto">
+                    </div>
+                  </div>
                 </div>
-                <div class="col-auto ms-auto">
+                <div class="card-body">
+                  <div class="tab-content">
+                    <!-- <canvas id="personalObjetive"></canvas> -->
+                    <canvas id="myPieGraph" style="max-height: 250px;"></canvas>
+                    <div class="text-center pt-3">  
+                      <h4>$<span id="employee-progress">{{item.accumulated}}</span>/$<span id="employee-objetive">{{item.objetive.quantity}}</span></h4>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="card-body">
-              <div class="tab-content">
-                <!-- <canvas id="personalObjetive"></canvas> -->
-                <canvas id="myPieGraph" style="max-height: 250px;"></canvas>
-                <div class="text-center pt-3">
-                  <h4>$173.530/$800.000</h4>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          {% endfor %}
+        {% endif %}
 
 
 
@@ -184,49 +133,5 @@
 <!-- ===============================================-->
 
 
-
-
-{% if false %}
-<div class="row g-0">
-  <div class="col-lg-8 pe-lg-2">
-    <div class="card mb-3">
-      <!--Card Header-->
-      <div class="card-header bg-light">
-        <h5 class="mb-0">Intro</h5>
-      </div>
-      <!--Card Body-->
-      <div class="card-body text-justify">
-        Sin colapsar
-        <div class="collapse show" id="profile-intro">
-          oculto
-        </div>
-      </div>
-      <div class="card-footer bg-light p-0 border-top">
-        <button class="btn btn-link d-block w-100 btn-intro-collapse" type="button" data-bs-toggle="collapse" data-bs-target="#profile-intro" aria-expanded="true" aria-controls="profile-intro">Show <span class="less">less<span class="fas fa-chevron-up ms-2 fs--2"></span></span><span class="full">full<span class="fas fa-chevron-down ms-2 fs--2"></span></span></button>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-4 ps-lg-2">
-    <div class="sticky-sidebar">
-      <div class="card mb-3">
-        <div class="card-header bg-light">
-          <h5 class="mb-0">Experience</h5>
-        </div>
-        <div class="card-body fs--1">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!--Card-->
-<div class="card bg-transparent-50 overflow-hidden">
-  <div class="card-header position-relative">
-    <div class="bg-holder d-none d-md-block bg-card z-index-1"
-      style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
-    </div>
-    <!--/.bg-holder-->
-  </div>
-</div>
-{% endif %}
 
 
