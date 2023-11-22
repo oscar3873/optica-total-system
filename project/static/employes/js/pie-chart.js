@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "Faltante",
     ],
     datasets: [{
-      data: [ `${percentEmployeeProgress}`, `${100-percentEmployeeProgress}` ],
+      data: [ `${percentEmployeeProgress.toFixed(1)}`, `${100-percentEmployeeProgress.toFixed(1)}` ],
       backgroundColor: [
         "#2c7be5",
         "#232e3c",
