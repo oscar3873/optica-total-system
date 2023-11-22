@@ -44,11 +44,13 @@
             text-align: center;
         }
         .branch-info{
-            text-align: center;
-            font-size: .7rem;
+            text-align: start;
+            font-size: 1rem;
+            padding-left: 8px;
         }
         .branch{
-            font-size: .7rem;
+            text-align: start;
+            font-size: 1rem;
         }
         .contact{
             font-weight: bold;
@@ -102,6 +104,9 @@
             margin-top: 2rem;
             font-size: .7rem;
         }
+        .obser{
+            padding-left: 8px;
+        }
     </style>
 </head>
 <body>
@@ -109,8 +114,8 @@
     <!-- Cabecera con logo y nombre -->
     <div class="header">
         <div class="datetime">
-            <small class="date">martes, 15 de agosto de 2023</small>
-            <small class="time">00:00:00</small>
+            <small class="date">{{cashregister.updated_at|date:"d/m/Y"}}</small>
+            <small class="time">{{cashregister.updated_at|time}}</small>
         </div>
         <div class="logo">
             <img src="{% static 'core/img/logo_optica_light.png' %}" alt="Logo de la empresa">
@@ -127,7 +132,7 @@
     </div>
 
     <!-- Resumen de cuentas -->
-    <h6>Movimientos</h6>
+    <!--<h6>Movimientos</h6>
     <table>
         <thead>
             <tr>
@@ -153,10 +158,19 @@
         </tfoot>
     </table>
     <br>
-    <br>
+    <br>-->
     <!-- Firma y aclaración -->
+    <div class="obser">
+        <span class="seleer">Observaciones: {{cashregister.observations}}</span>
+        <br>
+        <br>
+    </div>
     <div class="footer">
         <span class="seller">Firma</span>
+        <br>
+        <br>
+        <br>
+        <br>
     </div>
 </body>
 </html>
