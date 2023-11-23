@@ -11,8 +11,9 @@ from django.contrib import messages
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.utils import set_branch_session
 from applications.cashregister.utils import obtener_nombres_de_campos
-from applications.cashregister.models import Currency, Movement, PaymentType
+from applications.cashregister.models import CashRegister, Currency, Movement
 from applications.sales.models import Payment
+from applications.sales.forms import PaymentMethodForm, TypePaymentMethodForm
 from project.settings.base import DATE_NOW, ZONE_TIME
 
 from .models import *
@@ -322,7 +323,8 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
 
         service_order = Customer.objects.history(customer)
         context['service_orders'] = service_order
-
+        context['pay_form'] = TypePaymentMethodForm
+        context['payment_method_form'] = PaymentMethodForm
         context['sales'] = customer.sales.all().filter(state="PENDIENTE")
 
         return context
@@ -462,32 +464,53 @@ def pay_credits(request, pk):
     user = request.user
     customer = Customer.objects.get(pk=pk)
     total = 0
+    payment = TypePaymentMethodForm(request.POST)
 
-    transactions = Payment.objects.all(customer)
-    for transaction in transactions:      
-        transaction.sale.state = 'COMPLETADO'
-        total += transaction.sale.amount
-        transaction.sale.save()
+    if payment.is_valid():
+        pay = payment.save(commit=False)
+        transactions = customer.payments.filter(deleted_at=None, sale__state="PENDIENTE").order_by('created_at')
+        for transaction in transactions:      
+            transaction.sale.state = 'COMPLETADO'
+            total += transaction.sale.amount
+            transaction.sale.save()
 
-    cashregister = user.branch.cashregister_set.filter(is_close=False).last(),
+            Payment.objects.create(
+                user_made = request.user,
+                customer = customer,
+                amount = transaction.sale.amount,
+                payment_method = pay.payment_method,
+                description = pay.description if len(pay.description) > 1 else 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
+                sale = transaction.sale,
+            )
 
-    Movement.objects.create(
-        amount = total,
-        date_movement = DATE_NOW.date(),
-        cash_register = cashregister,
-        description = 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
-        currency = Currency.objects.get(name__icontains='PESO'),
-        type_operation = 'Ingreso',
-        payment_method = PaymentType.objects.first(),
-    )
+        branch_actualy = set_branch_session(request)
 
-    customer.credit_balance = 0
-    customer.user_made = user
-    customer.save()
+        cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
+        if not cashregister:
+            messages.error(request, 'Antes de realizar una Venta, debe Abrir una Caja.')
+            return redirect('cashregister_app:cashregister_view')
 
-    messages.success(request, "Se recibio el pago.")
-    return redirect('clients_app:customer_detail', pk=customer.pk)
+        type_operation = 'Ingreso'
+        Movement.objects.create(
+            amount = total,
+            date_movement = DATE_NOW.date(),
+            cash_register = cashregister,
+            description = pay.description if len(pay.description) > 1 else 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
+            currency = Currency.objects.get(name__icontains='PESO'),
+            type_operation = type_operation,
+            payment_method = pay.payment_method.type_method,
+        )
+        Movement.objects.update_balance(cashregister, total, type_operation)
 
+        customer.credit_balance = 0
+        customer.user_made = user
+        customer.save()
+
+        messages.success(request, "Se recibio el pago.")
+        return redirect('clients_app:customer_detail', pk=customer.pk)
+    else:
+        messages.error(request, "Se produjo un error al realizar pago.")
+        return redirect('clients_app:customer_detail', pk=customer.pk)
 
 
 def close_credit_account(request, pk):

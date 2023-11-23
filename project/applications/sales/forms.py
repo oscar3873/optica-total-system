@@ -26,7 +26,7 @@ class SaleForm(forms.ModelForm):
     )
 
     payment_method = forms.ModelChoiceField(
-        queryset=PaymentMethod.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        queryset=PaymentMethod.objects.all(),
         widget=forms.Select(
             attrs={'class': 'form-control'}
         )
@@ -90,7 +90,7 @@ class PaymentMethodForm(ValidationFormMixin):
     )
     
     type_method = forms.ModelChoiceField(
-        queryset = PaymentType.objects.exclude(name__in=['Efectivo', 'Transferencia']),
+        queryset = PaymentType.objects.exclude(name__in=['Efectivo', 'Transferencia', 'Cuenta Corriente']),
         widget=forms.Select(
             attrs={
                 'class': 'form-control'
@@ -113,15 +113,19 @@ class PaymentMethodForm(ValidationFormMixin):
 class TypePaymentMethodForm(ValidationFormMixin):
 
     payment_method = forms.ModelChoiceField(
-        queryset=PaymentMethod.objects.all(), #Tener en cuenta este "hardcodeo" para solo se tenga en cuenta Tarjeta de debito o credito, sin tener en cuenta efectivo y transferencia
+        queryset=PaymentMethod.objects.exclude(name__in=['Cuenta Corriente']),
         widget=forms.Select(
-            attrs={'class': 'form-control'}
+            attrs={
+                'class': 'form-control'
+                }
         )
     )
     description = forms.CharField(
         required = False,
         widget = forms.TextInput(
-            attrs={'class': 'form-control'}
+            attrs={
+                'class': 'form-control'
+                }
         )
     )
 

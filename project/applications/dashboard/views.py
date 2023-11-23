@@ -15,7 +15,6 @@ class DailyReportsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-
         
         branch_actualy = set_branch_session(self.request)
         
@@ -56,7 +55,6 @@ def sale_date_month(request, month):
 
             ventas_por_dia = []
 
-            
             branch_actualy = set_branch_session(request)
 
             for dia in range(1, ultimo_dia + 1):

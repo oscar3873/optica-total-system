@@ -326,7 +326,6 @@ class MovementsCreateView(CustomUserPassesTestMixin, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(branch=branch_actualy, is_close=False).last()
@@ -338,7 +337,6 @@ class MovementsCreateView(CustomUserPassesTestMixin, FormView):
         return context
     
     def form_valid(self, form):
-        
         branch_actualy = set_branch_session(self.request)
         cash_register = CashRegister.objects.filter(branch=branch_actualy, is_close=False).last()
 

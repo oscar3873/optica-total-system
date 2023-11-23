@@ -180,12 +180,19 @@ def dayli_sales_total(branch_actualy):
     return suma_total_ventas
 
 
+def yesterday_sales_total(branch_actualy):
+    suma_total = Sale.objects.filter(created_at__date=datetime.now().date() - timedelta(days=1), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
+    suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
+    print('\n\n\n\'', suma_total_ventas)
+    return suma_total_ventas
+
+
 def list_sale_to_dayli(branch_actualy):
     """
     IDEA: MOSTRAR COMO INDICA EN LA VARIABLE columns,
           link a el Cliente y a Venta
     """
-    columns = ['Fecha', 'Cliente', 'Venta', 'Estado', 'Monto']
+    columns = ['Por', 'Fecha', 'Hora', 'Cliente', 'Estado', 'Monto']
 
     sale = Sale.objects.filter(branch=branch_actualy).order_by('-created_at')[:4] # campos qeu se deben mostrar en la tabla: sale.id, sale.created_at, sale.state, sale.total, sale.customer
     print('LISTA DE VENTAS: ',sale)

@@ -11,7 +11,7 @@ def auto_set_payment_type(sender, **kwargs):
     branch_count = PaymentType.objects.count()
 
     if branch_count == 0:
-        for type in ['Efectivo', 'Tarjeta de Credito', 'Tarjeta de Debito', 'Transferencia']:
+        for type in ['Efectivo', 'Tarjeta de Credito', 'Tarjeta de Debito', 'Transferencia', 'Cuenta Corriente']:
             PaymentType.objects.create(
                 name = type,
             )
@@ -24,7 +24,7 @@ def auto_set_payment_type(sender, **kwargs):
                 )
         PaymentMethod.objects.create(
             name='Cuenta Corriente',
-            type_method=PaymentType.objects.get(name='Tarjeta de Credito')
+            type_method=PaymentType.objects.get(name='Cuenta Corriente')
             )
 
 post_migrate.connect(auto_set_payment_type)
