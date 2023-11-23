@@ -192,7 +192,7 @@ def list_sale_to_dayli(branch_actualy):
     IDEA: MOSTRAR COMO INDICA EN LA VARIABLE columns,
           link a el Cliente y a Venta
     """
-    columns = ['Por', 'Fecha', 'Hora', 'Cliente', 'Estado', 'Monto']
+    columns = ['Por', 'Fecha', 'Hora', 'Cliente', 'Estado', 'Total']
 
     sale = Sale.objects.filter(branch=branch_actualy).order_by('-created_at')[:4] # campos qeu se deben mostrar en la tabla: sale.id, sale.created_at, sale.state, sale.total, sale.customer
     print('LISTA DE VENTAS: ',sale)
@@ -200,7 +200,7 @@ def list_sale_to_dayli(branch_actualy):
 
 
 def movs_to_dayli(branch_actualy):
-    columns = ['Fecha', 'Responsable', 'Descripción', 'Tipo', 'Monto'] # MODIFICAR 
+    columns = ['Fecha', 'Responsable', 'Descripción', 'Tipo', 'Total'] # MODIFICAR 
 
     moviments = Movement.objects.filter(cash_register__branch=branch_actualy).order_by('-created_at')[:4]
     print('LISTA DE MOVIMIENTOS: ',moviments)
