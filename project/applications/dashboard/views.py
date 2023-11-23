@@ -15,7 +15,6 @@ class DailyReportsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context=super().get_context_data(**kwargs)
-
         
         branch_actualy = set_branch_session(self.request)
         
@@ -23,6 +22,7 @@ class DailyReportsView(TemplateView):
         context['customers'] = dayli_customers(branch_actualy) # clientes registrados del dia
         context['sales'] = dayli_sales_count(branch_actualy) # cantidad de ventas del dia
         context['suma_total_ventas'] = dayli_sales_total(branch_actualy) # total en $ventas del dia
+        context['suma_total_ventas_ayer'] = yesterday_sales_total(branch_actualy) # tota en ventas del dia anterior
         context['columns_sale'], context['sale_list'] = list_sale_to_dayli(branch_actualy) # lista de ventas para tabla ¡¡<<VER: CARLOS PUTOOO>>!!
         context['columns_mov'], context['mov_list'] = movs_to_dayli(branch_actualy) # lista de ventas para tabla ¡¡<<VER: CARLOS PUTOOO>>!!
         
@@ -37,7 +37,7 @@ class DashboardView(TemplateView):
         branch_actualy = set_branch_session(self.request)
 
         context['ventas_semanales'] = week_status(branch_actualy) # devuleve un diccionario con las ventas de la semana
-        context['ventas_por_semana'], context['total_ventas_anteriores'] = week_sales(branch_actualy) # devuleve un diccionario con las ventas de la semana
+        context['ventas_por_semana'], context['total_ventas_anteriores'], context['ventas_anteriores'] = week_sales(branch_actualy) # devuleve un diccionario con las ventas de la semana
         context['productos_mas_vendidos'] = top_prodcuts(branch_actualy) # devuleve un diccionario con el TOP de prodcutos mas vendidos
         context['marcas_mas_vendidos'] = top_brands(branch_actualy) # devuleve un diccionario con el TOP de marcas mas vendidas
         context['objetivos_emp'], context['objetivos_suc'] = objetives(branch_actualy) # VER MODELO PARA ACCEDER A LOS CAMPOS NECESARIOS!!!
@@ -56,7 +56,6 @@ def sale_date_month(request, month):
 
             ventas_por_dia = []
 
-            
             branch_actualy = set_branch_session(request)
 
             for dia in range(1, ultimo_dia + 1):
