@@ -7128,6 +7128,7 @@ var linePaymentChartInit = function linePaymentChartInit() {
   // Obtengo los datos del contexto
   var dataAttr = document.getElementById('data-successful-payments').getAttribute('data-successful-payments');
   var contextSuccessfulPayments = JSON.parse(dataAttr.replace(/'/g, '"'));
+  console.log(contextSuccessfulPayments);
   // Creo una lista en donde voy cargando los datos del contexto
   let listSuccessfulPayments = [];
   for (var key in contextSuccessfulPayments) {
@@ -7159,6 +7160,7 @@ var linePaymentChartInit = function linePaymentChartInit() {
     successful: listSuccessfulPayments,
     failed: listUnderpayments
   };
+  console.log(listSuccessfulPayments);
   var labels = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
   if ($echartsLinePaymentChart) {
@@ -7242,7 +7244,7 @@ var linePaymentChartInit = function linePaymentChartInit() {
           type: 'line',
           smooth: true,
           data: dataset.successful.map(function (d) {
-            return (d * 3.14).toFixed(2);
+            return (d).toFixed(2);
           }),
           symbol: 'emptyCircle',
           itemStyle: {
@@ -7302,7 +7304,8 @@ var linePaymentChartInit = function linePaymentChartInit() {
         chart.setOption({
           series: [{
             data: dataset[value].map(function (d) {
-              return (d * 3.14).toFixed(2);
+              console.log("PRINT ",d);
+              return (d).toFixed(2);
             })
           }]
         });
