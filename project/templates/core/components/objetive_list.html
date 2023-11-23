@@ -90,8 +90,10 @@
                             <td class="align-middle white-space-nowrap text-end">
                                 <div class="d-flex gap-2 py-0">
                                     <a  href="{% url 'core_app:objetive_detail' objetive.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
-                                    <a rel="noopener" target="_blank" href="{% url 'core_app:objetive_update' objetive.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
-                                    <a  href="{% url 'core_app:objetive_delete' objetive.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-trash text-danger"></span></a>
+                                    {% if request.user.is_staff %}
+                                        <a rel="noopener" target="_blank" href="{% url 'core_app:objetive_update' objetive.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-edit"></span></a>
+                                        <a  href="{% url 'core_app:objetive_delete' objetive.id %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-trash text-danger"></span></a>
+                                    {% endif %}
                                 </div>
                             </td>
 
