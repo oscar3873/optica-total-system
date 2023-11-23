@@ -153,7 +153,6 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             net_taxed = Decimal(sale.total / Decimal(1.21)),
             exempt_amount = 0,
             )
-        #sale.receipt.save()
         sale.save()
         
         vat = Vat.objects.create(
@@ -163,21 +162,16 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             receipt = sale.receipt
             ) 
         
-        
         # Realiza la validación del recibo con la AFIP
-        validation_result = sale.receipt.validate()
+        try:
+            validation_result = sale.receipt.validate()
+        except:
+            sale.receipt.dalete()
+            vat.dalete()
+            return 'Error de comunicacion con AFIP.'
         
         print(validation_result)
-        # if validation_result.result == 'A':
-        #     # Accede al CAE y su vencimiento
 
-        #     # Utiliza el CAE y su vencimiento como sea necesario, por ejemplo, en tu factura
-        #     print("CAE:", validation_result.cae)
-        #     print("Vencimiento del CAE:", validation_result.cae_expiration)
-        # else:
-        #     # Manejo de validación fallida
-        #     print("La validación falló. No se pudo obtener el CAE y su vencimiento.")
-        
 
 
 def find_cristal_product(all_products_to_sale, sale=None):
