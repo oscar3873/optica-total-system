@@ -12,7 +12,7 @@ from applications.core.mixins import CustomUserPassesTestMixin
 from applications.branches.utils import set_branch_session
 from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.cashregister.models import CashRegister, Currency, Movement
-from applications.sales.models import Payment
+from applications.sales.models import Payment, Sale
 from applications.sales.forms import PaymentMethodForm, TypePaymentMethodForm
 from project.settings.base import DATE_NOW, ZONE_TIME
 
@@ -325,7 +325,22 @@ class CustomerDetailView(LoginRequiredMixin, DetailView):
         context['service_orders'] = service_order
         context['pay_form'] = TypePaymentMethodForm
         context['payment_method_form'] = PaymentMethodForm
-        context['sales'] = customer.sales.all().filter(state="PENDIENTE")
+
+        context['table_column'] = obtener_nombres_de_campos(Sale,
+            "id",
+            "deleted_at", 
+            "created_at", 
+            "updated_at",
+            "receipt",
+            "customer",
+            "discount",
+            "refund_date",
+            "discount_extra",
+            "subtotal",
+            "branch",
+            "total"
+            )
+        context['sales_pendientes'] = customer.sales.filter(state="PENDIENTE")
 
         return context
     

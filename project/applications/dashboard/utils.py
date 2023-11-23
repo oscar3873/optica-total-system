@@ -65,11 +65,14 @@ def week_sales(branch_actualy):
     total_ventas_anteriores = Sale.objects.filter(branch=branch_actualy,
                             created_at__range=(fecha_inicio - timedelta(weeks=3), fecha_inicio)
                         ).count()
+    ventas_anteriores = Sale.objects.filter(branch=branch_actualy,
+                            created_at__range=(fecha_inicio - timedelta(weeks=3), fecha_inicio)
+                        ).annotate(ventas_anteriores=Sum('total')).values('ventas_anteriores').last()
 
     print("\nVentas por semana:", ventas_por_semana)
     print("Total de ventas de las 4 semanas anteriores:", total_ventas_anteriores)
-
-    return ventas_por_semana, total_ventas_anteriores
+    print("Ventas anteriores: $", ventas_anteriores['ventas_anteriores'])
+    return ventas_por_semana, total_ventas_anteriores, ventas_anteriores['ventas_anteriores']
 
 
 def top_prodcuts(branch_actualy):
@@ -93,10 +96,9 @@ def top_prodcuts(branch_actualy):
 
 def top_brands(branch_actualy):
     # Obtén un diccionario con el nombre de la marca y la cantidad total vendida
-    marcas_mas_vendidas = Brand.objects.annotate(
-                total_cantidad_vendida=Sum('product_brand__order_detaill__quantity')
-            ).filter(total_cantidad_vendida__gt=0, product_brand__branch__name=branch_actualy).values('name', 'total_cantidad_vendida')
-
+    marcas_mas_vendidas = Brand.objects.filter(product_brand__branch=branch_actualy
+            ).annotate(total_cantidad_vendida=Sum('product_brand__order_detaill__quantity')
+            ).filter(total_cantidad_vendida__gt=0).values('name', 'total_cantidad_vendida')
 
     # Crea un diccionario para almacenar los resultados
     top_marcas_mas_vendidas = defaultdict(int)
