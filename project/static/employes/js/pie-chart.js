@@ -61,14 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     let pieData;
-    if(percentEmployeeProgress<=(100-percentEmployeeProgress)){
+    if(percentEmployeeProgress<=100){
       pieData = {
         labels: [
           "Progreso",
           "Faltante",
         ],
         datasets: [{
-            data: [ `${percentEmployeeProgress.toFixed(1)}`, `${100-percentEmployeeProgress.toFixed(1)}` ],
+            data: [ `${percentEmployeeProgress.toFixed(1)}`, `${(100-percentEmployeeProgress).toFixed(1)}` ],
           backgroundColor: [
             "#2c7be5",
             "#232e3c",

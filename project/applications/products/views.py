@@ -333,7 +333,7 @@ class FeatureTypeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Feature_type
     form_class = FeatureForm
     template_name = 'products/featureType_update_page.html'
-    success_url = reverse_lazy('core_app:homefeature_type_list')
+    success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
         form.instance.user_made = self.request.user
