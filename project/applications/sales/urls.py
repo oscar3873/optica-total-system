@@ -50,12 +50,7 @@ urlpatterns = [
         name='order_service'
     ),
 
-    ########### Generar FACTURA #########
-    path(
-        'gen-factura/<pk>/',
-        gen_factura_v2,
-        name='gen_factura'
-    ),
+
 
     ########### PAGAR DEUDA ACUMULADA DE UNA VENTA #########
     path(

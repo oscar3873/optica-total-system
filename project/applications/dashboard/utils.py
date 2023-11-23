@@ -200,7 +200,7 @@ def list_sale_to_dayli(branch_actualy):
 
 
 def movs_to_dayli(branch_actualy):
-    columns = ['Fecha', 'Responsable', 'Descripción', 'Tipo', 'Total'] # MODIFICAR 
+    columns = ['Por', 'Fecha', 'Hora', 'Descripción', 'Tipo', 'Monto'] # MODIFICAR 
 
     moviments = Movement.objects.filter(cash_register__branch=branch_actualy).order_by('-created_at')[:4]
     print('LISTA DE MOVIMIENTOS: ',moviments)
