@@ -1,4 +1,3 @@
-from typing import Any
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
@@ -9,6 +8,7 @@ from django.db import transaction
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from project.settings.base import DATE_NOW
 from applications.core.mixins import CustomUserPassesTestMixin
 from applications.users.models import User
 from applications.users.forms import *
@@ -93,8 +93,12 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
         employee = self.get_object()
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
-        context['objetives'] = Employee_Objetives.objects.filter(employee_id=employee_pk).order_by('created_at')
-        context['objetives_branch'] = Branch_Objetives.objects.filter(branch=employee.user.branch).order_by('created_at')
+        context['objetives'] = Employee_Objetives.objects.filter(employee_id=employee_pk,
+                                                                objetive__exp_date__gte=DATE_NOW.date()
+                                                            ).order_by('created_at')
+        context['objetives_branch'] = Branch_Objetives.objects.filter(branch=employee.user.branch,
+                                                                    objetive__exp_date__gte=DATE_NOW.date()
+                                                                    ).order_by('created_at')
 
         if not user_actual.is_staff and user_actual.employee_type != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL
             context['is_self'] = False
@@ -222,9 +226,6 @@ def export_employee_list_to_excel(request):
 ########################### RUTINAS PARA PETICIONES AJAX ####################################
 
 def ajax_search_employee(request):
-    branch = request.user.branch
-
-    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':

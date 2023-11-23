@@ -8,7 +8,11 @@
 			{% if url %}
 			<a href="{{url}}">Volver a {{reverse}}</a>
 			{% else %}
-			<a href="{% url 'core_app:home' %}">Volver</a>
+				{% if request.user.is_staff %}
+					<a href="{% url 'dashboard_app:daily_summary' %}">Ir a repostes diarios
+				{% else %}
+					<a href="{% url 'sales_app:point_of_sale_view' %}">Ir a Punto de venta
+				{% endif %}
 			{% endif %}
 		</div>
 	</div>

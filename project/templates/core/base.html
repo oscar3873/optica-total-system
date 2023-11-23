@@ -657,7 +657,13 @@
                         aria-controls="navbarVerticalCollapse" aria-expanded="false"
                         aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
                                 class="toggle-line"></span></span></button>
-                    <a class="navbar-brand me-1 me-sm-3" href="{% url 'core_app:home' %}">
+                    
+                    
+                    {% if request.user.is_staff %}
+                        <a class="navbar-brand me-1 me-sm-3" href="{% url 'dashboard_app:daily_summary' %}">
+                    {% else %}
+                        <a class="navbar-brand me-1 me-sm-3" href="{% url 'sales_app:point_of_sale_view' %}">
+                    {% endif %}
                         <div class="d-flex align-items-center">
                             <span class="font-sans-serif">
                                 <img id="logoImageMovil" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"

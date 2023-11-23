@@ -76,10 +76,12 @@ class AdminCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE ADMINI
 class LoginView(views.RedirectURLMixin, FormView):
     template_name = "users/login.html"
     form_class = LoginForm
-    success_url = reverse_lazy('core_app:home')
+    success_url = reverse_lazy('sales_app:point_of_sale_view')
 
     def dispatch(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:
+            if self.request.user.is_staff:
+                self.success_url = reverse_lazy('dashboard_app:daily_summary') 
             return redirect(self.success_url)
         return super().dispatch(request, *args, **kwargs)
 
@@ -89,6 +91,10 @@ class LoginView(views.RedirectURLMixin, FormView):
             password=form.cleaned_data['password']
         )
         login(self.request, user)
+
+        if user.is_staff:
+            self.success_url = reverse_lazy('dashboard_app:daily_summary') 
+
         next_url = self.request.GET.get('next')  # Obtiene el valor del par�metro 'next' de la URL
         self.request.session['branch_actualy'] = int(self.request.user.branch.id)
         

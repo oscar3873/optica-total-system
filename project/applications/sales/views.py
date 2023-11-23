@@ -30,7 +30,6 @@ from django.views.generic import ListView
 class PointOfSaleView(LoginRequiredMixin, FormView):
     form_class = OrderDetailFormset
     template_name = 'sales/point_of_sale_page.html'
-    success_url = reverse_lazy('core_app:home')
 
     def get(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         branch_actualy = set_branch_session(self.request)
