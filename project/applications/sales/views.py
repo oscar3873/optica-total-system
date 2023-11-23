@@ -227,6 +227,7 @@ class SalesListView(LoginRequiredMixin, ListView):
             "discount_extra",
             "updated_at",
             "subtotal",
+            "created_at"
             )
         
         return context
@@ -437,10 +438,13 @@ def ajax_search_sales(request):
             print("####################################",paginate_by)
             sales = Sale.objects.all().filter(deleted_at = None)[:paginate_by]
         else:
+            from datetime import datetime
+            formatted_search_term = datetime.strptime(search_term, '%d/%m/%Y').date() if '/' in search_term else search_term
             # Usando Q por todos los campos existentes en la tabla
-            sales = Sale.objects.all().filter(deleted_at = None, branch=branch_actualy).filter(
+            sales = Sale.objects.filter(deleted_at = None, branch=branch_actualy).filter(
                 Q(total__icontains=search_term) |
-                # Q(date_time_sale__icontains=search_term) |
+                Q(missing_balance__icontains=search_term) |
+                Q(created_at__date__icontains=formatted_search_term) |
                 Q(state__icontains=search_term) |
                 Q(user_made__first_name__icontains=search_term) |
                 Q(user_made__last_name__icontains=search_term) |
@@ -453,7 +457,8 @@ def ajax_search_sales(request):
             'id': sale.id,
             'total': sale.total,
             'missing_balance': sale.missing_balance,
-            # 'date_time_sale': sale.date_time_sale.strftime('%d %B %Y'),
+            'date_time_sale': sale.created_at.time().strftime('%H:%M'),
+            'date_sale': sale.created_at.date().strftime('%d/%m/%Y'),
             'state': sale.state,
             'customer': str(sale.customer),
             'customer_id': sale.customer.id,
@@ -473,19 +478,6 @@ def set_serviceOrder_onSale(request, pk):
     service_order.save()
 
     return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': pk}))
-
-
-# def print_invoice(request, pk): # pk de la orden
-#     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
-#         service = Sale.objects.get(pk=pk)
-#         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
-#         html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
-
-#         # Devuelve el HTML como respuesta
-#         return HttpResponse(html_content, content_type="text/html")
-#     else:
-#         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
-#         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
 
 def pay_missing_balance(request, pk):

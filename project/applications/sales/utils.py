@@ -141,7 +141,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             else:
                 document = DocumentType.objects.get(id=10) #es dni
         
-        sale.receipt = Receipt.objects.create(
+        receipt = Receipt.objects.create(
             point_of_sales = pos_afip,
             receipt_type = receipt_type,
             concept = ConceptType.objects.get(id=1),
@@ -153,6 +153,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             net_taxed = Decimal(sale.total / Decimal(1.21)),
             exempt_amount = 0,
             )
+        sale.receipt = receipt
         sale.save()
         
         vat = Vat.objects.create(
@@ -166,8 +167,8 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
         try:
             validation_result = sale.receipt.validate()
         except:
-            sale.receipt.dalete()
-            vat.dalete()
+            vat.delete()
+            receipt.delete()
             return 'Error de comunicacion con AFIP.'
         
         print(validation_result)

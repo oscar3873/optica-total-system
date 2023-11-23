@@ -44,10 +44,16 @@ document.addEventListener('DOMContentLoaded', () => {
                                 row.appendChild(nameCell);
                                 //Fecha
                                 const dateSaleCell = document.createElement('td');
-                                dateSaleCell.className = 'align-start date_time_sale d-none d-sm-table-cell';
-                                const descriptionText = document.createTextNode(sale.date_time_sale);
+                                dateSaleCell.className = 'align-start date_sale d-none d-sm-table-cell';
+                                const descriptionText = document.createTextNode(sale.date_sale);
                                 dateSaleCell.appendChild(descriptionText);
                                 row.appendChild(dateSaleCell);
+                                //Hora
+                                const timeSaleCell = document.createElement('td');
+                                timeSaleCell.className = 'align-start date_time_sale d-none d-sm-table-cell';
+                                const descriptionTextTime = document.createTextNode(sale.date_time_sale);
+                                timeSaleCell.appendChild(descriptionTextTime);
+                                row.appendChild(timeSaleCell);
                                 //Cliente
                                 const clientCell = document.createElement('td');
                                 clientCell.className = 'align-start customer';

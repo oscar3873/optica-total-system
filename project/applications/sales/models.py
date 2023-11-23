@@ -9,15 +9,6 @@ from .managers import PaymentManager
 
 # Create your models here.
 
-class InvoiceType(BaseAbstractWithUser):
-    TYPE = [
-        ('A', 'Factura A'),
-        ('B', 'Factura B'),
-        ('X', 'Comprobante de pago'),
-    ]
-
-    num_invoice = models.CharField(unique=True, db_index=True, null=True, blank=True)
-    name = models.CharField(max_length=10, choices=TYPE, default=TYPE[0], null=True, blank=True)
 
 class Sale(BaseAbstractWithUser):
     """
@@ -37,7 +28,7 @@ class Sale(BaseAbstractWithUser):
         ('CANCELADO','CANCELADO')
     ]
 
-    receipt = models.OneToOneField(Receipt, on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
+    receipt = models.OneToOneField(Receipt, on_delete=models.SET_NULL, related_name='sales', null=True, blank=True)
     customer = models.ForeignKey(Customer, on_delete=models.PROTECT, related_name='sales', null=True, blank=True, verbose_name='Cliente')
     state = models.CharField(max_length=10, choices=STATE, default='PENDIENTE', blank=False, null=False, verbose_name='Estado')
     refund_date = models.DateTimeField(verbose_name='Fecha de devolucion', null=True, blank=True)

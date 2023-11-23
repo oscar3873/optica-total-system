@@ -69,8 +69,6 @@ class ProductForm(ValidationFormMixin):
             attrs={
                 'class': 'form-control',
                 'placeholder': 'Nombre del producto',
-                'type': 'text',
-                'pattern': '.{3,}',  # Mínimo 3 caracteres
                 }
         )
     )
@@ -81,7 +79,6 @@ class ProductForm(ValidationFormMixin):
         widget=forms.NumberInput(
             attrs={
                 'placeholder': 'Codigo de barra',
-                'type': 'number',
                 'class': 'form-control',
                 'placeholder' : 'Ej: 7908132209861'
                 }
@@ -202,7 +199,8 @@ class ProductForm(ValidationFormMixin):
     def clean_barcode(self):
         barcode = self.cleaned_data['barcode']
         try:
-            Product.objects.get(barcode=barcode, branch=self.branch)
+            if len(barcode) > 3:
+                Product.objects.get(barcode=barcode, branch=self.branch)
             raise forms.ValidationError('El codigo ingresado ya existe en la surcursal.')
         except Product.DoesNotExist:
             pass
