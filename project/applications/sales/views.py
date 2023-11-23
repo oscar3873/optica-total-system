@@ -101,6 +101,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 all_products_to_sale.append(product)
 
         cristal = find_cristal_product(all_products_to_sale)
+        contacto = find_contacto_product(all_products_to_sale)
         armazon = find_armazons_product(all_products_to_sale)
         if cristal and armazon:
             if cristal and not customer:
@@ -127,8 +128,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
         
-        if not cristal and amount < sale.total:
-            messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales.")
+        if not (cristal or contacto) and amount < sale.total:
+            messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales o Lentes de Contacto.")
             return super().form_invalid(form)
 
         process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, amount, self.request)
