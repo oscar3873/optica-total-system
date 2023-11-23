@@ -9,6 +9,7 @@ constantly==15.1.0
 cryptography==41.0.3
 daphne==4.0.0
 Django==4.2.3
+django-afip==11.3.1
 django-ckeditor==6.7.0
 django-excel-response==2.0.5
 django-js-asset==2.1.0
