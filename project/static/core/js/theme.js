@@ -10588,7 +10588,7 @@ var weeklySalesInit = function weeklySalesInit() {
     }
   }
   const totalSales = document.getElementById('total-sales-import');
-  totalSales.innerText = listWeeklySales;
+  totalSales.innerText =`$${listWeeklySales}`;
 
 
   if ($echartBarWeeklySales) {
