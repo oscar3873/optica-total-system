@@ -22,6 +22,10 @@ class BranchCreateView(CustomUserPassesTestMixin, FormView):
     success_url = reverse_lazy('core_app:home')
 
     def form_valid(self, form):
+        if self.request.user.is_staff:
+            self.success_url = reverse_lazy('dashboard_app:daily_summary') 
+        else:
+            self.success_url = reverse_lazy('sales_app:point_of_sale_view')
         branch = form.save(commit=False)
         branch.user_made = self.request.user
         branch.save()
@@ -74,6 +78,12 @@ class BranchDeleteView(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.delete()  # Realiza la eliminación suave
+
+        if self.request.user.is_staff:
+            self.success_url = reverse_lazy('dashboard_app:daily_summary') 
+        else:
+            self.success_url = reverse_lazy('sales_app:point_of_sale_view')
+
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -100,4 +110,8 @@ class BranchChangeView(View):
         if sucursal_id:
             request.session['branch_actualy'] = int(sucursal_id)
         # Redirige de vuelta a la página desde la que se hizo el cambio
-        return redirect(request.META.get('HTTP_REFERER', 'core_app:home'))
+        if request.user.is_staff:
+            url = reverse_lazy('dashboard_app:daily_summary') 
+        else:
+            url = reverse_lazy('sales_app:point_of_sale_view')
+        return redirect(request.META.get('HTTP_REFERER', url))
