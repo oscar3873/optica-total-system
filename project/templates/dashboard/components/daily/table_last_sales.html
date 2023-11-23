@@ -1,30 +1,18 @@
 <div class="col">
     <div class="card z-index-1" id="recentPurchaseTable"
-        data-list='{"valueNames":["name","email","product","payment","amount"],"page":25,"pagination":true}'>
+        data-list='{"valueNames":["name","date","time","customer","state","total"],"page":25,"pagination":true}'>
         <div class="card-header">
             <div class="row flex-between-center">
                 <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
                     <h5 class="fs-0 mb-0 text-nowrap py-2 py-xl-0">Ultimas ventas</h5>
+                    <!-- <div>{{columns_sale}}</div>
+                    <p>{{sale_list}}</p> -->
                 </div>
                 <div class="col-6 col-sm-auto ms-auto text-end ps-0">
-                    <!-- <div class="d-none" id="table-purchases-actions">
-                        <div class="d-flex">
-                            <select class="form-select form-select-sm" aria-label="Bulk actions">
-                                <option selected="">Acciones masivas</option>
-                                <option value="Refund">Devolucion</option>
-                                <option value="Delete">Eliminar</option>
-                                <option value="Archive">Archivar</option>
-                            </select>
-                            <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
-                        </div>
-                    </div> -->
                     <div id="table-purchases-replace-element">
-                        <button class="btn btn-falcon-default btn-sm me-2" type="button"><span class="fas fa-plus"
+                        <!-- <button class="btn btn-falcon-default btn-sm me-2" type="button"><span class="fas fa-plus"
                                 data-fa-transform="shrink-3 down-2"></span><span
-                                class="d-none d-sm-inline-block ms-1">Nuevo</span></button>
-                        <!-- <button class="btn btn-falcon-default btn-sm" type="button"><span
-                                class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span
-                                class="d-none d-sm-inline-block ms-1">Exportar</span></button> -->
+                                class="d-none d-sm-inline-block ms-1">Nuevo</span></button> -->
                     </div>
                 </div>
             </div>
@@ -34,141 +22,31 @@
                 <table class="table table-sm fs--1 mb-0 overflow-hidden">
                     <thead class="bg-200 text-900">
                         <tr>
-                            </th>
-                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="name">Cliente</th>
-                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="email">Correo</th>
-                            <th class="sort pe-1 align-middle white-space-nowrap" data-sort="product">Producto</th>
-                            <th class="sort pe-1 align-middle white-space-nowrap text-center" data-sort="payment">Estado
-                            </th>
-                            <th class="sort pe-1 align-middle white-space-nowrap text-end" data-sort="amount">Monto</th>
-                            <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+                            {% for column in columns_sale %}
+                                <th class="sort pe-1 align-middle white-space-nowrap {% if column == 'Estado' %}text-center{% endif %}">{{column}}</th>
+                            {% endfor %}
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody class="list" id="table-purchase-body">
+                        {% for sale in sale_list %}
                         <tr class="btn-reveal-trigger">
-                            <th class="align-middle white-space-nowrap name"><a
-                                    href="../app/e-commerce/customer-details.html">Sylvia Plath</a></th>
-                            <td class="align-middle white-space-nowrap email">john@gmail.com</td>
-                            <td class="align-middle white-space-nowrap product">Slick - Drag &amp; Drop Bootstrap
-                                Generator</td>
-                            <td class="align-middle text-center fs-0 white-space-nowrap payment"><span
-                                    class="badge badge rounded-pill badge-soft-success">Success<span
-                                        class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
+                            <th class="align-middle white-space-nowrap name">{{sale.user_made}}</th>
+                            <td class="align-middle white-space-nowrap date">{{sale.created_at.date}}</td>
+                            <td class="sort pe-1 align-middle white-space-nowrap time">{{sale.created_at.time}}</td>
+                            <td class="align-middle white-space-nowrap state">{{sale.customer}}</td>
+                            <td class="align-middle text-center fs-0 white-space-nowrap customer"><span
+                                class="badge badge rounded-pill {% if sale.state == 'COMPLETADO' %}badge-soft-success{% else %}badge-soft-warning{% endif %}">{{sale.state}}<span
+                                    class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
                             </td>
-                            <td class="align-middle text-end amount">$99</td>
+                            <td class="align-middle white-space-nowrap total">{{sale.total}}</td>
                             <td class="align-middle white-space-nowrap text-end">
-                                <div class="dropstart font-sans-serif position-static d-inline-block">
-                                    <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                        type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window"
-                                        aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span
-                                            class="fas fa-ellipsis-h fs--1"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                        aria-labelledby="dropdown0"><a class="dropdown-item" href="#!">Ver</a><a
-                                            class="dropdown-item" href="#!">Editar</a><a class="dropdown-item"
-                                            href="#!">Devolucion</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item text-warning"
-                                            href="#!">Archivar</a><a class="dropdown-item text-danger"
-                                            href="#!">Eliminar</a>
-                                    </div>
+                                <div class="d-flex gap-2 py-1">
+                                    <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
                                 </div>
                             </td>
                         </tr>
-                        <tr class="btn-reveal-trigger">
-                            <th class="align-middle white-space-nowrap name"><a
-                                    href="../app/e-commerce/customer-details.html">Homer</a></th>
-                            <td class="align-middle white-space-nowrap email">sylvia@mail.ru</td>
-                            <td class="align-middle white-space-nowrap product">Bose SoundSport Wireless Headphones</td>
-                            <td class="align-middle text-center fs-0 white-space-nowrap payment"><span
-                                    class="badge badge rounded-pill badge-soft-success">Success<span
-                                        class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
-                            </td>
-                            <td class="align-middle text-end amount">$634</td>
-                            <td class="align-middle white-space-nowrap text-end">
-                                <div class="dropstart font-sans-serif position-static d-inline-block">
-                                    <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                        type="button" id="dropdown1" data-bs-toggle="dropdown" data-boundary="window"
-                                        aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span
-                                            class="fas fa-ellipsis-h fs--1"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                        aria-labelledby="dropdown1"><a class="dropdown-item" href="#!">View</a><a
-                                            class="dropdown-item" href="#!">Edit</a><a class="dropdown-item"
-                                            href="#!">Refund</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item text-warning"
-                                            href="#!">Archive</a><a class="dropdown-item text-danger"
-                                            href="#!">Delete</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="btn-reveal-trigger">
-                            <!-- <td class="align-middle" style="width: 28px;">
-                                <div class="form-check mb-0">
-                                    <input class="form-check-input" type="checkbox" id="recent-purchase-2"
-                                        data-bulk-select-row="data-bulk-select-row" />
-                                </div>
-                            </td> -->
-                            <th class="align-middle white-space-nowrap name"><a
-                                    href="../app/e-commerce/customer-details.html">Edgar Allan Poe</a></th>
-                            <td class="align-middle white-space-nowrap email">edgar@yahoo.com</td>
-                            <td class="align-middle white-space-nowrap product">All-New Fire HD 8 Kids Edition Tablet
-                            </td>
-                            <td class="align-middle text-center fs-0 white-space-nowrap payment"><span
-                                    class="badge badge rounded-pill badge-soft-secondary">Blocked<span
-                                        class="ms-1 fas fa-ban" data-fa-transform="shrink-2"></span></span>
-                            </td>
-                            <td class="align-middle text-end amount">$199</td>
-                            <td class="align-middle white-space-nowrap text-end">
-                                <div class="dropstart font-sans-serif position-static d-inline-block">
-                                    <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                        type="button" id="dropdown2" data-bs-toggle="dropdown" data-boundary="window"
-                                        aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span
-                                            class="fas fa-ellipsis-h fs--1"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                        aria-labelledby="dropdown2"><a class="dropdown-item" href="#!">View</a><a
-                                            class="dropdown-item" href="#!">Edit</a><a class="dropdown-item"
-                                            href="#!">Refund</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item text-warning"
-                                            href="#!">Archive</a><a class="dropdown-item text-danger"
-                                            href="#!">Delete</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="btn-reveal-trigger">
-                            <!-- <td class="align-middle" style="width: 28px;">
-                                <div class="form-check mb-0">
-                                    <input class="form-check-input" type="checkbox" id="recent-purchase-5"
-                                        data-bulk-select-row="data-bulk-select-row" />
-                                </div>
-                            </td> -->
-                            <th class="align-middle white-space-nowrap name"><a
-                                    href="../app/e-commerce/customer-details.html">Emily Dickinson</a></th>
-                            <td class="align-middle white-space-nowrap email">emily@gmail.com</td>
-                            <td class="align-middle white-space-nowrap product">Mirari OK to Wake! Alarm Clock &amp;
-                                Night-Light</td>
-                            <td class="align-middle text-center fs-0 white-space-nowrap payment"><span
-                                    class="badge badge rounded-pill badge-soft-warning">Pending<span
-                                        class="ms-1 fas fa-stream" data-fa-transform="shrink-2"></span></span>
-                            </td>
-                            <td class="align-middle text-end amount">$11</td>
-                            <td class="align-middle white-space-nowrap text-end">
-                                <div class="dropstart font-sans-serif position-static d-inline-block">
-                                    <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                        type="button" id="dropdown5" data-bs-toggle="dropdown" data-boundary="window"
-                                        aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span
-                                            class="fas fa-ellipsis-h fs--1"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                        aria-labelledby="dropdown5"><a class="dropdown-item" href="#!">View</a><a
-                                            class="dropdown-item" href="#!">Edit</a><a class="dropdown-item"
-                                            href="#!">Refund</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item text-warning"
-                                            href="#!">Archive</a><a class="dropdown-item text-danger"
-                                            href="#!">Delete</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
