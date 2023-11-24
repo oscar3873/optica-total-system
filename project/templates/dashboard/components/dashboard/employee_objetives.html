@@ -29,13 +29,12 @@
     <div class="col py-1">
       <div class="row flex-end-center g-0">
         <div class="col-auto pe-2">
-          <div class="fs--1 fw-semi-bold"><span class="badge rounded-pill ms-2 bg-200 text-primary">${{objective.accumulated}}</span>/${{objective.objetive.quantity}}</div>
-          <div class="fs--1 fw-semi-bold"><span class="badge rounded-pill ms-2 bg-200 text-primary">${{objective.accumulated}}</span>/${{objective.accumulated}}</div>
+          <div class="fs--1 fw-semi-bold"><span class="ms-2 text-primary">${{objective.accumulated}}</span> / ${{objective.objetive.quantity}}</div>
         </div>
-        <div class="col-5 pe-card ps-2">
-          <div class="progress bg-200 me-2" style="height: 5px;">
-            <div class="progress-bar rounded-pill" role="progressbar" style="width: 38%" aria-valuenow="38"
-              aria-valuemin="0" aria-valuemax="100"></div>
+        <div class="col-9 pe-card ps-2">
+          <div class="progress bg-200" style="height: 5px; width: 110px;">
+            <div id="employee-progress-bar" class="progress-bar rounded-pill" role="progressbar" aria-valuenow="50"
+              aria-valuemin="0" aria-valuemax="100" data-progress="{{objective.accumulated}}" data-objetive="{{objective.objetive.quantity}}"></div>
           </div>
         </div>
       </div>
