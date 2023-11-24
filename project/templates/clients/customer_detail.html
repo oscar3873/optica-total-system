@@ -100,8 +100,8 @@
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Confirmar pago</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
+                                                </div>
+                                                <div class="modal-body">
                                                     <p>¿Estas seguro de confirmar el pago de <span class="text-warning"> ${{customer.credit_balance}} </span> ?</p>
                                                     <div class="pb-3">
                                                         <div class="row align-items-center">
@@ -123,11 +123,11 @@
                                                             {{pay_form.description}}
                                                         </div>
                                                     </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="modal-footer justify-content-between">
                                                     <button type="submit" class="btn btn-primary">Confirmar</button>
-                                                    </div>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -149,14 +149,14 @@
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Cerrar cuenta</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
+                                                </div>
+                                                <div class="modal-body">
                                                     <p>¿Estas seguro de cerrar la cuenta de <span class="text-warning">{{customer.get_full_name}}</span>?</p>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                </div>
+                                                <div class="modal-footer justify-content-between">
                                                     <button type="submit" class="btn btn-primary">Confirmar</button>
-                                                    </div>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -189,15 +189,21 @@
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Teléfono:</p>
-                            <span class="ms-3 text-800 fw-bold"><a href="https://wa.me/{{customer.phone_code}}{{ customer.phone_number }}">{{customer.phone_code}}{{ customer.phone_number }}</a></span>
+                            <span class="ms-3 text-800 fw-bold">
+                                {% if customer.phone_number %}
+                                    <a href="https://wa.me/{{customer.phone_code}}{{ customer.phone_number }}">{{customer.phone_code}}{{ customer.phone_number }}</a>
+                                {% else %}
+                                    Sin dato
+                                {% endif %}
+                            </span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Domicilio:</p>
-                            <span class="ms-3 text-800 fw-bold">{{ customer.address }}</span>
+                            <span class="ms-3 text-800 fw-bold">{% if customer.address %}{{ customer.address }}{% else %}Sin dato{% endif %}</span>
                         </div>
                         <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-sm-start justify-content-between">
                             <p class="col-sm-3 fw-normal fw-semi-bold mb-1">Correo:</p>
-                            <span class="ms-3 text-800 fw-bold">{{ customer.email }}</span>
+                            <span class="ms-3 text-800 fw-bold">{% if customer.email %}{{ customer.email }}{% else %}Sin dato{% endif %}</span>
                         </div>
                         
                     </div>
@@ -233,7 +239,7 @@
 
     <div class="col-lg-12 col-xl-12 col-xxl-12 h-100">
         <div class="card border-top z-index-1 mb-3" id="recentPurchaseTable"
-            data-list='{"valueNames":["user_made","diagnostic","armazon","observations","email","is_done"],"page":25,"pagination":true}'>
+            data-list='{"valueNames":["user_made","armazon","email","is_done"],"page":25,"pagination":true}'>
             <div class=" card-header">
                 <div class="row flex-between-center">
                     <div class="row">
@@ -284,74 +290,62 @@
                                 <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                                     <thead class="bg-200 text-900">
                                         <tr>
-                                            <th class="sort pe-1  align-middle created_at white-space-nowrap px-4"
-                                                data-sort="Fecha">
-                                                Creado
-                                            </th>
-                                            <th class="sort pe-1  align-middle px-4 user_made white-space-nowrap"
+                                            <th class="sort align-middle px-4 user_made white-space-nowrap"
                                                 data-sort="user_made">
                                                 Por
                                             </th>
-                                            <th class="sort pe-1  align-middle armazon white-space-nowrap px-4 "
+                                            <th class="sort align-middle created_at white-space-nowrap px-4"
+                                                data-sort="Fecha">
+                                                Creado
+                                            </th>
+                                            <th class="sort align-middle armazon white-space-nowrap px-4 "
                                                 data-sort="armazon">
                                                 Armazon
                                             </th>
-                                            {% comment %} <th class="sort pe-1  align-middle diagnostic white-space-nowrap px-4 "
-                                                data-sort="diagnostic">
-                                                Diagnostico
-                                            </th>
-                                            <th class="sort pe-1  align-middle observations white-space-nowrap px-4 "
-                                                data-sort="obervations">
-                                                Observacion
-                                            </th> {% endcomment %}
-                                            <th class="sort pe-1  align-middle is_done px-4 white-space-nowrap "
+                                            <th class="sort align-middle is_done px-4 white-space-nowrap "
                                                 data-sort="is_done">
                                                 Estado
                                             </th>
-                                            <th class="align-start type_operation white-space-nowrap px-4"> Acciones</th>
+                                            <th class="align-start type_operation white-space-nowrap"> Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody class="list" id="table-purchase-body">
                                         {% for service_order in service_orders %}
-                                        <tr class="btn-reveal-trigger">
-                                            <th class="align-start created_at">{{ service_order.created_at | date:"d-m-Y" }}</th>
-                                            <th class="align-start user_made ">{{ service_order.user_made }}</th>
-                                            <td class="align-start armazon">{{ service_order.armazon }}</td>
-                                            {% comment %} <th class="align-start diagnostic">{{ service_order.diagnostic }}</th>
-                                            <td class="align-start observation">{{ service_order.observations }}</td> {% endcomment %}
-                                            <td class="align-start is_done">
-                                                <p class="h6">
-                                                    {% if service_order.is_done %}
-                                                    Completado
-                                                    {% else %}
-                                                    No Completado
-                                                    {% endif %}
-                                                </p>
-                                            </td>
-                                            <td class="align-middle white-space-nowrap text-center">
-                                                <div class="dropstart font-sans-serif position-static d-inline-block">
-                                                    <button
-                                                        class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                                                        type="button" id="dropdown0" data-bs-toggle="dropdown"
-                                                        data-boundary="window" aria-haspopup="true" aria-expanded="false"
-                                                        data-bs-reference="parent">
-                                                        <span class="fas fa-ellipsis-h fs--1"></span></button>
-                                                    <div class="dropdown-menu dropdown-menu-end border py-2"
-                                                        aria-labelledby="dropdown0">
-                                                        <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_detail' service_order.id %}">Detalle</a>
-                                                            {% if request.user.is_staff %}
-                                                        <a class="dropdown-item"
-                                                            href="{% url 'clients_app:service_order_update' service_order.id %}">Editar</a>
-                                                        <button class="dropdown-item" id="printer" data-id="{{service_order.id}}"
-                                                            href="{% url 'clients_app:print_service_order' service_order.id %}">Imprimir</button>
-                                                        <a class=" dropdown-item text-danger"
-                                                        href="{% url 'clients_app:service_order_delete' service_order.id %}">Eliminar</a>
+                                            <tr class="btn-reveal-trigger">
+                                                <th class="align-start user_made">{{ service_order.user_made }}</th>
+                                                <th class="align-start created_at">{{ service_order.created_at | date:"d-m-Y" }}</th>
+                                                <td class="align-start armazon">{{ service_order.armazon.name }}</td>
+                                                <td class="align-start is_done">
+                                                    <p class="h6">
+                                                        {% if service_order.is_done %}
+                                                            <span class="badge rounded-pill badge-soft-success fs--1">Entregado</span>
+                                                        {% elif service_order.sale.state == 'PENDIENTE' %}
+                                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#entrega-{{service_order.pk}}">
+                                                                <span class="badge rounded-pill badge-soft-danger">Pago pendiente</span>
+                                                            </button>
+                                                        {% else %}
+                                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#entrega-{{service_order.pk}}">
+                                                                <span class="badge rounded-pill badge-soft-warning">Click Entregar</span>
+                                                            </button>
                                                         {% endif %}
+                                                    </p>
+                                                </td>
+                                                <td class="align-middle white-space-nowrap text-center">
+                                                    <div class="dropstart font-sans-serif position-static d-inline-block">
+                                                        <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
+                                                            <span class="fas fa-ellipsis-h fs--1"></span>
+                                                        </button>
+                                                        <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown0">
+                                                            <a class="dropdown-item" href="{% url 'clients_app:service_order_detail' service_order.id %}">Detalle</a>
+                                                            {% if request.user.is_staff %}
+                                                                <a class="dropdown-item" href="{% url 'clients_app:service_order_update' service_order.id %}">Editar</a>
+                                                                <button class="dropdown-item" id="printer" data-id="{{service_order.id}}" href="{% url 'clients_app:print_service_order' service_order.id %}">Imprimir</button>
+                                                                <a class="dropdown-item text-danger" href="{% url 'clients_app:service_order_delete' service_order.id %}">Eliminar</a>
+                                                            {% endif %}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
@@ -391,6 +385,78 @@
     
 </div>
 
+
+{% for service_order in service_orders %}
+    {% if service_order.is_done %}
+
+    {% elif service_order.sale.state == 'PENDIENTE' %}
+        <!-- Modal para confirmar apertura caja corriente-->
+        <div class="modal fade" id="pay-registrar-{{service_order.pk}}" tabindex="-1" aria-labelledby="pay-registrar-{{service_order.pk}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'clients_app:pay_service_order' service_order.pk %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="pay-registrar-{{service_order.pk}}Label">Confirmar pago de Orden de Servicio <span class="text-warning">#{{service_order.pk}}</span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estás seguro de confirmar el pago de <span class="text-warning"> ${{customer.credit_balance}} </span> ?</p>
+                            <div class="pb-3">
+                                <div class="row align-items-center">
+                                    <label for="">Seleccione el método de pago</label>
+                                    <div class="col-9">
+                                        <div class="form-group">
+                                            {{pay_form.payment_method}}
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <!-- Botón para modal de método de pago -->
+                                        <button id="addPaymentMethod" class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="tooltip" data-bs-target="#payment-method-modal" data-bs-original-title="Añadir nuevo método de pago" style="cursor: pointer"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pb-3">
+                                <label for="">Descripción</label>
+                                <div class="form-group">
+                                    {{pay_form.description}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <!-- Modal para confirmar apertura caja corriente-->
+        <div class="modal fade" id="entrega-{{service_order.pk}}" tabindex="-1" aria-labelledby="entrega-{{service_order.pk}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'clients_app:service_order_entrega' service_order.pk %}">
+                        {% csrf_token %}
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="entrega-{{service_order.pk}}Label">Confirmar Entrega de Orden de Servicio <span class="text-warning">#{{service_order.pk}}</span></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estás seguro de confirmar entrega?</p>
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                            <button type="submit" class="btn btn-primary">Confirmar</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}
+    
+
 <!-- Modal para crear el metod de pago-->
 <div class="modal fade" id="payment-method-modal" tabindex="-1" aria-labelledby="payment-method-modalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -412,12 +478,36 @@
                 </form>
             </div>
             <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
                 <button class="btn btn-primary" type="button" id="save-payment-method">Guardar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="close-ft-modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Modal para confirmar apertura caja corriente-->
+<div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="confirm-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'clients_app:open_credit_account' customer.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Confirmar apertura</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estas seguro de abrir una cuenta corriente a <span class="text-warning">{{customer.get_full_name}}</span>?</p>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+        </form>
+        </div>
+    </div>
+</div>
+
 
 {% endblock main %}
 

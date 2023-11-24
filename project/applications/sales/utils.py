@@ -233,21 +233,22 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
         customer = Customer.objects.get(id=1)
 
     if customer and not 'consumidor' in customer.first_name.lower():
-        if customer.has_credit_account and 'cuenta corriente' in payment_methods.name.lower():
+        if customer.has_credit_account: # and 'cuenta corriente' in payment_methods.name.lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
+            sale.state = Sale.STATE[0][0] # COMPLETADO
             customer.credit_balance += total * Decimal(1 - sale.discount / 100)
             customer.save()
 
-        elif customer.has_credit_account:
-            """Si TIENE CUENTA CORRIENTE + Metodo: Credito/Debito/Efectivo"""
-            missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
-            sale.missing_balance = missing_balance
-            if missing_balance > 0:
-                customer.credit_balance += missing_balance
-                customer.save()
-            set_movement(payment_total, payment_methods.type_method, customer, request)
+        # elif customer.has_credit_account:
+        #     """Si TIENE CUENTA CORRIENTE + Metodo: Credito/Debito/Efectivo"""
+        #     missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
+        #     sale.missing_balance = missing_balance
+        #     if missing_balance > 0:
+        #         customer.credit_balance += missing_balance
+        #         customer.save()
+        #     set_movement(payment_total, payment_methods.type_method, customer, request)
 
-        elif product_cristal or product_contacto: 
+        elif not customer.has_credit_account and product_cristal or product_contacto: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
             missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
             sale.missing_balance = missing_balance

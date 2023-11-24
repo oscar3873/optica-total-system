@@ -124,6 +124,10 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 subtotal += get_total_and_products(formset)
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
 
+        for formset in formsets:
+            if formset.is_valid():
+                update_stock(formset)
+
         promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
         for promotion, products_with_discountPromo in promotional_products.items():
@@ -341,6 +345,7 @@ def show_invoice(request, pk):
     else:
         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+
 
 def show_factura(request, pk):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":

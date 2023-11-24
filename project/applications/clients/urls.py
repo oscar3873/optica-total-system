@@ -90,37 +90,48 @@ urlpatterns = [
 
     ########## SERVICE ORDER OF CUSTOMER EXCEL ##########
     path(
-        'detail/<pk>/export_service_orders',
+        'detail/<pk>/export-service-orders',
         export_order_service_list_to_excel,
         name='export_service_orders'
     ),
 
     ########### OPEN CREDIT ACCOUNT ############
     path(
-        'open_credit_account/<pk>/',
+        'open-redit-account/<pk>/',
         open_credit_account,
         name='open_credit_account'
     ),
 
     ########### CLOSE CREDIT ACCOUNT ############
     path(
-        'close_credit_account/<pk>/',
+        'close-credit-account/<pk>/',
         close_credit_account,
         name='close_credit_account'
     ),
 
     ########## PAY CREDITS EXCEL #########
     path(
-        'pay_credits/<pk>/',
+        'pay-credits/<pk>/',
         pay_credits,
         name='pay_credits'
     ),
 
+    path(
+      'pay-service-order/<pk>/',
+      pay_service_order,
+      name='pay_service_order'
+    ),
     ########## CUSTOMER LIST EXCEL ##########
     path(
-        'export_customer_list',
+        'export-customer-list',
         export_customer_list_to_excel,
         name='export_customer_list'
+    ),
+
+    path(
+        'service-order-entrega/<pk>',
+        service_order_entrega,
+        name='service_order_entrega'
     ),
 
     ####################### AJAX SEARCH ###################

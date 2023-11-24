@@ -37,7 +37,7 @@ class DashboardView(TemplateView):
         branch_actualy = set_branch_session(self.request)
 
         context['ventas_semanales'] = week_status(branch_actualy) # devuleve un diccionario con las ventas de la semana
-        context['ventas_por_semana'], context['total_ventas_anteriores'], context['ventas_anteriores'] = week_sales(branch_actualy) # devuleve un diccionario con las ventas de la semana
+        context['ventas_por_semana'], context['total_ventas_anteriores'], context['ventas_anteriores'], context['total_ventas_semana_anterior'] = week_sales(branch_actualy) # devuleve un diccionario con las ventas de la semana
         context['productos_mas_vendidos'] = top_prodcuts(branch_actualy) # devuleve un diccionario con el TOP de prodcutos mas vendidos
         context['marcas_mas_vendidos'] = top_brands(branch_actualy) # devuleve un diccionario con el TOP de marcas mas vendidas
         context['objetivos_emp'], context['objetivos_suc'] = objetives(branch_actualy) # VER MODELO PARA ACCEDER A LOS CAMPOS NECESARIOS!!!
