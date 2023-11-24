@@ -5,57 +5,51 @@
         <div class="col">
           <h6 class="mb-0">Objetivos de empleados</h6>
         </div>
-        <div class="col-auto text-center pe-card">
-          <select class="form-select form-select-sm">
-            <option>Working Time</option>
-            <option>Estimated Time</option>
-            <option>Billable Time</option>
-          </select>
-        </div>
       </div>
     </div>
 
-    <!-- QUITAR DESDE AQUI Y REEMPLAZAR POR LO DE ABAJO -->
-    <div class="card-body p-0">
-      <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
-        <div class="col ps-card py-1 position-static">
-          <div class="d-flex align-items-center">
-            <div class="avatar avatar-xl me-3">
-              <div class="avatar-name rounded-circle bg-soft-primary text-dark">
-                <span class="fs-0 text-{% if objective.is_active %}primary{% else %}warining{% endif %}">{% if objective.is_active %}A{% else %}I{% endif %}</span>
-              </div>
-            </div>
-            <div class="flex-1">
-              <h6 class="mb-0 d-flex align-items-center"><a class="text-1000 stretched-link" href="#!">{{objective.title}}</a>
-                <span class="badge rounded-pill ms-2 bg-200 text-primary">{{objective.quantity}}</span>
-              </h6>
-            </div>
+    
+<!-- PEGAR ESTO EN LUGAR DE LO QUE HAY Q ELMINAR -->
+{% if objetivos_emp %}
+<div class="card-body p-0">
+   {% for objective in objetivos_emp %}
+  <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
+    <div class="col ps-card py-1 position-static">
+      <div class="d-flex align-items-center">
+        <div class="avatar avatar-xl me-3">
+          <div class="avatar-name rounded-circle bg-soft-primary text-dark">
+            <span class="fs-0 text-{% if objective.is_active %}primary{% else %}warining{% endif %}">{% if objective.is_active %}A{% else %}I{% endif %}</span>
           </div>
         </div>
-        <div class="col py-1">
-          <div class="row flex-end-center g-0">
-            <div class="col-auto pe-2">
-              <div class="fs--1 fw-semi-bold">{{objective.start_date}} - {{objective.exp_date}}</div>
-            </div>
-            <div class="col-5 pe-card ps-2">
-              <div class="progress bg-200 me-2" style="height: 5px;">
-                <div class="progress-bar rounded-pill" role="progressbar" style="width: 38%" aria-valuenow="38"
-                  aria-valuemin="0" aria-valuemax="100"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col">
-          NO HAY OBJETIVOS  
+        <div class="flex-1">
+          <h6 class="mb-0 d-flex align-items-center">{{objective.employee}}<span class="badge rounded-pill ms-2 bg-200 text-primary">{{objective.quantity}}</span></h6>
         </div>
       </div>
     </div>
-
-
-    <!-- HASTA AQUI -->
-
+    <div class="col py-1">
+      <div class="row flex-end-center g-0">
+        <div class="col-auto pe-2">
+          <div class="fs--1 fw-semi-bold">{{objective.start_date}} - {{objective.exp_date}}</div>
+        </div>
+        <div class="col-5 pe-card ps-2">
+          <div class="progress bg-200 me-2" style="height: 5px;">
+            <div class="progress-bar rounded-pill" role="progressbar" style="width: 38%" aria-valuenow="38"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="row justify-content-center">
+    <div class="col py-3 ps-4">
+      <h6 class="mb-0 d-flex align-items-center">NO HAY OBJETIVOS</h6>
+        
+    </div>
+  </div>
+</div>
+{% endif %}
 
 
     <!-- <div class="card-footer bg-light p-0"><a class="btn btn-sm btn-link d-block w-100 py-2" href="#!">Show all
@@ -109,5 +103,55 @@
   </div>
 </div>
 <!-- {% endif %} -->
+
+
+
+
+
+
+
+
+
+
+<!-- QUITAR DESDE AQUI Y REEMPLAZAR POR LO DE ABAJO -->
+<div class="card-body p-0">
+  <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
+    <div class="col ps-card py-1 position-static">
+      <div class="d-flex align-items-center">
+        <div class="avatar avatar-xl me-3">
+          <div class="avatar-name rounded-circle bg-soft-primary text-dark">
+            <span class="fs-0 text-{% if objective.is_active %}primary{% else %}warining{% endif %}">{% if objective.is_active %}A{% else %}I{% endif %}</span>
+          </div>
+        </div>
+        <div class="flex-1">
+          <h6 class="mb-0 d-flex align-items-center"><a class="text-1000 stretched-link" href="#!">{{objective.title}}</a>
+            <span class="badge rounded-pill ms-2 bg-200 text-primary">{{objective.quantity}}</span>
+          </h6>
+        </div>
+      </div>
+    </div>
+    <div class="col py-1">
+      <div class="row flex-end-center g-0">
+        <div class="col-auto pe-2">
+          <div class="fs--1 fw-semi-bold">{{objective.start_date}} - {{objective.exp_date}}</div>
+        </div>
+        <div class="col-5 pe-card ps-2">
+          <div class="progress bg-200 me-2" style="height: 5px;">
+            <div class="progress-bar rounded-pill" role="progressbar" style="width: 38%" aria-valuenow="38"
+              aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col">
+      NO HAY OBJETIVOS  
+    </div>
+  </div>
+</div>
+
+
+<!-- HASTA AQUI -->
 
 {% endif %}
