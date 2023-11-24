@@ -70,32 +70,32 @@ class Correction(BaseAbstractWithUser):
 ###############################################################
 
 class Material(BaseAbstractWithUser):
-    policarbonato = models.BooleanField(null=True, blank=True)
-    organic = models.BooleanField(null=True, blank=True)
-    mineral = models.BooleanField(null=True, blank=True)
-    m_r8 = models.BooleanField(null=True, blank=True)
+    policarbonato = models.BooleanField(null=True, blank=True, verbose_name="Policarbonato")
+    organic = models.BooleanField(null=True, blank=True, verbose_name="Organico")
+    mineral = models.BooleanField(null=True, blank=True, verbose_name="Mineral")
+    m_r8 = models.BooleanField(null=True, blank=True, verbose_name="M_R8")
 
 
 class Color(BaseAbstractWithUser):
-    white = models.BooleanField(null=True, blank=True)
-    full_gray = models.BooleanField(null=True, blank=True)
-    gray_gradient = models.BooleanField(null=True, blank=True)
-    flat_sepia = models.BooleanField(null=True, blank=True)
+    white = models.BooleanField(null=True, blank=True, verbose_name="Blanco")
+    full_gray = models.BooleanField(null=True, blank=True, verbose_name="Gris")
+    gray_gradient = models.BooleanField(null=True, blank=True, verbose_name="Gris Grad.")
+    flat_sepia = models.BooleanField(null=True, blank=True, verbose_name="Sepia Plano")
 
 class Cristal(BaseAbstractWithUser):
-    monofocal = models.BooleanField(null=True, blank=True)
-    bifocal_fv = models.BooleanField(null=True, blank=True)
-    bifocal_k = models.BooleanField(null=True, blank=True)
-    bifocal_pi = models.BooleanField(null=True, blank=True)
-    progressive = models.BooleanField(null=True, blank=True)
+    monofocal = models.BooleanField(null=True, blank=True, verbose_name="Monofocal")
+    bifocal_fv = models.BooleanField(null=True, blank=True, verbose_name="Bifocal FV")
+    bifocal_k = models.BooleanField(null=True, blank=True, verbose_name="Bifocal K")
+    bifocal_pi = models.BooleanField(null=True, blank=True, verbose_name="Bifocal PI")
+    progressive = models.BooleanField(null=True, blank=True, verbose_name="Progresivo")
 
 class Tratamient(BaseAbstractWithUser):
-    antireflex = models.BooleanField(null=True, blank=True)
-    filtro_azul = models.BooleanField(null=True, blank=True)
-    fotocromatico = models.BooleanField(null=True, blank=True)
-    ultravex = models.BooleanField(null=True, blank=True)
-    polarizado = models.BooleanField(null=True, blank=True)
-    neutrosolar = models.BooleanField(null=True, blank=True)
+    antireflex = models.BooleanField(null=True, blank=True, verbose_name="Antireflex")
+    filtro_azul = models.BooleanField(null=True, blank=True, verbose_name="Filtro Azul")
+    fotocromatico = models.BooleanField(null=True, blank=True, verbose_name="Fotocromático")
+    ultravex = models.BooleanField(null=True, blank=True, verbose_name="Ultravex")
+    polarizado = models.BooleanField(null=True, blank=True, verbose_name="Polarizado")
+    neutrosolar = models.BooleanField(null=True, blank=True, verbose_name="Neutrosolar")
     
 ###############################################################
 

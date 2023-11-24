@@ -219,142 +219,55 @@ class CorrectionForm(forms.ModelForm):
         exclude = ['user_made','deleted_at']
 
 class MaterialForm(forms.ModelForm):
-    MATERIAL_CHOICES = [
-        ('policarbonato', 'Policarbonato'),
-        ('organic', 'Organic'),
-        ('mineral', 'Mineral'),
-        ('m_r8', 'M_R8'),
-    ]
-
-    material_choice = forms.ChoiceField(
-        choices=MATERIAL_CHOICES,
-        required=False,
-        label='Material',
-        widget=forms.RadioSelect(
-            # attrs={'class': 'form-check'}
-            )
-    )
-
-
     class Meta:
         model = Material
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Obtén la instancia del modelo Material asociada al formulario
-        material_instance = self.instance
-
-        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
-        # la que corresponde al campo booleano en True en la instancia del modelo
-        for choice_value, choice_label in self.fields['material_choice'].choices:
-            if getattr(material_instance, choice_value):
-                self.fields['material_choice'].initial = choice_value
-
+        widgets = {
+            'policarbonato': forms.CheckboxInput(attrs={'required': False}),
+            'organic': forms.CheckboxInput(attrs={'required': False}),
+            'mineral': forms.CheckboxInput(attrs={'required': False}),
+            'm_r8': forms.CheckboxInput(attrs={'required': False}),
+        }
 
 class ColorForm(forms.ModelForm):
-    COLOR_CHOICES = [
-        ('white', 'Blanco'),
-        ('full_gray', 'Gris puro'),
-        ('gray_gradient', 'Gris gradiente'),
-        ('flat_sepia', 'Sepia plana'),
-    ]
-
-    color_choice = forms.ChoiceField(
-        choices=COLOR_CHOICES,
-        required=False,
-        label='Color',
-        widget=forms.RadioSelect(
-            # attrs={'class': 'form-check'}
-            )
-    )
-
     class Meta:
         model = Color
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Obtén la instancia del modelo Material asociada al formulario
-        material_instance = self.instance
-
-        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
-        # la que corresponde al campo booleano en True en la instancia del modelo
-        for choice_value, choice_label in self.fields['color_choice'].choices:
-            if getattr(material_instance, choice_value):
-                self.fields['color_choice'].initial = choice_value
-
+        widgets = {
+            'white': forms.CheckboxInput(attrs={'required': False}),
+            'full_gray': forms.CheckboxInput(attrs={'required': False}),
+            'gray_gradient': forms.CheckboxInput(attrs={'required': False}),
+            'flat_sepia': forms.CheckboxInput(attrs={'required': False}),
+        }
 
 class CristalForm(forms.ModelForm):
-    CRISTAL_CHOICES = [
-        ('monofocal', 'Monofocal'),
-        ('bifocal_fv', 'Bifocal FV'),
-        ('bifocal_k', 'Bifocal K'),
-        ('bifocal_pi', 'Bifocal PI'),
-        ('progressive', 'Progresivo'),
-    ]
-
-    cristal_choice = forms.ChoiceField(
-        choices=CRISTAL_CHOICES,
-        required=False,
-        label='Cristal',
-        widget=forms.RadioSelect(
-            # attrs={'class': 'form-check'}
-            )
-    )
-
     class Meta:
         model = Cristal
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Obtén la instancia del modelo Material asociada al formulario
-        material_instance = self.instance
-
-        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
-        # la que corresponde al campo booleano en True en la instancia del modelo
-        for choice_value, choice_label in self.fields['cristal_choice'].choices:
-            if getattr(material_instance, choice_value):
-                self.fields['cristal_choice'].initial = choice_value
+        widgets = {
+            'monofocal': forms.CheckboxInput(attrs={'required': False}),
+            'bifocal_fv': forms.CheckboxInput(attrs={'required': False}),
+            'bifocal_k': forms.CheckboxInput(attrs={'required': False}),
+            'bifocal_pi': forms.CheckboxInput(attrs={'required': False}),
+            'progressive': forms.CheckboxInput(attrs={'required': False}),
+        }
 
 class TratamientForm(forms.ModelForm):
-    TRATAMIENT_CHOICES = [
-        ('antireflex', 'Antireflex'),
-        ('filtro_azul', 'Filtro Azul'),
-        ('fotocromatico', 'Fotocromático'),
-        ('ultravex', 'Ultravex'),
-        ('polarizado', 'Polarizado'),
-        ('neutrosolar', 'Neutro Solar'),
-    ]
-
-    tratamient_choice = forms.ChoiceField(
-        choices=TRATAMIENT_CHOICES,
-        required=False,
-        label='Tratamiento',
-        widget=forms.RadioSelect(
-            # attrs={'class': 'form-check'}
-            )
-    )
-
     class Meta:
         model = Tratamient
         fields = '__all__'
         exclude = ['user_made', 'deleted_at']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Obtén la instancia del modelo Material asociada al formulario
-        material_instance = self.instance
-
-        # Recorre las opciones de MATERIAL_CHOICES y marca como seleccionada
-        # la que corresponde al campo booleano en True en la instancia del modelo
-        for choice_value, choice_label in self.fields['tratamient_choice'].choices:
-            if getattr(material_instance, choice_value):
-                self.fields['tratamient_choice'].initial = choice_value
+        widgets = {
+            'antireflex': forms.CheckboxInput(attrs={'required': False}),
+            'filtro_azul': forms.CheckboxInput(attrs={'required': False}),
+            'fotocromatico': forms.CheckboxInput(attrs={'required': False}),
+            'ultravex': forms.CheckboxInput(attrs={'required': False}),
+            'polarizado': forms.CheckboxInput(attrs={'required': False}),
+            'neutrosolar': forms.CheckboxInput(attrs={'required': False}),
+        }
 
 
 class InterpupillaryForm(forms.ModelForm):

@@ -65,8 +65,8 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
             pupilar_form.is_valid()
             ):
 
-            print(material_form.cleaned_data['material_choice'], color_form.cleaned_data['color_choice'],
-                cristal_form.cleaned_data['cristal_choice'], tratamiento_form.cleaned_data['tratamient_choice'])
+            print(material_form.cleaned_data, color_form.cleaned_data,
+                cristal_form.cleaned_data, tratamiento_form.cleaned_data)
 
             # Create the main form instance
             ServiceOrder.objects.create_lab(
@@ -76,7 +76,11 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
             )
             messages.success(self.request, 'Se ha registrado una nueva orden de servicio con exito.')
         else: 
-            print(correction_form.errors)
+            print('\n\nERRROR:',material_form.errors,
+                color_form.errors,
+                cristal_form.errors,
+                tratamiento_form.errors,
+                pupilar_form.errors)
 
         if customer:
             return redirect('clients_app:customer_detail', pk=self.kwargs.get('pk'))
@@ -206,16 +210,9 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
                 instance = formset.instance
                 new_formset = formset.__class__(self.request.POST, instance=instance)
                 if new_formset.is_valid():
-                    subcadena = '_choice'
-                    key = obtener_clave_por_subcadena(new_formset.cleaned_data, subcadena)
-                    if key:
-                        obj = new_formset.instance
-                        to_check = new_formset.cleaned_data.get(key)
-                        # new_formset.cleaned_data[to_check] = True
-                        setattr(obj, to_check, True)
-                        obj.save()
                     new_formset.save()
-
+                else:
+                    print(new_formset.errors)
             service_order.save()
         messages.success(self.request, 'Se ha acutalizado la orden de servicio con exito.')
         if customer:
