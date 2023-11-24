@@ -46,40 +46,45 @@ def week_status(branch_actualy):
     return week_sales
 
 def week_sales(branch_actualy):
-    from django.db.models.functions import ExtractWeekDay
+    # Obtener la fecha de hoy
+    fecha_hoy = datetime.now().date()
 
     # Calcular la fecha de inicio de la semana actual (lunes)
     fecha_inicio_semana_actual = fecha_hoy - timedelta(days=fecha_hoy.weekday())
-
-    # Calcular la fecha de inicio de las 3 semanas anteriores
-    fecha_inicio_tres_semanas_anteriores = fecha_inicio_semana_actual - timedelta(weeks=3)
+    # Calcular la fecha de inicio de las 3 semanas anteriores (y la actual)
+    fecha_inicio_cuatro_semanas = fecha_inicio_semana_actual - timedelta(weeks=3)
 
     # Lista para almacenar las ventas por semana
     ventas_por_semana = []
 
-    # Calcular las ventas de las 3 semanas anteriores
-    for i in range(3):
-        fecha_inicio_semana = fecha_inicio_tres_semanas_anteriores + timedelta(weeks=i)
-        fecha_fin_semana = fecha_inicio_semana + timedelta(weeks=1)
+    # Calcular las ventas de las 4 semanas (incluyendo la semana actual)
+    for i in range(4):
+        fecha_inicio_semana = fecha_inicio_cuatro_semanas + timedelta(weeks=i)
+        fecha_fin_semana = fecha_inicio_semana + timedelta(days=5)  # Sumar 5 días para llegar al sábado (excluir el domingo)
         ventas_semana = Sale.objects.filter(branch=branch_actualy,
             created_at__range=(fecha_inicio_semana, fecha_fin_semana)
         ).count()
         ventas_por_semana.append((i + 1, ventas_semana))
 
-    # Calcular el total de ventas de las 3 semanas anteriores
-    total_ventas_anteriores = Sale.objects.filter(branch=branch_actualy,
-                            created_at__range=(fecha_inicio_tres_semanas_anteriores, fecha_inicio_semana_actual - timedelta(days=1))
+    # Calcular el total de ventas de las 4 semanas (incluyendo la actual)
+    total_ventas = Sale.objects.filter(branch=branch_actualy,
+                            created_at__range=(fecha_inicio_cuatro_semanas, fecha_fin_semana)
                         ).count()
 
-    ventas_anteriores = Sale.objects.filter(branch=branch_actualy,
-                            created_at__range=(fecha_inicio_tres_semanas_anteriores, fecha_inicio_semana_actual - timedelta(days=1))
-                        ).aggregate(total_ventas_anteriores=Sum('total'))
+    ventas_totales = Sale.objects.filter(branch=branch_actualy,
+                            created_at__range=(fecha_inicio_cuatro_semanas, fecha_fin_semana)
+                        ).aggregate(total_ventas=Sum('total'))
+    
+    total_ventas_semana_anterior = Sale.objects.filter(branch=branch_actualy,
+                            created_at__range=(fecha_inicio_semana_actual - timedelta(weeks=1), fecha_inicio_semana_actual - timedelta(days=1))
+                        ).aggregate(total_ventas=Sum('total'))['total_ventas']
 
-    print("\nVentas por semana (3 semanas anteriores):", ventas_por_semana)
-    print("Total de ventas de las 3 semanas anteriores:", total_ventas_anteriores)
-    print("Ventas anteriores: $", ventas_anteriores['total_ventas_anteriores'])
+    print("\nVentas por semana (4 semanas, incluyendo la actual):", ventas_por_semana)
+    print("Total de ventas de las 4 semanas (incluyendo la actual hasta la fecha):", total_ventas)
+    print("Ventas totales: $", ventas_totales['total_ventas'])
+    print('total_ventas_semana_anterior: ', total_ventas_semana_anterior or 0)
 
-    return ventas_por_semana, total_ventas_anteriores, ventas_anteriores['total_ventas_anteriores']
+    return ventas_por_semana, ventas_totales['total_ventas'], total_ventas, total_ventas_semana_anterior or 0
 
 
 def top_prodcuts(branch_actualy):
@@ -87,10 +92,9 @@ def top_prodcuts(branch_actualy):
     productos_mas_vendidos = Product.objects.annotate(
         total_quantity_vendida=Sum('order_detaill__quantity')
     ).exclude(
-        name__icontains='propio'
+        name__icontains='propio').exclude(category__name__icontains='Cristal'
     ).filter(total_quantity_vendida__gt=0, branch=branch_actualy).values('name', 'brand__name', 'total_quantity_vendida')[:5]
 
-    # Crea un diccionario para almacenar los resultados
     top_productos_mas_vendidos = {}
 
     # Llena el diccionario con el nombre del producto y la cantidad total vendida
@@ -127,8 +131,8 @@ def top_brands(branch_actualy):
 
 
 def objetives(branch_actualy):
-    obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy).order_by('created_at')
-    obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy).order_by('created_at')
+    obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy).order_by('employee', 'created_at').distinct('employee')
+    obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy).order_by('branch', 'created_at').distinct('branch')
 
     print('\nObjetivos de empleado: ', obj_employee)
     print('\nObjetivos de sucursal: ', obj_branch)
@@ -215,7 +219,7 @@ def list_sale_to_dayli(branch_actualy):
 
 
 def movs_to_dayli(branch_actualy):
-    columns = ['Fecha', 'Responsable', 'Descripción', 'Tipo', 'Total'] # MODIFICAR 
+    columns = ['Por', 'Fecha', 'Hora', 'Descripción', 'Tipo', 'Monto'] # MODIFICAR 
 
     moviments = Movement.objects.filter(cash_register__branch=branch_actualy).order_by('-created_at')[:4]
     print('LISTA DE MOVIMIENTOS: ',moviments)
