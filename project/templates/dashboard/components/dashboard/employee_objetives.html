@@ -22,15 +22,15 @@
           </div>
         </div> -->
         <div class="flex-1">
-          <h6 class="mb-0 d-flex align-items-center">{{objective.employee}}<span class="badge rounded-pill ms-2 bg-200 text-primary">{{objective.objetive}}</span></h6>
+          <h6 class="mb-0 d-flex align-items-center">{{objective.employee}}</h6>
         </div>
       </div>
     </div>
     <div class="col py-1">
       <div class="row flex-end-center g-0">
         <div class="col-auto pe-2">
-          <div class="fs--1 fw-semi-bold">{{objective.objetive}}/{{objective.accumulated}}</div>
-          <div class="fs--1 fw-semi-bold">{{objective.objetive}}/{{objective.accumulated}}</div>
+          <div class="fs--1 fw-semi-bold"><span class="badge rounded-pill ms-2 bg-200 text-primary">${{objective.accumulated}}</span>/${{objective.objetive.quantity}}</div>
+          <div class="fs--1 fw-semi-bold"><span class="badge rounded-pill ms-2 bg-200 text-primary">${{objective.accumulated}}</span>/${{objective.accumulated}}</div>
         </div>
         <div class="col-5 pe-card ps-2">
           <div class="progress bg-200 me-2" style="height: 5px;">
