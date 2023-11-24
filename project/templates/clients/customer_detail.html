@@ -284,26 +284,26 @@
                                 <table class="table table-sm fs--1 mb-0 overflow-hidden ">
                                     <thead class="bg-200 text-900">
                                         <tr>
-                                            <th class="sort pe-1  align-middle px-4 user_made white-space-nowrap"
-                                                data-sort="user_made">
-                                                Por
-                                            </th>
                                             <th class="sort pe-1  align-middle created_at white-space-nowrap px-4"
                                                 data-sort="Fecha">
                                                 Creado
                                             </th>
-                                            <th class="sort pe-1  align-middle diagnostic white-space-nowrap px-4 "
-                                                data-sort="diagnostic">
-                                                Diagnostico
+                                            <th class="sort pe-1  align-middle px-4 user_made white-space-nowrap"
+                                                data-sort="user_made">
+                                                Por
                                             </th>
                                             <th class="sort pe-1  align-middle armazon white-space-nowrap px-4 "
                                                 data-sort="armazon">
                                                 Armazon
                                             </th>
+                                            {% comment %} <th class="sort pe-1  align-middle diagnostic white-space-nowrap px-4 "
+                                                data-sort="diagnostic">
+                                                Diagnostico
+                                            </th>
                                             <th class="sort pe-1  align-middle observations white-space-nowrap px-4 "
                                                 data-sort="obervations">
                                                 Observacion
-                                            </th>
+                                            </th> {% endcomment %}
                                             <th class="sort pe-1  align-middle is_done px-4 white-space-nowrap "
                                                 data-sort="is_done">
                                                 Estado
@@ -314,12 +314,11 @@
                                     <tbody class="list" id="table-purchase-body">
                                         {% for service_order in service_orders %}
                                         <tr class="btn-reveal-trigger">
-                                            <th class="align-start user_made ">{{ service_order.user_made }}</th>
                                             <th class="align-start created_at">{{ service_order.created_at | date:"d-m-Y" }}</th>
-                                            <th class="align-start diagnostic">{{ service_order.diagnostic }}</th>
+                                            <th class="align-start user_made ">{{ service_order.user_made }}</th>
                                             <td class="align-start armazon">{{ service_order.armazon }}</td>
-                                            <td class="align-start observation">{{ service_order.observations }}
-                                            </td>
+                                            {% comment %} <th class="align-start diagnostic">{{ service_order.diagnostic }}</th>
+                                            <td class="align-start observation">{{ service_order.observations }}</td> {% endcomment %}
                                             <td class="align-start is_done">
                                                 <p class="h6">
                                                     {% if service_order.is_done %}
