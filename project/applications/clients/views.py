@@ -14,6 +14,7 @@ from applications.cashregister.utils import obtener_nombres_de_campos
 from applications.cashregister.models import CashRegister, Currency, Movement
 from applications.sales.models import Payment, Sale
 from applications.sales.forms import PaymentMethodForm, TypePaymentMethodForm
+from applications.sales.utils import set_movement
 from project.settings.base import DATE_NOW, ZONE_TIME
 
 from .models import *
@@ -451,10 +452,6 @@ class HealthInsuranceDeleteView(CustomUserPassesTestMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
     
 
-
-
-    
-
 ####################### CREDIT ACCOUNT #######################
 
 def open_credit_account(request, pk): # usar con   --->   <form method='post' acction="{% url 'clients_app:open_credit_account' customer.pk %}"> </form>
@@ -471,29 +468,14 @@ def open_credit_account(request, pk): # usar con   --->   <form method='post' ac
     return redirect('clients_app:customer_detail', pk=customer.pk)
 
 
-
 def pay_credits(request, pk):
     user = request.user
     customer = Customer.objects.get(pk=pk)
-    total = 0
+    total = customer.credit_balance
     payment = TypePaymentMethodForm(request.POST)
 
     if payment.is_valid():
         pay = payment.save(commit=False)
-        transactions = customer.payments.filter(deleted_at=None, sale__state="PENDIENTE").order_by('created_at')
-        for transaction in transactions:      
-            transaction.sale.state = 'COMPLETADO'
-            total += transaction.sale.amount
-            transaction.sale.save()
-
-            Payment.objects.create(
-                user_made = request.user,
-                customer = customer,
-                amount = transaction.sale.amount,
-                payment_method = pay.payment_method,
-                description = pay.description if len(pay.description) > 1 else 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
-                sale = transaction.sale,
-            )
 
         branch_actualy = set_branch_session(request)
 
@@ -612,6 +594,33 @@ def export_order_service_list_to_excel(request, pk):
 
     return response
 
+
+def pay_service_order(request, pk):
+    if request.method == 'POST':
+        service = ServiceOrder.objects.get(id=pk)
+        customer = service.customer
+        sale = service.sale
+
+        type_method = TypePaymentMethodForm(request.POST)
+        if type_method.is_valid():
+            type_method = type_method.save(commit=False)
+            total = sale.missing_balance if sale.state == "PENDIENTE" else 0
+            if not service.is_done and total:
+                service.is_done = True
+                service.save()
+                set_movement(total, type_method.payment_method, service.customer, request)
+                
+                customer.credit_balance -= total
+                customer.save()
+
+                messages.success(request, "La Orden de Servicio fue pagada con exito.")
+                return redirect('clients_app:customer_detail', pk=service.customer.pk)
+            else:
+                messages.warning(request, "La Orden de Servicio ya fué completada.")
+                return redirect('clients_app:customer_detail', pk=service.customer.pk)
+        else:
+            messages.error(request, "Se produjo un error al realizar pago.")
+            return redirect('clients_app:customer_detail', pk=service.customer.pk)
 
 ####################### EXPORT CLIENTS LIST #########################
 
@@ -754,3 +763,10 @@ def print_service_order(request, pk): # pk de la orden
         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
     
     
+def service_order_entrega(request, pk):
+    if request.method == "POST":
+        service = ServiceOrder.objects.get(pk=pk)
+        service.is_done = True
+        service.save()
+        messages.success(request, "La Orden de Servicio fue marcada como entregada.")
+        return redirect('clients_app:customer_detail', pk=service.customer.pk)
