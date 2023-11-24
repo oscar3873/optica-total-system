@@ -131,12 +131,12 @@ def dayli_sales(branch_actualy):
     monto_por_rango_pendiente = {str(hora.hour): 0 for hora in horas}
 
     # Realiza la consulta para obtener los montos recaudados en cada hora con estado "COMPLETADO"
-    ventas_completadas = Sale.objects.filter(created_at__date=fecha_hoy, state='COMPLETADO', branch=branch_actualy
-                                             ).values('created_at__time').annotate(monto_recaudado=Sum('total'))
+    ventas_completadas = Sale.objects.filter(created_at__date=fecha_hoy, state='COMPLETADO', branch=branch_actualy,
+                                            deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum('total'))
     
     # Realiza la consulta para obtener los montos recaudados en cada hora con estado "PENDIENTE"
-    ventas_pendientes = Sale.objects.filter(created_at__date=fecha_hoy, state='PENDIENTE', branch=branch_actualy
-                                            ).values('created_at__time').annotate(monto_recaudado=Sum(F('total') - F('missing_balance')))
+    ventas_pendientes = Sale.objects.filter(created_at__date=fecha_hoy, state='PENDIENTE', branch=branch_actualy,
+                                            deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum(F('total') - F('missing_balance')))
 
     # Llena los diccionarios con los montos recaudados en cada intervalo de una hora
     for venta in ventas_completadas:

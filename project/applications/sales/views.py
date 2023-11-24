@@ -101,7 +101,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 all_products_to_sale.append(product)
 
         cristal = find_cristal_product(all_products_to_sale)
+        contacto = find_contacto_product(all_products_to_sale)
         armazon = find_armazons_product(all_products_to_sale)
+        
         if cristal and armazon:
             if cristal and not customer:
                 messages.error(self.request, "Seleccione un Cliente antes de vender un Cristal.")
@@ -109,6 +111,10 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             
         elif cristal and not armazon:
             messages.error(self.request, "Seleccione un Armazón antes de vender un Cristal.")
+            return super().form_invalid(form)
+        
+        if contacto and not customer:
+            messages.error(self.request, "Seleccione un Cliente antes de vender un Lente de Contacto.")
             return super().form_invalid(form)
 
         for formset in formsets:
@@ -123,15 +129,15 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
 
-        if cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
+        if (cristal or contacto) and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
         
-        if not cristal and amount < sale.total:
-            messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales.")
+        if not (cristal or contacto) and amount < sale.total:
+            messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales o Lentes de Contacto.")
             return super().form_invalid(form)
 
-        process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, amount, self.request)
+        process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, contacto, amount, self.request)
         if sale.state == 'COMPLETADO':
             up_objetives(sale.user_made, sale)
 
@@ -227,6 +233,7 @@ class SalesListView(LoginRequiredMixin, ListView):
             "discount_extra",
             "updated_at",
             "subtotal",
+            "created_at"
             )
         
         return context
@@ -247,6 +254,7 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         context['sale_details'] = OrderDetail.objects.filter(sale=sale)
         
         context['cristales'] = find_cristal_product(None, sale)
+        context['contactos'] = find_contacto_product(None, sale)
         
         armazones = find_armazons_product(None, sale)
 
@@ -437,10 +445,13 @@ def ajax_search_sales(request):
             print("####################################",paginate_by)
             sales = Sale.objects.all().filter(deleted_at = None)[:paginate_by]
         else:
+            from datetime import datetime
+            formatted_search_term = datetime.strptime(search_term, '%d/%m/%Y').date() if '/' in search_term else search_term
             # Usando Q por todos los campos existentes en la tabla
-            sales = Sale.objects.all().filter(deleted_at = None, branch=branch_actualy).filter(
+            sales = Sale.objects.filter(deleted_at = None, branch=branch_actualy).filter(
                 Q(total__icontains=search_term) |
-                # Q(date_time_sale__icontains=search_term) |
+                Q(missing_balance__icontains=search_term) |
+                Q(created_at__date__icontains=formatted_search_term) |
                 Q(state__icontains=search_term) |
                 Q(user_made__first_name__icontains=search_term) |
                 Q(user_made__last_name__icontains=search_term) |
@@ -453,7 +464,8 @@ def ajax_search_sales(request):
             'id': sale.id,
             'total': sale.total,
             'missing_balance': sale.missing_balance,
-            # 'date_time_sale': sale.date_time_sale.strftime('%d %B %Y'),
+            'date_time_sale': sale.created_at.time().strftime('%H:%M'),
+            'date_sale': sale.created_at.date().strftime('%d/%m/%Y'),
             'state': sale.state,
             'customer': str(sale.customer),
             'customer_id': sale.customer.id,
@@ -473,19 +485,6 @@ def set_serviceOrder_onSale(request, pk):
     service_order.save()
 
     return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': pk}))
-
-
-# def print_invoice(request, pk): # pk de la orden
-#     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
-#         service = Sale.objects.get(pk=pk)
-#         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
-#         html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
-
-#         # Devuelve el HTML como respuesta
-#         return HttpResponse(html_content, content_type="text/html")
-#     else:
-#         # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
-#         return JsonResponse({'error': 'Solicitud no válida'}, status=400)
 
 
 def pay_missing_balance(request, pk):

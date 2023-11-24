@@ -125,6 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-        }, 1500) // Establecemos el retraso de 500 milisegundos
+        }, 0) // Establecemos el retraso de 500 milisegundos
     });
 });

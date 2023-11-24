@@ -141,7 +141,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             else:
                 document = DocumentType.objects.get(id=10) #es dni
         
-        sale.receipt = Receipt.objects.create(
+        receipt = Receipt.objects.create(
             point_of_sales = pos_afip,
             receipt_type = receipt_type,
             concept = ConceptType.objects.get(id=1),
@@ -153,6 +153,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             net_taxed = Decimal(sale.total / Decimal(1.21)),
             exempt_amount = 0,
             )
+        sale.receipt = receipt
         sale.save()
         
         vat = Vat.objects.create(
@@ -166,8 +167,8 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
         try:
             validation_result = sale.receipt.validate()
         except:
-            sale.receipt.dalete()
-            vat.dalete()
+            vat.delete()
+            receipt.delete()
             return 'Error de comunicacion con AFIP.'
         
         print(validation_result)
@@ -184,6 +185,16 @@ def find_cristal_product(all_products_to_sale, sale=None):
             return product
     return None
 
+def find_contacto_product(all_products_to_sale, sale=None):
+    """Ecuentra un CRISTAL dentro de la orden de venta (productos)"""
+    if sale:
+        all_products_to_sale = Product.objects.filter(order_detaill__sale=sale)
+
+    for product in all_products_to_sale:
+        if 'contacto' in product.category.name.lower():
+            return product
+    return None
+
 def find_armazons_product(all_products_to_sale, sale=None):
     """Ecuentra un Armazon dentro de la orden de venta (productos)"""
     if sale:
@@ -195,11 +206,13 @@ def find_armazons_product(all_products_to_sale, sale=None):
             return product
     return None
 
+
+
 def generate_proof(proof_type): # generar factura o recibo
     print('IMPRIMIENDO %s' % proof_type)
 
 
-def process_customer(customer, sale, payment_methods, total, product_cristal, amount, request):
+def process_customer(customer, sale, payment_methods, total, product_cristal, product_contacto, amount, request):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
@@ -234,7 +247,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
                 customer.save()
             set_movement(payment_total, payment_methods.type_method, customer, request)
 
-        elif product_cristal: 
+        elif product_cristal or product_contacto: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
             missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
             sale.missing_balance = missing_balance

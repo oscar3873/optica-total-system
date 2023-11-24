@@ -171,10 +171,10 @@ class CashRegisterCloseView(LoginRequiredMixin, FormView):
         cashregister.observations = observations
         cashregister.is_close = True
         cashregister.save()
-        
-        self.get_context_data()['cashregister'] = cashregister
-        
-        return render(self.request, 'cashregister/components/ticket_close_cashregister.html', self.get_context_data())
+
+        # Redirige a la lista de cajas después de cerrar la caja
+        messages.success(self.request, 'La caja se cerró correctamente.')
+        return redirect('cashregister_app:cashregister_list_view')
     
     def form_invalid(self, form):
         print("######################################")
