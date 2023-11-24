@@ -212,7 +212,7 @@ def generate_proof(proof_type): # generar factura o recibo
     print('IMPRIMIENDO %s' % proof_type)
 
 
-def process_customer(customer, sale, payment_methods, total, product_cristal, amount, request):
+def process_customer(customer, sale, payment_methods, total, product_cristal, product_contacto, amount, request):
     """
     Funcion que procesa los datos de metodos de pago y el tipo de cliente.
     """
@@ -247,7 +247,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, am
                 customer.save()
             set_movement(payment_total, payment_methods.type_method, customer, request)
 
-        elif product_cristal: 
+        elif product_cristal or product_contacto: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
             missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
             sale.missing_balance = missing_balance

@@ -44,15 +44,15 @@
     </button>
     
     {% if sale.receipt %}
-        <button id="show-factura" data-id="{{sale.pk}}" class="btn btn-primary">
-            Ver Factura
-        </button>
-    {% else %}
+    <button id="show-factura" data-id="{{ sale.pk }}" class="btn btn-primary">
+        Ver Factura
+    </button>
+    {% elif sale.state == 'COMPLETADO' %}
         <form method="post" action="{% url 'sales_app:gen_factura' sale.pk %}">
             {% csrf_token %}
             <div class="d-flex" id="gen-fatura-button">
                 <div class="col-2 me-2">
-                    {{select.select}}
+                    {{ select.select }}
                 </div>
             </div>
         </form>
@@ -84,7 +84,7 @@
             </div>
             
             <!-- Si la venta contiene un cristal o lente de contacto, muestra el boton de para agregar orden de servicio -->
-            {% if cristales %} 
+            {% if cristales or contactos %} 
                 <div class="col-6">
                     <!--Boton modal de orden de servicio-->
                     <button type="button" class="btn btn-info" data-bs-target="#serviceOrder" data-bs-toggle="modal">Orden de servicio</button>                

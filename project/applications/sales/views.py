@@ -103,6 +103,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         cristal = find_cristal_product(all_products_to_sale)
         contacto = find_contacto_product(all_products_to_sale)
         armazon = find_armazons_product(all_products_to_sale)
+        
         if cristal and armazon:
             if cristal and not customer:
                 messages.error(self.request, "Seleccione un Cliente antes de vender un Cristal.")
@@ -110,6 +111,10 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             
         elif cristal and not armazon:
             messages.error(self.request, "Seleccione un Armazón antes de vender un Cristal.")
+            return super().form_invalid(form)
+        
+        if contacto and not customer:
+            messages.error(self.request, "Seleccione un Cliente antes de vender un Lente de Contacto.")
             return super().form_invalid(form)
 
         for formset in formsets:
@@ -124,7 +129,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
 
-        if cristal and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
+        if (cristal or contacto) and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
         
@@ -132,7 +137,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales o Lentes de Contacto.")
             return super().form_invalid(form)
 
-        process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, amount, self.request)
+        process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, contacto, amount, self.request)
         if sale.state == 'COMPLETADO':
             up_objetives(sale.user_made, sale)
 
@@ -249,6 +254,7 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         context['sale_details'] = OrderDetail.objects.filter(sale=sale)
         
         context['cristales'] = find_cristal_product(None, sale)
+        context['contactos'] = find_contacto_product(None, sale)
         
         armazones = find_armazons_product(None, sale)
 
