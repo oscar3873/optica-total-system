@@ -91,19 +91,43 @@ document.addEventListener("DOMContentLoaded", function () {
             customerIdCheck.name = `selected_customer_id_${fieldIdentifier}`;
             customerIdCheck.value = customerId;
             searchInput.closest('form').appendChild(customerIdCheck);
+            const botonMasDiv = document.getElementById('boton-mas');
 
             if (customerCredit == 1) {
                 var searchText = "Cuenta Corriente";
+                var preventDefault = function(event) {
+                    event.preventDefault();
+                };
+            
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                 for (var i = 0; i < payment_method.options.length; i++) {
                     if (payment_method.options[i].text.includes(searchText)) {
                         // Selecciona la opción encontrada
                         payment_method.options[i].selected = true;
+                        
+                        
+                        // Oculta el div con nombre 'boton-mas'
+                        if (botonMasDiv) {
+                            botonMasDiv.style.display = 'none';
+                        }
                     }
                 }
-            }else{
-                payment_method.options[selected_payment].selected = true;
+                payment_method.disabled = true;
+            } else {
+                payment_method.disabled = false;
+                console.log("entra por acá");
+                // Activa la opción seleccionada
+                payment_method.options[3].selected = false;
+            
+                // Muestra el div con nombre 'boton-mas'
+                if (botonMasDiv) {
+                    botonMasDiv.style.display = 'block'; // O 'inline' según el tipo de display que uses
+                }
+
             }
+
+
+            
 
         });
     }
@@ -118,4 +142,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // SOLO PARA EL FORMULARIO 1
     const form_0 = document.getElementById('id_form-0');
     configureSearchInputs(form_0, 0);
+
+    // Obtén una referencia al botón "boton-realizar-venta" por su ID
+    var realizarVentaBtn = document.getElementById('boton-realizar-venta');
+
+    // Agrega un evento de clic al botón "boton-realizar-venta"
+    realizarVentaBtn.addEventListener('click', function() {
+        // Coloca aquí el código que deseas ejecutar al hacer clic en el botón "boton-realizar-venta"
+        // En este caso, deshabilitar payment_method
+        if (payment_method) {
+            payment_method.disabled = false;
+            console.log("payment_method deshabilitado");
+        } else {
+            console.error("payment_method no está definido o no es accesible desde este ámbito.");
+        }
+    });
 });

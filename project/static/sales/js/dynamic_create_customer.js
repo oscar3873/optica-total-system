@@ -6,6 +6,7 @@ const customer_modal = document.getElementById('New-customer-form');
 
 document.addEventListener('DOMContentLoaded', function() {
     const saveCustomer = document.getElementById('save-customer');
+    const botonMasDiv = document.getElementById('boton-mas');
 
 
     saveCustomer.addEventListener('click', function() {
@@ -58,10 +59,19 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (payment_method.options[i].text.includes(searchText)) {
                                 // Selecciona la opción encontrada
                                 payment_method.options[i].selected = true;
+                                payment_method.disabled = true;
+                                if (botonMasDiv) {
+                                    botonMasDiv.style.display = 'none';
+                                }
                             }
                         }
                     }else{
                         payment_method.options[selected_payment].selected = true;
+                        payment_method.disabled = false;
+                        // Muestra el div con nombre 'boton-mas'
+                        if (botonMasDiv) {
+                            botonMasDiv.style.display = 'block'; // O 'inline' según el tipo de display que uses
+                        }
                     }
 
                     // Cierra el modal al guardar exitosamente

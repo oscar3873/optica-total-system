@@ -86,7 +86,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             if discount_sale < 0:
                 messages.error(self.request, "Descuento de venta Inválido. Ingrese solo valores positivos.")
                 return super().form_invalid(form)
-
+        else:
+            print(saleform.errors)
+            print("\n\n\n\n\n\n\n")
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
