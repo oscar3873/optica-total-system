@@ -44,28 +44,19 @@ class ServiceOrderManager(BaseManager):
         correction.user_made = user_made
         correction.save()
 
-        print(material_form.cleaned_data)
-        material_field = material_form.cleaned_data.pop('material_choice')
         material = material_form.save(commit=False)
-        setattr(material, material_field, True)
         material.user_made = user_made
         material.save()
 
-        color_field = color_form.cleaned_data.pop('color_choice')
         color = color_form.save(commit=False)
-        setattr(color, color_field, True)
         color.user_made = user_made
         color.save()
 
-        cristal_field = cristal_form.cleaned_data.pop('cristal_choice')
         cristal = cristal_form.save(commit=False)
-        setattr(cristal, cristal_field, True)
         cristal.user_made = user_made
         cristal.save()
 
-        tratamiento_field = tratamiento_form.cleaned_data.pop('tratamient_choice')
         tratamiento = tratamiento_form.save(commit=False)
-        setattr(tratamiento, tratamiento_field, True)
         tratamiento.user_made = user_made
         tratamiento.save()
 
