@@ -272,6 +272,7 @@ class CloseTicketCashRegister(LoginRequiredMixin, View):
 
 #Falta corregir esta funcion y pasarla a una clase
 def archingTicket(request, pk, archiv_pos):
+    from project.settings.base import ZONE_TIME
     total = 0
     
     cashregister = CashRegister.objects.get(pk=pk)
@@ -279,9 +280,20 @@ def archingTicket(request, pk, archiv_pos):
     print("#########################################################")
     for dicc in next(iter(archering_data[int(archiv_pos)].items()))[1]:
         total += dicc['counted_amount']
-
     total = int(total)
-    context = {'archering_data': archering_data[int(archiv_pos)], 'total': total}
+
+
+    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+    format = "%A, %d de %B de %Y"
+    
+    created_at = next(iter(archering_data[int(archiv_pos)].items()))[0].astimezone(ZONE_TIME)
+    sale_date_str = created_at.strftime(format)
+    context = {
+        'archering_data': archering_data[int(archiv_pos)],
+        'total': total,
+        'date': sale_date_str,
+        'time': created_at.time(),
+        }
 
     return render(request, 'cashregister/components/ticket_arching.html', context)
 
