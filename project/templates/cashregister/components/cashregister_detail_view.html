@@ -170,13 +170,13 @@
             <h5 class="mb-0">Arqueo de caja</h5>
         </div>
         <div class="card-body">
-            {% for date in archering_data %}
+            {% for key_possition, date in archering_data.items %}
                 <div class="table-responsive fs--1">
                     {% for key, value in date.items %}
                     <h6>{{ key|date:"l, j F Y H:i" }}</h6>
                     <div class="d-flex flex-column flex-md-row justify-content-between">
                         <span>realizado por <a href="{% url 'users_app:profile' value.0.user_made.pk  %}">{{value.0.user_made}}</a></span>
-                        <a href="{% url 'cashregister_app:arching_ticket_view' cashregister.pk %}">
+                        <a href="{% url 'cashregister_app:arching_ticket_view' cashregister.pk key_possition %}">
                             <span class="fas fa-receipt"></span>
                             <span cla>Ticket</span>
                         </a>

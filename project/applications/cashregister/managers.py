@@ -27,7 +27,6 @@ class CashRegisterManager(models.Manager):
 
         arqueos = CashRegisterDetail.objects.filter(cash_register=cash_register)
         arqueos = arqueos.annotate(creation_datetime=Trunc('created_at', 'minute'))
-
         resultados = arqueos.values(
             'creation_datetime', 'cash_register', 'type_method', 'registered_amount', 'counted_amount', 'difference', 'user_made'
         )
@@ -45,11 +44,12 @@ class CashRegisterManager(models.Manager):
             data_by_datetime[creation_datetime].append(resultado)
 
         # Formatear los resultados en la estructura deseada
-        formatted_results = []
+        formatted_results = {}
+        cont = 0
         for datetime, data in data_by_datetime.items():
             formatted_result = {datetime: data}
-            formatted_results.append(formatted_result)
-
+            formatted_results[cont] = formatted_result
+            cont += 1
         return formatted_results
 
 

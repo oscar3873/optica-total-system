@@ -130,8 +130,6 @@ class CashRegisterDetailView(LoginRequiredMixin, DetailView):
         archering_data = CashRegister.objects.get_archering_data(self.get_object())
         context['archering_data'] = archering_data
         print('###################################################')
-        print(context['archering_data'])
-        
         return context
 
 #Esta view aun esta sin uso
@@ -199,7 +197,8 @@ class CashRegisterArching(LoginRequiredMixin, View):
             {
                 'type_method': method, # tipo de metodo de pago
                 'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister) # calculo de monto registrado por el metodo de pago elegido
-            } for method in PaymentType.objects.all()]
+            } for method in PaymentType.objects.exclude(name='Cuenta Corriente')]
+        print(PaymentType.objects.exclude(name='Cuenta Corriente'))
         # Hay que buscar una alternativa a esta linea de codigo
         # Porque todo deja de funcionar si se saca initial=initial_data
         formset = CashRegisterDetailFormSet(initial=initial_data)
@@ -272,15 +271,19 @@ class CloseTicketCashRegister(LoginRequiredMixin, View):
 
 
 #Falta corregir esta funcion y pasarla a una clase
-def archingTicket(request, pk):
+def archingTicket(request, pk, archiv_pos):
+    total = 0
     
     cashregister = CashRegister.objects.get(pk=pk)
     archering_data = CashRegister.objects.get_archering_data(cashregister)
     print("#########################################################")
-    print(archering_data)
-    context = {}
-    
-    return render(request, 'cashregister/components/ticket_arching.html')
+    for dicc in next(iter(archering_data[int(archiv_pos)].items()))[1]:
+        total += dicc['counted_amount']
+
+    total = int(total)
+    context = {'archering_data': archering_data[int(archiv_pos)], 'total': total}
+
+    return render(request, 'cashregister/components/ticket_arching.html', context)
 
 
 class MovementsView(LoginRequiredMixin, TemplateView):

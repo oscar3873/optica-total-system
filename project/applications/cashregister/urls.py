@@ -53,7 +53,7 @@ urlpatterns = [
         name = 'cashregister_arching_view'
     ),
     path(
-        'arching/ticket/<pk>/',
+        'arching/ticket/<pk>/<archiv_pos>/',
         archingTicket,
         name = 'arching_ticket_view'
     ),

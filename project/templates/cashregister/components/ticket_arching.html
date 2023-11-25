@@ -101,6 +101,13 @@
             margin-top: 2rem;
             font-size: .7rem;
         }
+        .text-center{
+            text-align: center;
+        }
+        .text-end{
+            text-align: end;
+            padding-right: 1.5rem;
+        }
     </style>
 </head>
 <body>
@@ -121,41 +128,27 @@
         <thead>
             <tr>
                 <th>TIPO</th>
-                <th >MONTO</th>
-                <th >CONTEO</th>
-                <th >DIF.</th>
+                <th class="text-center">MONTO</th>
+                <th class="text-center">CONTEO</th>
+                <th class="text-end">DIF.</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>EFECTIVO</td>
-                <td>$ 15000</td>
-                <td>$ 16000</td>
-                <td>$ 17000</td>
-            </tr>
-            <tr>
-                <td>T. CREDITO</td>
-                <td>$ 18000</td>
-                <td>$ 19000</td>
-                <td>$ 20000</td>
-            </tr>
-            <tr>
-                <td>T. DEBITO</td>
-                <td>$ 21000</td>
-                <td>$ 22000</td>
-                <td>$ 23000</td>
-            </tr>
-            <tr>
-                <td>TRANSFER.</td>
-                <td>$ 24000</td>
-                <td>$ 25000</td>
-                <td>$ 26000</td>
-            </tr>
+            {% for key, value in archering_data.items %}
+                {% for v in value %}
+                    <tr>
+                        <td>{{ v.type_method }}</td>
+                        <td class="text-center">{{ v.registered_amount|floatformat:2}}</td>
+                        <td class="text-center">{{ v.counted_amount|floatformat:2}}</td>
+                        <td class="text-end">{{ v.difference|floatformat:2}}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="3">TOTAL</th>
-                <th colspan="1">$ 27000</th>
+                <th colspan="3">TOTAL CONTEO</th>
+                <th colspan="1">$ {{total|floatformat:2}}</th>
             </tr>
         </tfoot>
     </table>
