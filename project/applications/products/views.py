@@ -345,7 +345,7 @@ class ProductListView(LoginRequiredMixin, ListView):
     model = Product
     template_name = 'products/product_list_page.html'
     context_object_name = 'products'
-    paginate_by = 25
+    paginate_by = 50
 
     def get_queryset(self):
         
@@ -694,7 +694,7 @@ def ajax_search_products(request):
                 Q(description__icontains=search_term) |
                 Q(category__name__icontains=search_term) |
                 Q(brand__name__icontains=search_term)
-            )[:25]
+            )[:40]
         # Crear una lista de diccionarios con los datos de los productos
         data = [{
             'id': product.id,

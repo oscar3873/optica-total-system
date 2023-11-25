@@ -317,7 +317,7 @@ def archingTicket(request, pk, archiv_pos):
 
 class MovementsView(LoginRequiredMixin, TemplateView):
     template_name = 'cashregister/movements_page.html'
-    paginate_by = 25
+    paginate_by = 50
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -515,11 +515,9 @@ class CurrencyCreateView(CustomUserPassesTestMixin, FormView):
 def ajax_search_movements(request):
     # branch = request.user.branch
 
-    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
         print("###################### Esto es lo que se esta buscando: ",search_term)
@@ -536,7 +534,7 @@ def ajax_search_movements(request):
                 Q(type_operation__icontains=search_term) |
                 Q(user_made__first_name__icontains=search_term) |
                 Q(user_made__last_name__icontains=search_term)
-            )[:25]
+            )[:40]
         # Crear una lista de diccionarios con los datos de los empleados
         locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{

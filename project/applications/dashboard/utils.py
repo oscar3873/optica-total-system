@@ -21,6 +21,10 @@ def week_status(branch_actualy):
 
     sale = Sale.objects.filter(created_at__date__gte=week_date, created_at__date__lte=fecha_hoy,
                                 branch=branch_actualy, deleted_at=None)
+    
+    
+    print("\n\n\n\n\n\n")
+    print(sale)
     week_sales = {
         'mon': [0, 0],
         'tue': [0, 0],

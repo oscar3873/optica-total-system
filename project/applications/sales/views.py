@@ -204,7 +204,7 @@ class PaymentMethodView(CustomUserPassesTestMixin, ListView):
     """
     model = PaymentMethod
     template_name = 'sales/payment_method_list_page.html'
-    paginate_by = 10
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -217,7 +217,7 @@ class PaymentMethodView(CustomUserPassesTestMixin, ListView):
 class SalesListView(LoginRequiredMixin, ListView):
     template_name = 'sales/sale_page.html'
     model = Sale
-    paginate_by = 25
+    paginate_by = 50
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -464,7 +464,7 @@ def ajax_search_sales(request):
                 Q(user_made__last_name__icontains=search_term) |
                 Q(customer__first_name__icontains=search_term) |
                 Q(customer__last_name__icontains=search_term)
-            )[:25]
+            )[:40]
         # Crear una lista de diccionarios con los datos de los empleados
         locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
