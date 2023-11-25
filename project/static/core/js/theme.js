@@ -10581,9 +10581,9 @@ var weeklySalesInit = function weeklySalesInit() {
           case 'sat':
             listWeeklyDays.push('Sáb');
             break;
-          case 'sun':
-            listWeeklyDays.push('Dom');
-            break;
+          // case 'sun':
+          //   listWeeklyDays.push('Dom');
+          //   break;
         }
     }
   }

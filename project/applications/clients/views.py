@@ -360,7 +360,7 @@ class CustomerListView(LoginRequiredMixin, ListView):
     model = Customer
     template_name = 'clients/customer_page.html'
     context_object_name = 'customers'
-    paginate_by = 25
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -389,14 +389,14 @@ class ServiceOrderListView(LoginRequiredMixin, ListView):
     model = ServiceOrder
     template_name = 'clients/service_order_page.html'
     context_object_name = 'laboratory_orders'
-    paginate_by = 25
+    paginate_by = 50
 
 
 class HealthInsuranceListView(LoginRequiredMixin, ListView):
     model = HealthInsurance
     template_name = 'clients/hinsuranse_page.html'
     context_object_name = 'h_insurances'
-    paginate_by = 25
+    paginate_by = 50
 
 
 ########################### DELETE ####################################
@@ -691,20 +691,17 @@ def export_customer_list_to_excel(request):
 
 def ajax_search_customers(request):
     from django.db.models import Q
-
-    branch = request.user.branch
-    print(branch)
-    print("################################################")
-    print("Entre aqui")
     
     branch_actualy = set_branch_session(request)
+
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-
+        print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = CustomerListView().paginate_by
+            print("####################################",paginate_by)
             customers = Customer.objects.get_customers_branch(branch_actualy).filter(deleted_at=None)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
@@ -713,10 +710,11 @@ def ajax_search_customers(request):
                 Q(last_name__icontains=search_term) |
                 Q(phone_number__icontains=search_term) |
                 Q(phone_code__icontains=search_term) |
-                Q(email__icontains=search_term)
-            )
-
+                Q(email__icontains=search_term) |
+                Q(dni__icontains=search_term)
+            )[:40]
         # Crear una lista de diccionarios con los datos de los empleados
+        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
             'id': customer.id,
             'first_name': customer.first_name,
@@ -725,11 +723,10 @@ def ajax_search_customers(request):
             'phone_code': customer.phone_code,
             'dni': customer.dni,
             'user_made': str(customer.user_made),
-            'has_credit_account': 1 if customer.has_credit_account else 0,
             'credit_balance': customer.credit_balance,
             'is_staff': 1 if request.user.is_staff else 0
         } for customer in customers]
-        print(data)
+        locale.setlocale(locale.LC_TIME, '')
         return JsonResponse({'data': data})
     
 

@@ -84,7 +84,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     model = Note
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
-    paginate_by = 25
+    paginate_by = 50
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
