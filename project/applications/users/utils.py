@@ -33,7 +33,7 @@ def generate_profile_img_and_assign(user):
     text_height = text_bbox[3] - text_bbox[1]
 
     # Calcular la posición del texto en el centro de la imagen
-    x = (width - text_width) // 1.5
+    x = (width - text_width) // 1.7
     y = (height - text_height) // 2
 
     # Dibujar el texto en la imagen con el color especificado

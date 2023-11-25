@@ -328,7 +328,7 @@ class MovementsView(LoginRequiredMixin, TemplateView):
         cashregisters = CashRegister.objects.filter(branch=branch_actualy, deleted_at=None)
 
         #Tener en cuenta que cuando se hace una consulta por filtro anula lo de deleted_at y hay que especificarlo de nuevo
-        movements = Movement.objects.filter(cash_register__in=cashregisters, deleted_at=None).order_by('-created_at')
+        movements = Movement.objects.filter(cash_register__in=cashregisters, deleted_at=None).order_by('-created_at')[:self.paginate_by]
         context['movements'] = movements
         print("###############################################################")
         print(movements)

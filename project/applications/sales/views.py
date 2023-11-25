@@ -454,6 +454,7 @@ def ajax_search_sales(request):
         else:
             from datetime import datetime
             formatted_search_term = datetime.strptime(search_term, '%d/%m/%Y').date() if '/' in search_term else search_term
+            print(search_term, formatted_search_term)
             # Usando Q por todos los campos existentes en la tabla
             sales = Sale.objects.filter(deleted_at = None, branch=branch_actualy).filter(
                 Q(total__icontains=search_term) |

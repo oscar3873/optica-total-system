@@ -699,7 +699,7 @@ def ajax_search_customers(request):
         search_term = request.GET.get('search_term', '')
         print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
-            # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
+            # En caso de que search_term esté vacío, muestra la cantidad de clientes por defecto
             paginate_by = CustomerListView().paginate_by
             print("####################################",paginate_by)
             customers = Customer.objects.get_customers_branch(branch_actualy).filter(deleted_at=None)[:paginate_by]
@@ -712,7 +712,7 @@ def ajax_search_customers(request):
                 Q(phone_code__icontains=search_term) |
                 Q(email__icontains=search_term) |
                 Q(dni__icontains=search_term)
-            )[:40]
+            )[:50]
         # Crear una lista de diccionarios con los datos de los empleados
         locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
@@ -723,10 +723,11 @@ def ajax_search_customers(request):
             'phone_code': customer.phone_code,
             'dni': customer.dni,
             'user_made': str(customer.user_made),
+            'has_credit_account': 1 if customer.has_credit_account else 0,
             'credit_balance': customer.credit_balance,
             'is_staff': 1 if request.user.is_staff else 0
         } for customer in customers]
-        locale.setlocale(locale.LC_TIME, '')
+        print(data)
         return JsonResponse({'data': data})
     
 

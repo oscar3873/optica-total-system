@@ -694,7 +694,7 @@ def ajax_search_products(request):
                 Q(description__icontains=search_term) |
                 Q(category__name__icontains=search_term) |
                 Q(brand__name__icontains=search_term)
-            )[:40]
+            )[:50]
         # Crear una lista de diccionarios con los datos de los productos
         data = [{
             'id': product.id,

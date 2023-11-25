@@ -122,10 +122,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 payment_method.disabled = false;
                 payment_method.options[selected_payment].selected = true;
             });
-
-            if (customerCredit == 1) {
-                var searchText = "Cuenta Corriente";
-            
+            console.log(customerCredit);
+            if (customerCredit == 1) {            
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                 for (var i = 0; i < payment_method.options.length; i++) {
                     if (payment_method.options[i].text.includes(searchText)) {
@@ -178,6 +176,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // En este caso, deshabilitar payment_method
         if (payment_method) {
             payment_method.disabled = false;
+            for (var i = 0; i < payment_method.options.length; i++) {
+                if (payment_method.options[i].text.includes(searchText)) {
+                    // Selecciona la opción encontrada
+                    payment_method.options[i].disabled = false;
+                }
+            }
             console.log("payment_method deshabilitado");
         } else {
             console.error("payment_method no está definido o no es accesible desde este ámbito.");
