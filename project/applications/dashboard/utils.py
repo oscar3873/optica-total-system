@@ -84,7 +84,7 @@ def week_sales(branch_actualy):
     print("Ventas totales: $", ventas_totales['total_ventas'])
     print('total_ventas_semana_anterior: ', total_ventas_semana_anterior or 0)
 
-    return ventas_por_semana, ventas_totales['total_ventas'], total_ventas, total_ventas_semana_anterior or 0
+    return ventas_por_semana, int(ventas_totales['total_ventas']), total_ventas, total_ventas_semana_anterior or 0
 
 
 def top_prodcuts(branch_actualy):
