@@ -14,8 +14,12 @@ from applications.branches.utils import set_branch_session
 from applications.core.mixins import CustomUserPassesTestMixin, LoginRequiredMixin
 from applications.cashregister.models import CashRegister, CashRegisterDetail, PaymentType, Movement
 from applications.cashregister.forms import CloseCashRegisterForm, CashRegisterDetailFormSet
+from applications.sales.models import Payment
 from applications.cashregister.utils import obtener_nombres_de_campos
 from django.views.generic import DetailView
+from project.settings.base import DATE_NOW
+
+
 
 
 # Create your views here.
@@ -207,7 +211,6 @@ class CashRegisterArching(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
     
     def post(self, request, *args, **kwargs):
-        
         branch_actualy = set_branch_session(self.request)
 
         cashregister = CashRegister.objects.filter(is_close=False, branch= branch_actualy).last() #pasar contexto de cashregiter
@@ -245,6 +248,20 @@ class CashRegisterArching(LoginRequiredMixin, View):
             # cashregister.is_close = True
             # cashregister.save()
             
+            
+            ########### HARDCODEO MORTAL PARA CUENTA CORREINTE ##############
+            from django.db.models import Sum
+            registered_amount = Payment.objects.filter(payment_method__name='Cuenta Corriente', created_at__date=DATE_NOW.date()).aggregate(amount=Sum('sale__total'))['amount'] or 0
+            print(registered_amount)
+            CashRegisterDetail.objects.create(
+                user_made = request.user,
+                cash_register = cashregister,
+                type_method = PaymentType.objects.get(name='Cuenta Corriente'),
+                registered_amount = abs(registered_amount),
+                counted_amount = abs(registered_amount),
+                difference = 0
+            )
+
         else:
             messages.error(request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
             return render(request, self.template_name, {'formset': formset})

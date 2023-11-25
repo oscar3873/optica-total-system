@@ -76,15 +76,38 @@ document.addEventListener("DOMContentLoaded", function () {
             checkboxCustomer.hidden = true;
             checkboxCustomer.checked = true;
             const label = document.createElement("label");
-            const titleH5Customer = document.createElement('h5')
+
+            const titleH5Customer = document.createElement('h5');
             const textContentCustomer = document.createTextNode(customerName);
             titleH5Customer.appendChild(textContentCustomer);
             titleH5Customer.id = 'selecter_customer_title';
-            label.classList.add('d-block', 'mt-2');
+            label.classList.add('d-flex', 'align-items-center', 'mt-2'); // Agregar clases flex y alineación vertical al contenedor
 
-            label.appendChild(titleH5Customer)
-            label.appendChild(checkboxCustomer);
+            // Agregar el h5 al label primero
+            label.appendChild(titleH5Customer);
+
+            // Crear el botón
+            var trash_delete = document.createElement("button");
+
+            // Establecer atributos del botón
+            trash_delete.setAttribute("class", "btn btn-falcon-default btn-sm ms-2"); // Agregar clase 'ms-2' para agregar margen a la izquierda
+            trash_delete.setAttribute("type", "button");
+            trash_delete.setAttribute("id", "button-delete-customer");
+            trash_delete.setAttribute("title", "Eliminar Cliente");
+
+            // Crear el ícono dentro del botón
+            var icon = document.createElement("span");
+            icon.setAttribute("class", "fas fa-trash text-danger");
+            icon.setAttribute("data-fa-transform", "shrink-3 down-2");
+
+            // Agregar el ícono al botón
+            trash_delete.appendChild(icon);
+
+            // Agregar el botón al label después del h5
+            label.appendChild(trash_delete);
+
             checkboxContainer.appendChild(label);
+
             // Añadir el ID del customer al formulario
             const customerIdCheck = document.createElement('input');
             customerIdCheck.type = 'hidden';
@@ -92,19 +115,22 @@ document.addEventListener("DOMContentLoaded", function () {
             customerIdCheck.value = customerId;
             searchInput.closest('form').appendChild(customerIdCheck);
             const botonMasDiv = document.getElementById('boton-mas');
+            
+            trash_delete.addEventListener("click", function(){
+                customerIdCheck.remove();
+                label.remove();
+                payment_method.disabled = false;
+                payment_method.options[selected_payment].selected = true;
+            });
 
             if (customerCredit == 1) {
                 var searchText = "Cuenta Corriente";
-                var preventDefault = function(event) {
-                    event.preventDefault();
-                };
             
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                 for (var i = 0; i < payment_method.options.length; i++) {
                     if (payment_method.options[i].text.includes(searchText)) {
                         // Selecciona la opción encontrada
                         payment_method.options[i].selected = true;
-                        
                         
                         // Oculta el div con nombre 'boton-mas'
                         if (botonMasDiv) {
@@ -114,10 +140,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 payment_method.disabled = true;
             } else {
-                payment_method.disabled = false;
-                console.log("entra por acá");
                 // Activa la opción seleccionada
-                payment_method.options[3].selected = false;
+                console.log(selected_payment);
+                payment_method.disabled = false;
+                payment_method.options[selected_payment].selected = true;
             
                 // Muestra el div con nombre 'boton-mas'
                 if (botonMasDiv) {

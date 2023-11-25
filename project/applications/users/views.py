@@ -13,7 +13,6 @@ from .forms import UserCreateForm
 from .models import User
 from .forms import *
 from .utils import *
-from applications.branches.models import Branch
 from applications.core.mixins import CustomUserPassesTestMixin
 
 
