@@ -892,12 +892,7 @@
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
-                                    {% if request.user.is_staff %}
-                                        <a class="dropdown-item" href="{% url 'users_app:profile' request.user.id %}">
-                                            <span class="fas fa-user"></span>
-                                            Perfil
-                                        </a>
-                                    {% else %}
+                                    {% if not request.user.is_staff %}
                                         <a class="dropdown-item" href="{% url 'employees_app:profile_employee' request.user.employee_type.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
