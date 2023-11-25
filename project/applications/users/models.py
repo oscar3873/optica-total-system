@@ -29,9 +29,6 @@ class User(Person, AbstractUser):
         return f"{self.get_full_name()}"
     
     def get_absolute_url(self):
-        try:
-            employee = self.employee_type
-            return reverse('employees_app:profile_employee', kwargs={'pk': employee.pk})
-        except:
-            return reverse('employees_app:profile', kwargs={'pk': self.pk})
+        employee = self.employee_type
+        return reverse('employees_app:profile_employee', kwargs={'pk': employee.pk})
 

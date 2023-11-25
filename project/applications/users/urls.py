@@ -26,11 +26,11 @@ urlpatterns = [
         UpdatePasswordView.as_view(),
         name = 'update_password'
     ),
-    path(
-        'profile/<pk>/', 
-        AdminProfileView.as_view(),
-        name='profile'
-    ),
+    # path(
+    #     'profile/<pk>/', 
+    #     AdminProfileView.as_view(),
+    #     name='profile'
+    # ),
     path(
         'account/<pk>/', 
         AccountView.as_view(),

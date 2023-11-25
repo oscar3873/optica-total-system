@@ -175,7 +175,12 @@
                     {% for key, value in date.items %}
                     <h6>{{ key|date:"l, j F Y H:i" }}</h6>
                     <div class="d-flex flex-column flex-md-row justify-content-between">
-                        <span>realizado por <a href="{% url 'users_app:profile' value.0.user_made.pk  %}">{{value.0.user_made}}</a></span>
+                        <span>realizado por 
+                        {% if value.0.user_made.employee_type %}
+                            <a href="{% url 'employees_app:profile_employee' value.0.user_made.pk  %}">{{value.0.user_made}}</a>
+                        {% else %}
+                            {{value.0.user_made}}</span>
+                        {% endif %}
                         <a href="{% url 'cashregister_app:arching_ticket_view' cashregister.pk key_possition %}">
                             <span class="fas fa-receipt"></span>
                             <span cla>Ticket</span>

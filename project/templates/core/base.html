@@ -512,9 +512,8 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if   request.user.is_staff %}
-                            <li class="nav-item">
-                                <!-- label-->
+                            <!-- {% if   request.user.is_staff %} -->
+                            <!-- <li class="nav-item">
                                 <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
                                     <div class="col-auto navbar-vertical-label">
                                         <span class="fas fa-bell"></span>
@@ -524,22 +523,15 @@
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
                                 </div>
-                                <!-- parent pages--><a class="nav-link" href="{% url 'notifications_app:list' %}" role="button"
+                                <a class="nav-link" role="button"
                                     aria-expanded="false" id="notifications_list">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-eye"></span></span><span
                                             class="nav-link-text ps-1">Ver notificaciones</span>
                                     </div>
                                 </a>
-                                {% comment %} <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
-                                    aria-expanded="false" id="notifications_config">
-                                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                                class="fas fa-cog"></span></span><span
-                                            class="nav-link-text ps-1">Configurar notificaciones</span>
-                                    </div>
-                                </a> {% endcomment %}
-                            </li>
-                            {% endif %}
+                            </li> -->
+                            <!-- {% endif %} -->
                             {% if   request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
@@ -613,7 +605,7 @@
                             {% if request.user.is_staff %}
                             <li class="nav-item">
                                 <!-- label-->
-                                <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
+                                <!-- <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
                                     <div class="col-auto navbar-vertical-label">
                                         <span class="fas fa-cogs"></span>
                                         Configuraciones
@@ -621,7 +613,7 @@
                                     <div class="col ps-0">
                                         <hr class="mb-0 navbar-vertical-divider" />
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- parent pages--><!--<a class="nav-link" href="documentation/getting-started.html"
                                     role="button" aria-expanded="false" id="general_settings">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
@@ -629,13 +621,13 @@
                                             class="nav-link-text ps-1">Configuraciones generales</span>
                                     </div>
                                 </a>-->
-                                <!-- parent pages--><a class="nav-link" href="documentation/gulp.html" role="button"
+                                <!-- parent pages<a class="nav-link" href="documentation/gulp.html" role="button"
                                     aria-expanded="false" id="afip_settings">
                                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                                 class="fas fa-file-invoice"></span></span><span
                                             class="nav-link-text ps-1">Configuracion AFIP</span>
                                     </div>
-                                </a>
+                                </a> -->
                             </li>
                             {% endif %}
                         </ul>
@@ -882,8 +874,9 @@
 
                                         </div>
                                     </div>
-                                    <div class="card-footer text-center border-top"><a class="card-link d-block"
-                                            href="app/social/notifications.html">Mostar todo</a></div>
+                                    <!-- <div class="card-footer text-center border-top"><a class="card-link d-block"
+                                            href="app/social/notifications.html">Mostar todo</a>
+                                    </div> -->
                                 </div>
                             </div>
 
@@ -899,12 +892,7 @@
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     
-                                    {% if request.user.is_staff %}
-                                        <a class="dropdown-item" href="{% url 'users_app:profile' request.user.id %}">
-                                            <span class="fas fa-user"></span>
-                                            Perfil
-                                        </a>
-                                    {% else %}
+                                    {% if not request.user.is_staff %}
                                         <a class="dropdown-item" href="{% url 'employees_app:profile_employee' request.user.employee_type.id %}">
                                             <span class="fas fa-user"></span>
                                             Perfil
