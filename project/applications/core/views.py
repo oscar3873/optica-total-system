@@ -1,5 +1,8 @@
+from typing import Any
+from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, UpdateView, ListView, DetailView, DeleteView
 from django.db import transaction
@@ -13,6 +16,14 @@ from .forms import ObjetiveForm
 
 class HomePageView(LoginRequiredMixin , TemplateView):
     template_name = "core/home_page.html"
+    success_url = reverse_lazy('sales_app:point_of_sale_view')
+
+    def dispatch(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            if self.request.user.is_staff:
+                self.success_url = reverse_lazy('dashboard_app:daily_summary') 
+            return redirect(self.success_url)
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     payment_method.addEventListener("change", function() {
         // Obtener el valor seleccionado
-        selected_payment = payment_method.value;
+        selected_payment = payment_method.selectedIndex;
     });
 
     // cuando el usuario hace clic en el botón "add more" de las variantes

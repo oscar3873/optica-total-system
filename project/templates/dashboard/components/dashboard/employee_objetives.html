@@ -13,15 +13,11 @@
     <div class="card-body p-0">
       {% for objective in objetivos_emp %}
       <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
-        <div class="col ps-card py-1 position-static">
+        <div class="col ps-2 py-1 position-static">
           <div class="d-flex align-items-center">
-            <!-- <div class="avatar avatar-xl me-3">
-              <div class="avatar-name rounded-circle bg-soft-primary text-dark">
-                <span class="fs-0 text-{% if objective.is_active %}primary{% else %}warning{% endif %}">
-                  {% if objective.is_active %}A{% else %}I{% endif %}
-                </span>
-              </div>
-            </div> -->
+            <div class="avatar avatar-xl mx-2">
+              <img src="{{objective.employee.user.imagen.url}}" alt="{{objective.employee.user.firstname}} {{objective.employee.user.lastname}}" class="rounded-circle">
+            </div>
             <div class="flex-1">
               <h6 class="mb-0 d-flex align-items-center">{{objective.employee}}</h6>
             </div>

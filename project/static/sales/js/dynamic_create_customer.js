@@ -2,6 +2,14 @@ let payment_method = document.getElementById('id_payment_method');
 let error_div = document.createElement('div');
 let selected_payment = 1;
 const customer_modal = document.getElementById('New-customer-form');
+const searchText = "Cuenta Corriente";
+
+for (var i = 0; i < payment_method.options.length; i++) {
+    if (payment_method.options[i].text.includes(searchText)) {
+        // Selecciona la opción encontrada
+        payment_method.options[i].disabled = true;
+    }
+}
 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -53,7 +61,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     if (customer_data.has_credit_account) {                
-                        var searchText = "Cuenta Corriente";
                         // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                         for (var i = 0; i < payment_method.options.length; i++) {
                             if (payment_method.options[i].text.includes(searchText)) {
