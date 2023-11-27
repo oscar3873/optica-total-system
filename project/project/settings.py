@@ -182,4 +182,5 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR/ "media"
 
 # Configuraciones adicionales para Heroku
+print(locals())
 django_on_heroku.settings(locals())
