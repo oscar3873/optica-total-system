@@ -26,7 +26,7 @@ def get_total_and_products(formset):
 def update_stock(formset):
     product = formset.cleaned_data['product']
     quantity = formset.cleaned_data['quantity']
-    if not 'cristal' in product.category.name.lower() and not 'contacto' in product.category.name.lower() and not 'propio' in product.name.lower():
+    if not 'cristal' in product.category.name.lower() and not 'propio' in product.name.lower():
         product.stock -= quantity
     product.save()
     

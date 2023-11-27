@@ -17,8 +17,10 @@ fecha_hoy = DATE_NOW.date()
 ##############################  REPORTES DE SEMANAS  #############################
 
 def week_status(branch_actualy):
-    week_date = fecha_hoy - timedelta(weeks=1)
+    # week_date = fecha_hoy - timedelta(weeks=1)
 
+    week_date = fecha_hoy - timedelta(days=fecha_hoy.weekday())
+    
     sale = Sale.objects.filter(created_at__date__gte=week_date, created_at__date__lte=fecha_hoy,
                                 branch=branch_actualy, deleted_at=None)
     
@@ -51,8 +53,6 @@ def week_status(branch_actualy):
 
 def week_sales(branch_actualy):
     # Obtener la fecha de hoy
-    fecha_hoy = datetime.now().date()
-
     # Calcular la fecha de inicio de la semana actual (lunes)
     fecha_inicio_semana_actual = fecha_hoy - timedelta(days=fecha_hoy.weekday())
     # Calcular la fecha de inicio de las 3 semanas anteriores (y la actual)
