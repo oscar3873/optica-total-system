@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath  project project.wsgi --log-file -
+gunicorn --pythonpath project project.wsgi:application --settings project.settings_prod
