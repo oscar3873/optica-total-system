@@ -251,7 +251,7 @@ class CashRegisterArching(LoginRequiredMixin, View):
 
             ########### HARDCODEO MORTAL PARA CUENTA CORREINTE ##############
             from django.db.models import Sum
-            registered_amount = Payment.objects.filter(customer__user__branch=branch_actualy, payment_method__name='Cuenta Corriente', created_at__date=DATE_NOW.date()).aggregate(amount=Sum('sale__total'))['amount'] or 0
+            registered_amount = Payment.objects.filter(customer__user_made__branch=branch_actualy, payment_method__name='Cuenta Corriente', created_at__date=DATE_NOW.date()).aggregate(amount=Sum('sale__total'))['amount'] or 0
             print(registered_amount)
             CashRegisterDetail.objects.create(
                 user_made = request.user,

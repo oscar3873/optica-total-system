@@ -50,7 +50,7 @@ class Product(BaseAbstractWithUser):
         return (f'{self.name} - '+
                 f'{self.brand} - '+
                 f'{self.category} - '+
-                f'Stock: {self.stock}'
+                f'Codigo: {self.barcode}'
                 ) 
     class Meta:
         verbose_name = 'Producto'
