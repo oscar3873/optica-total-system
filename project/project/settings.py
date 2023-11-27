@@ -177,20 +177,14 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR/ "media"
 
-# Obtén la URL de la base de datos desde la variable de entorno
-database_url = os.environ.get('DATABASE_URL')
-
-# Parsea la URL
-parsed_database_url = urlparse(database_url)
-
 # Configura la base de datos
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parsed_database_url.path[1:],
-        'USER': parsed_database_url.username,
-        'PASSWORD': parsed_database_url.password,
-        'HOST': parsed_database_url.hostname,
-        'PORT': parsed_database_url.port,
+        'NAME': os.environ.get("DB_NAME"),
+        'USER': os.environ.get("DB_USER"),
+        'PASSWORD': os.environ.get("DB_PASSWORD"),
+        'HOST': os.environ.get("DB_HOST"),
+        'PORT': os.environ.get("DB_PORT"),
     }
 }
