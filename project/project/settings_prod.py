@@ -171,7 +171,7 @@ ALLOWED_HOSTS = ['*']
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 # Configuraciones de static y media
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "media/"
