@@ -20,12 +20,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-secret-key')
 # Configura la base de datos
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': "ec2-34-238-201-192.compute-1.amazonaws.com",
-        'PORT': 5432,
-        'NAME': "d50er38v1mgi7v",
-        'USER': "qzjbmjiyvpiyki",
-        'PASSWORD': "1f7b60eca03f688320b893eaec182c3d77e49ce4130463d6b0144672f3206cc7",
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd50er38v1mgi7v',
+        'USER': 'qzjbmjiyvpiyki',
+        'PASSWORD': '1f7b60eca03f688320b893eaec182c3d77e49ce4130463d6b0144672f3206cc7',
+        'HOST': 'ec2-34-238-201-192.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
 
