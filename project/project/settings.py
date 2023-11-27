@@ -15,7 +15,7 @@ import django_on_heroku
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # El directorio raiz de la aplicacion.
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-secret-key')
 
 
 # Application definition
@@ -142,10 +142,11 @@ DATE_NOW = datetime.now(ZONE_TIME)
 # Separadores de miles y decimales
 # https://docs.djangoproject.com/en/4.2/ref/settings/#localization
 
+# Separadores de miles y decimales
 THOUSAND_SEPARATOR = ','
 DECIMAL_SEPARATOR = '.'
 
-# Email settings for sending emails
+# Configuraciones de email
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
@@ -154,7 +155,7 @@ EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-# Login
+# Configuraciones de login
 LOGIN_URL = 'users_app:login'
 LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
@@ -170,20 +171,9 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
-    }
-}
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+# Configuraciones de static y media
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
@@ -191,5 +181,8 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR/ "media"
 
+# Configuración de la base de datos usando dj_database_url
 DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
+
+# Configuraciones adicionales para Heroku
 django_on_heroku.settings(locals())
