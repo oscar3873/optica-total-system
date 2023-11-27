@@ -2,13 +2,10 @@
 Configuracion base que todos necesitan para funcionar.
 """
 from datetime import datetime
-from django.core.exceptions import ImproperlyConfigured
-import json
 from pathlib import Path
-
+from urllib.parse import urlparse
 import pytz
 import os
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # El directorio raiz de la aplicacion.
@@ -180,5 +177,20 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR/ "media"
 
-# Configuraciones adicionales para Heroku
-DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
+# Obtén la URL de la base de datos desde la variable de entorno
+database_url = os.environ.get('DATABASE_URL')
+
+# Parsea la URL
+parsed_database_url = urlparse(database_url)
+
+# Configura la base de datos
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed_database_url.path[1:],
+        'USER': parsed_database_url.username,
+        'PASSWORD': parsed_database_url.password,
+        'HOST': parsed_database_url.hostname,
+        'PORT': parsed_database_url.port,
+    }
+}
