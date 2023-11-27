@@ -181,8 +181,5 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR/ "media"
 
-# Configuración de la base de datos usando dj_database_url
-DATABASES = {'default': dj_database_url.config(conn_max_age=600, ssl_require=True)}
-
 # Configuraciones adicionales para Heroku
 django_on_heroku.settings(locals())
