@@ -1,11 +1,15 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
+import pytz
+import os
+import environ
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
-import pytz
-import os
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # El directorio raiz de la aplicacion.
@@ -17,11 +21,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'your-fallback-secret-key')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT"),
+        'HOST': "ec2-34-238-201-192.compute-1.amazonaws.com",
+        'PORT': 5432,
+        'NAME': "d50er38v1mgi7v",
+        'USER': "qzjbmjiyvpiyki",
+        'PASSWORD': "1f7b60eca03f688320b893eaec182c3d77e49ce4130463d6b0144672f3206cc7",
     }
 }
 
