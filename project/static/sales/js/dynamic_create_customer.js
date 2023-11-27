@@ -3,6 +3,7 @@ let error_div = document.createElement('div');
 let selected_payment = 1;
 const customer_modal = document.getElementById('New-customer-form');
 const searchText = "Cuenta Corriente";
+const botonMasDiv = document.getElementById('boton-mas');
 
 for (var i = 0; i < payment_method.options.length; i++) {
     if (payment_method.options[i].text.includes(searchText)) {
@@ -14,8 +15,6 @@ for (var i = 0; i < payment_method.options.length; i++) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const saveCustomer = document.getElementById('save-customer');
-    const botonMasDiv = document.getElementById('boton-mas');
-
 
     saveCustomer.addEventListener('click', function() {
         const formData = new FormData(customer_modal);
@@ -39,23 +38,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
                         selected_customer.value = customer_data.id;
                     }else{
+                        checkboxContainer.innerHTML = "";
                         const checkboxCustomer = document.createElement("input");
                         checkboxCustomer.type = "radio";
-                        checkboxCustomer.classList.add('form-check-input', 'me-1', 'invisible');
                         // Asegúrate de que todas las casillas de verificación tengan el mismo nombre
                         checkboxCustomer.name = "customer"; 
                         checkboxCustomer.value = customer_data.id;
                         checkboxCustomer.id = `id_customer`;
                         checkboxCustomer.hidden = true;
                         checkboxCustomer.checked = true;
+                        
                         const label = document.createElement("label");
                         const titleH5Customer = document.createElement('h5')
                         const textContentCustomer = document.createTextNode(`${customer_data.first_name} ${customer_data.last_name}`);
                         titleH5Customer.appendChild(textContentCustomer);
                         titleH5Customer.id = 'selecter_customer_title';
-                        label.classList.add('d-block', 'mt-2');
+                        label.classList.add('d-flex', 'align-items-center', 'mt-2'); // Agregar clases flex y alineación vertical al contenedor
 
                         label.appendChild(titleH5Customer)
+                        // Crear el botón
+                        var trash_delete = document.createElement("button");
+
+                        // Establecer atributos del botón
+                        trash_delete.setAttribute("class", "btn btn-falcon-default btn-sm ms-2"); // Agregar clase 'ms-2' para agregar margen a la izquierda
+                        trash_delete.setAttribute("type", "button");
+                        trash_delete.setAttribute("id", "button-delete-customer");
+                        trash_delete.setAttribute("title", "Eliminar Cliente");
+
+                        // Crear el ícono dentro del botón
+                        var icon = document.createElement("span");
+                        icon.setAttribute("class", "fas fa-trash text-danger");
+                        icon.setAttribute("data-fa-transform", "shrink-3 down-2");
+
+                        // Agregar el ícono al botón
+                        trash_delete.appendChild(icon);
+
+                        // Agregar el botón al label después del h5
+                        label.appendChild(trash_delete);
+
+                        checkboxContainer.appendChild(label);
+
+                        label.appendChild(checkboxCustomer);
+                        
+                        trash_delete.addEventListener("click", function(){
+                            payment_method.disabled = false;
+                            payment_method.options[selected_payment].selected = true;
+                            label.remove();
+                        });
                         label.appendChild(checkboxCustomer);
                         checkboxContainer.appendChild(label);
                     }

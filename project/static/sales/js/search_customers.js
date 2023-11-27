@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Agregar el h5 al label primero
             label.appendChild(titleH5Customer);
-
             // Crear el botón
             var trash_delete = document.createElement("button");
 
@@ -108,21 +107,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
             checkboxContainer.appendChild(label);
 
-            // Añadir el ID del customer al formulario
-            const customerIdCheck = document.createElement('input');
-            customerIdCheck.type = 'hidden';
-            customerIdCheck.name = `selected_customer_id_${fieldIdentifier}`;
-            customerIdCheck.value = customerId;
-            searchInput.closest('form').appendChild(customerIdCheck);
-            const botonMasDiv = document.getElementById('boton-mas');
-            
+            label.appendChild(checkboxCustomer);
+
             trash_delete.addEventListener("click", function(){
-                customerIdCheck.remove();
-                label.remove();
                 payment_method.disabled = false;
                 payment_method.options[selected_payment].selected = true;
+                label.remove();
             });
-            console.log(customerCredit);
+
             if (customerCredit == 1) {            
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                 for (var i = 0; i < payment_method.options.length; i++) {
@@ -139,7 +131,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 payment_method.disabled = true;
             } else {
                 // Activa la opción seleccionada
-                console.log(selected_payment);
                 payment_method.disabled = false;
                 payment_method.options[selected_payment].selected = true;
             
