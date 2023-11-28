@@ -1,3 +1,4 @@
+{% if sale %}
 <div class="col">
     <div class="card z-index-1" id="recentPurchaseTable"
         data-list='{"valueNames":["name","date","time","customer","state","total"],"page":25,"pagination":true}'>
@@ -55,3 +56,30 @@
         </div>
     </div>
 </div>
+
+{% else %}
+
+<div class="col">
+    <div class="card z-index-1" id="recentPurchaseTable">
+        <div class="card-header">
+            <div class="row flex-between-center">
+                <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
+                    <h5 class="fs-0 mb-0 text-nowrap py-2 py-xl-0">Ultimas ventas</h5>
+                </div>
+                <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+                    <div id="table-purchases-replace-element">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body bg-light px-0 py-1 mt-2">
+            <div>
+                <h3 class="text-primary mb-1 ps-4">Aún no hay ventas</h3>
+            </div>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+</div>
+
+{% endif %}

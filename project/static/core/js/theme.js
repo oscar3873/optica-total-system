@@ -4162,10 +4162,10 @@ var grossRevenueChartInit = function grossRevenueChartInit() {
 var linePaymentChartInit = function linePaymentChartInit() {
   var $echartsLinePaymentChart = document.querySelector('.echart-line-payment');
 
-  // Obtengo los datos del contexto
+  if(document.getElementById('data-successful-payments') != null){
+    // Obtengo los datos del contexto
   var dataAttr = document.getElementById('data-successful-payments').getAttribute('data-successful-payments');
   var contextSuccessfulPayments = JSON.parse(dataAttr.replace(/'/g, '"'));
-  console.log(contextSuccessfulPayments);
   // Creo una lista en donde voy cargando los datos del contexto
   let listSuccessfulPayments = [];
   for (var key in contextSuccessfulPayments) {
@@ -4197,7 +4197,6 @@ var linePaymentChartInit = function linePaymentChartInit() {
     successful: listSuccessfulPayments,
     failed: listUnderpayments
   };
-  console.log(listSuccessfulPayments);
   var labels = ['8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00'];
 
   if ($echartsLinePaymentChart) {
@@ -4349,6 +4348,8 @@ var linePaymentChartInit = function linePaymentChartInit() {
       });
     }
   }
+  }
+  
 };
 
 
@@ -5672,141 +5673,144 @@ var weeklySalesInit = function weeklySalesInit() {
   var ECHART_BAR_WEEKLY_SALES = '.echart-bar-weekly-sales';
   var $echartBarWeeklySales = document.querySelector(ECHART_BAR_WEEKLY_SALES);
 
-  var dataAttr = document.getElementById('data-weekly-sales').getAttribute('data-weekly-sales');
-  var contextWeeklySales = JSON.parse(dataAttr.replace(/'/g, '"'));
-
-  // Creo una lista en donde voy cargando los datos del contexto
-  let listWeeklySales = 0;
-  let listWeeklySalesQuantity = [];
-  let listWeeklyDays = [];
-  for (var key in contextWeeklySales) {
-    if (contextWeeklySales.hasOwnProperty(key)) {
-        var listValue = contextWeeklySales[key];
-        listWeeklySales = listWeeklySales + listValue[0];
-        listWeeklySalesQuantity.push(listValue[1]);
-        switch(key){
-          case 'mon':
-            listWeeklyDays.push('Lun');
-            break;
-          case 'tue':
-            listWeeklyDays.push('Mar');
-            break;
-          case 'wen':
-            listWeeklyDays.push('Mié');
-            break;
-          case 'thu':
-            listWeeklyDays.push('Jue');
-            break;
-          case 'fri':
-            listWeeklyDays.push('Vie');
-            break;
-          case 'sat':
-            listWeeklyDays.push('Sáb');
-            break;
-          case 'sun':
-            listWeeklyDays.push('Dom');
-            break;
-        }
+  if(document.getElementById('data-weekly-sales')!=null){
+    var dataAttr = document.getElementById('data-weekly-sales').getAttribute('data-weekly-sales');
+    var contextWeeklySales = JSON.parse(dataAttr.replace(/'/g, '"'));
+  
+    // Creo una lista en donde voy cargando los datos del contexto
+    let listWeeklySales = 0;
+    let listWeeklySalesQuantity = [];
+    let listWeeklyDays = [];
+    for (var key in contextWeeklySales) {
+      if (contextWeeklySales.hasOwnProperty(key)) {
+          var listValue = contextWeeklySales[key];
+          listWeeklySales = listWeeklySales + listValue[0];
+          listWeeklySalesQuantity.push(listValue[1]);
+          switch(key){
+            case 'mon':
+              listWeeklyDays.push('Lun');
+              break;
+            case 'tue':
+              listWeeklyDays.push('Mar');
+              break;
+            case 'wen':
+              listWeeklyDays.push('Mié');
+              break;
+            case 'thu':
+              listWeeklyDays.push('Jue');
+              break;
+            case 'fri':
+              listWeeklyDays.push('Vie');
+              break;
+            case 'sat':
+              listWeeklyDays.push('Sáb');
+              break;
+            case 'sun':
+              listWeeklyDays.push('Dom');
+              break;
+          }
+      }
+    }
+    const totalSales = document.getElementById('total-sales-import');
+    totalSales.innerText =`$${listWeeklySales}`;
+  
+  
+    if ($echartBarWeeklySales) {
+      // Get options from data attribute
+      var userOptions = utils.getData($echartBarWeeklySales, 'options');
+      // var data = [300, 200, 150, 80, 70, 110, 120]; // Max value of data
+      var data = listWeeklySalesQuantity;
+      var yMax = Math.max.apply(Math, data);
+      var dataBackground = data.map(function () {
+        return yMax;
+      });
+      var chart = window.echarts.init($echartBarWeeklySales); // Default options
+  
+      var getDefaultOptions = function getDefaultOptions() {
+        return {
+          tooltip: {
+            trigger: 'axis',
+            padding: [7, 10],
+            formatter: '{b0} : {c0}',
+            transitionDuration: 0,
+            backgroundColor: utils.getGrays()['100'],
+            borderColor: utils.getGrays()['300'],
+            textStyle: {
+              color: utils.getColors().dark
+            },
+            borderWidth: 1,
+            position: function position(pos, params, dom, rect, size) {
+              return getPosition(pos, params, dom, rect, size);
+            }
+          },
+          xAxis: {
+            type: 'category',
+            // data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'domingo'],
+            data: listWeeklyDays,
+            boundaryGap: false,
+            axisLine: {
+              show: false
+            },
+            axisLabel: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
+            axisPointer: {
+              type: 'none'
+            }
+          },
+          yAxis: {
+            type: 'value',
+            splitLine: {
+              show: false
+            },
+            axisLine: {
+              show: false
+            },
+            axisLabel: {
+              show: false
+            },
+            axisTick: {
+              show: false
+            },
+            axisPointer: {
+              type: 'none'
+            }
+          },
+          series: [{
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+              borderRadius: 10
+            },
+            barWidth: '5px',
+            itemStyle: {
+              barBorderRadius: 10,
+              color: utils.getColors().primary
+            },
+            data: data,
+            z: 10,
+            emphasis: {
+              itemStyle: {
+                color: utils.getColors().primary
+              }
+            }
+          }],
+          grid: {
+            right: 5,
+            left: 10,
+            top: 0,
+            bottom: 0
+          }
+        };
+      };
+  
+      echartSetOption(chart, userOptions, getDefaultOptions);
     }
   }
-  const totalSales = document.getElementById('total-sales-import');
-  totalSales.innerText =`$${listWeeklySales}`;
 
-
-  if ($echartBarWeeklySales) {
-    // Get options from data attribute
-    var userOptions = utils.getData($echartBarWeeklySales, 'options');
-    // var data = [300, 200, 150, 80, 70, 110, 120]; // Max value of data
-    var data = listWeeklySalesQuantity;
-    var yMax = Math.max.apply(Math, data);
-    var dataBackground = data.map(function () {
-      return yMax;
-    });
-    var chart = window.echarts.init($echartBarWeeklySales); // Default options
-
-    var getDefaultOptions = function getDefaultOptions() {
-      return {
-        tooltip: {
-          trigger: 'axis',
-          padding: [7, 10],
-          formatter: '{b0} : {c0}',
-          transitionDuration: 0,
-          backgroundColor: utils.getGrays()['100'],
-          borderColor: utils.getGrays()['300'],
-          textStyle: {
-            color: utils.getColors().dark
-          },
-          borderWidth: 1,
-          position: function position(pos, params, dom, rect, size) {
-            return getPosition(pos, params, dom, rect, size);
-          }
-        },
-        xAxis: {
-          type: 'category',
-          // data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'domingo'],
-          data: listWeeklyDays,
-          boundaryGap: false,
-          axisLine: {
-            show: false
-          },
-          axisLabel: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisPointer: {
-            type: 'none'
-          }
-        },
-        yAxis: {
-          type: 'value',
-          splitLine: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          },
-          axisLabel: {
-            show: false
-          },
-          axisTick: {
-            show: false
-          },
-          axisPointer: {
-            type: 'none'
-          }
-        },
-        series: [{
-          type: 'bar',
-          showBackground: true,
-          backgroundStyle: {
-            borderRadius: 10
-          },
-          barWidth: '5px',
-          itemStyle: {
-            barBorderRadius: 10,
-            color: utils.getColors().primary
-          },
-          data: data,
-          z: 10,
-          emphasis: {
-            itemStyle: {
-              color: utils.getColors().primary
-            }
-          }
-        }],
-        grid: {
-          right: 5,
-          left: 10,
-          top: 0,
-          bottom: 0
-        }
-      };
-    };
-
-    echartSetOption(chart, userOptions, getDefaultOptions);
-  }
 };
 
 var preventEnterKey = function preventEnterKey(){
