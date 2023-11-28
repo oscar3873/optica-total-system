@@ -162,7 +162,7 @@ class UserChangeImagen(FormView):
 
     def form_valid(self, form):
         from PIL import Image
-        from project.settings.local import MEDIA_ROOT
+        from project.settings.prod import MEDIA_ROOT
 
         pk = self.kwargs['pk']
         user_profile = User.objects.get(pk=pk)
