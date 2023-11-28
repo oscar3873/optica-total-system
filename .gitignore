@@ -61,9 +61,3 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
-
-
-# Fotos de usuarios
-project/media/
-/media/profile
-/media/
