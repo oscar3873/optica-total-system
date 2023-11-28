@@ -2,7 +2,6 @@
 
 # Importar la configuración base
 from .base import *
-import dj_database_url
 import django_on_heroku
 
 
@@ -27,11 +26,9 @@ DATABASES = {
 
 # Configuraciones de static y media
 STATIC_URL = "static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_ROOT = BASE_DIR/ "media"
 
 django_on_heroku.settings(locals())
