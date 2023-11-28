@@ -1,1 +1,1 @@
-web: daphne --pythonpath  project project.asgi --log-file -
+web: daphne project.asgi:application
