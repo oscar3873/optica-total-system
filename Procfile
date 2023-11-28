@@ -1,1 +1,1 @@
-web: daphne --root-path  project project.asgi
+web: daphne -u $REDIS_PORT -v2 --root-path=project project.asgi:application
