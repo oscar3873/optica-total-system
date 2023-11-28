@@ -1,1 +1,1 @@
-web: daphne --pythonpath  project project.asgi
+web: daphne --root-path  project project.asgi
