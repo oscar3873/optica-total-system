@@ -2,9 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //Para poder ponerle un pequeño delay
     let timeoutId;
 
-    //loader para los movimientos
-    // const loader = document.getElementById('loader-sales');
-
     // Obtén el formulario de búsqueda y el contenedor de resultados de la tabla
     const searchForm = document.getElementById('searchForm');
     const searchInput = document.getElementById('searchInput');
@@ -15,13 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         //Se borra el temporizador anterior (si es que existe)
         clearTimeout(timeoutId);
-        // loader.classList.remove('d-none');
         // Establece un nuevo temporizador para retrasar la solicitud
         timeoutId = setTimeout(function () {
             e.preventDefault();
             const searchUrl = searchForm.getAttribute('data-ajax-search-url'); // URL para la búsqueda AJAX
             let searchTerm = searchInput.value.trim();
-    
+
             // Verifica si el término de búsqueda contiene solo espacios en blanco
             if (searchTerm !== '' && searchTerm !== ' ') {
                 // Hay término de búsqueda válido, se realiza la solicitud
@@ -67,8 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const stateCell = document.createElement('td');
                                 stateCell.className = 'align-start state';
                                 const stateSpan = document.createElement('span');
-                                stateSpan.className = sale.state === 'COMPLETADO'?'badge rounded-pill badge-soft-success': 'badge rounded-pill badge-soft-danger';
-                                const stateText = document.createTextNode(sale.state === 'COMPLETADO'?'Completa':'Pendiente');
+                                stateSpan.className = sale.state === 'COMPLETADO' ? 'badge rounded-pill badge-soft-success' : 'badge rounded-pill badge-soft-danger';
+                                const stateText = document.createTextNode(sale.state === 'COMPLETADO' ? 'Completa' : 'Pendiente');
                                 stateSpan.appendChild(stateText);
                                 stateCell.appendChild(stateSpan);
                                 row.appendChild(stateCell);
@@ -85,61 +81,44 @@ document.addEventListener('DOMContentLoaded', () => {
                                 totalCell.appendChild(total);
                                 row.appendChild(totalCell);
                                 const actionsCell = document.createElement('td');
-                                actionsCell.className = 'align-middle white-space-nowrap text-end';
-                                
+                                actionsCell.className = 'align-middle white-space-nowrap py-1';
+
+                                // Reemplaza el bloque de código actual para el botón de acciones
+                                const actionsButton = document.createElement('a');
+                                actionsButton.href = `/sales/detail/${sale.id}/`;
+                                actionsButton.className = 'btn btn-sm btn-falcon-default';
+                                actionsButton.setAttribute('data-bs-toggle', 'tooltip');
+                                actionsButton.setAttribute('title', 'Ver Detalle');
+                                const actionsIcon = document.createElement('span');
+                                actionsIcon.className = 'fas fa-eye';
+                                actionsButton.appendChild(actionsIcon);
+
                                 const actionsDropdown = document.createElement('div');
                                 actionsDropdown.className = 'dropstart font-sans-serif position-static d-inline-block';
-    
-                                const actionsButton = document.createElement('button');
-                                actionsButton.className = 'btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end';
-                                actionsButton.type = 'button';
-                                actionsButton.id = 'dropdown0';
-                                actionsButton.setAttribute('data-bs-toggle', 'dropdown');
-                                actionsButton.setAttribute('data-boundary', 'window');
-                                actionsButton.setAttribute('aria-haspopup', 'true');
-                                actionsButton.setAttribute('aria-expanded', 'false');
-                                actionsButton.setAttribute('data-bs-reference', 'parent');
-                                const actionsIcon = document.createElement('span');
-                                actionsIcon.className = 'fas fa-ellipsis-h fs--1';
-                                actionsButton.appendChild(actionsIcon);
-    
+
                                 const dropdownMenu = document.createElement('div');
                                 dropdownMenu.className = 'dropdown-menu dropdown-menu-end border py-2';
-                                dropdownMenu.setAttribute('aria-labelledby', 'dropdown0');
-    
-                                const detailLink = document.createElement('a');
-                                detailLink.className = 'dropdown-item';
-                                detailLink.href = `/sale/detail/${sale.id}`;
-                                detailLink.textContent = 'Detalle';
-                                dropdownMenu.appendChild(detailLink);
-                                if (sale.is_staff) {
-                                    const editLink = document.createElement('a');
-                                    editLink.className = 'dropdown-item';
-                                    editLink.href = `/sale/update/${sale.id}`;
-                                    editLink.textContent = 'Editar';
-                                    dropdownMenu.appendChild(editLink);
-                                }
-    
+
                                 actionsDropdown.appendChild(actionsButton);
                                 actionsDropdown.appendChild(dropdownMenu);
                                 actionsCell.appendChild(actionsDropdown);
                                 row.appendChild(actionsCell);
-    
+
                                 searchResults.appendChild(row);
                             });
-    
+
                         } else {
                             // Mostrar un mensaje si no se encuentran resultados
                             searchResults.innerHTML = '<tr><td colspan="5">No se encontraron resultados</td></tr>';
                         }
-                        // Ocultamos el loader despues de completar la busqueda
+                        // Ocultamos el loader después de completar la búsqueda
                         // loader.classList.add('d-none');
                     },
                     error: function (error) {
                         console.error('Error al realizar la búsqueda:', error);
                         searchResults.innerHTML = '<tr><td colspan="5">Error al realizar la búsqueda</td></tr>';
 
-                        //Lo oculatamos tambien en caso de error
+                        //Lo ocultamos también en caso de error
                         // loader.classList.add('d-none');
                     },
                 });

@@ -71,54 +71,44 @@ document.addEventListener('DOMContentLoaded', () => {
                             row.appendChild(brandCell);
 
                             const actionsCell = document.createElement('td');
-                            actionsCell.className = 'align-middle white-space-nowrap text-start';
+                            actionsCell.className = "align-middle white-space-nowrap text-end";
                             
                             const actionsDropdown = document.createElement('div');
-                            actionsDropdown.className = 'dropstart font-sans-serif position-static d-inline-block';
+                            actionsDropdown.className = 'd-flex gap-2 py-0';
 
-                            const actionsButton = document.createElement('button');
-                            actionsButton.className = 'btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end';
-                            actionsButton.type = 'button';
-                            actionsButton.id = 'dropdown0';
-                            actionsButton.setAttribute('data-bs-toggle', 'dropdown');
-                            actionsButton.setAttribute('data-boundary', 'window');
-                            actionsButton.setAttribute('aria-haspopup', 'true');
-                            actionsButton.setAttribute('aria-expanded', 'false');
-                            actionsButton.setAttribute('data-bs-reference', 'parent');
+                            const actionsButton = document.createElement('a');
+                            actionsButton.href = `/products/detail/product/${product.id}/`;
+                            actionsButton.className = 'btn btn-sm btn-falcon-default';
+                            actionsButton.setAttribute('data-bs-toggle', 'tooltip');
+                            actionsButton.setAttribute('title', 'Ver Detalle');
                             const actionsIcon = document.createElement('span');
-                            actionsIcon.className = 'fas fa-ellipsis-h fs--1';
+                            actionsIcon.className = 'fas fa-eye';
                             actionsButton.appendChild(actionsIcon);
 
                             const dropdownMenu = document.createElement('div');
-                            dropdownMenu.className = 'dropdown-menu dropdown-menu-end border py-2';
-                            dropdownMenu.setAttribute('aria-labelledby', 'dropdown0');
+                            dropdownMenu.className = 'dropstart font-sans-serif position-static d-inline-block';
 
-                            const detailLink = document.createElement('a');
-                            detailLink.className = 'dropdown-item';
-                            detailLink.href = `/products/detail/product/${product.id}`;
-                            detailLink.textContent = 'Detalle';
-                            dropdownMenu.appendChild(detailLink);
                             if (product.is_staff) {
                                 const editLink = document.createElement('a');
-                                editLink.className = 'dropdown-item';
-                                editLink.href = `/products/update/product/${product.id}`;
-                                editLink.textContent = 'Editar';
-                                dropdownMenu.appendChild(editLink);
-
-                                const divider = document.createElement('div');
-                                divider.className = 'dropdown-divider';
-                                dropdownMenu.appendChild(divider);
-
+                                editLink.href = `/products/update/product/${product.id}/`;
+                                editLink.className = 'btn btn-sm btn-falcon-default me-2';
+                                editLink.setAttribute('data-bs-toggle', 'tooltip');
+                                editLink.setAttribute('title', 'Editar');
+                                const editIcon = document.createElement('span');
+                                editIcon.className = 'fas fa-edit';
+                                editLink.appendChild(editIcon);
+                            
                                 const deleteLink = document.createElement('a');
-                                deleteLink.className = 'dropdown-item text-danger';
-                                deleteLink.href = `/products/delete/product/${product.id}`;
-                                deleteLink.textContent = 'Borrar';
+                                deleteLink.href = `/products/delete/product/${product.id}/`;
+                                deleteLink.className = 'btn btn-sm btn-falcon-default';
+                                const deleteIcon = document.createElement('span');
+                                deleteIcon.className = 'fas fa-trash text-danger';
+                                deleteLink.appendChild(deleteIcon);                                dropdownMenu.appendChild(editLink);
                                 dropdownMenu.appendChild(deleteLink);
                             }
 
                             actionsDropdown.appendChild(actionsButton);
-                            actionsDropdown.appendChild(dropdownMenu);
-                            actionsCell.appendChild(actionsDropdown);
+                            actionsDropdown.appendChild(dropdownMenu);                            actionsCell.appendChild(actionsDropdown);
                             row.appendChild(actionsCell);
 
                             searchResults.appendChild(row);

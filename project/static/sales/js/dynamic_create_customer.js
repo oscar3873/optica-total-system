@@ -1,19 +1,17 @@
-let payment_method = document.getElementById('id_payment_method');
-let error_div = document.createElement('div');
-let selected_payment = 1;
-const customer_modal = document.getElementById('New-customer-form');
-const searchText = "Cuenta Corriente";
-const botonMasDiv = document.getElementById('boton-mas');
-
-for (var i = 0; i < payment_method.options.length; i++) {
-    if (payment_method.options[i].text.includes(searchText)) {
-        // Selecciona la opción encontrada
-        payment_method.options[i].disabled = true;
-    }
-}
-
-
 document.addEventListener('DOMContentLoaded', function() {
+    let payment_method = document.getElementById('id_payment_method');
+    let error_div = document.createElement('div');
+    let selected_payment = 1;
+    const customer_modal = document.getElementById('New-customer-form');
+    const searchText = "Cuenta Corriente";
+    const botonMasDiv = document.getElementById('boton-mas');
+    
+    for (var i = 0; i < payment_method.options.length; i++) {
+        if (payment_method.options[i].text.includes(searchText)) {
+            // Selecciona la opción encontrada
+            payment_method.options[i].disabled = true;
+        }
+    }
     const saveCustomer = document.getElementById('save-customer');
 
     saveCustomer.addEventListener('click', function() {
