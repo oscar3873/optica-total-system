@@ -110,7 +110,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -119,7 +119,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -128,7 +128,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -137,7 +137,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -146,7 +146,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -155,7 +155,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -164,7 +164,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -173,7 +173,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -182,7 +182,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -191,7 +191,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -200,7 +200,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 
@@ -209,7 +209,7 @@ class CorrectionForm(forms.ModelForm):
         label='',
         widget=forms.TextInput(
             attrs={'class': 'form-control'
-                   }
+                }
         )
     )
 

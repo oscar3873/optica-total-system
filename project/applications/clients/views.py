@@ -734,6 +734,7 @@ def ajax_search_customers(request):
 def print_service_order(request, pk): # pk de la orden
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
         service = ServiceOrder.objects.get(pk=pk)
+        branch = service.sale.branch
         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
         html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
 
@@ -748,6 +749,9 @@ def print_service_order(request, pk): # pk de la orden
         context = {
             'service_order': service,
             'sale_date': sale_date,
+            'branch_name': branch.name,
+            'branch_phone': branch.phone,
+            'branch_address': branch.address
         }
 
         # Genera el HTML en lugar de renderizarlo
