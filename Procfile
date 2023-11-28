@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath  project project.wsgi --log-file -
+web: daphne --pythonpath  project project.asgi --log-file -
