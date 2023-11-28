@@ -1,5 +1,7 @@
+# prod.py
+
+# Importar la configuración base
 from .base import *
-import os
 import dj_database_url
 import django_on_heroku
 
@@ -10,26 +12,26 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
+# Configuración para el uso de base de datos en Heroku
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': get_secret('DB_NAME'),
-        'USER': get_secret('DB_USER'),
-        'PASSWORD': get_secret('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.environ.get('DATABASE_NAME'),
+        'USER': os.environ.get('DATABASE_USER'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),
     }
 }
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# Configuraciones de static y media
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_ROOT = BASE_DIR/ "media"
 
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 django_on_heroku.settings(locals())

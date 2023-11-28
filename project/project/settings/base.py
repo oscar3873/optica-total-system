@@ -1,20 +1,36 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
+import os
+import json
+import pytz
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
-import json
 from pathlib import Path
 
-import pytz
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # El directorio raiz de la aplicacion.
 # SECURITY WARNING: keep the secret key used in production secret!
 
-with open("secret.json") as f:
-    secret = json.loads(f.read())
-    
+# Verificar si estamos en entorno de desarrollo o producción
+DEVELOPMENT_ENVIRONMENT = os.environ.get("DEVELOPMENT_ENVIRONMENT", "False").lower() == "true"
+
+# Configuración de secretos
+if DEVELOPMENT_ENVIRONMENT:
+    # En entorno de desarrollo, cargar desde secret.json
+    with open("secret.json") as f:
+        secret = json.loads(f.read())
+else:
+    # En entorno de producción, usar variables de entorno
+    secret = {
+        "SECRET_KEY": os.environ.get("SECRET_KEY"),
+        "EMAIL_HOST": os.environ.get("EMAIL_HOST"),
+        "EMAIL_HOST_USER": os.environ.get("EMAIL_HOST_USER"),
+        "EMAIL_HOST_PASSWORD": os.environ.get("EMAIL_HOST_PASSWORD"),
+        # Agrega otras variables según sea necesario
+    }
+
 def get_secret(secret_name, secrets=secret):
     try:
         return secrets[secret_name]

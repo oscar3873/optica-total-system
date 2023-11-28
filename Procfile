@@ -1,1 +1,1 @@
-gunicorn --pythonpath project project.wsgi:application --settings project.settings_prod
+gunicorn --pythonpath project project.wsgi:application --settings project.settings.prod
