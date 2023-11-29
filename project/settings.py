@@ -1,7 +1,6 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
-import django_on_heroku
 import json
 import pytz
 import os
@@ -93,7 +92,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
@@ -240,10 +238,10 @@ else:
     }
 
 # Configuraciones de static y media
-STATIC_URL = "static/"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR/ "media"
-
-django_on_heroku.settings(locals())
+MEDIA_URL = "/media/"
+#Production media folder
+MEDIA_ROOT= os.path.join(BASE_DIR, "media")
