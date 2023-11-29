@@ -1,0 +1,33 @@
+/* Contenedor del scroll personalizado */
+.product-container {
+    max-height: 700px;
+    overflow-y: auto;
+    padding-right: 16px;
+}
+
+/* Barra de scroll personalizada */
+.product-container::-webkit-scrollbar {
+    width: 7px; /* Ancho total del riel */
+}
+
+.product-container::-webkit-scrollbar-thumb {
+    background-color: var(--falcon-200); /* Color de la barra de scroll */
+    border-radius: 12px; /* Puntas redondeadas de la barra de scroll */
+}
+
+.product-item {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+}
+
+.product-sale-item {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.boton-Quitar {
+    background-color: transparent;
+    border: none; /* Elimina el borde, si lo hubiera */
+    color: inherit; /* Usa el color de texto heredado */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+}
