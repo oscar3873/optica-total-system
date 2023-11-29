@@ -86,10 +86,10 @@
             <a class="navbar-brand" href="{% url 'users_app:login' %}">
               <div class="d-flex align-items-center justify-content-center py-3">
                 <span class="font-sans-serif d-block">
-                  <img id="logoImage" class="me-2" src="http://127.0.0.1:8000/static/core/img/logo_optica_light.png"
+                  <img id="logoImage" class="me-2" src="{% static 'core/img/logo_optica_light.png' %}"
                     width="210" alt="logo">
-                  <img id="darkLogo" class="logo" src="/static/core/img/logo_optica_dark.png" style="display: none;">
-                  <img id="lightLogo" class="logo" src="/static/core/img/logo_optica_light.png" style="display: none;">
+                  <img id="darkLogo" class="logo" src="{% static 'core/img/logo_optica_dark.png' %}" style="display: none;">
+                  <img id="lightLogo" class="logo" src="{% static 'core/img/logo_optica_light.png' %}" style="display: none;">
                 </span>
               </div>
             </a>
