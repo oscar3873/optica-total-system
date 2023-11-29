@@ -94,6 +94,7 @@ MIDDLEWARE = [
     "django.middleware.locale.LocaleMiddleware",
 ]
 
+
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
 ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
 
