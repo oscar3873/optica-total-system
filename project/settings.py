@@ -46,6 +46,13 @@ def get_secret(secret_name, secrets=secret):
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 14400
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -256,11 +263,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = "media/"
 # Production media folder
 MEDIA_ROOT = BASE_DIR / "media"
-
-
-SESSION_COOKIE_SECURE = True  # Usar solo si tu sitio es completamente HTTPS
-CSRF_COOKIE_SECURE = True  # Usar solo si tu sitio es completamente HTTPS
-SESSION_COOKIE_DOMAIN = '.herokuapp.com'
-
 
 django_on_heroku.settings(locals())
