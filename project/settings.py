@@ -213,7 +213,7 @@ LOGOUT_REDIRECT_URL = 'users_app:login'
 
 # prod.py
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
 # Configuración para el uso de base de datos en Heroku
