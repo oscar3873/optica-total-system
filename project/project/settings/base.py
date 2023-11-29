@@ -1,9 +1,11 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
-import os
+import django_on_heroku
 import json
 import pytz
+import os
+
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
@@ -28,6 +30,11 @@ else:
         "EMAIL_HOST": os.environ.get("EMAIL_HOST"),
         "EMAIL_HOST_USER": os.environ.get("EMAIL_HOST_USER"),
         "EMAIL_HOST_PASSWORD": os.environ.get("EMAIL_HOST_PASSWORD"),
+        "DB_NAME": os.environ.get('DB_NAME'),
+        "DB_USER": os.environ.get('DB_USER'),
+        "DB_PASSWORD": os.environ.get('DB_PASSWORD'),
+        "DB_HOST": os.environ.get('DB_HOST'),
+        "DB_PORT": os.environ.get('DB_PORT'),
         # Agrega otras variables según sea necesario
     }
 
@@ -202,3 +209,43 @@ LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
 LOGOUT_REDIRECT_URL = 'users_app:login'
 
+# prod.py
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
+# Configuración para el uso de base de datos en Heroku
+
+if DEVELOPMENT_ENVIRONMENT:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': get_secret('DB_NAME'),
+            'USER': get_secret('DB_USER'),
+            'PASSWORD': get_secret('DB_PASSWORD'),
+            'HOST': get_secret('DB_HOST'),
+            'PORT': get_secret('DB_PORT'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'DB_NAME': os.environ.get('DB_NAME'),
+            'DB_USER': os.environ.get('DB_USER'),
+            'DB_PASSWORD': os.environ.get('DB_PASSWORD'),
+            'DB_HOST': os.environ.get('DB_HOST'),
+            'DB_PORT': os.environ.get('DB_PORT'),
+        }
+    }
+
+# Configuraciones de static y media
+STATIC_URL = "static/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+django_on_heroku.settings(locals())
