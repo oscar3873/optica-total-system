@@ -75,6 +75,8 @@ THIRD_PARTY_APPS = (
 
 
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
+ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
 
 CHANNEL_LAYERS = {
@@ -86,7 +88,16 @@ CHANNEL_LAYERS = {
     },
 }
 
-ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": [REDIS_URL],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
 ####################################################################
 
 
