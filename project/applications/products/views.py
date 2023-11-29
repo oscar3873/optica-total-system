@@ -581,7 +581,7 @@ class UpdatePriceView(CustomUserPassesTestMixin, FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print('\n\n\n\n', form.errors)
+        # print('\n\n\n\n', form.errors)
         return super().form_invalid(form)
     
 

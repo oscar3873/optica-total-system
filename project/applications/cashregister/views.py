@@ -133,7 +133,7 @@ class CashRegisterDetailView(LoginRequiredMixin, DetailView):
         
         archering_data = CashRegister.objects.get_archering_data(self.get_object())
         context['archering_data'] = archering_data
-        print('###################################################')
+        # print('###################################################')
         return context
 
 #Esta view aun esta sin uso
@@ -179,8 +179,8 @@ class CashRegisterCloseView(LoginRequiredMixin, FormView):
         return redirect('cashregister_app:cashregister_list_view')
     
     def form_invalid(self, form):
-        print("######################################")
-        print(form.errors)
+        # print("######################################")
+        # print(form.errors)
         messages.error(self.request, 'Existe un error en el formulario. Consulte al administrador del sistema por este mensaje')
         return super().form_invalid(form)
 
@@ -202,7 +202,7 @@ class CashRegisterArching(LoginRequiredMixin, View):
                 'type_method': method, # tipo de metodo de pago
                 'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister) # calculo de monto registrado por el metodo de pago elegido
             } for method in PaymentType.objects.exclude(name='Cuenta Corriente')]
-        print(PaymentType.objects.exclude(name='Cuenta Corriente'))
+        # print(PaymentType.objects.exclude(name='Cuenta Corriente'))
         # Hay que buscar una alternativa a esta linea de codigo
         # Porque todo deja de funcionar si se saca initial=initial_data
         formset = CashRegisterDetailFormSet(initial=initial_data)
@@ -224,9 +224,9 @@ class CashRegisterArching(LoginRequiredMixin, View):
                 'registered_amount': CashRegisterDetail.objects.registered_amount_for_type_method(method, Movement, cashregister)
             }
             for method in PaymentType.objects.all()]
-        print("#########################################################")
-        print(formset.is_valid())
-        print(formset.errors)
+        # print("#########################################################")
+        # print(formset.is_valid())
+        # print(formset.errors)
         if formset.is_valid():
             
             branch_actualy = set_branch_session(self.request)
@@ -235,8 +235,8 @@ class CashRegisterArching(LoginRequiredMixin, View):
             for form, data in zip(formset, final_data): # Esto esta provisorio, machea cada metodo con un form del formset, pero si se cambian de orden se rompe todo
                 if form.is_valid():
                     instance = form.save(commit=False)
-                    print("#########################################################")
-                    print(instance)
+                    # print("#########################################################")
+                    # print(instance)
                     instance.user_made = request.user
                     instance.cash_register = cashregister
                     instance.type_method = data['type_method']
@@ -252,7 +252,7 @@ class CashRegisterArching(LoginRequiredMixin, View):
             ########### HARDCODEO MORTAL PARA CUENTA CORREINTE ##############
             from django.db.models import Sum
             registered_amount = Payment.objects.filter(customer__user_made__branch=branch_actualy, payment_method__name='Cuenta Corriente', created_at__date=DATE_NOW.date()).aggregate(amount=Sum('sale__total'))['amount'] or 0
-            print(registered_amount)
+            # print(registered_amount)
             CashRegisterDetail.objects.create(
                 user_made = request.user,
                 cash_register = cashregister,
@@ -281,8 +281,8 @@ class CloseTicketCashRegister(LoginRequiredMixin, View):
             messages.error(self.request, 'No hay una caja registradora activa para esta sucursal')
         context['cashregister'] = cashregister
         context['movements'] = CashRegister.objects.get_movements_data(cashregister)
-        print("######################################")
-        print(context)
+        # print("######################################")
+        # print(context)
         
         return render(request, self.template_name, context)
 
@@ -294,7 +294,7 @@ def archingTicket(request, pk, archiv_pos):
     
     cashregister = CashRegister.objects.get(pk=pk)
     archering_data = CashRegister.objects.get_archering_data(cashregister)
-    print("#########################################################")
+    # print("#########################################################")
     for dicc in next(iter(archering_data[int(archiv_pos)].items()))[1]:
         total += dicc['counted_amount']
     total = int(total)
@@ -330,8 +330,8 @@ class MovementsView(LoginRequiredMixin, TemplateView):
         #Tener en cuenta que cuando se hace una consulta por filtro anula lo de deleted_at y hay que especificarlo de nuevo
         movements = Movement.objects.filter(cash_register__in=cashregisters, deleted_at=None).order_by('-created_at')[:self.paginate_by]
         context['movements'] = movements
-        print("###############################################################")
-        print(movements)
+        # print("###############################################################")
+        # print(movements)
         context['table_column'] = obtener_nombres_de_campos(Movement, 
             "description", 
             "currency", 
@@ -520,11 +520,11 @@ def ajax_search_movements(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-        print("###################### Esto es lo que se esta buscando: ",search_term)
+        # print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = MovementsView().paginate_by
-            print("####################################",paginate_by)
+            # print("####################################",paginate_by)
             movements = Movement.objects.all().filter(deleted_at = None, cash_register__branch=branch_actualy)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla

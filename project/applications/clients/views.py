@@ -66,8 +66,8 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
             pupilar_form.is_valid()
             ):
 
-            print(material_form.cleaned_data, color_form.cleaned_data,
-                cristal_form.cleaned_data, tratamiento_form.cleaned_data)
+            # print(material_form.cleaned_data, color_form.cleaned_data,
+            #     cristal_form.cleaned_data, tratamiento_form.cleaned_data)
 
             # Create the main form instance
             ServiceOrder.objects.create_lab(
@@ -76,12 +76,12 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
                 customer
             )
             messages.success(self.request, 'Se ha registrado una nueva orden de servicio con exito.')
-        else: 
-            print('\n\nERRROR:',material_form.errors,
-                color_form.errors,
-                cristal_form.errors,
-                tratamiento_form.errors,
-                pupilar_form.errors)
+        # else: 
+        #     print('\n\nERRROR:',material_form.errors,
+        #         color_form.errors,
+        #         cristal_form.errors,
+        #         tratamiento_form.errors,
+        #         pupilar_form.errors)
 
         if customer:
             return redirect('clients_app:customer_detail', pk=self.kwargs.get('pk'))
@@ -139,7 +139,7 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        print(form.errors)
+        # print(form.errors)
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX  
             return JsonResponse({'error': 'Por favor, verifique los campos'})
         messages.error(self.request, 'Por favor, verifique los campos.')
@@ -205,15 +205,15 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
         named_formsets = self.get_context_data()['order_service']
 
         if form.is_valid():
-            print("\n\n\n\n\n\n")
+            # print("\n\n\n\n\n\n")
             service_order = form.save(commit=False)
             for prefix, formset in named_formsets.items():
                 instance = formset.instance
                 new_formset = formset.__class__(self.request.POST, instance=instance)
                 if new_formset.is_valid():
                     new_formset.save()
-                else:
-                    print(new_formset.errors)
+                # else:
+                #     print(new_formset.errors)
             service_order.save()
         messages.success(self.request, 'Se ha acutalizado la orden de servicio con exito.')
         if customer:
@@ -697,11 +697,11 @@ def ajax_search_customers(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-        print("###################### Esto es lo que se esta buscando: ",search_term)
+        # print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de clientes por defecto
             paginate_by = CustomerListView().paginate_by
-            print("####################################",paginate_by)
+            # print("####################################",paginate_by)
             customers = Customer.objects.get_customers_branch(branch_actualy).filter(deleted_at=None)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
@@ -727,7 +727,7 @@ def ajax_search_customers(request):
             'credit_balance': customer.credit_balance,
             'is_staff': 1 if request.user.is_staff else 0
         } for customer in customers]
-        print(data)
+        # print(data)
         return JsonResponse({'data': data})
     
 

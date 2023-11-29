@@ -75,7 +75,7 @@ class NoteCreateForm(ValidationFormMixin):
         super().__init__(*args, **kwargs)
 
         if self.instance.pk:
-            print(self.instance.label.color)
+            # print(self.instance.label.color)
             self.fields['color_value'].initial = self.instance.label.color
 
 

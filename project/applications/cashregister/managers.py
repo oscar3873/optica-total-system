@@ -97,7 +97,7 @@ class MovementManager(models.Manager):
         Actualiza el balance final de la caja.
         """
         amount = abs(amount)
-        print('\n\n\n\n', operation)
+        # print('\n\n\n\n', operation)
         if operation == 'Ingreso':
             cash_register.final_balance += amount
         elif operation == 'Egreso':

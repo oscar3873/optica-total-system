@@ -86,9 +86,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             if discount_sale < 0:
                 messages.error(self.request, "Descuento de venta Inválido. Ingrese solo valores positivos.")
                 return super().form_invalid(form)
-        else:
-            print(saleform.errors)
-            print("\n\n\n\n\n\n\n")
+        # else:
+        #     print(saleform.errors)
+            # print("\n\n\n\n\n\n\n")
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
@@ -157,7 +157,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
 
     def form_invalid(self, form):
-        print(form.errors)
+        # print(form.errors)
         messages.error(self.request, "Error. Verifique los datos.")
         return super().form_invalid(form)
 
@@ -190,11 +190,11 @@ class PaymentMethodCreateView(CustomUserPassesTestMixin, FormView):
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
             return JsonResponse({'status': 'error', 'message':'Por favor, verifique los campos.'})
-        print("######################################################")
-        print("El formulario es invalido")
-        print(form.errors)
-        print(form.cleaned_data['name'])
-        print(form.cleaned_data.get('type_method'))
+        # print("######################################################")
+        # print("El formulario es invalido")
+        # print(form.errors)
+        # print(form.cleaned_data['name'])
+        # print(form.cleaned_data.get('type_method'))
         return super().form_invalid(form)
     
     
@@ -350,9 +350,9 @@ def show_invoice(request, pk):
 def show_factura(request, pk):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
         sale = Sale.objects.get(id=pk)
-        print("\n\n\n\n")
-        print(sale)
-        print("\n\n\n\n")
+        # print("\n\n\n\n")
+        # print(sale)
+        # print("\n\n\n\n")
         customer = sale.customer
         receipt = sale.receipt
 
@@ -403,7 +403,7 @@ def show_factura(request, pk):
             'payments': payments
         }
         
-        print(context)
+        # print(context)
 
         # Genera el HTML en lugar de renderizarlo
         template = loader.get_template('sales/components/factura.html')
@@ -445,16 +445,16 @@ def ajax_search_sales(request):
 
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-        print("###################### Esto es lo que se esta buscando: ",search_term)
+        # print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = SalesListView().paginate_by
-            print("####################################",paginate_by)
+            # print("####################################",paginate_by)
             sales = Sale.objects.all().filter(deleted_at = None)[:paginate_by]
         else:
             from datetime import datetime
             formatted_search_term = datetime.strptime(search_term, '%d/%m/%Y').date() if '/' in search_term else search_term
-            print(search_term, formatted_search_term)
+            # print(search_term, formatted_search_term)
             # Usando Q por todos los campos existentes en la tabla
             sales = Sale.objects.filter(deleted_at = None, branch=branch_actualy).filter(
                 Q(total__icontains=search_term) |

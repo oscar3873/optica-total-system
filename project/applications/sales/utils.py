@@ -119,11 +119,11 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
 def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
-    print("\n\n\n\n mierda")
+    # print("\n\n\n\n mierda")
     if invoice_or_receipt in ['A', 'B']:
         
         if invoice_or_receipt == 'A':
-            print("\n\n\n\n ES A")
+            # print("\n\n\n\n ES A")
             document = DocumentType.objects.get(id=1)
             receipt_type = ReceiptType.objects.get(id=1)
             
@@ -133,7 +133,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
         elif invoice_or_receipt == 'B':
             
             receipt_type = ReceiptType.objects.get(id=4)
-            print("\n\n\n\n ES B")
+            # print("\n\n\n\n ES B")
             if len(sale.customer.dni) > 10:
                 document = DocumentType.objects.get(id=2) #es cuil
             elif len(sale.customer.dni) < 2:
@@ -171,7 +171,7 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             receipt.delete()
             return 'Error de comunicacion con AFIP.'
         
-        print(validation_result)
+        # print(validation_result)
 
 
 
@@ -208,8 +208,8 @@ def find_armazons_product(all_products_to_sale, sale=None):
 
 
 
-def generate_proof(proof_type): # generar factura o recibo
-    print('IMPRIMIENDO %s' % proof_type)
+# def generate_proof(proof_type): # generar factura o recibo
+#     print('IMPRIMIENDO %s' % proof_type)
 
 
 def process_customer(customer, sale, payment_methods, total, product_cristal, product_contacto, amount, request):
@@ -317,13 +317,13 @@ def process_service_order(request, customer):
             customer
         )
 
-    print(service_order.errors,
-    correction_form.errors,
-    material_form.errors,
-    color_form.errors,
-    cristal_form.errors,
-    tratamiento_form.errors,
-    pupilar_form.errors)
+    # print(service_order.errors,
+    # correction_form.errors,
+    # material_form.errors,
+    # color_form.errors,
+    # cristal_form.errors,
+    # tratamiento_form.errors,
+    # pupilar_form.errors)
 
     return service
 

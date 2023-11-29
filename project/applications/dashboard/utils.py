@@ -25,8 +25,8 @@ def week_status(branch_actualy):
                                 branch=branch_actualy, deleted_at=None)
     
     
-    print("\n\n\n\n\n\n")
-    print(sale)
+    # print("\n\n\n\n\n\n")
+    # print(sale)
     week_sales = {
         'mon': [0, 0],
         'tue': [0, 0],
@@ -48,7 +48,7 @@ def week_status(branch_actualy):
                 week_sales[day][0] += round(float(s.total))
                 week_sales[day][1] += 1
 
-    print('\nVentas de la semana',week_sales)
+    # print('\nVentas de la semana',week_sales)
     return week_sales
 
 def week_sales(branch_actualy):
@@ -83,10 +83,10 @@ def week_sales(branch_actualy):
                             created_at__range=(fecha_inicio_semana_actual - timedelta(weeks=1), fecha_inicio_semana_actual - timedelta(days=1))
                         ).aggregate(total_ventas=Sum('total'))['total_ventas']
 
-    print("\nVentas por semana (4 semanas, incluyendo la actual):", ventas_por_semana)
-    print("Total de ventas de las 4 semanas (incluyendo la actual hasta la fecha):", total_ventas)
-    print("Ventas totales: $", ventas_totales['total_ventas'])
-    print('total_ventas_semana_anterior: ', total_ventas_semana_anterior or 0)
+    # print("\nVentas por semana (4 semanas, incluyendo la actual):", ventas_por_semana)
+    # print("Total de ventas de las 4 semanas (incluyendo la actual hasta la fecha):", total_ventas)
+    # print("Ventas totales: $", ventas_totales['total_ventas'])
+    # print('total_ventas_semana_anterior: ', total_ventas_semana_anterior or 0)
 
     return ventas_por_semana, int(ventas_totales['total_ventas'] or 0), total_ventas, total_ventas_semana_anterior or 0
 
@@ -107,7 +107,7 @@ def top_prodcuts(branch_actualy):
 
     # Puedes ordenar el diccionario por la cantidad vendida si es necesario
     top_productos_mas_vendidos = dict(sorted(top_productos_mas_vendidos.items(), key=lambda item: item[1], reverse=True))
-    print('\nTOP PRODUCTOS: ',top_productos_mas_vendidos)
+    # print('\nTOP PRODUCTOS: ',top_productos_mas_vendidos)
     return top_productos_mas_vendidos
 
 
@@ -130,7 +130,7 @@ def top_brands(branch_actualy):
     top_marcas_mas_vendidas = dict(sorted(top_marcas_mas_vendidas.items(), key=lambda item: item[1], reverse=True))
 
     # Imprime el diccionario
-    print('\nTOP MARCAS:', top_marcas_mas_vendidas)
+    # print('\nTOP MARCAS:', top_marcas_mas_vendidas)
     return top_marcas_mas_vendidas # TOP MARCAS +VENDIDAS
 
 
@@ -138,8 +138,8 @@ def objetives(branch_actualy):
     obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy).order_by('employee', 'created_at').distinct('employee')
     obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy).order_by('branch', 'created_at').distinct('branch')
 
-    print('\nObjetivos de empleado: ', obj_employee)
-    print('\nObjetivos de sucursal: ', obj_branch)
+    # print('\nObjetivos de empleado: ', obj_employee)
+    # print('\nObjetivos de sucursal: ', obj_branch)
     return obj_employee, obj_branch
 
 ######################## REPORTES DIARIOS #########################
@@ -178,35 +178,35 @@ def dayli_sales(branch_actualy):
                 monto_por_rango_pendiente[str(horas[i].hour)] += float(monto_recaudado)
                 break
     
-    print('\n\n\n',monto_por_rango_completado)
-    print('\n\n\n',monto_por_rango_pendiente)
+    # print('\n\n\n',monto_por_rango_completado)
+    # print('\n\n\n',monto_por_rango_pendiente)
 
     return monto_por_rango_completado, monto_por_rango_pendiente
 
 
 def dayli_customers(branch_actualy):
     customers = Customer.objects.filter(created_at__date=fecha_hoy, branch=branch_actualy).count()
-    print('\n\n\n\'',customers)
+    # print('\n\n\n\'',customers)
     return customers
 
 
 def dayli_sales_count(branch_actualy):
     sales = Sale.objects.filter(created_at__date=fecha_hoy, branch=branch_actualy).count()
-    print('\n\n\n\'',sales)
+    # print('\n\n\n\'',sales)
     return sales
 
 
 def dayli_sales_total(branch_actualy):
     suma_total = Sale.objects.filter(created_at__date=datetime.now().date(), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
-    print('\n\n\n\'', suma_total_ventas)
+    # print('\n\n\n\'', suma_total_ventas)
     return suma_total_ventas
 
 
 def yesterday_sales_total(branch_actualy):
     suma_total = Sale.objects.filter(created_at__date=datetime.now().date() - timedelta(days=1), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
-    print('\n\n\n\'', suma_total_ventas)
+    # print('\n\n\n\'', suma_total_ventas)
     return suma_total_ventas
 
 
@@ -218,7 +218,7 @@ def list_sale_to_dayli(branch_actualy):
     columns = ['Por', 'Fecha', 'Hora', 'Cliente', 'Estado', 'Total']
 
     sale = Sale.objects.filter(branch=branch_actualy).order_by('-created_at')[:4] # campos qeu se deben mostrar en la tabla: sale.id, sale.created_at, sale.state, sale.total, sale.customer
-    print('LISTA DE VENTAS: ',sale)
+    # print('LISTA DE VENTAS: ',sale)
     return columns, sale
 
 
@@ -226,5 +226,5 @@ def movs_to_dayli(branch_actualy):
     columns = ['Por', 'Fecha', 'Hora', 'Descripción', 'Tipo', 'Monto'] # MODIFICAR 
 
     moviments = Movement.objects.filter(cash_register__branch=branch_actualy).order_by('-created_at')[:4]
-    print('LISTA DE MOVIMIENTOS: ',moviments)
+    # print('LISTA DE MOVIMIENTOS: ',moviments)
     return columns, moviments
