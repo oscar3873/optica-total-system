@@ -8,7 +8,7 @@ https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 """
 
 import os
-import django
+import sys
 
 from django.core.asgi import get_asgi_application
 from channels.auth import AuthMiddlewareStack
