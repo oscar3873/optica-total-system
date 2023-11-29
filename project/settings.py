@@ -4,6 +4,7 @@ Configuracion base que todos necesitan para funcionar.
 import json
 import pytz
 import os
+import django_on_heroku
 
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
@@ -210,7 +211,7 @@ LOGOUT_REDIRECT_URL = 'users_app:login'
 
 # prod.py
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
 # Configuración para el uso de base de datos en Heroku
@@ -246,3 +247,5 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 MEDIA_URL = "media/"
 #Production media folder
 MEDIA_ROOT= os.path.join(BASE_DIR, "media")
+
+django_on_heroku.settings(locals())
