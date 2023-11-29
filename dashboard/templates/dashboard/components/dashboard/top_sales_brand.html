@@ -1,0 +1,50 @@
+<div class="col-md-4 mb-3">
+    <div class="card h-lg-100 overflow-hidden">
+      <div class="card-body p-0">
+        <div class="table-responsive scrollbar">
+          <table class="table table-dashboard mb-0 table-borderless fs--1 border-200">
+            <thead class="bg-light">
+              <div class="text-900 py-2 ps-3 bg-light border-bottom">Marcas más vendidas</div>
+              <tr class="text-900">
+                {% if not productos_mas_vendidos %}
+                <th class="text-700">Aún no hay productos vendidos.</th>
+                {% else %}
+                <th>Marca</th>
+                <th class="text-end">Cantidad</th>
+                {% endif %}
+                <!-- <th class="pe-card text-end" style="width: 8rem">Revenue (%)</th> -->
+              </tr>
+            </thead>
+            <tbody>
+              {% if marcas_mas_vendidos %}
+                {% for key, value in marcas_mas_vendidos.items %}
+                  <tr class="border-bottom border-200">
+                    <td>
+                      <div class="d-flex align-items-center position-relative">
+                        <div class="flex-1 ms-3">
+                          <h6 class="mb-1 fw-semi-bold">{{key}}</h6>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="align-middle text-end fw-semi-bold">{{value}}</td>
+                  </tr>
+                  {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer bg-light py-0">
+        <div class="row flex-between-center">
+          <!-- <div class="col-auto">
+            <select class="form-select form-select-sm">
+              <option>Últimos 7 días</option>
+              <option>Último mes</option>
+              <option>Último Año</option>
+            </select>
+          </div> -->
+          <!-- <div class="col-auto"><a class="btn btn-sm btn-falcon-default" href="#!">Mostrar todo</a></div> -->
+        </div>
+      </div>
+    </div>
+  </div>

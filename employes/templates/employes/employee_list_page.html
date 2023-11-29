@@ -1,0 +1,17 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Empleados{% endblock title %}
+
+{% block extra_css %}
+{% load static %}
+
+{% endblock extra_css  %}
+
+{% block main %}
+{% include 'employes/components/employee_list.html' %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script  src={% static 'employes/js/ajax_search_employee.js' %}></script>
+{% endblock extra_js %}

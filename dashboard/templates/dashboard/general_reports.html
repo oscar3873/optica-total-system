@@ -1,0 +1,15 @@
+{% extends 'dashboard/dashboard_page.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row g-3 mb-3">
+        {% include 'dashboard/components/dashboard/weekly_sales.html' %}
+        {% include 'dashboard/components/dashboard/weekly_total_sales.html' %}
+    </div>
+    <div class="row mb-3">
+        {% include 'dashboard/components/dashboard/best_selling_products.html' %}
+        {% include 'dashboard/components/dashboard/top_sales_brand.html' %}
+        {% include 'dashboard/components/dashboard/employee_objetives.html' %}
+    </div>
+</div>
+{% endblock content %}

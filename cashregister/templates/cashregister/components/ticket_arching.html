@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Fiscal</title>
+    <style>
+        /* Estilos generales */
+        body {
+            font-family: 'Arial', sans-serif;
+            width: 300px; /* Aproximadamente 80mm */
+            margin: auto ;
+            padding: 10px;
+            border: 1px dashed #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Logo y nombre */
+        .header {
+            text-align: start;
+            margin-bottom: 10px;
+        }
+
+        .header img {
+            display: block;
+            width: 50%;
+            margin: auto auto 10px;
+        }
+
+        .header .datetime{
+            font-size: .6rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        .header .title{
+            font-size: .8rem;
+            text-align: center;
+        }
+        .tax-payer{
+            font-size: .7rem;
+            text-align: center;
+        }
+        .branch-info{
+            text-align: center;
+            font-size: .7rem;
+        }
+        .branch{
+            font-size: .7rem;
+        }
+        .contact{
+            font-weight: bold;
+        }
+        .client-data{
+            margin: 0rem 1rem;
+            display: flex;
+            flex-direction: column;
+            font-size: .7rem;
+        }
+        .row{
+            display: flex;
+            justify-content: space-between;
+        }
+        .col{
+            text-align: start;
+        }
+        /* Detalles del ticket */
+        table {
+            font-size: .6rem;
+            width: 100%;
+            border-collapse: collapse;
+            line-height: 1.5; /* Ajusta este valor según tu preferencia */
+        }
+
+        table th, table td {
+            padding: 3px 5px;
+            text-align: left;
+            line-height: 4; /* Ajusta este valor según tu preferencia */
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+        .payments{
+            font-size: .8rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        /* Detalles del cierre */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            margin: 10px .5rem 0px .5rem;
+            font-size: .8rem;
+        }
+        .thanks{
+            text-align: center;
+            background-color: #f2f2f2;
+            margin-top: 2rem;
+            font-size: .7rem;
+        }
+        .text-center{
+            text-align: center;
+        }
+        .text-end{
+            text-align: end;
+            padding-right: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cabecera con logo y nombre -->
+    <div class="header">
+        <div class="datetime">
+            <small class="date">{{date}}</small>
+            <small class="time">{{time}}</small>
+        </div>
+        <div class="logo">
+            <img src="{% static 'core/img/logo_optica_light.png' %}" alt="Logo de la empresa">
+            <p class="title">ARQUEO DE CAJA</p>
+        </div>
+    </div>
+    <!-- Resumen de cuentas -->
+    <table>
+        <thead>
+            <tr>
+                <th>TIPO</th>
+                <th class="text-center">MONTO</th>
+                <th class="text-center">CONTEO</th>
+                <th class="text-end">DIF.</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for key, value in archering_data.items %}
+                {% for v in value %}
+                    <tr>
+                        <td>{{ v.type_method }}</td>
+                        <td class="text-center">{{ v.registered_amount|floatformat:2}}</td>
+                        <td class="text-center">{{ v.counted_amount|floatformat:2}}</td>
+                        <td class="text-end">{{ v.difference|floatformat:2}}</td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3">TOTAL CONTEO</th>
+                <th colspan="1">$ {{total|floatformat:2}}</th>
+            </tr>
+        </tfoot>
+    </table>
+    <br>
+    <br>
+    <!-- Firma y aclaración -->
+    <div class="footer">
+        <span class="seller">Firma</span>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
+
+</body>
+</html>

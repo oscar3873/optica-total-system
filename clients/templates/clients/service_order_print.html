@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Orden de servicio</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        <style>
+            /* Estilos generales */
+            body {
+                font-family: 'Arial', sans-serif;
+                width: 300px; /* Aproximadamente 80mm */
+                margin: auto ;
+                padding: 10px;
+                border: 1px dashed #ccc;
+                box-sizing: border-box;
+            }
+            .small-text {
+                font-size: 8px; /* Ajusta el tamaño de fuente según tus necesidades */
+                margin:0;
+            }
+            .custom-row {
+                height: 15px; /* Ajusta la altura según tus necesidades */
+            }
+            .custom-row-tit {
+                height: 30px; /* Ajusta la altura según tus necesidades */
+            }
+            .custom-row-45 {
+                height: 45px; /* Ajusta la altura según tus necesidades */
+            }
+            .custom-row-cristal {
+                margin: 0px;
+                height: 90px; /* Ajusta la altura según tus necesidades */
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="datetime d-flex justify-content-between">
+                        <small class="date">{{sale_date|date:"d/m/Y"}}</small>
+                        <small class="time">{{sale_date|time}}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row pt-3">
+                <div class="col-12">
+                    <label class="mb-0">{{branch_name}}</label>
+                </div>
+                <div class="col-12">
+                    <small>Dirección: {{branch_address}}</small>
+                </div>
+                <div class="col-12">
+                    <small>Localidad: Salta</small>
+                </div>
+                <div class="col-12">
+                    <small>Tel: {{branch_phone}}</small>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container">
+            <div class="row mt-3 border custom-row">
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">DISTANCIA</p>
+                </div>
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">OJO</p>
+                </div>
+                <div class="col-3 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">ESFERICO</p>
+                </div>
+                <div class="col-3 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">CILINDRICO</p>
+                </div>
+                <div class="col-2 d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">EJE</p>
+                </div>
+            </div>
+            <div class="row border custom-row-tit">
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">LEJOS</p>
+                </div>
+                <div class="col-2 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OD</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OI</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.lej_od_esferico}}</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.lej_oi_esferico}}</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.lej_od_cilindrico}}</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.lej_oi_cilindrico}}</p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.lej_od_eje}}</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.lej_oi_eje}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row border custom-row-tit">
+                <div class="col-2 border-right d-flex align-items-center justify-content-center text-center">
+                    <p class="small-text">CERCA</p>
+                </div>
+                <div class="col-2 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OD</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">OI</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.cer_od_esferico}}</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.cer_oi_esferico}}</p>
+                    </div>
+                </div>
+                <div class="col-3 border-right">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.cer_od_cilindrico}}</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.cer_oi_cilindrico}}</p>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="row custom-row border-bottom d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.cer_od_eje}}</p>
+                    </div>
+                    <div class="row custom-row d-flex align-items-center justify-content-center text-center">
+                        <p class="small-text">{{service_order.correction.cer_oi_eje}}</p>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+
+        <div class="row custom-row-cristal border-top">
+            <div class="col-6 p-0">
+                <div class="col-12 border-bottom border-left p-0 ">
+                    <p class="small-text d-flex align-items-center justify-content-center text-center">TIPO DE CRISTAL</p>
+                </div>
+                <div class="row p-0 m-0">
+                    <div class="col-10 p-0 boder">
+                        <div class="border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Monofocal</p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end border-left">
+                            <div class="d-flex justify-content-center text-center ">
+                                <p class="small-text px-4">Bifocal</p>
+                            </div>
+                            <div class="d-flex flex-column border-right border-left text-center">
+                                <p class="small-text border-bottom px-1">FV</p>
+                                <p class="small-text border-bottom">K</p>
+                                <p class="small-text">PI</p>
+                            </div>
+                        </div>
+                        <div class="border-bottom border-top border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Progresivo</p>
+                        </div>
+                    </div>
+                    <div class="col-2 p-0 text-center">
+                        <div class="border-bottom">
+                            {% if service_order.type_cristal.monofocal %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="border-bottom">
+                            {% if service_order.type_cristal.bifocal_fv %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="border-bottom">
+                            {% if service_order.type_cristal.bifocal_k %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="border-bottom">
+                            {% if service_order.type_cristal.bifocal_pi %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="border-bottom">
+                            {% if service_order.type_cristal.progressive %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 px-0">
+                <div class="row mx-0">
+                    <div class="col-12 text-center border-bottom border-right border-left">
+                        <p class="small-text">TRATAMIENTO</p>
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom border-left">
+                        <p class="small-text">Antireflex</p>
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom">
+                        {% if service_order.tratamient.antireflex %}
+                            <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                        {% else %}
+                            <p class="small-text">&nbsp;</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom border-left">
+                        <p class="small-text">Filtro Azul</p>
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom">
+                        {% if service_order.tratamient.filtro_azul %}
+                            <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                        {% else %}
+                            <p class="small-text">&nbsp;</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom border-left">
+                        <div class="d-flex justify-content-center">
+                            <p class="small-text">Fotocromatico</p>
+                        </div>
+
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom">
+                        {% if service_order.tratamient.fotocromatico %}
+                            <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                        {% else %}
+                            <p class="small-text">&nbsp;</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom border-left">
+                        <p class="small-text">Ultravex</p>
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom">
+                        {% if service_order.tratamient.ultravex %}
+                            <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                        {% else %}
+                            <p class="small-text">&nbsp;</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom border-left">
+                        <p class="small-text">Polarizado</p>
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom">
+                        {% if service_order.tratamient.polarizado %}
+                            <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                        {% else %}
+                            <p class="small-text">&nbsp;</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom border-left">
+                        <p class="small-text">Neutrosolar</p>
+                    </div>
+                    <div class="col-6 text-center border-right border-bottom">
+                        {% if service_order.tratamient.neutrosolar %}
+                            <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                        {% else %}
+                            <p class="small-text">&nbsp;</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            
+
+        </div>
+
+        <div class="row custom-row-cristal border-top mt-3">
+            <div class="col-6 p-0">
+                <div class="col-12 border-bottom p-0 ">
+                    <p class="small-text d-flex align-items-center justify-content-center text-center border-left">MATERIAL</p>
+                </div>
+                <div class="row p-0 m-0">
+                    <div class="col-10 p-0 boder">
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Policarbonato</p>
+                        </div>
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Orgánico</p>
+                        </div>
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Mineral</p>
+                        </div>                        
+                    </div>
+
+                    <div class="col-2 p-0 text-center">
+                        <div class="custom-row border-bottom d-flex align-items-center justify-content-center">
+                            {% if service_order.material.policarbonato %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="custom-row border-bottom  d-flex align-items-center justify-content-center">
+                            {% if service_order.material.organic %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="custom-row border-bottom d-flex align-items-center justify-content-center">
+                            {% if service_order.material.mineral %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-6 p-0">
+                <div class="col-12 border-bottom border-right p-0 ">
+                    <p class="small-text d-flex align-items-center justify-content-center text-center border-left ">COLOR</p>
+                </div>
+                <div class="row p-0 m-0">
+                    <div class="col-10 p-0 boder">
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Blanco</p>
+                        </div>
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Gris Completo</p>
+                        </div>
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Gris Gradiente</p>
+                        </div>
+                        <div class="custom-row border-bottom border-right border-left d-flex align-items-center justify-content-center text-center">
+                            <p class="small-text">Flat Sepia</p>
+                        </div>                      
+                    </div>
+
+                    <div class="col-2 p-0 text-center">
+                        <div class="custom-row border-bottom border-right d-flex align-items-center justify-content-center">
+                            {% if service_order.color.white %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="custom-row border-bottom border-right d-flex align-items-center justify-content-center">
+                            {% if service_order.color.full_gray %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="custom-row border-bottom border-right d-flex align-items-center justify-content-center">
+                            {% if service_order.color.gray_gradient %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                        <div class="custom-row border-bottom border-right d-flex align-items-center justify-content-center">
+                            {% if service_order.color.flat_sepia %}
+                                <p class="badge custom-badge h3 text-dark p-0 m-0 d-flex align-items-center justify-content-center">X</p>
+                            {% else %}
+                                <p class="small-text">&nbsp;</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container border mt-1">
+            <div class="row border-bottom">
+                <div class="col-12 text-center border-bottom">
+                    <p class="small-text">MEDIDAS INTERPUPILARES</p>
+                </div>
+                <div class="col-2 border-right px-1">
+                    <div class="d-flex">
+                        <p class="small-text"></p>
+                    </div>
+                </div>
+                <div class="col-2 border-right text-center px-1">
+                    <p class="small-text">OJO</p>
+                </div>
+                <div class="col-3 border-right text-center px-1">
+                    <p class="small-text">Naso Pupilar</p>
+                </div>
+                <div class="col-2 border-right text-center px-1">
+                    <p class="small-text">Total</p>
+                </div>
+                <div class="col-3 text-center px-1">
+                    <p class="small-text">Alt. Pelicula</p>
+                </div>
+            </div>
+
+            <div class="row border-bottom">
+                <div class="col-2 border-right text-center d-flex justify-content-center align-items-center  px-1">
+                    <p class="small-text">LEJOS</p>
+                </div>
+                <div class="col-2 border-right px-0">
+                    <div class="d-flex flex-column text-center">
+                        <div class="col-12 border-bottom">
+                            <p class="small-text">OD</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="small-text">OI</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 border-right px-0">
+                    <div class="d-flex flex-column text-center">
+                        <div class="col-12 border-bottom">
+                            <p class="small-text">{{service_order.interpupillary.lej_od_nanopupilar}}</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="small-text">{{service_order.interpupillary.lej_oi_nanopupilar}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 border-right px-1">
+                    <p class="small-text text-center">{{service_order.interpupillary.lej_total}}</p>
+                </div>
+                <div class="col-3 px-0">
+                    <div class="d-flex flex-column text-center">
+                        <div class="col-12 border-bottom">
+                            <p class="small-text">{{service_order.interpupillary.lej_od_pelicula}}</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="small-text">{{service_order.interpupillary.lej_oi_pelicula}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-2 border-right text-center d-flex justify-content-center align-items-center  px-1">
+                    <p class="small-text">CERCA</p>
+                </div>
+                <div class="col-2 border-right px-0">
+                    <div class="d-flex flex-column text-center">
+                        <div class="col-12 border-bottom">
+                            <p class="small-text">OD</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="small-text">OI</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 border-right px-0">
+                    <div class="d-flex flex-column text-center">
+                        <div class="col-12 border-bottom">
+                            <p class="small-text">{{service_order.interpupillary.cer_od_nanopupilar}}</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="small-text">{{service_order.interpupillary.cer_oi_nanopupilar}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2 border-right px-1">
+                    <p class="small-text text-center">{{service_order.interpupillary.cer_total}}</p>
+                </div>
+                <div class="col-3 px-0">
+                    <div class="d-flex flex-column text-center">
+                        <div class="col-12 border-bottom">
+                            <p class="small-text">{{service_order.interpupillary.cer_od_pelicula}}</p>
+                        </div>
+                        <div class="col-12">
+                            <p class="small-text">{{service_order.interpupillary.cer_oi_pelicula}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="container border mt-3">
+            <div class="row">
+                <div class="col-12 text-center border-bottom">
+                    <p class="small-text">ARMAZON</p>
+                </div>
+                <p class="small-text">{{service_order.armazon}}</p>
+            </div>
+            <br>
+        </div>
+
+        <div class="container border mt-3">
+            <div class="row">
+                <div class="col-12 text-center border-bottom">
+                    <p class="small-text">OBSERVACIONES</p>
+                </div>
+                <p class="small-text">{{service_order.observations}}</p>
+            </div>
+            <br>
+        </div>
+
+        <br>
+        <br>
+    </body>
+</html>

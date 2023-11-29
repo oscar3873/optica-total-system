@@ -1,0 +1,61 @@
+<div class="col-12 col-md-4 mb-3">
+  <div class="card h-lg-100 overflow-hidden">
+    <div class="card-header bg-light">
+      <div class="row align-items-center">
+        <div class="col">
+          <h6 class="mb-0">Objetivos de empleados</h6>
+        </div>
+      </div>
+    </div>
+
+    <!-- PEGAR ESTO EN LUGAR DE LO QUE HAY QUE ELIMINAR -->
+    {% if objetivos_emp %}
+    <div class="card-body p-0">
+      {% for objective in objetivos_emp %}
+      <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
+        <div class="col ps-2 py-1 position-static">
+          <div class="d-flex align-items-center">
+            <div class="avatar avatar-xl mx-2">
+              <img src="{{objective.employee.user.imagen.url}}" alt="{{objective.employee.user.firstname}} {{objective.employee.user.lastname}}" class="rounded-circle">
+            </div>
+            <div class="flex-1">
+              <h6 class="mb-0 d-flex align-items-center">{{objective.employee}}</h6>
+            </div>
+          </div>
+        </div>
+        <div class="col py-1">
+          <div class="row flex-end-center g-0 pe-3">
+            <div class="col-auto pe-2">
+              <div class="fs--1 fw-semi-bold">
+                <span class="ms-2 text-primary">${{objective.accumulated}}</span> / ${{objective.objetive.quantity}}
+              </div>
+            </div>
+            <div class="col-9 pe-card ">
+              <p id="progress-percent-{{forloop.counter}}" class="text-center mb-0 ps-3"></p>
+              <div class="progress bg-200" style="height: 5px; width: 110px;">
+                <div
+                  id="employee-progress-bar-{{forloop.counter}}"
+                  class="progress-bar rounded-pill"
+                  role="progressbar"
+                  aria-valuenow="50"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  data-progress="{{objective.accumulated}}"
+                  data-objetive="{{objective.objetive.quantity}}"
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+      <div class="col py-3 ps-4">
+        <h6 class="mb-0 d-flex align-items-center">NO HAY OBJETIVOS</h6>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,295 @@
+<div>
+    <!--Correccion-->
+    <div class="px-sm-3 px-md-5">
+        <div class="text-center">
+            <h4>Lejos</h4>
+        </div>
+        <div class="table-responsive scrollbar">
+            <table class="table table-bordered overflow-hidden table-fixed" id="table_from_correction">
+                <colgroup>
+                    <col class="col-3"/>
+                    <col class="col-3"/>
+                    <col class="col-3"/>
+                    <col class="col-3"/>
+                </colgroup>
+                <thead>
+                    <tr class="btn-reveal-trigger">
+                        <th scope="col"></th>
+                        <th class="text-center" scope="col">Esferico</th>
+                        <th class="text-center" scope="col">Cilindrico</th>
+                        <th class="text-center" scope="col">Eje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="btn-reveal-trigger">
+                        <td>
+                            <p><strong>Derecho</strong></p>
+                        </td>
+                        <td>{{ order_service.correction.lej_od_esferico }}</td>
+                        <td>{{ order_service.correction.lej_od_cilindrico }}</td>
+                        <td>{{ order_service.correction.lej_od_eje }}</td>
+                    </tr>
+                    <tr class="btn-reveal-trigger">
+                        <td>
+                            <p><strong>Izquierdo</strong></p>
+                        </td>
+                        <td>{{ order_service.correction.lej_oi_esferico }}</td>
+                        <td>{{ order_service.correction.lej_oi_cilindrico }}</td>
+                        <td>{{ order_service.correction.lej_oi_eje }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <h4>Cerca</h4>
+        </div>
+        <div class="table-responsive scrollbar">
+            <table class="table table-bordered overflow-hidden" id="table_from_correction">
+                <colgroup>
+                    <col class="col-3"/>
+                    <col class="col-3"/>
+                    <col class="col-3"/>
+                    <col class="col-3"/>
+                </colgroup>
+                <thead>
+                    <tr class="btn-reveal-trigger">
+                        <th scope="col"></th>
+                        <th class="text-center" scope="col">Esferico</th>
+                        <th class="text-center" scope="col">Cilindrico</th>
+                        <th class="text-center" scope="col">Eje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="btn-reveal-trigger">
+                        <td>
+                            <p><strong>Derecho</strong></p>
+                        </td>
+                        <td>{{ order_service.correction.cer_od_esferico }}</td>
+                        <td>{{ order_service.correction.cer_od_cilindrico }}</td>
+                        <td>{{ order_service.correction.cer_od_eje }}</td>
+                    </tr>
+                    <tr class="btn-reveal-trigger">
+                        <td>
+                            <p><strong>Izquierdo</strong></p>
+                        </td>
+                        <td>{{ order_service.correction.cer_oi_esferico }}</td>
+                        <td>{{ order_service.correction.cer_oi_cilindrico }}</td>
+                        <td>{{ order_service.correction.cer_oi_eje }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- </form> -->
+    </div>
+    <hr>
+    <!--Caracteristicas-->
+    <div class="px-sm-3 px-md-5">
+        <!-- <form> -->
+            <div class="row">
+                <div class="col position-relative text-start">
+                    <div class="row">
+                        <h5 class="mt-5 mt-md-2 mb-3">Materiales</h5>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            {{ order_service.material.policarbonato }}
+                            <span>{{ order_service.material.policarbonato.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.material.organic }}
+                            <span>{{ order_service.material.organic.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.material.mineral }}
+                            <span>{{ order_service.material.mineral.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.material.m_r8 }}
+                            <span>{{ order_service.material.m_r8.label }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col form-check-reverse text-start">
+                    <div class="row">
+                        <h5 class="mt-5 mt-md-2 mb-3">Color</h5>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            {{ order_service.color.white }}
+                            <span>{{ order_service.color.white.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.color.full_gray }}
+                            <span>{{ order_service.color.full_gray.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.color.gray_gradient }}
+                            <span>{{ order_service.color.gray_gradient.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.color.flat_sepia }}
+                            <span>{{ order_service.color.flat_sepia.label }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-start">
+                    <div class="row">
+                        <h5 class="mt-5 mt-md-2 mb-3">Cristales</h5>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            {{ order_service.cristal.monofocal }}
+                            <span>{{ order_service.cristal.monofocal.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.cristal.bifocal_fv }}
+                            <span>{{ order_service.cristal.bifocal_fv.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.cristal.bifocal_k }}
+                            <span>{{ order_service.cristal.bifocal_k.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.cristal.bifocal_pi }}
+                            <span>{{ order_service.cristal.bifocal_pi.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.cristal.progressive }}
+                            <span>{{ order_service.cristal.progressive.label }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-start">
+                    <div class="row">
+                        <h5 class="mt-5 mt-md-2 mb-3">Tratamiento</h5>
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <div class="d-flex gap-2">
+                            {{ order_service.tratamiento.antireflex }}
+                            <span>{{ order_service.tratamiento.antireflex.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.tratamiento.filtro_azul }}
+                            <span>{{ order_service.tratamiento.filtro_azul.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.tratamiento.fotocromatico }}
+                            <span>{{ order_service.tratamiento.fotocromatico.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.tratamiento.ultravex }}
+                            <span>{{ order_service.tratamiento.ultravex.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.tratamiento.polarizado }}
+                            <span>{{ order_service.tratamiento.polarizado.label }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            {{ order_service.tratamiento.neutrosolar }}
+                            <span>{{ order_service.tratamiento.neutrosolar.label }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- </form> -->
+    </div>
+    <!--Pupilar-->
+    <hr>
+    <div class="px-sm-3 px-md-5">
+        <!-- <form class="form-validation"> -->
+        <div class="row">
+            <div class="col">
+                <div class="text-center">
+                    <h4>Lejos</h4>
+                </div>
+                <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Izquierdo</th>
+                            <th scope="col">Derecho</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row">
+                                <p><strong>Nanopupilar</strong></p>
+                            </td>
+                            <td>{{ order_service.pupilar.lej_oi_nanopupilar }}</td>
+                            <td>{{ order_service.pupilar.lej_od_nanopupilar }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">
+                                <p><strong>Pelicula</strong></p>
+                            </td>
+                            <td>{{ order_service.pupilar.lej_oi_pelicula }}</td>
+                            <td>{{ order_service.pupilar.lej_od_pelicula }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">
+                                <p><strong>Total</strong>
+                            </td>
+                            <td colspan="2">{{ order_service.pupilar.lej_total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col">
+                <div class="text-center">
+                    <h4>Cerca</h4>
+                </div>
+                <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Izquierdo</th>
+                            <th scope="col">Derecho</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td scope="row">
+                                <p><strong>Nanopupilar</strong></p>
+                            </td>
+                            <td>{{ order_service.pupilar.cer_oi_nanopupilar }}</td>
+                            <td>{{ order_service.pupilar.cer_od_nanopupilar }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">
+                                <p><strong>Pelicula</strong></p>
+                            </td>
+                            <td>{{ order_service.pupilar.cer_oi_pelicula }}</td>
+                            <td>{{ order_service.pupilar.cer_od_pelicula }}</td>
+                        </tr>
+                        <tr>
+                            <td scope="row">
+                                <p><strong>Total</strong></p>
+                            </td>
+                            <td colspan="2">{{ order_service.pupilar.cer_total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- </form> -->
+    </div>
+    <hr>
+    <!--Diagnostico-->
+    <div class="px-sm-3 px-md-5">
+        <div class="row justify-content-sm-center pb-2">
+                <div class="container mb-2">
+                    <label for="id_diagnostic" class="form-label">Diagnostico</label>
+                    {{order_service.service.diagnostic}}
+                </div>
+                <div class="container mb-2">
+                    <label for="id_armazon" class="form-label">Armazones</label>
+                    {{order_service.service.armazon}}
+                </div>
+                <div class="container">
+                    <label for="id_observation" class="form-label">Observaciones</label>
+                    {{order_service.service.observations}}
+                </div>
+        </div>  
+        
+    </div>
+</div>

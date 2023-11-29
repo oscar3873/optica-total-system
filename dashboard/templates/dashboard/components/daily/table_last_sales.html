@@ -1,0 +1,85 @@
+{% if sale %}
+<div class="col">
+    <div class="card z-index-1" id="recentPurchaseTable"
+        data-list='{"valueNames":["name","date","time","customer","state","total"],"page":25,"pagination":true}'>
+        <div class="card-header">
+            <div class="row flex-between-center">
+                <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
+                    <h5 class="fs-0 mb-0 text-nowrap py-2 py-xl-0">Ultimas ventas</h5>
+                    <!-- <div>{{columns_sale}}</div>
+                    <p>{{sale_list}}</p> -->
+                </div>
+                <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+                    <div id="table-purchases-replace-element">
+                        <!-- <button class="btn btn-falcon-default btn-sm me-2" type="button"><span class="fas fa-plus"
+                                data-fa-transform="shrink-3 down-2"></span><span
+                                class="d-none d-sm-inline-block ms-1">Nuevo</span></button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body px-0 py-0">
+            <div class="table-responsive scrollbar">
+                <table class="table table-sm fs--1 mb-0 overflow-hidden">
+                    <thead class="bg-200 text-900">
+                        <tr>
+                            {% for column in columns_sale %}
+                                <th class="sort pe-1 align-middle white-space-nowrap {% if column == 'Estado' %}text-center{% endif %} 
+                                {% if column != 'Por' and column != 'Estado' and column != 'Total' %}d-none d-sm-table-cell{% endif %}">{{column}}</th>
+                            {% endfor %}
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="list" id="table-purchase-body">
+                        {% for sale in sale_list %}
+                        <tr class="btn-reveal-trigger">
+                            <th class="align-middle white-space-nowrap name">{{sale.user_made}}</th>
+                            <td class="align-middle white-space-nowrap d-none d-sm-table-cell date">{{sale.created_at.date}}</td>
+                            <td class="sort pe-1 align-middle white-space-nowrap d-none d-sm-table-cell time">{{sale.created_at.time}}</td>
+                            <td class="align-middle white-space-nowrap d-none d-sm-table-cell customer">{{sale.customer}}</td>
+                            <td class="align-middle text-center fs-0 white-space-nowrap state"><span
+                                class="badge badge rounded-pill {% if sale.state == 'COMPLETADO' %}badge-soft-success{% else %}badge-soft-warning{% endif %}">{{sale.state}}</span>
+                            </td>
+                            <td class="align-middle white-space-nowrap total">{{sale.total}}</td>
+                            <td class="align-middle white-space-nowrap text-end">
+                                <div class="d-flex gap-2 py-1">
+                                    <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="col">
+    <div class="card z-index-1" id="recentPurchaseTable">
+        <div class="card-header">
+            <div class="row flex-between-center">
+                <div class="col-6 col-sm-auto d-flex align-items-center pe-0">
+                    <h5 class="fs-0 mb-0 text-nowrap py-2 py-xl-0">Ultimas ventas</h5>
+                </div>
+                <div class="col-6 col-sm-auto ms-auto text-end ps-0">
+                    <div id="table-purchases-replace-element">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body bg-light px-0 py-1 mt-2">
+            <div>
+                <h3 class="text-primary mb-1 ps-4">Aún no hay ventas</h3>
+            </div>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+</div>
+
+{% endif %}

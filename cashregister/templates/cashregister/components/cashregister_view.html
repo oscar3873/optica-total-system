@@ -1,0 +1,129 @@
+{% load static %}
+{% load humanize %}
+<!-- ===============================================-->
+<!--    Contentenedor del block main-->
+<!-- ===============================================-->
+
+<div class="container py-4">
+
+  <!-- ===============================================-->
+  <!--    Errores de Sistema (Backend)-->
+  <!-- ===============================================-->
+
+  {% include 'core/components/messages.html' %}
+
+  <!-- ===============================================-->
+  <!--    Fin Errores de Sistema (Backend)--> 
+  <!-- ===============================================-->
+
+
+  <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <!-- Titulo del formulario wizard -->
+    <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
+          class="fa-inverse fa-stack-1x text-primary fas fa-cash-register"></i></span>
+      <div class="col">
+        <h5 class="mb-0 text-primary position-relative"><span class="bg-200 dark__bg-1100 pe-3">Caja activa</span><span
+            class="border position-absolute top-50 translate-middle-y w-100 start-0 z-index--1"></span></h5>
+        <p class="mb-0">Aquí puede vizualizar la caja que tiene abierta actualmente</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ===============================================-->
+  <!--    Card con la presentacion de la caja-->
+  <!-- ===============================================-->
+
+  {% if cashregister %}
+  <div class="row g-3">
+    <div class="col-lg-8 col-xl-12 col-xxl-8 h-100">
+      <!--Card-->
+      <!-- <div class="card bg-transparent-50 overflow-hidden"> -->
+      <div class="card overflow-hidden">
+        <div class="card-header bg-light">
+          <p class="mb-0"><a href="{% url 'cashregister_app:cashregister_detail_view' cashregister.pk %}">Ir a mi caja del dia</a></p>
+          <div class="position-relative z-index-2">
+            <div>
+              <p class="fs--2 mb-0">
+                Abierta por 
+                {% if cashregister.user_made.employee_type %}
+                    <a href="{% url 'employees_app:profile_employee' cashregister.user_made.pk  %}">{{cashregister.user_made}} </a>
+                {% else %}
+                    {{cashregister.user_made}}</span>
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="d-flex pb-3 justify-content-between align-items-center">
+            <div class="pe-3">
+              <p class="text-700 fs--0 fw-medium">Balance inicial </p>
+              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
+              <small class="d-none d-md-inline">Monto inicial en <span class="text-warning">Efectivo</span></small>
+            </div>
+            <div class="ps-3">
+              <p class="text-700 fs--0">Balance Actual </p>
+              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.final_balance|floatformat:2|intcomma}} </h4>
+              
+            </div>
+          </div>
+          <div class="d-flex pb-3 justify-content-between align-items-center">
+            <div class="lottie me-3" data-options='{"path":"{% static "cashregister/img/animated-icons/cashregister_animated.json" %}"}'></div>
+            <div class="ps-3 text-end text-md-center">
+              <a href="{% url 'cashregister_app:movements_view' %}" class="btn btn-primary mb-2"
+              type="button">Movimientos</a>
+              <a href="{% url 'cashregister_app:cashregister_arching_view' %}" class="btn btn-warning mb-2"
+                type="button">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Arqueo&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="pe-3">
+            <p class="text-600 fs--1 fw-medium">El {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</p>
+            <small class="d-none d-md-inline">EL monto final tiene en cuenta <span class="text-warning">Efectivo, Tarjetas de Credito, Tarjetas de Debito y Transfer.</span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="row g-3">
+    <div class="col-sm-8 col-lg-6 h-100">
+      <!--Card-->
+      <!-- <div class="card bg-transparent-50 overflow-hidden"> -->
+      <div class="card overflow-hidden">
+        <div class="card-header position-relative bg-light pt-3 pb-2">
+          <div class="bg-holder d-none d-md-block bg-card z-index-1"
+            style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+          </div>
+          <!--/.bg-holder-->
+          <div class="position-relative z-index-2">
+            <div>
+              <h5 class="text-primary pb-2">No hay una caja abierta</h5>
+            </div>
+            <!-- <div class="d-flex py-3">
+            </div> -->
+          </div>
+        </div>
+        <div class="card-body border-top">
+          <div class="d-flex py-3 justify-content-between">
+            <a href="{% url 'cashregister_app:cashregister_create_view' %}" class="btn btn-primary" type="submit">Abrir
+              caja</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+
+<!-- ===============================================-->
+<!--   Fin Card con la presentacion de la caja-->
+<!-- ===============================================-->
+
+</div>
+
+<!-- ===============================================-->
+<!--    Fin Contentenedor del block main-->
+<!-- ===============================================-->

@@ -1,0 +1,15 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block extra_css %}
+{% endblock extra_css  %}
+
+
+{% block main %}
+    {% block content %}
+
+    {% endblock content %}
+{% endblock main %}
+
+{% block extra_js %}
+<script src="{% static 'dashboard/js/progress-bar.js' %}"></script>
+{% endblock extra_js %}
