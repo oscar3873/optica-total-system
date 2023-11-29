@@ -1,20 +1,36 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
+import os
+import json
+import pytz
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
-import json
 from pathlib import Path
 
-import pytz
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # El directorio raiz de la aplicacion.
 # SECURITY WARNING: keep the secret key used in production secret!
 
-with open("secret.json") as f:
-    secret = json.loads(f.read())
-    
+# Verificar si estamos en entorno de desarrollo o producción
+DEVELOPMENT_ENVIRONMENT = os.environ.get("DEVELOPMENT_ENVIRONMENT", "False").lower() == "true"
+
+# Configuración de secretos
+if DEVELOPMENT_ENVIRONMENT:
+    # En entorno de desarrollo, cargar desde secret.json
+    with open("secret.json") as f:
+        secret = json.loads(f.read())
+else:
+    # En entorno de producción, usar variables de entorno
+    secret = {
+        "SECRET_KEY": os.environ.get("SECRET_KEY"),
+        "EMAIL_HOST": os.environ.get("EMAIL_HOST"),
+        "EMAIL_HOST_USER": os.environ.get("EMAIL_HOST_USER"),
+        "EMAIL_HOST_PASSWORD": os.environ.get("EMAIL_HOST_PASSWORD"),
+        # Agrega otras variables según sea necesario
+    }
+
 def get_secret(secret_name, secrets=secret):
     try:
         return secrets[secret_name]
@@ -59,16 +75,36 @@ THIRD_PARTY_APPS = (
 
 
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
+ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+
+REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379/1")
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [REDIS_URL],
+        },
+        "OPTIONS": {
+            "websocket_timeout": 300,
+            "websocket_max_connections": 10000,
         },
     },
 }
 
-ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": [REDIS_URL],
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "ssl_cert_reqs": None
+            },
+        }
+    }
+}
+
 ####################################################################
 
 
@@ -83,6 +119,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = "project.urls"
@@ -164,3 +201,4 @@ LOGIN_URL = 'users_app:login'
 LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
 LOGOUT_REDIRECT_URL = 'users_app:login'
+
