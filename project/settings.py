@@ -258,4 +258,9 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
+SESSION_COOKIE_SECURE = True  # Usar solo si tu sitio es completamente HTTPS
+CSRF_COOKIE_SECURE = True  # Usar solo si tu sitio es completamente HTTPS
+SESSION_COOKIE_DOMAIN = ".herokuapp.com"  # Ajusta a tu dominio
+
+
 django_on_heroku.settings(locals())
