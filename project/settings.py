@@ -140,7 +140,6 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.csrf",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
@@ -262,7 +261,6 @@ MEDIA_ROOT = BASE_DIR / "media"
 SESSION_COOKIE_SECURE = True  # Usar solo si tu sitio es completamente HTTPS
 CSRF_COOKIE_SECURE = True  # Usar solo si tu sitio es completamente HTTPS
 SESSION_COOKIE_DOMAIN = '.herokuapp.com'
-CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
 
 
 django_on_heroku.settings(locals())
