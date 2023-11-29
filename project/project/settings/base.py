@@ -85,6 +85,10 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [REDIS_URL],
         },
+        "OPTIONS": {
+            "websocket_timeout": 300,
+            "websocket_max_connections": 10000,
+        },
     },
 }
 

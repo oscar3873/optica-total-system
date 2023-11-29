@@ -1,4 +1,4 @@
-const notificationSocket = new WebSocket(`ws://${window.location.host}/ws/notifications/global/`);
+const notificationSocket = new WebSocket(`wss//${window.location.host}/ws/notifications/global/`);
 
 document.addEventListener('DOMContentLoaded', () => {
     const notificationList = document.getElementById('notification-list');

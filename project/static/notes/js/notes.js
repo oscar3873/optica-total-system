@@ -1,5 +1,5 @@
 const noteSocket = new WebSocket(
-    'ws://' + window.location.host + '/ws/notes/global/'
+    'wss//' + window.location.host + '/ws/notes/global/'
 );
 
 noteSocket.onmessage = function(e) {
