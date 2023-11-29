@@ -46,7 +46,7 @@ def get_secret(secret_name, secrets=secret):
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
-ALLOWED_HOSTS = ['.herokuapp.com','*']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 DJANGO_APPS = (
