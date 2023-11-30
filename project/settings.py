@@ -50,7 +50,13 @@ SECRET_KEY = get_secret('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['optica-total-system-29fc65c3d78e.herokuapp.com']
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+SESSION_COOKIE_DOMAIN = '.herokuapp.com'
+CSRF_TRUSTED_ORIGINS = ['https://optica-total-system-29fc65c3d78e.herokuapp.com']
 
 # Application definition
 DJANGO_APPS = (
@@ -214,12 +220,6 @@ LOGIN_URL = 'users_app:login'
 LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
 LOGOUT_REDIRECT_URL = 'users_app:login'
-
-SESSION_COOKIE_DOMAIN = '.herokuapp.com'
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
-
 
 # Configuración para el uso de base de datos en Heroku
 
