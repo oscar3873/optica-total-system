@@ -4,8 +4,6 @@ Configuracion base que todos necesitan para funcionar.
 import json
 import pytz
 import os
-import django_on_heroku
-
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
@@ -48,9 +46,16 @@ SECRET_KEY = get_secret('SECRET_KEY')
 
 # prod.py
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['optica-total-system-29fc65c3d78e.herokuapp.com']
+
+# Configuración de cookies seguras
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://optica-total-system-29fc65c3d78e.herokuapp.com']
+
+
 # Application definition
 DJANGO_APPS = (
     "whitenoise.runserver_nostatic",
@@ -214,8 +219,15 @@ LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
 LOGOUT_REDIRECT_URL = 'users_app:login'
 
-# Configuración para el uso de base de datos en Heroku
 
+# Configuraciones adicionales de seguridad
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_SSL_REDIRECT = True
+
+
+# Configuración para el uso de base de datos en Heroku
 if DEVELOPMENT_ENVIRONMENT:
     DATABASES = {
         'default': {
@@ -254,5 +266,3 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = "media/"
 # Production media folder
 MEDIA_ROOT = BASE_DIR / "media"
-
-django_on_heroku.settings(locals())
