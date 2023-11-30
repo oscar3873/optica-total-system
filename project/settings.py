@@ -50,6 +50,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://optica-total-system-29fc65c3d78e.herokuapp.com']
+
 # Application definition
 DJANGO_APPS = (
     "whitenoise.runserver_nostatic",
