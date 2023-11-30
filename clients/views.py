@@ -3,7 +3,7 @@ from django.template import loader
 from django.db import transaction
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import (DeleteView, UpdateView, DetailView, FormView, ListView)
 from django.contrib import messages
@@ -714,7 +714,7 @@ def ajax_search_customers(request):
                 Q(dni__icontains=search_term)
             )[:50]
         # Crear una lista de diccionarios con los datos de los empleados
-        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+        # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
             'id': customer.id,
             'first_name': customer.first_name,
@@ -732,14 +732,13 @@ def ajax_search_customers(request):
     
 
 def print_service_order(request, pk): # pk de la orden
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
         service = ServiceOrder.objects.get(pk=pk)
         branch = service.sale.branch
         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
         html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
 
         # Convertir la cadena en un objeto de fecha
-        locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+        # locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
         
         format = "%A, %d de %B de %Y"
         
@@ -755,15 +754,10 @@ def print_service_order(request, pk): # pk de la orden
         }
 
         # Genera el HTML en lugar de renderizarlo
-        template = loader.get_template('clients/service_order_print.html')
-        html_content = template.render(context)
+        return render(request, 'clients/service_order_print.html', context)
+
         
-        # Devuelve el HTML como respuesta
-        return HttpResponse(html_content, content_type="text/html")
-    else:
-        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
-        return JsonResponse({'error': 'Solicitud no válida'}, status=400)
-    
+   
     
 def service_order_entrega(request, pk):
     if request.method == "POST":

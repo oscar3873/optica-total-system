@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
         searchInput.addEventListener('input', (event) => {
-            const searchTerm = event.target.value.trim().toLowerCase();
+            let searchTerm = event.target.value.trim().toLowerCase();
             if (!searchTerm) {
                 // Limpiar los resultados de búsqueda si no hay término de búsqueda
                 searchResults.innerHTML = '';
@@ -13,9 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Realizar la búsqueda de clientes que coincidan con el término de búsqueda
             $.ajax({
-                url: `/customers/ajax-search-customers/?search_term=${searchTerm}`,
-                method: 'GET',
-                dataType: 'json',
+                url: `/customers/ajax-search-customers/`,
+                data: { search_term: searchTerm },
                 success: function(data) {
                     const customers = data.data;
                     // Mostrar los resultados de búsqueda

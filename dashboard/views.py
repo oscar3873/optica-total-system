@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from project.settings import DATE_NOW
 from branches.utils import set_branch_session
@@ -10,7 +12,7 @@ fecha_hoy = DATE_NOW.date()
 
 
 # Create your views here.
-class DailyReportsView(TemplateView):
+class DailyReportsView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/daily_summary.html'
 
     def get_context_data(self, **kwargs):
@@ -28,7 +30,7 @@ class DailyReportsView(TemplateView):
         
         return context
     
-class DashboardView(TemplateView):
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'dashboard/general_reports.html'
     
     def get_context_data(self, **kwargs):

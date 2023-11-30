@@ -52,13 +52,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             row.appendChild(dniCell);
 
                             const userMadeCell = document.createElement('td');
-                            userMadeCell.className = 'align-start user_made d-none d-md-table-cell';
-                            const userMadeText = document.createTextNode(customer.user_made);
-                            userMadeCell.appendChild(userMadeText);
+                            userMadeCell.className = 'align-start user_mades d-none d-md-table-cell';
+                            userMadeCell.textContent = customer.user_made;
                             row.appendChild(userMadeCell);
 
                             const creditAccountCell = document.createElement('td');
-                            creditAccountCell.className = 'align-start dni d-none d-md-table-cell';
+                            creditAccountCell.className = 'align-start has_credit_account d-none d-md-table-cell';
 
                             const creditAccountText = document.createElement("span");
                                 creditAccountText.className = 'badge rounded-pill badge-soft-secondary';
@@ -72,14 +71,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             row.appendChild(creditAccountCell);
 
                             const actionsCell = document.createElement('td');
-                            actionsCell.className = 'align-middle white-space-nowrap text-start';
+                            actionsCell.className = 'align-middle white-space-nowrap text-end';
                             
                             const actionsDropdown = document.createElement('div');
-                            actionsDropdown.className = 'dropstart font-sans-serif position-static d-inline-block';
+                            actionsDropdown.className = 'd-flex gap-2 py-0';
 
                             const actionsButton = document.createElement('a');
                             actionsButton.href = `/customers/detail/${customer.id}`;
-                            actionsButton.className = 'btn btn-sm btn-falcon-default me-2';
+                            actionsButton.className = 'btn btn-sm btn-falcon-default';
                             actionsButton.setAttribute('data-bs-toggle', 'tooltip');
                             actionsButton.setAttribute('title', 'Ver Detalle');
                             const actionsIcon = document.createElement('span');
@@ -88,16 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             const dropdownMenu = document.createElement('div');
                             dropdownMenu.className = 'dropstart font-sans-serif position-static d-inline-block';
+                            
+                            actionsDropdown.appendChild(actionsButton);
 
-                            // const detailLink = document.createElement('a');
-                            // detailLink.className = 'dropdown-item';
-                            // detailLink.href = `/customers/detail/${customer.id}`;
-                            // detailLink.textContent = 'Detalle';
-                            // dropdownMenu.appendChild(detailLink);
                             if (customer.is_staff) {
                                 const editLink = document.createElement('a');
                                 editLink.href = `/customers/update/${customer.id}`;
-                                editLink.className = 'btn btn-sm btn-falcon-default me-2';
+                                editLink.className = 'btn btn-sm btn-falcon-default';
                                 editLink.setAttribute('data-bs-toggle', 'tooltip');
                                 editLink.setAttribute('title', 'Editar');
                                 const editIcon = document.createElement('span');
@@ -109,12 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 deleteLink.className = 'btn btn-sm btn-falcon-default';
                                 const deleteIcon = document.createElement('span');
                                 deleteIcon.className = 'fas fa-trash text-danger';
-                                deleteLink.appendChild(deleteIcon);                                dropdownMenu.appendChild(editLink);
-                                dropdownMenu.appendChild(deleteLink);
+                                deleteLink.appendChild(deleteIcon);                                
+                                
+                                actionsDropdown.appendChild(editLink);
+                                actionsDropdown.appendChild(deleteLink);
                             }
 
-                            actionsDropdown.appendChild(actionsButton);
-                            actionsDropdown.appendChild(dropdownMenu);
                             actionsCell.appendChild(actionsDropdown);
                             row.appendChild(actionsCell);
 

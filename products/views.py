@@ -110,7 +110,7 @@ class FeatureCreateView(CustomUserPassesTestMixin, FormView):
         return super().form_valid(form)
     
 
-class FeatureFullCreateView(FormView):
+class FeatureFullCreateView(LoginRequiredMixin, FormView):
     """
     Crear una característica nueva para el producto.
         Icluye el TIPO y CARACTERISTICA.
@@ -134,7 +134,7 @@ class FeatureFullCreateView(FormView):
             return JsonResponse({'status': 'success', 'new_feature': new_feature_data})
 
         
-class FeatureUnitCreateView(FormView):
+class FeatureUnitCreateView(LoginRequiredMixin, FormView):
     """
     Añade una caracteristica a un TIPO seleccionado.
         ¡¡SOLO PARA PETICIONES FETCH!!
@@ -164,7 +164,7 @@ class FeatureUnitCreateView(FormView):
         return JsonResponse({'status': 'success', 'new_feature_unit': new_feature_data})
 
 
-class FeatureTypeCreateView(CustomUserPassesTestMixin, FormView): # TIPO DE CARACTERISTICA (1)
+class FeatureTypeCreateView(LoginRequiredMixin, FormView): # TIPO DE CARACTERISTICA (1)
     """
     Crear un tipo para la caracteristica nueva para el producto
         Es lo primero que se crea, luego se crea la caracteristica (tipo -> caracteristica)

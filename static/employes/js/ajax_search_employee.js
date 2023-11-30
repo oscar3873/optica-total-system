@@ -38,20 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             avatarImage.className = 'rounded-circle';
                             avatarImage.src = employee.image_url;
                             avatarImage.alt = '';
-                            
                             avatar.appendChild(avatarImage);
                             avatarContainer.appendChild(avatar);
 
                             const firstNameText = document.createTextNode(employee.first_name);
-                            avatarContainer.appendChild(firstNameText);
+                            avatarContainer.textContent = employee.first_name;
                             firstNameCell.appendChild(avatarContainer);
-
                             row.appendChild(firstNameCell);
 
                             const lastNameCell = document.createElement('td');
                             lastNameCell.className = 'align-start last_name';
                             const lastNameText = document.createTextNode(employee.last_name);
-                            lastNameCell.appendChild(lastNameText);
+                            lastNameCell.textContent = employee.last_name;
                             row.appendChild(lastNameCell);
 
                             const phoneNumberCell = document.createElement('td');
@@ -73,51 +71,43 @@ document.addEventListener('DOMContentLoaded', () => {
                             const actionsCell = document.createElement('td');
                             actionsCell.className = 'align-middle white-space-nowrap text-start';
                             
-                            const actionsDropdown = document.createElement('div');
-                            actionsDropdown.className = 'dropstart font-sans-serif position-static d-inline-block';
-
-                            const actionsButton = document.createElement('button');
-                            actionsButton.className = 'btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end';
-                            actionsButton.type = 'button';
-                            actionsButton.id = 'dropdown0';
-                            actionsButton.setAttribute('data-bs-toggle', 'dropdown');
-                            actionsButton.setAttribute('data-boundary', 'window');
-                            actionsButton.setAttribute('aria-haspopup', 'true');
-                            actionsButton.setAttribute('aria-expanded', 'false');
-                            actionsButton.setAttribute('data-bs-reference', 'parent');
+                            const actionsButton = document.createElement('a');
+                            actionsButton.href = `/employees/profile/${employee.id}`;
+                            actionsButton.className = 'btn btn-sm btn-falcon-default';
+                            actionsButton.setAttribute('data-bs-toggle', 'tooltip');
+                            actionsButton.setAttribute('title', 'Ver Detalle');
                             const actionsIcon = document.createElement('span');
-                            actionsIcon.className = 'fas fa-ellipsis-h fs--1';
+                            actionsIcon.className = 'fas fa-eye';
                             actionsButton.appendChild(actionsIcon);
 
                             const dropdownMenu = document.createElement('div');
-                            dropdownMenu.className = 'dropdown-menu dropdown-menu-end border py-2';
-                            dropdownMenu.setAttribute('aria-labelledby', 'dropdown0');
+                            dropdownMenu.className = 'dropstart font-sans-serif position-static d-inline-block';
+                            
+                            let actionsDropdown = document.createElement('div');
+                            actionsDropdown.className = 'd-flex gap-2 py-0'; 
+                            actionsDropdown.appendChild(actionsButton);
 
-                            const detailLink = document.createElement('a');
-                            detailLink.className = 'dropdown-item';
-                            detailLink.href = `/employees/profile/${employee.id}`;
-                            detailLink.textContent = 'Detalle';
-                            dropdownMenu.appendChild(detailLink);
                             if (employee.is_staff) {
                                 const editLink = document.createElement('a');
-                                editLink.className = 'dropdown-item';
                                 editLink.href = `/employees/update/${employee.id}`;
-                                editLink.textContent = 'Editar';
-                                dropdownMenu.appendChild(editLink);
-
-                                const divider = document.createElement('div');
-                                divider.className = 'dropdown-divider';
-                                dropdownMenu.appendChild(divider);
-
+                                editLink.className = 'btn btn-sm btn-falcon-default';
+                                editLink.setAttribute('data-bs-toggle', 'tooltip');
+                                editLink.setAttribute('title', 'Editar');
+                                const editIcon = document.createElement('span');
+                                editIcon.className = 'fas fa-edit';
+                                editLink.appendChild(editIcon);
+                            
                                 const deleteLink = document.createElement('a');
-                                deleteLink.className = 'dropdown-item text-danger';
-                                deleteLink.href = `/employees/delete/${employee.id}`;
-                                deleteLink.textContent = 'Borrar';
-                                dropdownMenu.appendChild(deleteLink);
+                                deleteLink.href = `/employees/delete/${employee.id}/`;
+                                deleteLink.className = 'btn btn-sm btn-falcon-default';
+                                const deleteIcon = document.createElement('span');
+                                deleteIcon.className = 'fas fa-trash text-danger';
+                                deleteLink.appendChild(deleteIcon);                                
+                                
+                                actionsDropdown.appendChild(editLink);
+                                actionsDropdown.appendChild(deleteLink);
                             }
 
-                            actionsDropdown.appendChild(actionsButton);
-                            actionsDropdown.appendChild(dropdownMenu);
                             actionsCell.appendChild(actionsDropdown);
                             row.appendChild(actionsCell);
 
