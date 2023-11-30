@@ -46,9 +46,9 @@ def get_secret(secret_name, secrets=secret):
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+# prod.py
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -215,9 +215,10 @@ LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
 LOGOUT_REDIRECT_URL = 'users_app:login'
 
-# prod.py
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+SESSION_COOKIE_DOMAIN = '.herokuapp.com'
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com']
 
 
 # Configuración para el uso de base de datos en Heroku
