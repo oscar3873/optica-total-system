@@ -46,15 +46,9 @@ SECRET_KEY = get_secret('SECRET_KEY')
 
 # prod.py
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['optica-total-system-29fc65c3d78e.herokuapp.com']
-
-# Configuración de cookies seguras
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = ['https://optica-total-system-29fc65c3d78e.herokuapp.com']
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 DJANGO_APPS = (
