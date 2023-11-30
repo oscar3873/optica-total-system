@@ -16,15 +16,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 url: `/customers/ajax-search-customers/`,
                 data: { search_term: searchTerm },
                 success: function(data) {
-                    const customers = data.data;
+                    let customers = data.data;
+                    
                     // Mostrar los resultados de búsqueda
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
-                    customers.forEach(customer => {
+                    for (let index = 0; index < 5; index++) {
+                        let customer = customers[index];
                         const item = document.createElement('li');
                         item.style.zIndex = "3";
-                        item.style.backgroundColor = '#464c55';
                         item.style.cursor = 'pointer';
-                        item.classList.add('list-group-item', 'customers');
+                        item.classList.add('list-group-item','searchType', 'list-group-item-secondary', 'customers');
                         item.dataset.customerId = customer.id;
                         item.dataset.customerCredit = customer.has_credit_account;
                         item.innerHTML = `
@@ -34,7 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         </div>
                         `;
                         searchResults.appendChild(item);
-                    });
+                        
+                    }
                 },
                 error: function(error) {
                     console.error('Error en la solicitud AJAX', error);
