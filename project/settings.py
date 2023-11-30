@@ -1,11 +1,9 @@
 """
 Configuracion base que todos necesitan para funcionar.
 """
-import django_on_heroku
 import json
 import pytz
 import os
-
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
@@ -46,16 +44,24 @@ def get_secret(secret_name, secrets=secret):
 
 SECRET_KEY = get_secret('SECRET_KEY')
 
-ALLOWED_HOSTS = ['.herokuapp.com','*']
+# prod.py
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = ['*']
+
+CSRF_TRUSTED_ORIGINS = ['https://optica-total-system-29fc65c3d78e.herokuapp.com']
 
 # Application definition
 DJANGO_APPS = (
+    "whitenoise.runserver_nostatic",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "storages",
     "django.contrib.humanize"
 )
 
@@ -86,6 +92,7 @@ INSTALLED_APPS = THIRD_PARTY_APPS + DJANGO_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -93,23 +100,18 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
+
 
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
 ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
-
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [REDIS_URL],
-        },
-        "OPTIONS": {
-            "websocket_timeout": 300,
-            "websocket_max_connections": 10000,
         },
     },
 }
@@ -120,9 +122,9 @@ CACHES = {
         "LOCATION": [REDIS_URL],
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {
-                "ssl_cert_reqs": None
-            },
+            # "CONNECTION_POOL_KWARGS": {
+            #     "ssl_cert_reqs": None
+            # },
         }
     }
 }
@@ -209,13 +211,8 @@ LOGIN_REDIRECT_URL = 'core_app:home'
 LOGOUT_URL = 'users_app:logout'
 LOGOUT_REDIRECT_URL = 'users_app:login'
 
-# prod.py
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 
 # Configuración para el uso de base de datos en Heroku
-
 if DEVELOPMENT_ENVIRONMENT:
     DATABASES = {
         'default': {
@@ -230,7 +227,7 @@ if DEVELOPMENT_ENVIRONMENT:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': os.environ.get('DB_NAME'),
             'USER': os.environ.get('DB_USER'),
             'PASSWORD': os.environ.get('DB_PASSWORD'),
@@ -239,12 +236,21 @@ else:
         }
     }
 
-# Configuraciones de static y media
-STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Static files (CSS, JavaScript, Images)
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_URL = "static/"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = "media/"
+# # Production media folder
+# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-django_on_heroku.settings(locals())
+# Configuración de almacenamiento S3
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME = os.environ.get('AWS_S3_REGION_NAME')
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+# Configuración de los archivos de media
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'

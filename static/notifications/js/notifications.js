@@ -1,4 +1,4 @@
-const notificationSocket = new WebSocket(`ws://${window.location.host}/ws/notifications/global/`);
+const notificationSocket = new WebSocket(`wss://${window.location.host}/ws/notifications/global/`);
 
 document.addEventListener('DOMContentLoaded', () => {
     const notificationList = document.getElementById('notification-list');
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 notificationsContainer.removeChild(audioElement); // Elimina el elemento de audio
                 notificationsContainer.appendChild(sourceElement);
             }, 1000); // Espera 1 segundo antes de eliminar la notificación y el elemento de audio
-        }, 118000); // 5000 milisegundos = 5 segundos
+        }, 5000); // 5000 milisegundos = 5 segundos
     }
 
     function appendNotification(notification) {

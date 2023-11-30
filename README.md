@@ -70,7 +70,17 @@ Para crear las migraciones y aplicarlas, ejecuta:
 python project/manage.py makemigrations
 python project/manage.py migrate
 
-### 5. Ejecutar el proyecto
+### 6. Variable de entorno
+al ejecutar la aplicación o al configurar tu entorno virtual. Puedes hacerlo directamente en la terminal antes de ejecutar tu aplicación.
+
+**En sistemas basados en Unix/Linux/Mac**
+export DEVELOPMENT_ENVIRONMENT=True
+
+**En Windows (CMD)**
+set DEVELOPMENT_ENVIRONMENT=True
+
+
+### 7. Ejecutar el proyecto
 
 python project/manage.py runserver
 

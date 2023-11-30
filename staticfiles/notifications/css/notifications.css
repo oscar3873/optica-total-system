@@ -1,0 +1,20 @@
+/* Estilos para el contenedor de notificaciones */
+.notifications-app-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #fff;
+    padding: 10px;
+    z-index: 9999; /* Asegura que esté por encima de todo */
+}
+
+.notifications-app {
+    /* Estilos para las notificaciones individuales */
+    background-color: #232e3c;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    max-width: 300px;
+    margin-bottom: 10px;
+    pointer-events: auto;
+}

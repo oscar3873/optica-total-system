@@ -15,6 +15,9 @@ from .forms import *
 from .utils import *
 from core.mixins import CustomUserPassesTestMixin
 
+from io import BytesIO
+from django.core.files.base import ContentFile
+from PIL import Image
 
 # Create your views here.
 class AdminProfileView(CustomUserPassesTestMixin, DetailView):
@@ -160,9 +163,6 @@ class UserChangeImagen(FormView):
     form_class = ImagenChangeForm
 
     def form_valid(self, form):
-        from PIL import Image
-        from project.settings import MEDIA_ROOT
-
         pk = self.kwargs['pk']
         user_profile = User.objects.get(pk=pk)
         new_image = form.cleaned_data['imagen']
@@ -172,17 +172,18 @@ class UserChangeImagen(FormView):
             image = fix_image_orientation(image)  # Corregir la orientación si es necesario
             image.thumbnail((500, 500)) # Re-dimensionar imagen
 
+            # Preparar el archivo para guardarlo
+            temp_thumb = BytesIO()
+            image.save(temp_thumb, 'JPEG')
+            temp_thumb.seek(0)
+
+            # Si existe una imagen anterior, eliminarla
             if user_profile.imagen:
-                user_profile.imagen.delete()
-                os.remove(user_profile.imagen.path)
-
-            # Guardar la imagen en la carpeta profile en la misma ubicación
-            name_img = user_profile.first_name[0] + user_profile.last_name[0] + str(user_profile.pk)
-            image_path = os.path.join(MEDIA_ROOT, "profile", f'{name_img}.jpg')
-            image.save(image_path, format='JPEG')
-
-            user_profile.imagen = os.path.join("profile", f'{name_img}.jpg')
-            user_profile.save()
+                user_profile.imagen.delete(save=False)
+            
+            # Guardar la nueva imagen en el modelo
+            user_profile.imagen.save(f'{user_profile.first_name[0]}{user_profile.last_name[0]}{user_profile.pk}.jpg', ContentFile(temp_thumb.read()), save=True)
+            temp_thumb.close()
 
             messages.success(self.request, 'Imagen de perfil actualizada correctamente')
         else:
