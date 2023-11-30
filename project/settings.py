@@ -106,16 +106,11 @@ MIDDLEWARE = [
 ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
-
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
             "hosts": [REDIS_URL],
-        },
-        "OPTIONS": {
-            "websocket_timeout": 300,
-            "websocket_max_connections": 10000,
         },
     },
 }
