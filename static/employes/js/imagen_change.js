@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (selectedFile) {
             const imageUrl = URL.createObjectURL(selectedFile);
             profileImagePreview.src = imageUrl;
-            profileImageButtons.style.display = 'block';
+            profileImageButtons.style.display = 'flex';
         }
     });
 
