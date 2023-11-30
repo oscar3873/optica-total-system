@@ -732,7 +732,7 @@ def ajax_search_customers(request):
     
 
 def print_service_order(request, pk): # pk de la orden
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         service = ServiceOrder.objects.get(pk=pk)
         branch = service.sale.branch
         # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña

@@ -39,14 +39,14 @@
     <!--    Card con la presentacion del detalle de venta-->
     <!-- ===============================================-->
 
-    <button id="printer" data-id="{{sale.pk}}" class="btn btn-primary">
+    <a href='{% url "sales_app:show_invoice" sale.pk %}' target='_blank' class="btn btn-primary">
         Ver Comprobante de Pago
-    </button>
+    </a>
     
     {% if sale.receipt %}
-    <button id="show-factura" data-id="{{ sale.pk }}" class="btn btn-primary">
+    <a href='{% url "sales_app:show_factura" sale.pk %}' target='_blank' class="btn btn-primary">
         Ver Factura
-    </button>
+    </a>
     {% elif sale.state == 'COMPLETADO' %}
         <form method="post" action="{% url 'sales_app:gen_factura' sale.pk %}">
             {% csrf_token %}

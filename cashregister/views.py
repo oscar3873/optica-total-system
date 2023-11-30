@@ -540,7 +540,7 @@ def ajax_search_movements(request):
         data = [{
             'id': movement.id,
             'amount': movement.amount,
-            'date_movement': movement.date_movement.strftime('%d %B %Y'),
+            'date_movement': movement.date_movement.strftime('%d/%m/%Y'),
             'type_operation': movement.type_operation,
             'user_made': str(movement.user_made),
             'is_staff': 1 if request.user.is_staff else 0

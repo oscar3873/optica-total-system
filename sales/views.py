@@ -3,7 +3,7 @@ import locale
 from typing import Any
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.views.generic import *
 from django.template import loader
 from django.db import transaction
@@ -285,135 +285,113 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
 def show_invoice(request, pk):
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
-        sale = Sale.objects.get(id=pk)
-        customer = sale.customer
+    sale = Sale.objects.get(id=pk)
+    customer = sale.customer
 
-        payments = Payment.objects.filter(sale=sale)
+    payments = Payment.objects.filter(sale=sale)
 
-        if payments.exists():
-            # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
-            payment = payments.first()
-            payment_method = payment.payment_method.name
-        else:
-            # Manejar el caso en el que no hay pagos
-            payment_method = None
-        
-        order_details = sale.order_detaill.filter(sale=sale)
-        order_details_template = []
-        subtotal = []
-
-        for order in list(order_details):
-            order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
-            subtotal.append(order.price * order.quantity)
-
-        # Convertir la cadena en un objeto de fecha
-        locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
-
-        format = "%A, %d de %B de %Y"
-        
-        created_at = sale.created_at.astimezone(ZONE_TIME)
-        sale_date_str = created_at.strftime(format)
-
-        disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
-
-        context = {
-            'customer': customer,
-            'total': f'{sale.total:.2f}',
-            'order_details': order_details_template,
-            'subtotal': sum(subtotal),
-            'seler': sale.user_made,
-            'promo': f'{sale.total}',
-            'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
-            'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
-            'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
-            'payment_method': payment.payment_method.name,
-            'pay': f'{sale.total - sale.missing_balance:.2f}',
-            'missing_balance': f'{sale.missing_balance:.2f}',
-            'date': sale_date_str,
-            'time': created_at.time(),
-            'payments': payments,
-            'branch': sale.branch,
-        }
-
-        # Genera el HTML en lugar de renderizarlo
-        template = loader.get_template('sales/components/comprobante_pago.html')
-        html_content = template.render(context)
-
-        # Devuelve el HTML como respuesta
-        return HttpResponse(html_content, content_type="text/html")
+    if payments.exists():
+        # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
+        payment = payments.first()
+        payment_method = payment.payment_method.name
     else:
-        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
-        return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+        # Manejar el caso en el que no hay pagos
+        payment_method = None
+    
+    order_details = sale.order_detaill.filter(sale=sale)
+    order_details_template = []
+    subtotal = []
+
+    for order in list(order_details):
+        order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
+        subtotal.append(order.price * order.quantity)
+
+    # Convertir la cadena en un objeto de fecha
+    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+
+    format = "%A, %d de %B de %Y"
+    
+    created_at = sale.created_at.astimezone(ZONE_TIME)
+    sale_date_str = created_at.strftime(format)
+
+    disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
+
+    context = {
+        'customer': customer,
+        'total': f'{sale.total:.2f}',
+        'order_details': order_details_template,
+        'subtotal': sum(subtotal),
+        'seler': sale.user_made,
+        'promo': f'{sale.total}',
+        'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
+        'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
+        'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
+        'payment_method': payment.payment_method.name,
+        'pay': f'{sale.total - sale.missing_balance:.2f}',
+        'missing_balance': f'{sale.missing_balance:.2f}',
+        'date': sale_date_str,
+        'time': created_at.time(),
+        'payments': payments,
+        'branch': sale.branch,
+    }
+
+    return render(request, 'sales/components/comprobante_pago.html', context)
 
 
 def show_factura(request, pk):
-    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest' and request.method == "GET":
-        sale = Sale.objects.get(id=pk)
-        # print("\n\n\n\n")
-        # print(sale)
-        # print("\n\n\n\n")
-        customer = sale.customer
-        receipt = sale.receipt
+    sale = Sale.objects.get(id=pk)
 
-        payments = Payment.objects.filter(sale=sale)
+    customer = sale.customer
+    receipt = sale.receipt
 
-        if payments.exists():
-            # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
-            payment = payments.first()
-            payment_method = payment.payment_method.name
-        else:
-            # Manejar el caso en el que no hay pagos
-            payment_method = None
+    payments = Payment.objects.filter(sale=sale)
 
-        order_details = sale.order_detaill.filter(sale=sale)
-        order_details_template = []
-        subtotal = []
-
-        for order in list(order_details):
-            order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
-            subtotal.append(order.price * order.quantity)
-
-        # Convertir la cadena en un objeto de fecha
-        locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
-
-        format = "%A, %d de %B de %Y"
-        
-        created_at = sale.created_at.astimezone(ZONE_TIME)
-        sale_date_str = created_at.strftime(format)
-
-        disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
-
-        context = {
-            'customer': customer,
-            'total': f'{sale.total:.2f}',
-            'order_details': order_details_template,
-            'subtotal': sum(subtotal),
-            'seler': sale.user_made,
-            'promo': f'{sale.total}',
-            'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
-            'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
-            'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
-            'payment_method': payment.payment_method.name,
-            'pay': f'{sale.total - sale.missing_balance:.2f}',
-            'missing_balance': f'{sale.missing_balance:.2f}',
-            'date': datetime.now().strftime('%d/%m/%Y'),  # Formato: DD/MM/AAAA
-            'time': datetime.now().strftime('%H:%M'),     # Formato: HH:MM
-            'receipt': receipt,
-            'payments': payments
-        }
-        
-        # print(context)
-
-        # Genera el HTML en lugar de renderizarlo
-        template = loader.get_template('sales/components/factura.html')
-        html_content = template.render(context)
-
-        # Devuelve el HTML como respuesta
-        return HttpResponse(html_content, content_type="text/html")
+    if payments.exists():
+        # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
+        payment = payments.first()
+        payment_method = payment.payment_method.name
     else:
-        # Si la solicitud no es AJAX o no es un método GET, puedes manejarlo según tus necesidades
-        return JsonResponse({'error': 'Solicitud no válida'}, status=400)
+        # Manejar el caso en el que no hay pagos
+        payment_method = None
+
+    order_details = sale.order_detaill.filter(sale=sale)
+    order_details_template = []
+    subtotal = []
+
+    for order in list(order_details):
+        order_details_template.append((order, f'{Decimal(order.price)*Decimal(1-order.discount/100):.2f}'))
+        subtotal.append(order.price * order.quantity)
+
+    # Convertir la cadena en un objeto de fecha
+    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+
+    format = "%A, %d de %B de %Y"
+    
+    created_at = sale.created_at.astimezone(ZONE_TIME)
+    sale_date_str = created_at.strftime(format)
+
+    disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
+
+    context = {
+        'customer': customer,
+        'total': f'{sale.total:.2f}',
+        'order_details': order_details_template,
+        'subtotal': sum(subtotal),
+        'seler': sale.user_made,
+        'promo': f'{sale.total}',
+        'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
+        'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
+        'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
+        'payment_method': payment.payment_method.name,
+        'pay': f'{sale.total - sale.missing_balance:.2f}',
+        'missing_balance': f'{sale.missing_balance:.2f}',
+        'date': datetime.now().strftime('%d/%m/%Y'),  # Formato: DD/MM/AAAA
+        'time': datetime.now().strftime('%H:%M'),     # Formato: HH:MM
+        'receipt': receipt,
+        'payments': payments
+    }
+
+    return render(request, 'sales/components/factura.html', context)
 
 
 def gen_factura(request, pk):
