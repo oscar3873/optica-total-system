@@ -307,7 +307,7 @@ def show_invoice(request, pk):
         subtotal.append(order.price * order.quantity)
 
     # Convertir la cadena en un objeto de fecha
-    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+    # locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
 
     format = "%A, %d de %B de %Y"
     
@@ -363,7 +363,7 @@ def show_factura(request, pk):
         subtotal.append(order.price * order.quantity)
 
     # Convertir la cadena en un objeto de fecha
-    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+    # # locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
 
     format = "%A, %d de %B de %Y"
     
@@ -445,7 +445,7 @@ def ajax_search_sales(request):
                 Q(customer__last_name__icontains=search_term)
             )[:40]
         # Crear una lista de diccionarios con los datos de los empleados
-        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+        # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
             'id': sale.id,
             'total': sale.total,
@@ -458,7 +458,7 @@ def ajax_search_sales(request):
             'user_made': str(sale.user_made),
             'is_staff': 1 if request.user.is_staff else 0
         } for sale in sales]
-        locale.setlocale(locale.LC_TIME, '')
+        # locale.setlocale(locale.LC_TIME, '')
         return JsonResponse({'data': data})
     
 

@@ -300,7 +300,7 @@ def archingTicket(request, pk, archiv_pos):
     total = int(total)
 
 
-    locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+    # locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
     format = "%A, %d de %B de %Y"
     
     created_at = next(iter(archering_data[int(archiv_pos)].items()))[0].astimezone(ZONE_TIME)
@@ -536,7 +536,7 @@ def ajax_search_movements(request):
                 Q(user_made__last_name__icontains=search_term)
             )[:40]
         # Crear una lista de diccionarios con los datos de los empleados
-        locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+        # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
             'id': movement.id,
             'amount': movement.amount,
@@ -545,5 +545,5 @@ def ajax_search_movements(request):
             'user_made': str(movement.user_made),
             'is_staff': 1 if request.user.is_staff else 0
         } for movement in movements]
-        locale.setlocale(locale.LC_TIME, '')
+        # locale.setlocale(locale.LC_TIME, '')
         return JsonResponse({'data': data})

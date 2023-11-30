@@ -158,7 +158,7 @@ class UpdatePasswordView(LoginRequiredMixin, UpdateView):
         return redirect('users_app:account', pk=self.kwargs['pk'])
 
 
-class UserChangeImagen(FormView):
+class UserChangeImagen(LoginRequiredMixin, FormView):
     template_name = 'users/user_account_page.html'
     form_class = ImagenChangeForm
 

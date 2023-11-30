@@ -51,7 +51,7 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         return super().form_invalid(form)
 
 
-class EmployeeUpdateView(UpdateView):
+class EmployeeUpdateView(CustomUserPassesTestMixin, UpdateView):
     model = Employee
     template_name = 'employes/components/employee_update_form.html'
     form_class = EmployeeUpdateForm
@@ -116,7 +116,7 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
     
 
 ################################## LISTING  ##################################
-class EmployeeListView(LoginRequiredMixin, ListView):
+class EmployeeListView(CustomUserPassesTestMixin, ListView):
     model = Employee
     template_name = 'employes/employee_list_page.html'
     context_object_name = 'employees'
@@ -155,7 +155,7 @@ class EmployeeListView(LoginRequiredMixin, ListView):
 
 ########################### DELETE ####################################
 
-class EmployeeDeleteView(LoginRequiredMixin, DeleteView):
+class EmployeeDeleteView(CustomUserPassesTestMixin, DeleteView):
     model = Employee
     template_name = 'employes/employee_delete_page.html'
     success_url = reverse_lazy('employees_app:list_employee')

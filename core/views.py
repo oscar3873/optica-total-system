@@ -65,7 +65,7 @@ class ObjetiveUpdateView(CustomUserPassesTestMixin, UpdateView):
         return context
     
 
-class ObjetivesListView(ListView):
+class ObjetivesListView(LoginRequiredMixin, ListView):
     model = Objetives
     template_name = 'core/objetives_view.html'
     paginator = 5
@@ -84,13 +84,13 @@ class ObjetivesListView(ListView):
             )
         return context
     
-class ObjetiveDetail(DetailView):
+class ObjetiveDetail(LoginRequiredMixin, DetailView):
     model = Objetives
     template_name = 'core/objetive_detail_page.html'
     context_object_name = 'objetive'
 
 
-class ObjetiveDelete(DeleteView):
+class ObjetiveDelete(CustomUserPassesTestMixin, DeleteView):
     model = Objetives
     template_name = 'core/objetive_delete_page.html'
     context_object_name = 'objetive'

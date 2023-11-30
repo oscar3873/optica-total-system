@@ -29,9 +29,9 @@
     </div>
     
     <!-- Editar boton - Boton para editar Orden de Servicio -->
-    <button id="printer" data-id="{{service_order.pk}}" class="btn btn-primary">
+    <a href="{% url 'clients_app:print_service_order' service_order.pk %}" target='_blank' class="btn btn-primary">
         Imprimir Orden de servicio
-    </button>
+    </a>
     {% if request.user.is_staff %}
         <a class="btn btn-info" href="{% url 'clients_app:service_order_update' service_order.pk %}">Editar</a>
     {% endif %}
@@ -151,7 +151,7 @@
                     <tbody>
                         <tr>
                             <td scope="row">
-                                <p><strong>Nanopupilar</strong></p>
+                                <p><strong>Nasopupilar</strong></p>
                             </td>
                             <td>{{ service_order.interpupillary.lej_oi_nanopupilar }}</td>
                             <td>{{ service_order.interpupillary.lej_od_nanopupilar }}</td>
@@ -187,7 +187,7 @@
                     <tbody>
                         <tr>
                             <td scope="row">
-                                <p><strong>Nanopupilar</strong></p>
+                                <p><strong>Nasopupilar</strong></p>
                             </td>
                             <td>{{ service_order.interpupillary.cer_oi_nanopupilar }}</td>
                             <td>{{ service_order.interpupillary.cer_od_nanopupilar }}</td>
