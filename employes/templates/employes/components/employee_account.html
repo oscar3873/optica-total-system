@@ -32,18 +32,18 @@
                       Cambiar Foto
                     </label>
                   </div>
+                  <form method="post" id="profile-image-form" enctype="multipart/form-data" action="{% url 'users_app:change_img' object.pk %}">
+                    {% csrf_token %}
+                    <div hidden>
+                      {{ change_image.imagen }}
+                    </div>
+                    <div id="profile-image-buttons" class="mb-2" style="display: none;">
+                        <button class="btn btn-primary me-2" type="submit">Guardar</button>
+                        <button class="btn btn-danger" type="button" id="cancel-img-button">Cancelar</button>
+                    </div>
+                  </form>
               </div>
             </div>
-            <form method="post" id="profile-image-form" enctype="multipart/form-data" action="{% url 'users_app:change_img' object.pk %}">
-              {% csrf_token %}
-              <div hidden>
-                {{ change_image.imagen }}
-              </div>
-              <div id="profile-image-buttons" style="display: none;">
-                  <button class="btn btn-primary" type="submit">Guardar</button>
-                  <button class="btn btn-danger" type="button" id="cancel-img-button">Cancelar</button>
-              </div>
-            </form>
         </div>
          
             
