@@ -38,12 +38,13 @@ class EmployeeCreateView(CustomUserPassesTestMixin, FormView): # CREACION DE EMP
         
         branch_actualy = set_branch_session(self.request)
 
-        Employee.objects.create(
+        employe = Employee.objects.create(
             user_made = user,
             employment_date = form.cleaned_data.pop('employment_date'),
             jornada = form.cleaned_data.pop('jornada'),
             user = User.objects.create_user(**form.cleaned_data, branch=branch_actualy) # Funcion que crea EMPLEADOS
             )
+        Employee_Objetives.objects.pre_set_data_objetives(employe, branch_actualy)
         return super().form_valid(form)
     
     def form_invalid(self, form):

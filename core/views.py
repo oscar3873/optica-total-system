@@ -1,16 +1,18 @@
-from typing import Any
-from django import http
+from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView, UpdateView, ListView, DetailView, DeleteView
 from django.db import transaction
+from branches.models import Branch_Objetives
 
 from core.mixins import CustomUserPassesTestMixin
 from cashregister.utils import obtener_nombres_de_campos
+from employes.models import Employee_Objetives
 from .models import Objetives
 from .forms import ObjetiveForm
+from branches.utils import set_branch_session
 
 # Create your views here.
 
@@ -40,7 +42,6 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
     @transaction.atomic
     def form_valid(self, form):
         if form.is_valid():
-            from branches.utils import set_branch_session
             branch_actualy = set_branch_session(self.request)
             
             # tipo = form.cleaned_data.pop('tipo')
@@ -88,6 +89,17 @@ class ObjetiveDetail(LoginRequiredMixin, DetailView):
     model = Objetives
     template_name = 'core/objetive_detail_page.html'
     context_object_name = 'objetive'
+    
+    def get_context_data(self, **kwargs):
+        branch_actualy = set_branch_session(self.request)
+        if self.get_object().to == 'EMPLEADOS':
+            objetive = Employee_Objetives.objects.filter(objetive=self.get_object())
+        else:
+            objetive= Branch_Objetives.objects.filter(objetive=self.get_object())
+            
+        context = super().get_context_data(**kwargs)
+        context['objetives'] = objetive
+        return context
 
 
 class ObjetiveDelete(CustomUserPassesTestMixin, DeleteView):

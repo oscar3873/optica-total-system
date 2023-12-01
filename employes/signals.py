@@ -4,8 +4,6 @@ from .models import *
 from users.utils import generate_profile_img_and_assign
 
 def set_imagen_user(instance, created, **kwargs):
-    if created:
-        Employee_Objetives.objects.pre_set_data_objetives(instance, instance.user.branch)
     if not instance.user.imagen:
         generate_profile_img_and_assign(instance.user)
 post_save.connect(set_imagen_user, sender=Employee)

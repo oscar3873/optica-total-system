@@ -10,7 +10,7 @@
 <div class="container py-4">
     {% include 'core/components/messages.html' %}
     
-    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="col-12 h-100">
         <!-- Titulo del formulario wizard -->
         <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
             class="fa-inverse fa-stack-1x text-primary fas fa-eye"></i></span>
@@ -23,7 +23,7 @@
         </div>
     </div>
     {% if h_insurances %}
-    <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+    <div class="col-12 h-100">
         <div class="card z-index-1 mb-3" id="recentPurchaseTable"
             data-list='{"valueNames":["user_made","first_name","last_name","dni","address","phone_number","email"],"page":25,"pagination":true}'">
             <div class=" card-header">
@@ -133,7 +133,7 @@
     </div>
 </div>
 {% else %}
-<div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+<div class="col-12 h-100">
     <!--Card-->
     <!-- <div class="card bg-transparent-50 overflow-hidden"> -->
     <div class="card overflow-hidden">

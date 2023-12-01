@@ -126,8 +126,8 @@ def top_brands(branch_actualy):
 
 
 def objetives(branch_actualy):
-    obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy, exp_date__lte=fecha_hoy).order_by('employee', 'created_at').distinct('employee')
-    obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy, exp_date__lte=fecha_hoy).order_by('branch', 'created_at').distinct('branch')
+    obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy, objetive__exp_date__gte=fecha_hoy).order_by('employee', 'created_at').distinct('employee')
+    obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy, objetive__exp_date__gte=fecha_hoy).order_by('branch', 'created_at').distinct('branch')
 
     return obj_employee, obj_branch
 

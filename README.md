@@ -29,7 +29,7 @@ cd Scripts
 
 echo $ENVIRONMENT_DEVELOPMENT
 
-sudo su postgres
+sudo su root
 
 source venv-optica-total/bin/activate
 
