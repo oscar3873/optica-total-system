@@ -3,7 +3,7 @@ let setBrandsSelected = new Set();
 document.addEventListener("DOMContentLoaded", function () {
     function configureSearch(searchInput, searchResults) {
         searchInput.addEventListener('input', (event) => {
-            const searchTerm = event.target.value.trim().toLowerCase();
+            let searchTerm = event.target.value.trim().toLowerCase();
 
             if (!searchTerm) {
                 // Limpiar los resultados de búsqueda si no hay término de búsqueda
@@ -13,8 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Realizar la búsqueda de marcas que coincidan con el término de búsqueda
             $.ajax({
-                url: `/suppliers/brands/ajax-search-brands/?search_term=${searchTerm}`,
-                method: 'GET',
+                url: `/suppliers/brands/ajax-search-brands/`,
                 dataType: 'json',
                 success: function(data) {
                     const brands = data.data;

@@ -428,7 +428,8 @@ def ajax_search_sales(request):
                 Q(user_made__first_name__icontains=search_term) |
                 Q(user_made__last_name__icontains=search_term) |
                 Q(customer__first_name__icontains=search_term) |
-                Q(customer__last_name__icontains=search_term)
+                Q(customer__last_name__icontains=search_term)|
+                Q(customer__dni__icontains=search_term)
             )[:40]
         # Crear una lista de diccionarios con los datos de los empleados
         # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
