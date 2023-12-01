@@ -53,8 +53,7 @@
             <div id="table-purchases-replace-element">
               <a href="{% url 'cashregister_app:movements_create_view' %}" class="btn btn-falcon-default btn-sm me-1 mt-2 mt-md-0" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Nuevo movimiento</span></a>
               <a href="{% url 'cashregister_app:cashregister_view' %}" class="btn btn-falcon-default btn-sm me-1 mt-2 mt-md-0" type="button"><span class="fas fa-cash-register" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Ir a caja</span></a>
-              {% comment %} <button class="btn btn-falcon-default btn-sm me-1 mt-2 mt-md-0" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></button> {% endcomment %}
-            </div>
+              <a class="btn btn-falcon-default btn-sm" href="{% url 'cashregister_app:export_movements' movement.cash_register.id %}" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>            </div>
           </div>
         </div>
       </div>

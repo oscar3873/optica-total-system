@@ -83,9 +83,9 @@ urlpatterns = [
         MovementsDeleteView.as_view(),
         name = 'movements_delete_view'
     ),
-        ########## SEARCH PRODUCTS LIST #########
+        ########## SEARCH MOVEMENTS LIST #########
     path(
-        'ajax_search_products/',
+        'ajax_search_movements/',
         ajax_search_movements,
         name='ajax_search_movements'
     ),
@@ -99,4 +99,10 @@ urlpatterns = [
         CurrencyView.as_view(),
         name = 'currency_view'
     ),
+
+    path(
+        '<pk>/export-movements/',
+        export_movements_list_to_excel,
+        name='export_movements'
+    )
 ]

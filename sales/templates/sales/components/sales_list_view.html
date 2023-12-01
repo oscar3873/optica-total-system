@@ -52,8 +52,8 @@
                 <div class="col-6 col-sm-auto ms-auto text-end ps-0">
                     <div id="table-purchases-replace-element">
                     <a href="{% url 'sales_app:point_of_sale_view' %}" class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-store" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block me-1">Ir al punto de venta</span></a>
-                    <button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></button>
-                    </div>
+                    <a class="btn btn-falcon-default btn-sm" href="{% url 'sales_app:export_sales' %}" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>            </div>
+                </div>
                 </div>
                 </div>
             </div>
