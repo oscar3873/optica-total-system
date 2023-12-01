@@ -60,7 +60,6 @@ noteSocket.onmessage = function(e) {
     var audioElement = document.createElement("audio");
     audioElement.id = "notes-audio";
     audioElement.autoplay = true; // Habilita el autoplay
-    audioElement.muted = true; // Añade esta línea
 
     // Crea una fuente de audio
     var sourceElement = document.getElementById("notes-source");
