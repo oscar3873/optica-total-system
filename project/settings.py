@@ -7,7 +7,42 @@ import os
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
+from redis.asyncio.connection import Connection, RedisSSLContext
+from typing import Optional
+import ssl
+from urllib.parse import urlparse
 
+######################## Solucion encontrada en GITHUB #########################
+#https://github.com/django/channels_redis/issues/235
+
+class CustomSSLConnection(Connection):
+    def __init__(
+        self,
+        ssl_context: Optional[str] = None,
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.ssl_context = RedisSSLContext(ssl_context)
+
+class RedisSSLContext:
+    __slots__ = (
+        "context",
+    )
+
+    def __init__(
+        self,
+        ssl_context,
+    ):
+        self.context = ssl_context
+
+    def get(self):
+        return self.context
+
+
+url = urlparse(os.environ.get("REDIS_URL"))
+
+ssl_context = ssl.SSLContext()
+ssl_context.check_hostname = False
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -106,20 +141,62 @@ MIDDLEWARE = [
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
 ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
 
-REDIS_URL = os.environ.get("REDIS_URL", "rediss://:p4ab81ce934466f9b718a8f57019b5ad428247e287f3ca488845fb9febbe8f7d1@ec2-3-212-47-171.compute-1.amazonaws.com:21180")
+from redis.asyncio.connection import Connection, RedisSSLContext
+from typing import Optional
+import ssl
+from urllib.parse import urlparse
+
+class CustomSSLConnection(Connection):
+    def __init__(
+        self,
+        ssl_context: Optional[str] = None,
+        **kwargs,
+    ):
+        super().__init__(**kwargs)
+        self.ssl_context = RedisSSLContext(ssl_context)
+
+class RedisSSLContext:
+    __slots__ = (
+        "context",
+    )
+
+    def __init__(
+        self,
+        ssl_context,
+    ):
+        self.context = ssl_context
+
+    def get(self):
+        return self.context
+
+
+url = urlparse(os.environ.get("REDIS_URL"))
+
+ssl_context = ssl.SSLContext()
+ssl_context.check_hostname = False
+
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [REDIS_URL],
-        },
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [
+                    {
+                        'host': url.hostname,
+                        'port': url.port,
+                        'username': url.username,
+                        'password': url.password,
+                        'connection_class': CustomSSLConnection,
+                        'ssl_context': ssl_context,
+                    }
+                ],
+        }
     },
 }
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": [REDIS_URL],
+        "LOCATION": os.environ.get('REDIS_TLS_URL'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {
