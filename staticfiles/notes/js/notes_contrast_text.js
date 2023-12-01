@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const backgroundLuminance = getLuminance(backgroundColor);
         const textColor = backgroundLuminance > 0.1 ? 'black' : 'white';
-        console.log(textColor);
         titleElement.style.color = textColor + ' !important';
     });
 

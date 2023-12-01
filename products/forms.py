@@ -361,6 +361,6 @@ class UpdatePriceForm(forms.Form):
 
     def clean_percentage(self):
         percentage = self.cleaned_data['percentage']
-        if percentage and percentage > 0:
+        if percentage and percentage < 0:
             raise forms.ValidationError('El porcentaje debe ser positivo')
         return percentage

@@ -33,7 +33,7 @@
                         <tr class="btn-reveal-trigger">
                             <th class="align-middle white-space-nowrap name">{{mov.user_made}}</th>
                             <td class="align-middle white-space-nowrap d-none d-sm-table-cell date">{{mov.created_at.date}}</td>
-                            <td class="sort pe-1 align-middle white-space-nowrap d-none d-sm-table-cell time">{{mov.created_at.time}}</td>
+                            <td class="sort pe-1 align-middle white-space-nowrap d-none d-sm-table-cell time">{{mov.created_at|time}}</td>
                             <td class="align-middle white-space-nowrap d-none d-sm-table-cell description">{{mov.description}}</td>
                             <td class="align-middle text-center fs-0 white-space-nowrap type_operation"><span
                                 class="badge badge rounded-pill {% if mov.type_operation == 'Ingreso' %}badge-soft-success{% else %}badge-soft-danger{% endif %}">{{mov.type_operation}}</span>

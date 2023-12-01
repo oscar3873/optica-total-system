@@ -3,12 +3,12 @@ from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-from project.settings import DATE_NOW
+from django.utils import timezone
 from branches.utils import set_branch_session
 
 from .utils import *
 
-fecha_hoy = DATE_NOW.date()
+fecha_hoy = timezone.now().date()
 
 
 # Create your views here.

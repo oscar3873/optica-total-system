@@ -48,6 +48,5 @@ def set_notification(sender, created, instance, **kwargs):
 
         except Exception as e:
             # Handle the exception (e.g., print a warning, log it, or perform alternative actions)
-            # print(f"An error occurred while sending notification: {e}")
             pass
 post_save.connect(set_notification, sender=Sale)

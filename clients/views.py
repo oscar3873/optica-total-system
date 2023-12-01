@@ -15,7 +15,7 @@ from cashregister.models import CashRegister, Currency, Movement
 from sales.models import Payment, Sale
 from sales.forms import PaymentMethodForm, TypePaymentMethodForm
 from sales.utils import set_movement
-from project.settings import DATE_NOW, ZONE_TIME
+from django.utils import timezone
 
 from .models import *
 from .forms import *
@@ -66,22 +66,7 @@ class ServiceOrderCreateView(LoginRequiredMixin, FormView):
             pupilar_form.is_valid()
             ):
 
-            # print(material_form.cleaned_data, color_form.cleaned_data,
-            #     cristal_form.cleaned_data, tratamiento_form.cleaned_data)
-
-            # Create the main form instance
-            ServiceOrder.objects.create_lab(
-                self.request.user, form, correction_form, material_form,
-                color_form, cristal_form, tratamiento_form, pupilar_form,
-                customer
-            )
             messages.success(self.request, 'Se ha registrado una nueva orden de servicio con exito.')
-        # else: 
-        #     print('\n\nERRROR:',material_form.errors,
-        #         color_form.errors,
-        #         cristal_form.errors,
-        #         tratamiento_form.errors,
-        #         pupilar_form.errors)
 
         if customer:
             return redirect('clients_app:customer_detail', pk=self.kwargs.get('pk'))
@@ -139,7 +124,6 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        # print(form.errors)
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest': # Para saber si es una peticion AJAX  
             return JsonResponse({'error': 'Por favor, verifique los campos'})
         messages.error(self.request, 'Por favor, verifique los campos.')
@@ -205,7 +189,6 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
         named_formsets = self.get_context_data()['order_service']
 
         if form.is_valid():
-            # print("\n\n\n\n\n\n")
             service_order = form.save(commit=False)
             for prefix, formset in named_formsets.items():
                 instance = formset.instance
@@ -213,7 +196,6 @@ class ServiceOrderUpdateView(LoginRequiredMixin, UpdateView):
                 if new_formset.is_valid():
                     new_formset.save()
                 # else:
-                #     print(new_formset.errors)
             service_order.save()
         messages.success(self.request, 'Se ha acutalizado la orden de servicio con exito.')
         if customer:
@@ -487,7 +469,7 @@ def pay_credits(request, pk):
         type_operation = 'Ingreso'
         Movement.objects.create(
             amount = total,
-            date_movement = DATE_NOW.date(),
+            date_movement = timezone.now().date(),
             cash_register = cashregister,
             description = pay.description if len(pay.description) > 1 else 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
             currency = Currency.objects.get(name__icontains='PESO'),
@@ -697,11 +679,9 @@ def ajax_search_customers(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-        # print("###################### Esto es lo que se esta buscando: ",search_term)
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de clientes por defecto
             paginate_by = CustomerListView().paginate_by
-            # print("####################################",paginate_by)
             customers = Customer.objects.get_customers_branch(branch_actualy).filter(deleted_at=None)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
@@ -727,7 +707,6 @@ def ajax_search_customers(request):
             'credit_balance': customer.credit_balance,
             'is_staff': 1 if request.user.is_staff else 0
         } for customer in customers]
-        # print(data)
         return JsonResponse({'data': data})
     
 
@@ -742,7 +721,7 @@ def print_service_order(request, pk): # pk de la orden
         
         format = "%A, %d de %B de %Y"
         
-        created_at = service.created_at.astimezone(ZONE_TIME)
+        created_at = service.created_at
         sale_date = created_at
         
         context = {

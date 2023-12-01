@@ -18,6 +18,5 @@ def auto_set_user_branch(instance, created, **kwargs):
             user.branch = Branch.objects.first()
             user.save()
     except User.DoesNotExist:
-        # print("No se pudo asignar Sucursal al usuario primero")
         pass
 post_save.connect(auto_set_user_branch, sender=User)

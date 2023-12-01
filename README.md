@@ -25,6 +25,21 @@ cd Scripts
 
 ```./activate```
 
+###########################################################
+
+echo $ENVIRONMENT_DEVELOPMENT
+
+sudo su postgres
+
+source venv-optica-total/bin/activate
+
+export ENVIRONMENT_DEVELOPMENT="True"
+
+python manage.py runserver
+
+###########################################################
+
+
 
 ### 2. Instalación de dependencias
 

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("pasa por esta parte");
     const supplierBrands = document.getElementById('id_brands');
     const discountInput = document.getElementById('id_discount');
 

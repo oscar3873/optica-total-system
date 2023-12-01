@@ -2,7 +2,6 @@
 // Obtén una lista de todos los campos de monto manual
 const countedAmountFields = Array.from(document.getElementsByClassName('difference-input'));
 
-console.log(countedAmountFields);
 
 // Función para calcular y actualizar la diferencia
 function updateDifferences() {
@@ -13,7 +12,6 @@ function updateDifferences() {
         const typeMethod = document.getElementById(`${index+1}`).dataset.typeMethod;
         const difference = isNaN(countedAmount) ? null : countedAmount - systemAmount;
         const differenceField = document.getElementById(`difference-${typeMethod}`);
-        console.log(differenceField);
         if (difference === null) {
             differenceField.textContent = 'No válido';
         } else {

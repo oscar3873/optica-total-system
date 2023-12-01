@@ -30,7 +30,6 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
         return context
 
     def form_valid(self, form):
-        delete_banks_not_assoc()
 
         supplier = form.save(commit=False)
         supplier.user_made = self.request.user
@@ -38,13 +37,14 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 
         banks = form.cleaned_data.get('cbu')
         for bank in banks:
+            print(type(bank))
             Supplier_Bank.objects.create(
                 supplier=supplier,
                 bank=bank,
-                user_made=self.request.user
             )
-
+        delete_banks_not_assoc()
         selected_brands = form.cleaned_data.get('brandsSelected')
+
         for brand in selected_brands:  # Usa brandsSelected en lugar de brands
             Brand_Supplier.objects.create(
                 supplier=supplier, 
@@ -157,8 +157,7 @@ class SupplierDetailView(DetailView):
         supplier = self.object  # Obtén el proveedor del contexto
         # Obtén las marcas relacionadas al proveedor
         brands = supplier.brand_suppliers.all()
-        # print(supplier.banks.all())
-        context['banks'] = supplier.banks.filter(deleted_at=None)        
+        context['banks'] = supplier.banks.all()       
         context['related_brands'] = brands
         return context
 
@@ -193,7 +192,6 @@ def set_bank_supplier(request):
                     'cuit': bank.cuit
                 }
                 return JsonResponse({'status':'success', 'data': bank_data})
-        # print(bank_form.errors.as_json())
         return JsonResponse({'error': bank_form.errors.as_json()})
     return JsonResponse({'error': 'Por favor, verifique los campos.'})
 

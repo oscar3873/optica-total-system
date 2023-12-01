@@ -28,7 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 dataType: 'json',
                 success: function(data) {
                     //Data es un array de resultados de la busqueda de nombres de marcas y categorias
-                    console.log(data);
                     
 
                     // Mostrar los resultados de búsqueda
@@ -56,7 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         // element.addEventListener('click', function () {
                         //     itemClicked=true;
-                        //     console.log('hizo click en el elemento');
                         // });
                         searchResults.appendChild(element);
                     });

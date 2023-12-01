@@ -193,7 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 dataType: 'json',
                 success : function (allPromotions) {
                     promotions = allPromotions.promotions;
-                    console.log(promotions);
                 }
             });
 
@@ -438,7 +437,6 @@ document.addEventListener('DOMContentLoaded', function() {
             promotions.forEach(promotionElement => {
                 let prodId = parseInt(promotionElement.getAttribute('id').match(/\d+/)[0], 10);
 
-                console.log('--------------------------------------------------------');
 
                 let promType = promotionElement.getAttribute('data-promotion');
 
@@ -500,15 +498,6 @@ document.addEventListener('DOMContentLoaded', function() {
             let importPromotion2ndUn = promotionPrice(prom2ndUn, promotionDiscount_2da);
             let importPromotionDesc = processBasicsPromotion(promDiscount, promotionDiscount);
             let importPromotionNone = processBasicsPromotion(promNone, 0);
-
-            console.log('Importe a pagar en productos de promo 2x1: ',importPromotion2x1);
-            console.log(prom2x1);
-            console.log('Importe a pagar en productos de promo 2da un: ',importPromotion2ndUn);
-            console.log(prom2ndUn);
-            console.log('Importe a pagar en productos de promo % Descuento: ',importPromotionDesc);
-            console.log(promDiscount);
-            console.log('Importe a pagar en productos SIN PROMO: ',importPromotionNone);
-            console.log(promNone);
 
 
             // Calcula el subtotal para el producto y agrégalo al subtotal total
@@ -572,7 +561,6 @@ document.addEventListener('DOMContentLoaded', function() {
         let sumSecondUnit = 0;
         let totalDiscount = 0;
         let size = list.length;
-        console.log(discount);
         // Controla si la cantidad de elementos es par y si es distinta de 0
         if(size!=0 && size%2==0){
             // Recorre la lista de precios hasta el final

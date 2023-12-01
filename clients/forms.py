@@ -48,7 +48,6 @@ class CustomerForm(PersonForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        # print(email)
         if not email:
             email = None
         return email
@@ -409,6 +408,5 @@ class ServiceOrderForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if armazon:
-            # print(kwargs)
             self.fields['armazon'].queryset = armazon
             self.fields['armazon'].initial = armazon

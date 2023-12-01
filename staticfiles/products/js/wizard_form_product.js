@@ -288,7 +288,6 @@ document.addEventListener('DOMContentLoaded', function() {
         var selectedOption = is_armazon.options[is_armazon.selectedIndex];
         var selectedText = selectedOption.text;
         if (selectedText.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") == 'armazon'){
-            console.log('CATEGORIA ARMAZON SELECCIONADA');
             armazonSelected = true;
         }else{
             armazonSelected = false;

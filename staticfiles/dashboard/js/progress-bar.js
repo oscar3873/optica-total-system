@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let progress = employeeProgressBar.getAttribute('data-progress');
         let objetive = employeeProgressBar.getAttribute('data-objetive');
         let percent = parseInt((progress*100)/objetive);
-        console.log(percent);
         employeeProgressBar.style.width = `${percent}%`
         employeeProgressBar
         let numId = (employeeProgressBar.id).match(/\d+/g);

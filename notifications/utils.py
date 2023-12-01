@@ -9,7 +9,6 @@ def get_notifications_JSON(notifications):
         if notifications:
             notif_list = []
             for notification in notifications:
-                # print(notification.content_object.get_absolute_url())
                 notif_list.append(
                     {
                     'details': notification.details,

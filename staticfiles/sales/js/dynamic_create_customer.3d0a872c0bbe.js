@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     $('#New-customer').modal('hide');
 
                 } else if ('error' in data) {
-                    console.log(data.error);
                     error_div.innerHTML = data.error;
                     error_div.className = "text-danger text-center";
                     

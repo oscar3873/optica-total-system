@@ -4,7 +4,7 @@ from django_timestamps.timestamps import TimestampsModel
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from project.settings import DATE_NOW
+from django.utils import timezone
 
 # Create your models here.
 class Person(SoftDeletionModel, TimestampsModel):
@@ -79,4 +79,4 @@ class Objetives(BaseAbstractWithUser):
         return f'{self.title} - {self.start_date} a {self.exp_date} para {self.to}'
     
     def is_active(self) ->bool:
-        return DATE_NOW.date() <= self.exp_date
+        return timezone.now().date() <= self.exp_date

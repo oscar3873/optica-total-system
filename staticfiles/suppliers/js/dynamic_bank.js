@@ -50,13 +50,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     cuitErrorElement.innerText = '';
 
                     if('cbu' in response){
-                        console.log("entra");
                         cbuErrorElement.innerText = `${response.cbu[0].message}`;
-                        console.log(response.cbu[0].message);
                     }
                     if('cuit' in response){
                         cuitErrorElement.innerText = `${response.cuit[0].message}`;
-                        console.log(response.cuit[0].message);
                     }
                     // error_div.innerHTML = data.error;
                     // error_div.className = "text-danger text-center";

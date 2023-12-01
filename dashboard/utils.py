@@ -1,9 +1,9 @@
 from collections import defaultdict
 from datetime import timedelta
-from django.db.models import Sum, F, Count
+from django.db.models import Sum, F
 from datetime import datetime, time
 
-from project.settings import DATE_NOW, ZONE_TIME
+from django.utils import timezone
 from products.models import Brand, Product
 from clients.models import Customer
 from sales.models import Sale
@@ -11,7 +11,7 @@ from cashregister.models import Movement
 from employes.models import Employee_Objetives
 from branches.models import Branch_Objetives
 
-fecha_hoy = DATE_NOW.date()
+fecha_hoy = timezone.now().date()
 
 
 ##############################  REPORTES DE SEMANAS  #############################
@@ -25,8 +25,6 @@ def week_status(branch_actualy):
                                 branch=branch_actualy, deleted_at=None)
     
     
-    # print("\n\n\n\n\n\n")
-    # print(sale)
     week_sales = {
         'mon': [0, 0],
         'tue': [0, 0],
@@ -42,13 +40,12 @@ def week_status(branch_actualy):
     for day in week_sales:
         for s in sale:
             # Convierte la fecha y hora de UTC a la zona horaria de Argentina
-            created_at= s.created_at.astimezone(ZONE_TIME)
+            created_at= s.created_at
             dia_semana = created_at.strftime('%a').lower()
             if day in dia_semana.lower():
                 week_sales[day][0] += round(float(s.total))
                 week_sales[day][1] += 1
 
-    # print('\nVentas de la semana',week_sales)
     return week_sales
 
 def week_sales(branch_actualy):
@@ -83,10 +80,6 @@ def week_sales(branch_actualy):
                             created_at__range=(fecha_inicio_semana_actual - timedelta(weeks=1), fecha_inicio_semana_actual - timedelta(days=1))
                         ).aggregate(total_ventas=Sum('total'))['total_ventas']
 
-    # print("\nVentas por semana (4 semanas, incluyendo la actual):", ventas_por_semana)
-    # print("Total de ventas de las 4 semanas (incluyendo la actual hasta la fecha):", total_ventas)
-    # print("Ventas totales: $", ventas_totales['total_ventas'])
-    # print('total_ventas_semana_anterior: ', total_ventas_semana_anterior or 0)
 
     return ventas_por_semana, int(ventas_totales['total_ventas'] or 0), total_ventas, total_ventas_semana_anterior or 0
 
@@ -107,7 +100,6 @@ def top_prodcuts(branch_actualy):
 
     # Puedes ordenar el diccionario por la cantidad vendida si es necesario
     top_productos_mas_vendidos = dict(sorted(top_productos_mas_vendidos.items(), key=lambda item: item[1], reverse=True))
-    # print('\nTOP PRODUCTOS: ',top_productos_mas_vendidos)
     return top_productos_mas_vendidos
 
 
@@ -130,7 +122,6 @@ def top_brands(branch_actualy):
     top_marcas_mas_vendidas = dict(sorted(top_marcas_mas_vendidas.items(), key=lambda item: item[1], reverse=True))
 
     # Imprime el diccionario
-    # print('\nTOP MARCAS:', top_marcas_mas_vendidas)
     return top_marcas_mas_vendidas # TOP MARCAS +VENDIDAS
 
 
@@ -138,15 +129,13 @@ def objetives(branch_actualy):
     obj_employee = Employee_Objetives.objects.filter(employee__user__branch=branch_actualy).order_by('employee', 'created_at').distinct('employee')
     obj_branch = Branch_Objetives.objects.filter(branch=branch_actualy).order_by('branch', 'created_at').distinct('branch')
 
-    # print('\nObjetivos de empleado: ', obj_employee)
-    # print('\nObjetivos de sucursal: ', obj_branch)
     return obj_employee, obj_branch
 
 ######################## REPORTES DIARIOS #########################
 
 def dayli_sales(branch_actualy):
     # Crea una lista de horas en el rango de 8 a.m. a 9 p.m.
-    horas = [datetime.combine(DATE_NOW, time(i, 0)) for i in range(8, 22)]
+    horas = [datetime.combine(timezone.now(), time(i, 0)) for i in range(8, 22)]
     # Inicializa diccionarios para almacenar los montos recaudados en cada intervalo de una hora
     monto_por_rango_completado = {str(hora.hour): 0 for hora in horas}
     monto_por_rango_pendiente = {str(hora.hour): 0 for hora in horas}
@@ -178,35 +167,29 @@ def dayli_sales(branch_actualy):
                 monto_por_rango_pendiente[str(horas[i].hour)] += float(monto_recaudado)
                 break
     
-    # print('\n\n\n',monto_por_rango_completado)
-    # print('\n\n\n',monto_por_rango_pendiente)
 
     return monto_por_rango_completado, monto_por_rango_pendiente
 
 
 def dayli_customers(branch_actualy):
     customers = Customer.objects.filter(created_at__date=fecha_hoy, branch=branch_actualy).count()
-    # print('\n\n\n\'',customers)
     return customers
 
 
 def dayli_sales_count(branch_actualy):
     sales = Sale.objects.filter(created_at__date=fecha_hoy, branch=branch_actualy).count()
-    # print('\n\n\n\'',sales)
     return sales
 
 
 def dayli_sales_total(branch_actualy):
     suma_total = Sale.objects.filter(created_at__date=datetime.now().date(), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
-    # print('\n\n\n\'', suma_total_ventas)
     return suma_total_ventas
 
 
 def yesterday_sales_total(branch_actualy):
     suma_total = Sale.objects.filter(created_at__date=datetime.now().date() - timedelta(days=1), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
-    # print('\n\n\n\'', suma_total_ventas)
     return suma_total_ventas
 
 
@@ -218,7 +201,6 @@ def list_sale_to_dayli(branch_actualy):
     columns = ['Por', 'Fecha', 'Hora', 'Cliente', 'Estado', 'Total']
 
     sale = Sale.objects.filter(branch=branch_actualy).order_by('-created_at')[:4] # campos qeu se deben mostrar en la tabla: sale.id, sale.created_at, sale.state, sale.total, sale.customer
-    # print('LISTA DE VENTAS: ',sale)
     return columns, sale
 
 
@@ -226,5 +208,5 @@ def movs_to_dayli(branch_actualy):
     columns = ['Por', 'Fecha', 'Hora', 'Descripción', 'Tipo', 'Monto'] # MODIFICAR 
 
     moviments = Movement.objects.filter(cash_register__branch=branch_actualy).order_by('-created_at')[:4]
-    # print('LISTA DE MOVIMIENTOS: ',moviments)
+    
     return columns, moviments

@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         newOption.selected = true;
                         closeModal();  // Cerrar el modal después de agregar la nueva categoría
                     }else{
-                        console.log(data.message);
                         error_pay.innerHTML = data.message;
                         error_pay.className = "text-danger text-center";
                         

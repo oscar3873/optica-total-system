@@ -2,7 +2,7 @@
 Configuracion base que todos necesitan para funcionar.
 """
 import json
-import pytz
+from django.utils import timezone
 import os
 from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
@@ -187,8 +187,6 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-ZONE_TIME = pytz.timezone('America/Argentina/Buenos_Aires')
-DATE_NOW = datetime.now(ZONE_TIME)
 
 # Separadores de miles y decimales
 # https://docs.djangoproject.com/en/4.2/ref/settings/#localization

@@ -8,7 +8,7 @@ from django.db import transaction
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from project.settings import DATE_NOW
+from django.utils import timezone
 from core.mixins import CustomUserPassesTestMixin
 from users.models import User
 from users.forms import *
@@ -94,10 +94,10 @@ class EmployeeProfileView(LoginRequiredMixin, DetailView):
 
         context['is_self'] = True # SI ES ADMIN O EL PROPIO EMPLEADO VIENDO SU PERFIL
         context['objetives'] = Employee_Objetives.objects.filter(employee_id=employee_pk,
-                                                                objetive__exp_date__gte=DATE_NOW.date()
+                                                                objetive__exp_date__gte=timezone.now().date()
                                                             ).order_by('created_at')
         context['objetives_branch'] = Branch_Objetives.objects.filter(branch=employee.user.branch,
-                                                                    objetive__exp_date__gte=DATE_NOW.date()
+                                                                    objetive__exp_date__gte=timezone.now().date()
                                                                     ).order_by('created_at')
 
         if not user_actual.is_staff and user_actual.employee_type != self.get_object(): # SI ES UN EMPLEADO QUE ESTA VIENDO OTRO PERFIL

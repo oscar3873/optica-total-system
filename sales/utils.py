@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 
 from branches.utils import set_branch_session
 from branches.models import Branch_Objetives
-from project.settings import DATE_NOW
+from django.utils import timezone
 from clients.forms import *
 from .models import *
 
@@ -119,11 +119,9 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
 def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
-    # print("\n\n\n\n mierda")
     if invoice_or_receipt in ['A', 'B']:
         
         if invoice_or_receipt == 'A':
-            # print("\n\n\n\n ES A")
             document = DocumentType.objects.get(id=1)
             receipt_type = ReceiptType.objects.get(id=1)
             
@@ -133,7 +131,6 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
         elif invoice_or_receipt == 'B':
             
             receipt_type = ReceiptType.objects.get(id=4)
-            # print("\n\n\n\n ES B")
             if len(sale.customer.dni) > 10:
                 document = DocumentType.objects.get(id=2) #es cuil
             elif len(sale.customer.dni) < 2:
@@ -171,7 +168,6 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             receipt.delete()
             return 'Error de comunicacion con AFIP.'
         
-        # print(validation_result)
 
 
 
@@ -208,8 +204,6 @@ def find_armazons_product(all_products_to_sale, sale=None):
 
 
 
-# def generate_proof(proof_type): # generar factura o recibo
-#     print('IMPRIMIENDO %s' % proof_type)
 
 
 def process_customer(customer, sale, payment_methods, total, product_cristal, product_contacto, amount, request):
@@ -317,13 +311,7 @@ def process_service_order(request, customer):
             customer
         )
 
-    # print(service_order.errors,
-    # correction_form.errors,
-    # material_form.errors,
-    # color_form.errors,
-    # cristal_form.errors,
-    # tratamiento_form.errors,
-    # pupilar_form.errors)
+    
 
     return service
 
@@ -340,10 +328,10 @@ def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
 
 def up_objetives(user, sale):
     if not user.is_staff: # es empleado
-        self_objetives = user.employee_type.employee_objetives.filter(objetive__exp_date__gte=DATE_NOW.date())
+        self_objetives = user.employee_type.employee_objetives.filter(objetive__exp_date__gte=timezone.now().date())
         accumulate_objectives(self_objetives, sale)
         
-        objetives = Branch_Objetives.objects.filter(objetive__exp_date__gte=DATE_NOW.date())
+        objetives = Branch_Objetives.objects.filter(objetive__exp_date__gte=timezone.now().date())
         accumulate_objectives(objetives, sale)
 
 def accumulate_objectives(objetives, sale):

@@ -4340,7 +4340,6 @@ var linePaymentChartInit = function linePaymentChartInit() {
         chart.setOption({
           series: [{
             data: dataset[value].map(function (d) {
-              console.log("PRINT ",d);
               return (d).toFixed(2);
             })
           }]

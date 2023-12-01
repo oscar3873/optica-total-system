@@ -1,7 +1,7 @@
 from django.urls import reverse
 from core.managers import BaseManager
 from clients.models import *
-from project.settings import DATE_NOW
+from django.utils import timezone
 
 class CustomerManager(BaseManager):
     """

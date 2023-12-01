@@ -35,7 +35,7 @@
                         <tr class="btn-reveal-trigger">
                             <th class="align-middle white-space-nowrap name">{{sale.user_made}}</th>
                             <td class="align-middle white-space-nowrap d-none d-sm-table-cell date">{{sale.created_at.date}}</td>
-                            <td class="sort pe-1 align-middle white-space-nowrap d-none d-sm-table-cell time">{{sale.created_at.time}}</td>
+                            <td class="sort pe-1 align-middle white-space-nowrap d-none d-sm-table-cell time">{{sale.created_at|time}}</td>
                             <td class="align-middle white-space-nowrap d-none d-sm-table-cell customer">{{sale.customer}}</td>
                             <td class="align-middle text-center fs-0 white-space-nowrap state"><span
                                 class="badge badge rounded-pill {% if sale.state == 'COMPLETADO' %}badge-soft-success{% else %}badge-soft-warning{% endif %}">{{sale.state}}</span>

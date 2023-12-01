@@ -29,8 +29,6 @@ document.addEventListener("DOMContentLoaded", function() {
             contentType: false,
             success: function(data) {
                 if (data.status === 'success') {
-                    console.log('Sí se pudo');
-
                     $('#deleteModal').modal('hide');
 
                     let bank_deleted = document.getElementById(id);

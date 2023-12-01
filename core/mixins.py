@@ -4,7 +4,7 @@ from datetime import timedelta
 from django import forms
 
 from users.models import User
-from project.settings import DATE_NOW
+from django.utils import timezone
 
 class ValidationFormMixin(forms.ModelForm):
     def validate_length(self, field_value, min_length, error_message):
@@ -24,9 +24,9 @@ class ValidationFormMixin(forms.ModelForm):
             Debe tener por lo menos 3 meses de vida o no superar los 85 años.
         """
         if birth_date :
-            if birth_date >= DATE_NOW.date() - timedelta(days=2*365):
+            if birth_date >= timezone.now().date() - timedelta(days=2*365):
                 raise forms.ValidationError('La fecha establecida no puede registrarse.')
-            age_limit = DATE_NOW.date() - timedelta(days=100*365)
+            age_limit = timezone.now().date() - timedelta(days=100*365)
             if birth_date <= age_limit:
                 raise forms.ValidationError('La fecha establecida no puede superar los 90 años.')
 
@@ -49,7 +49,7 @@ class ValidationFormMixin(forms.ModelForm):
         Valida que la fecha ingresada no sea al futuro
         """
         if date:
-            if date > DATE_NOW.date():
+            if date > timezone.now().date():
                 raise forms.ValidationError('La fecha establecida no puede registrarse.')
         else:
             raise forms.ValidationError('Este campo es nesesario.')

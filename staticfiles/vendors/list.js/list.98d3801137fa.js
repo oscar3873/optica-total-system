@@ -566,7 +566,7 @@ var List; List =
                             pagingList.clear();
 
                             for (var i = 1; i <= pages; i++) {
-                                var className = currentPage === i ? 'active' : ''; //console.log(i, left, right, currentPage, (currentPage - innerWindow), (currentPage + innerWindow), className);
+                                var className = currentPage === i ? 'active' : '';
 
                                 if (is.number(i, left, right, currentPage, innerWindow)) {
                                     item = pagingList.add({

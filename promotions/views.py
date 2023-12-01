@@ -141,7 +141,6 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
     
     def form_valid(self, form):
         promotion = self.get_object()
-        # print(promotion.promotion_products.all())
         for relation in promotion.promotion_products.all():
             relation.delete()
             
@@ -158,13 +157,10 @@ def ajax_promotional_products(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         
         promotions = Promotion.objects.filter(branch=branch, is_active=True)  # Obtén todas las promociones
-        # print("Obtén todas las promociones")
-        # print(promotions)
         list_promotion = {}
 
         for promotion in promotions:
             # Obtén los productos asociados a cada promoción
             associated_products = promotion.promotion_products.values_list('product__id', flat=True)
             list_promotion[f'{promotion.name}-{promotion.type_prom.name}'] = (promotion.type_prom.name, promotion.discount, list(associated_products))
-        # print(list_promotion)
         return JsonResponse({'promotions': list_promotion})

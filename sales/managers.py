@@ -1,6 +1,6 @@
 
 from core.managers import BaseManager
-from project.settings import DATE_NOW
+from django.utils import timezone
 
 class PaymentManager(BaseManager):
     def all(self):

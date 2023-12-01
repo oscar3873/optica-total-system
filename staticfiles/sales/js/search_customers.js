@@ -173,7 +173,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     payment_method.options[i].disabled = false;
                 }
             }
-            console.log("payment_method deshabilitado");
         } else {
             console.error("payment_method no está definido o no es accesible desde este ámbito.");
         }

@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let buttonGenFactura = document.createElement('button');
     buttonGenFactura.textContent = 'Generar Factura';
-    buttonGenFactura.classList.add("btn", "btn-primary")
+    buttonGenFactura.classList.add("btn","btn-sm", "btn-primary", "m-2")
     buttonGenFactura.type = "submit";
     let option_selected = document.getElementById('id_select')
     let selectedValue = 0;
@@ -18,6 +18,5 @@ document.addEventListener('DOMContentLoaded', () => {
         else{
             buttonGenFactura.remove()
         }
-        console.log('Opción seleccionada:', selectedValue);
     });
 });
