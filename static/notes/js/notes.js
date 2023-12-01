@@ -1,4 +1,4 @@
-const noteSocket = new WebSocket('wss://' + window.location.host + '/ws/notes/global/'
+const noteSocket = new WebSocket('ws://' + window.location.host + '/ws/notes/global/'
 );
 
 noteSocket.onmessage = function(e) {
@@ -60,6 +60,7 @@ noteSocket.onmessage = function(e) {
     var audioElement = document.createElement("audio");
     audioElement.id = "notes-audio";
     audioElement.autoplay = true; // Habilita el autoplay
+    audioElement.muted = true; // Añade esta línea
 
     // Crea una fuente de audio
     var sourceElement = document.getElementById("notes-source");
