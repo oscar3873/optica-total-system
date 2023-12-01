@@ -104,7 +104,7 @@ MIDDLEWARE = [
 
 
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
-ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
+ASGI_APPLICATION = "project.asgi.application"
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
 CHANNEL_LAYERS = {
@@ -114,19 +114,6 @@ CHANNEL_LAYERS = {
             "hosts": [REDIS_URL],
         },
     },
-}
-
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": [REDIS_URL],
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            # "CONNECTION_POOL_KWARGS": {
-            #     "ssl_cert_reqs": None
-            # },
-        }
-    }
 }
 
 ####################################################################
