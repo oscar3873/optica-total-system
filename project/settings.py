@@ -81,7 +81,7 @@ SECRET_KEY = get_secret('SECRET_KEY')
 
 # prod.py
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
