@@ -2,9 +2,7 @@
 Configuracion base que todos necesitan para funcionar.
 """
 import json
-from django.utils import timezone
 import os
-from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
 
