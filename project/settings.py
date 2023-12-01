@@ -2,9 +2,7 @@
 Configuracion base que todos necesitan para funcionar.
 """
 import json
-from django.utils import timezone
 import os
-from datetime import datetime
 from django.core.exceptions import ImproperlyConfigured
 from pathlib import Path
 
@@ -104,27 +102,31 @@ MIDDLEWARE = [
 
 
 ###########  *CHANNEL PARA NOTIFICACIONES DE NOTAS*  ############## 
+
 ASGI_APPLICATION = "project.asgi.application"  # Reemplaza 'project' con el nombre real de tu proyecto
 
-REDIS_URL = os.environ.get("REDIS_URL", "redis://localhost:6379")
+REDIS_TLS_URL = os.environ.get("REDIS_TLS_URL", "redis://localhost:6379")
 CHANNEL_LAYERS = {
     "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND": "channels_redis.pubsub.RedisPubSubChannelLayer",
         "CONFIG": {
-            "hosts": [REDIS_URL],
-        },
-    },
+            "hosts":[{
+                "address": REDIS_TLS_URL,  # "REDIS_TLS_URL"
+                "ssl_cert_reqs": None,
+            }]
+        }
+    }
 }
 
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": [REDIS_URL],
+        "LOCATION": [REDIS_TLS_URL],
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            # "CONNECTION_POOL_KWARGS": {
-            #     "ssl_cert_reqs": None
-            # },
+            "CONNECTION_POOL_KWARGS": {
+                "ssl_cert_reqs": None
+            },
         }
     }
 }
