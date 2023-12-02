@@ -42,11 +42,11 @@ class ObjetiveCreateView(CustomUserPassesTestMixin, FormView):
     @transaction.atomic
     def form_valid(self, form):
         if form.is_valid():
-            branch_actualy = set_branch_session(self.request)
+            # branch_actualy = set_branch_session(self.request)
             
             # tipo = form.cleaned_data.pop('tipo')
             objetive = form.save(commit=False)
-            objetive.branch = branch_actualy
+            # objetive.branch = branch_actualy
             objetive.user_made = self.request.user
             objetive.save()
 

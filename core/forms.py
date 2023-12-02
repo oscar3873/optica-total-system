@@ -2,6 +2,8 @@ import re
 from django import forms
 from django.core.validators import RegexValidator,EmailValidator
 
+from branches.models import Branch
+
 from .models import Person, Objetives
 from .mixins import ValidationFormMixin
 
@@ -146,68 +148,6 @@ class PersonForm(ValidationFormMixin):
                 raise forms.ValidationError("Ingrese una dirección de correo electrónico válida.")
         return email
 
-class ObjetiveForm(forms.ModelForm):
-
-    TIPO = [
-        ('VENTAS', 'VENTAS'),
-        ('REGISTRO', 'REGISTRO'),
-        ('CRISTALES', 'CRISTALES')
-    ]
-
-    type = forms.ChoiceField(
-        label='Elige tipo de objetivo',
-        choices=TIPO,
-        required=True,
-        widget= forms.TextInput(
-            attrs={
-                'class': 'form-control',
-            }
-        )
-    )
-    class Meta:
-        model = Objetives
-        fields = ['to', 'type', 'description', 'start_date', 'exp_date', 'quantity']
-        widgets = {
-            'to': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Ejemplo: Peso Argentino',
-                    'required':''
-                    }
-                ),
-            'description': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Descripcion del objetivo',
-                    'required':''
-                    }
-                ),
-            'start_date': forms.DateInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Fecha de inicio',
-                    'required':'',
-                    'type': 'date'
-                    }
-                ),
-            'exp_date': forms.DateInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Fecha de finalizacion',
-                    'required':'',
-                    'type': 'date'
-                    }
-                ),
-            'quantity': forms.NumberInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Cantidad estimada',
-                    'required':'',
-                }
-            )
-            }
-        
-
 
 class ObjetiveForm(ValidationFormMixin):
     PARA= [
@@ -282,10 +222,19 @@ class ObjetiveForm(ValidationFormMixin):
             }
         )
     )
+    branch = forms.ModelChoiceField(
+        queryset=Branch.objects.all(),
+        required=False,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+            }
+        )
+    )
 
     class Meta:
         model = Objetives
-        fields = ['to', 'title', 'description', 'start_date', 'exp_date', 'quantity']
+        fields = ['to', 'title', 'description', 'start_date', 'exp_date', 'quantity', 'branch']
 
     def clean_title(self):
         title = self.cleaned_data['title']

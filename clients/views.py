@@ -10,7 +10,7 @@ from django.contrib import messages
 
 from core.mixins import CustomUserPassesTestMixin
 from branches.utils import set_branch_session
-from cashregister.utils import obtener_nombres_de_campos
+from cashregister.utils import create_in_movement, obtener_nombres_de_campos
 from cashregister.models import CashRegister, Currency, Movement
 from sales.models import Payment, Sale
 from sales.forms import PaymentMethodForm, TypePaymentMethodForm
@@ -453,8 +453,8 @@ def open_credit_account(request, pk): # usar con   --->   <form method='post' ac
 def pay_credits(request, pk):
     user = request.user
     customer = Customer.objects.get(pk=pk)
-    total = customer.credit_balance
     payment = TypePaymentMethodForm(request.POST)
+    total = payment.amount
 
     if payment.is_valid():
         pay = payment.save(commit=False)
@@ -466,19 +466,9 @@ def pay_credits(request, pk):
             messages.error(request, 'Antes de realizar una Venta, debe Abrir una Caja.')
             return redirect('cashregister_app:cashregister_view')
 
-        type_operation = 'Ingreso'
-        Movement.objects.create(
-            amount = total,
-            date_movement = timezone.now().date(),
-            cash_register = cashregister,
-            description = pay.description if len(pay.description) > 1 else 'PAGO TOTAL DE CUENTA CORRIENTE DE %s, %s' % (customer.last_name, customer.first_name),
-            currency = Currency.objects.get(name__icontains='PESO'),
-            type_operation = type_operation,
-            payment_method = pay.payment_method.type_method,
-        )
-        Movement.objects.update_balance(cashregister, total, type_operation)
+        create_in_movement(branch_actualy, request.user, pay.payment_method.type_method, pay.description, total)
 
-        customer.credit_balance = 0
+        customer.credit_balance -= total
         customer.user_made = user
         customer.save()
 
@@ -583,17 +573,21 @@ def pay_service_order(request, pk):
         customer = service.customer
         sale = service.sale
 
+        branch_actualy = set_branch_session(request)
+
         type_method = TypePaymentMethodForm(request.POST)
         if type_method.is_valid():
             type_method = type_method.save(commit=False)
             total = sale.missing_balance if sale.state == "PENDIENTE" else 0
+
             if not service.is_done and total:
-                service.is_done = True
-                service.save()
-                set_movement(total, type_method.payment_method, service.customer, request)
+                create_in_movement(branch_actualy, request.user, type_method.payment_method.type_method, type_method.description, total)
                 
-                customer.credit_balance -= total
+                customer.credit_balance -= total if customer.credit_balance > 0 else 0
                 customer.save()
+
+                sale.state = "COMPLETADO"
+                sale.save()
 
                 messages.success(request, "La Orden de Servicio fue pagada con exito.")
                 return redirect('clients_app:customer_detail', pk=service.customer.pk)
@@ -603,6 +597,15 @@ def pay_service_order(request, pk):
         else:
             messages.error(request, "Se produjo un error al realizar pago.")
             return redirect('clients_app:customer_detail', pk=service.customer.pk)
+        
+    
+def service_order_entrega(request, pk):
+    if request.method == "POST":
+        service = ServiceOrder.objects.get(pk=pk)
+        service.is_done = True
+        service.save()
+        messages.success(request, "La Orden de Servicio fue marcada como entregada.")
+        return redirect('clients_app:customer_detail', pk=service.customer.pk)
 
 ####################### EXPORT CLIENTS LIST #########################
 
@@ -734,14 +737,3 @@ def print_service_order(request, pk): # pk de la orden
 
         # Genera el HTML en lugar de renderizarlo
         return render(request, 'clients/service_order_print.html', context)
-
-        
-   
-    
-def service_order_entrega(request, pk):
-    if request.method == "POST":
-        service = ServiceOrder.objects.get(pk=pk)
-        service.is_done = True
-        service.save()
-        messages.success(request, "La Orden de Servicio fue marcada como entregada.")
-        return redirect('clients_app:customer_detail', pk=service.customer.pk)

@@ -112,12 +112,22 @@ class PaymentMethodForm(ValidationFormMixin):
 
 class TypePaymentMethodForm(ValidationFormMixin):
 
+    amount = forms.DecimalField(
+        required = False,
+        initial=0,
+        widget = forms.NumberInput(
+            attrs={
+                'class': 'form-control'
+            }
+        )
+    )
+
     payment_method = forms.ModelChoiceField(
         queryset=PaymentMethod.objects.exclude(name__in=['Cuenta Corriente']),
         widget=forms.Select(
             attrs={
                 'class': 'form-control'
-                }
+            }
         )
     )
     description = forms.CharField(
@@ -125,13 +135,13 @@ class TypePaymentMethodForm(ValidationFormMixin):
         widget = forms.TextInput(
             attrs={
                 'class': 'form-control'
-                }
+            }
         )
     )
 
     class Meta:
         model = Payment
-        fields = ['payment_method', 'description'] 
+        fields = ['payment_method', 'description', 'amount'] 
 
 
 class SelectFacturaFrom(forms.Form):

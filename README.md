@@ -27,13 +27,13 @@ cd Scripts
 
 ###########################################################
 
-echo $ENVIRONMENT_DEVELOPMENT
+echo $DEVELOPMENT_ENVIRONMENT
 
 sudo su root
 
 source venv-optica-total/bin/activate
 
-export ENVIRONMENT_DEVELOPMENT="True"
+export DEVELOPMENT_ENVIRONMENT="True"
 
 python manage.py runserver
 
@@ -66,10 +66,12 @@ Dentro de la raíz del proyecto, crea un archivo llamado `secret.json` con la si
     "DB_NAME": "name_db",
     "DB_USER": "name_user_db",
     "DB_PASSWORD": "password_db",
+    "DB_HOST": "<< hostname >>",
+    "DB_PORT": "5432",
 
     "EMAIL_HOST":"smtp.gmail.com",
     "EMAIL_HOST_USER":"optica.total.saltaar@gmail.com",
-    "EMAIL_HOST_PASSWORD":" <<password>>"
+    "EMAIL_HOST_PASSWORD":" << password >>"
 }
 ```
 Nota: Asegúrate de cambiar los valores de SECRET_KEY, DB_NAME, DB_USER y DB_PASSWORD a los apropiados para tu configuración.

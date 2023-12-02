@@ -106,7 +106,13 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p>¿Estas seguro de confirmar el pago de <span class="text-warning"> ${{customer.credit_balance}} </span> ?</p>
+                                                    <p>Total a pagar: <span class="text-warning"> ${{customer.credit_balance}} </span></p>
+                                                    <div class="pb-3">
+                                                        <label for="">Monto a pagar</label>
+                                                        <div class="form-group">
+                                                            {{pay_form.amount}}
+                                                        </div>
+                                                    </div>
                                                     <div class="pb-3">
                                                         <div class="row align-items-center">
                                                             <label for="">Seleccione el metodo de pago</label>
@@ -267,15 +273,6 @@
                     </div>
                     {% endif %}
                     <div class="col-6 col-sm-auto ms-auto text-end ps-0">
-                        <div class="d-none" id="table-purchases-actions">
-                            <div class="d-flex">
-                                <select class="form-select form-select-sm" aria-label="Bulk actions">
-                                    <option selected="">Accion masiva</option>
-                                    <option value="Delete">Borrar</option>
-                                </select>
-                                <button class="btn btn-falcon-default btn-sm ms-2" type="button">Aplicar</button>
-                            </div>
-                        </div>
                         {% if service_orders %}
                         <div id="table-purchases-replace-element">
                             <a class="btn btn-falcon-default btn-sm" href="{% url 'clients_app:export_service_orders' customer.id %}" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Exportar</span></a>
@@ -324,12 +321,12 @@
                                                         {% if service_order.is_done %}
                                                             <span class="badge rounded-pill badge-soft-success fs--1">Entregado</span>
                                                         {% elif service_order.sale.state == 'PENDIENTE' %}
-                                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#entrega-{{service_order.pk}}">
-                                                                <span class="badge rounded-pill badge-soft-danger">Pago pendiente</span>
+                                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#pay-registrar-{{service_order.pk}}">
+                                                                Pagar pendiente
                                                             </button>
                                                         {% else %}
-                                                            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#entrega-{{service_order.pk}}">
-                                                                <span class="badge rounded-pill badge-soft-warning">Click Entregar</span>
+                                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#entrega-{{service_order.pk}}">
+                                                                Click Entregar
                                                             </button>
                                                         {% endif %}
                                                     </p>
@@ -405,7 +402,9 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>¿Estás seguro de confirmar el pago de <span class="text-warning"> ${{customer.credit_balance}} </span> ?</p>
+                            <!-- <small>Total de la Venta: <span class="text-warning">${{service_order.sale.total}}</span></small> -->
+                            <p>¿Estás seguro de confirmar el pago de <span class="text-warning"> ${{service_order.sale.missing_balance}} </span> ?</p>
+
                             <div class="pb-3">
                                 <div class="row align-items-center">
                                     <label for="">Seleccione el método de pago</label>
