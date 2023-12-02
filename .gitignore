@@ -60,3 +60,6 @@ Thumbs.db
 *.flv
 *.mov
 *.wmv
+
+media/
+media/profile

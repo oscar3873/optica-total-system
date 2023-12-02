@@ -101,7 +101,7 @@ urlpatterns = [
     ),
 
     path(
-        '<pk>/export-movements/',
+        'export-movements/',
         export_movements_list_to_excel,
         name='export_movements'
     )
