@@ -92,9 +92,11 @@
               <tr class="btn-reveal-trigger">
                 <td class="align-start first_name">
                   <div class="d-flex align-items-center">
-                    <div class="avatar avatar-s me-1">
-                      <img class="rounded-circle" src="{{employee.user.imagen.url}}" alt="" />
-                    </div>
+                    {% if employee.user.imagen.url %}
+                      <div class="avatar avatar-s me-1">
+                        <img class="rounded-circle" src="{{employee.user.imagen.url}}" alt="foto-perfil" />
+                      </div>
+                    {% endif %}
                     {{employee.user.first_name}}
                   </div>
                 </td>
@@ -207,7 +209,7 @@
     <div class="card bg-transparent-50 overflow-hidden">
       <div class="card-header position-relative">
         <div class="bg-holder d-none d-md-block bg-card z-index-1"
-          style="background-image:url(../assets/img/illustrations/ecommerce-bg.png);background-size:230px;background-position:right bottom;z-index:-1;">
+          >
         </div>
 
         <div class="position-relative z-index-2">
