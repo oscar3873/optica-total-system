@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Obtén el formulario de búsqueda y el contenedor de resultados de la tabla
     const searchForm = document.getElementById('searchForm');
     const searchInput = document.getElementById('searchInput');
-    const searchResults = document.getElementById('table-purchase-body');
+    const searchResults = document.getElementById('table-product');
 
     // Agrega un evento de escucha al formulario para manejar la búsqueda AJAX
     searchForm.addEventListener('keyup', function (e) {
