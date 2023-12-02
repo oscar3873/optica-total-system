@@ -27,13 +27,15 @@ cd Scripts
 
 ###########################################################
 
-echo $ENVIRONMENT_DEVELOPMENT
+
 
 sudo su root
 
 source venv-optica-total/bin/activate
 
-export ENVIRONMENT_DEVELOPMENT="True"
+export DEVELOPMENT_ENVIRONMENT="True"
+
+echo $DEVELOPMENT_ENVIRONMENT
 
 python manage.py runserver
 

@@ -532,7 +532,7 @@ def ajax_search_movements(request):
 
 ############################### EXPORTAR MOVIMIENTOS ###############################
 
-def export_movements_list_to_excel(request, pk):
+def export_movements_list_to_excel(request):
     # Para la generacion de excel
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill
@@ -541,7 +541,7 @@ def export_movements_list_to_excel(request, pk):
     
     branch_actualy = set_branch_session(request)
     
-    list_movements = Movement.objects.filter(branch=branch_actualy, cash_register__id=pk)
+    list_movements = Movement.objects.filter(cash_register__branch=branch_actualy)
 
     if not list_movements:
         raise ValueError('No hay productos para exportar.') # modificar error
@@ -577,11 +577,11 @@ def export_movements_list_to_excel(request, pk):
 
     # Agregar los datos de los empleados a la hoja de cÃ¡lculo
     for row_num, movement in enumerate(list_movements, 2):
-        worksheet.cell(row=row_num, column=1, value=str(movement.date_movement))
-        worksheet.cell(row=row_num, column=2, value=movement.cash_register)
+        worksheet.cell(row=row_num, column=1, value=str(movement.created_at.strftime("%d/%m/%Y %H:%M")))
+        worksheet.cell(row=row_num, column=2, value=str(movement.cash_register))
         worksheet.cell(row=row_num, column=3, value=str(movement.amount))
         worksheet.cell(row=row_num, column=4, value=movement.description)
-        worksheet.cell(row=row_num, column=5, value=movement.currency)
+        worksheet.cell(row=row_num, column=5, value=str(movement.currency))
         worksheet.cell(row=row_num, column=6, value=movement.type_operation)
         worksheet.cell(row=row_num, column=7, value=str(movement.payment_method))
 
