@@ -45,7 +45,6 @@ class CashRegisterCreateView(LoginRequiredMixin, FormView):
         final_balance = initial_balance
         user_made = self.request.user
         currency = form.cleaned_data['currency']
-
         
         branch_actualy = set_branch_session(self.request)
         try:
@@ -529,3 +528,67 @@ def ajax_search_movements(request):
         } for movement in movements]
         # locale.setlocale(locale.LC_TIME, '')
         return JsonResponse({'data': data})
+    
+
+############################### EXPORTAR MOVIMIENTOS ###############################
+
+def export_movements_list_to_excel(request, pk):
+    # Para la generacion de excel
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    from django.http import HttpResponse
+    
+    
+    branch_actualy = set_branch_session(request)
+    
+    list_movements = Movement.objects.filter(branch=branch_actualy, cash_register__id=pk)
+
+    if not list_movements:
+        raise ValueError('No hay productos para exportar.') # modificar error
+    
+    # Crear un libro de trabajo de Excel
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    # Definir estilos personalizados para los encabezados
+    header_style = Font(name='Arial', size=14, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
+
+    # Definir los encabezados de las columnas
+    exclude_fields_user = ["deleted_at", "created_at", "updated_at", "id", "user_made", "transaction", "withdrawal_reason"]
+    headers = [campo[1] for campo in obtener_nombres_de_campos(Movement, *exclude_fields_user)]
+
+    # Aplicar estilos a los encabezados y escribir los encabezados
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num, value=header)
+        cell.font = header_style
+        cell.fill = header_fill
+
+    # Modificar el ancho de la columna (ajustar segÃºn tus necesidades)
+    #################################################
+    try: 
+        from openpyxl.cell import get_column_letter
+    except ImportError:
+        from openpyxl.utils import get_column_letter
+    #################################################
+    for col_num, _ in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 25
+
+    # Agregar los datos de los empleados a la hoja de cÃ¡lculo
+    for row_num, movement in enumerate(list_movements, 2):
+        worksheet.cell(row=row_num, column=1, value=str(movement.date_movement))
+        worksheet.cell(row=row_num, column=2, value=movement.cash_register)
+        worksheet.cell(row=row_num, column=3, value=str(movement.amount))
+        worksheet.cell(row=row_num, column=4, value=movement.description)
+        worksheet.cell(row=row_num, column=5, value=movement.currency)
+        worksheet.cell(row=row_num, column=6, value=movement.type_operation)
+        worksheet.cell(row=row_num, column=7, value=str(movement.payment_method))
+
+    # Crear una respuesta HTTP con el archivo Excel adjunto
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Lista de movimientos - Sucursal %s.xlsx' %(branch_actualy.name)
+
+    workbook.save(response)
+
+    return response

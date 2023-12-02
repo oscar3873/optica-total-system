@@ -70,4 +70,11 @@ urlpatterns = [
         name='pay_missing_balance'
     ),
 
+    ############# EXPORTAR LISTA DE VENTAS #############
+
+    path(
+        'export-sales/',
+        export_sale_list_to_excel,
+        name='export_sales'
+    )
 ]

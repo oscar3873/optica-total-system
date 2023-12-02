@@ -495,3 +495,67 @@ def pay_missing_balance(request, pk):
             return redirect('sales_app:sales_list_view')
     messages.error(request, 'La petición no es válida.')
     return redirect('sales_app:sale_detail_view', pk=pk)
+
+
+
+
+def export_sale_list_to_excel(request, pk):
+    # Para la generacion de excel
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill
+    from django.http import HttpResponse
+    
+    
+    branch_actualy = set_branch_session(request)
+    
+    list_sales = Sale.objects.filter(branch=branch_actualy)
+
+    if not list_sales:
+        raise ValueError('No hay productos para exportar.') # modificar error
+    
+    # Crear un libro de trabajo de Excel
+    workbook = Workbook()
+    worksheet = workbook.active
+
+    # Definir estilos personalizados para los encabezados
+    header_style = Font(name='Arial', size=14, bold=True, color='FFFFFF')
+    header_fill = PatternFill(start_color='0b1727', end_color='0b1727', fill_type='solid')
+
+    # Definir los encabezados de las columnas
+    exclude_fields_user = ["deleted_at", "receipt", "updated_at", "id", "user_made", "refund_date", "branch"]
+    headers = [campo[1] for campo in obtener_nombres_de_campos(Sale, *exclude_fields_user)]
+
+    # Aplicar estilos a los encabezados y escribir los encabezados
+    for col_num, header in enumerate(headers, 1):
+        cell = worksheet.cell(row=1, column=col_num, value=header)
+        cell.font = header_style
+        cell.fill = header_fill
+
+    # Modificar el ancho de la columna (ajustar segÃºn tus necesidades)
+    #################################################
+    try: 
+        from openpyxl.cell import get_column_letter
+    except ImportError:
+        from openpyxl.utils import get_column_letter
+    #################################################
+    for col_num, _ in enumerate(headers, 1):
+        col_letter = get_column_letter(col_num)
+        worksheet.column_dimensions[col_letter].width = 25
+
+    # Agregar los datos de los empleados a la hoja de cÃ¡lculo
+    for row_num, sale in enumerate(list_sales, 2):
+        worksheet.cell(row=row_num, column=1, value=sale.customer)
+        worksheet.cell(row=row_num, column=2, value=sale.state)
+        worksheet.cell(row=row_num, column=3, value=str(sale.discount))
+        worksheet.cell(row=row_num, column=4, value=str(sale.discount_extra))
+        worksheet.cell(row=row_num, column=5, value=str(sale.missing_balance))
+        worksheet.cell(row=row_num, column=6, value=str(sale.subtotal))
+        worksheet.cell(row=row_num, column=7, value=str(sale.total))
+
+    # Crear una respuesta HTTP con el archivo Excel adjunto
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=Lista de ventas - Sucursal %s.xlsx' %(branch_actualy.name)
+
+    workbook.save(response)
+
+    return response

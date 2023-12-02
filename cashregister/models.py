@@ -83,9 +83,9 @@ class Movement(BaseAbstractWithUser):
         ('Egreso', 'Egreso')
     ]
     
-    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
     date_movement = models.DateField(auto_now_add=True, verbose_name="Fecha")
     cash_register = models.ForeignKey(CashRegister, on_delete=models.CASCADE, verbose_name="Caja")
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Monto")
     description = models.CharField(max_length=100, null=True, blank=True, verbose_name="Descripción")
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, verbose_name="Moneda")
     type_operation = models.CharField(max_length=50, choices=TYPE_OPERATION, verbose_name="Operacion")

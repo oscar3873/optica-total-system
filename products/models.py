@@ -31,7 +31,7 @@ class Product(BaseAbstractWithUser):
         
     """
     name = models.CharField(max_length=50, blank=False, null=False, verbose_name="Nombre")
-    barcode = models.PositiveBigIntegerField(verbose_name='Codigo', null=True)
+    barcode = models.CharField(max_length=99, null=True, blank=True, verbose_name='Codigo')
     cost_price =models.DecimalField(max_digits=15, decimal_places=2, default=0, null=True, blank=True, verbose_name="Precio de costo")
     # suggested_price =models.DecimalField(max_digits=15, decimal_places=2, null=True, blank=True, verbose_name="Precio sugerido")
     sale_price =models.DecimalField(max_digits=15, decimal_places=2, default=0, null=True, blank=True, verbose_name="Precio")
