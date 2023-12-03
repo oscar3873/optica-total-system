@@ -58,7 +58,7 @@
                         {{ form.counted_amount }}
                         <p class="fs--2 fw-lighter text-600">Ingrese el monto que registro en <span class="text-warning">{{form.initial.type_method|lower}}</span> en su caja </p>
                         <label for="difference-{{ form.initial.type_method|lower }}" class="form-label">Diferencia entre ambos</label>
-                        <p class="fw-bold fs-1 text-900 my-0"><span id="difference-{{ form.initial.type_method|lower }}">1567</span></p>
+                        <p class="fw-bold fs-1 text-900 my-0"><span id="difference-{{ form.initial.type_method|lower }}"></span></p>
                         <p class="fs--2 fw-lighter text-600"><span class="text-warning">Diferencia</span> que existe entre su caja de <span class="text-warning">sistema</span> y su registro <span class="text-warning">manual</span> en <span class="text-warning">{{form.initial.type_method|lower}}</span></p>
                     </div>
                     {% endfor %}
