@@ -34,15 +34,17 @@
         <div class="card theme-wizard h-100 mb-5">
             <!--Card Header-->
             <div class="card-header bg-light pt-3 pb-2">
-                <p class="fs--1 mb-0">Esta apertura solo es para efectivo<a class="link-600 fw-semi-bold" href="#!">{{cashregister.user_made.username}}</a></p>
+                <p class="fs--1 mb-0">Esta apertura solo es para efectivo<a class="link-600 fw-semi-bold" href="#!">{{ cashregister.user_made.username }}</a></p>
+                
                 {% if cashregister %}
-                <p class="next">
-                    <span class="text-warning">
-                        Ya se abrió una caja el dia de hoy.<a href="{% url 'cashregister_app:cashregister_view' %}">Ver aquí</a>
-                    </span>
-                </p>
+                    <p class="next">
+                        <span class="text-warning">
+                            Ya se abrió una caja el día de hoy.<a href="{% url 'cashregister_app:cashregister_view' %}">Ver aquí</a>
+                        </span>
+                    </p>
                 {% endif %}
             </div>
+    
             <!--Card Body-->
             <div class="card-body py-4">
                 <div class="tab-content">
@@ -55,17 +57,18 @@
                                         <i class="fas fa-circle fa-stack-2x text-primary"></i>
                                         <i class="fa-inverse fa-stack-1x dark__text-white fas fa-cash-register"></i>
                                     </span>
-                                    <span>Monto Incial</span>
+                                    <span>Monto Inicial</span>
                                 </label>
                                 {% if not cashregister %}
-                                {{form.initial_balance}}
-                                <p class="text-600 fs--2">Monto de apertura</p>
+                                    {{ form.initial_balance }}
+                                    <p class="text-600 fs--2">Monto de apertura</p>
                                 {% else %}
-                                <input class="form-control" type="number" disabled placeholder="0.00">
+                                    <input class="form-control" type="number" disabled placeholder="0.00">
                                 {% endif %}
                                 <div class="valid-feedback">Perfecto!</div>
                                 <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
                             </div>
+                            
                             <div class="d-flex align-items-center col-md-7">
                                 <div class="col-md-10">
                                     <label for="id_initial_balance" class="col-12 col-form-label d-flex justify-content-start align-items-center">
@@ -76,36 +79,37 @@
                                         <span>Moneda</span>
                                     </label>
                                     {% if not cashregister %}
-                                        {{form.currency}}
+                                        {{ form.currency }}
                                         <p class="text-600 fs--2">Seleccione divisa</p>
-                                        {% else %}
+                                    {% else %}
                                         <select class="form-control" disabled></select>
                                     {% endif %}
-                                    
                                     <div class="valid-feedback">Perfecto!</div>
                                     <div class="invalid-feedback">Error. Seleccione una divisa</div>
                                 </div>
+                                
                                 {% if not cashregister %}
-                                <div class="col-md-2">
-                                    <span id="addCurrency" class="fa-stack ms-2 mt-3" data-bs-toggle="tooltip" data-bs-target="#currency-modal" data-bs-original-title="Añadir nueva moneda" style="cursor: pointer">
-                                        <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                                        <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
-                                    </span>
-                                </div>
+                                    <div class="col-md-2">
+                                        <span id="addCurrency" class="fa-stack ms-2 mt-3" data-bs-toggle="tooltip" data-bs-target="#currency-modal" data-bs-original-title="Añadir nueva moneda" style="cursor: pointer">
+                                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                            <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
+                                        </span>
+                                    </div>
+                                {% endif %}
                             </div>
-                            
+    
                             <div class="col-12">
-                                <button class="btn btn-primary" type="submit">Abrir caja</button>
+                                {% if not cashregister %}
+                                    <button class="btn btn-primary" type="submit">Abrir caja</button>
+                                {% else %}
+                                    <button class="btn btn-primary" type="submit" disabled>Abrir caja</button>
+                                {% endif %}
                             </div>
-                            {% else %}
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit" disabled>Abrir caja</button>
-                            </div>
-                            {% endif %}
+    
                             {% if form.initial_balance.errors %}
-                            <div class="col-12">
-                                <div class="invalid-feedback">{{ form.initial_balance.errors }}</div>
-                            </div>
+                                <div class="col-12">
+                                    <div class="invalid-feedback">{{ form.initial_balance.errors }}</div>
+                                </div>
                             {% endif %}
                         </form>
                     </div>
@@ -113,6 +117,7 @@
             </div>
         </div>
     </div>
+    
     <!-- ===============================================-->
     <!--   Fin Card con el formulario de la caja-->
     <!-- ===============================================-->
