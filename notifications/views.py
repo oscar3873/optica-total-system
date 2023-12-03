@@ -42,5 +42,5 @@ class DynamicDetail(LoginRequiredMixin, View):
 
 class LoadNotificationsView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        notifications = Notifications.objects.all().order_by('-created_at')[:5]
+        notifications = Notifications.objects.filter(deleted_at=None).order_by('-created_at')[:5]
         return JsonResponse(get_notifications_JSON(notifications), safe=False)

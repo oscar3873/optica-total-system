@@ -3,6 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     payment_method.addEventListener("change", function() {
         // Obtener el valor seleccionado
         selected_payment = payment_method.selectedIndex;
+        console.log(selected_payment);
+        var payment_option = payment_method.options[selected_payment].text;
+
+        if (payment_option.includes("Cuenta Corriente")) {
+            selected_payment = 0;
+        }
     });
 
     // cuando el usuario hace clic en el botón "add more" de las variantes

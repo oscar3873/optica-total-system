@@ -244,16 +244,18 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
 
         elif not customer.has_credit_account and product_cristal or product_contacto: 
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
-            missing_balance = Decimal(total) - Decimal(payment_total) # Diferencial total de la venta con el pago del cliente
+            missing_balance = max(Decimal(0), Decimal(total) - Decimal(payment_total))
             sale.missing_balance = missing_balance
             set_movement(payment_total, payment_methods.type_method, customer, request)
 
         else:
             """Si el cliente NO CUENTA CORRIENTE pero paga el total de la compra - NO CRISTAL"""
-            set_movement(total, payment_methods.type_method, customer, request)
+            payment = max(Decimal(0), Decimal(total) - Decimal(payment_total))
+            set_movement(payment, payment_methods.type_method, customer, request)
     else:
         """Si el CLIETNE NO REGISTRA"""
-        set_movement(total,  payment_methods.type_method, None, request)
+        payment = max(Decimal(0), Decimal(total) - Decimal(payment_total))
+        set_movement(payment,  payment_methods.type_method, None, request)
 
     # Modificamos la forma de obtener la sucursal
     branch_actualy = set_branch_session(request)

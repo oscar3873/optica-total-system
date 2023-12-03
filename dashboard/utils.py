@@ -142,7 +142,7 @@ def dayli_sales(branch_actualy):
 
     # Realiza la consulta para obtener los montos recaudados en cada hora con estado "COMPLETADO"
     ventas_completadas = Sale.objects.filter(created_at__date=fecha_hoy, state='COMPLETADO', branch=branch_actualy,
-                                            deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum('total'))
+                                            deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum('sale_payment__amount'))
     
     # Realiza la consulta para obtener los montos recaudados en cada hora con estado "PENDIENTE"
     ventas_pendientes = Sale.objects.filter(created_at__date=fecha_hoy, state='PENDIENTE', branch=branch_actualy,
@@ -182,13 +182,13 @@ def dayli_sales_count(branch_actualy):
 
 
 def dayli_sales_total(branch_actualy):
-    suma_total = Sale.objects.filter(created_at__date=datetime.now().date(), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
+    suma_total = Sale.objects.filter(created_at__date=datetime.now().date(), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('sale_payment__amount')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
     return suma_total_ventas
 
 
 def yesterday_sales_total(branch_actualy):
-    suma_total = Sale.objects.filter(created_at__date=datetime.now().date() - timedelta(days=1), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('total') - F('missing_balance')))
+    suma_total = Sale.objects.filter(created_at__date=datetime.now().date() - timedelta(days=1), branch=branch_actualy).aggregate(suma_total_ventas=Sum(F('sale_payment__amount')))
     suma_total_ventas = suma_total['suma_total_ventas'] if suma_total['suma_total_ventas'] is not None else 0
     return suma_total_ventas
 

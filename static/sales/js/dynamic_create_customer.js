@@ -1,6 +1,6 @@
 let payment_method = document.getElementById('id_payment_method');
 let error_div = document.createElement('div');
-let selected_payment = 1;
+let selected_payment = 0;
 
 const customer_modal = document.getElementById('New-customer-form');
 const searchText = "Cuenta Corriente";
