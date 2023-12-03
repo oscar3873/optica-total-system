@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 actionsDropdown.className = 'dropstart font-sans-serif position-static d-inline-block';
 
                                 const actionsButton = document.createElement('a');
-                                actionsButton.href = `/movements/detail/${movement.id}`;
+                                actionsButton.href = `detail/${movement.id}`;
                                 actionsButton.className = 'btn btn-sm btn-falcon-default me-2';
                                 actionsButton.setAttribute('data-bs-toggle', 'tooltip');
                                 actionsButton.setAttribute('title', 'Ver Detalle');
