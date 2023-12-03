@@ -13,7 +13,7 @@ class SaleForm(forms.ModelForm):
     )
 
     amount = forms.DecimalField(
-        required = False,
+        required = True,
         widget = forms.NumberInput(
             attrs={'class': 'form-control'}
         )
@@ -27,6 +27,7 @@ class SaleForm(forms.ModelForm):
 
     payment_method = forms.ModelChoiceField(
         queryset=PaymentMethod.objects.all(),
+        empty_label=None,
         widget=forms.Select(
             attrs={'class': 'form-control'}
         )
@@ -90,6 +91,7 @@ class PaymentMethodForm(ValidationFormMixin):
     )
     
     type_method = forms.ModelChoiceField(
+        empty_label=None,
         queryset = PaymentType.objects.exclude(name__in=['Efectivo', 'Transferencia', 'Cuenta Corriente']),
         widget=forms.Select(
             attrs={
@@ -123,6 +125,7 @@ class TypePaymentMethodForm(ValidationFormMixin):
     )
 
     payment_method = forms.ModelChoiceField(
+        empty_label=None,
         queryset=PaymentMethod.objects.exclude(name__in=['Cuenta Corriente']),
         widget=forms.Select(
             attrs={

@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             const barcodeCell = document.createElement('td');
                             barcodeCell.className = 'align-start barcode';
-                            const barcodeText = document.createTextNode(product.barcode);
+                            const barcodeText = document.createTextNode(product.barcode || 'Sin codigo');
                             barcodeCell.appendChild(barcodeText);
                             row.appendChild(barcodeCell);
 

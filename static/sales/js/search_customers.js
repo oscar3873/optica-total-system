@@ -17,27 +17,30 @@ document.addEventListener("DOMContentLoaded", function () {
                 data: { search_term: searchTerm },
                 success: function(data) {
                     let customers = data.data;
-                    
+                
                     // Mostrar los resultados de búsqueda
                     searchResults.innerHTML = ''; // Limpia los resultados anteriores
-                    for (let index = 0; index < 5; index++) {
+                    // Define el límite de resultados a mostrar (5 en este caso)
+                    const limit = 5;
+                
+                    for (let index = 0; index < customers.length && index < limit; index++) {
                         let customer = customers[index];
                         const item = document.createElement('li');
                         item.style.zIndex = "3";
                         item.style.cursor = 'pointer';
-                        item.classList.add('list-group-item','searchType', 'list-group-item-secondary', 'customers');
+                        item.classList.add('list-group-item', 'searchType', 'list-group-item-secondary', 'customers');
                         item.dataset.customerId = customer.id;
                         item.dataset.customerCredit = customer.has_credit_account;
                         item.innerHTML = `
-                        <div class="d-flex justify-content-between">
-                            <h6>${customer.first_name} ${customer.last_name}</h6>
-                            <small>${customer.dni}</small>
-                        </div>
+                            <div class="d-flex justify-content-between">
+                                <h6>${customer.first_name} ${customer.last_name}</h6>
+                                <small>${customer.dni}</small>
+                            </div>
                         `;
                         searchResults.appendChild(item);
-                        
                     }
                 },
+                
                 error: function(error) {
                     console.error('Error en la solicitud AJAX', error);
                 }
@@ -116,7 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 label.remove();
             });
 
-            if (customerCredit == 1) {            
+            if (customerCredit == 1) {
                 // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                 for (var i = 0; i < payment_method.options.length; i++) {
                     if (payment_method.options[i].text.includes(searchText)) {
@@ -141,10 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
             }
-
-
-            
-
         });
     }
 
@@ -166,7 +165,10 @@ document.addEventListener("DOMContentLoaded", function () {
     realizarVentaBtn.addEventListener('click', function() {
         // Coloca aquí el código que deseas ejecutar al hacer clic en el botón "boton-realizar-venta"
         // En este caso, deshabilitar payment_method
-        if (payment_method) {
+        let customer_selected = document.getElementById('id_customer');
+        let amount_input = document.getElementById('id_amount');
+
+        if (payment_method && customer_selected && amount_input.value != '') {
             payment_method.disabled = false;
             for (var i = 0; i < payment_method.options.length; i++) {
                 if (payment_method.options[i].text.includes(searchText)) {

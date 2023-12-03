@@ -62,7 +62,13 @@
                       </div>
                       <div class="col-12 d-flex justify-content-between">
                           <p class="fw-normal fw-semi-bold mb-1">Código:</p>
-                          <span class="ms-3 text-900 fw-bold">{{product.barcode}}</span>
+                          <span class="ms-3 text-900 fw-bold">
+                            {% if product.barcode %}
+                              {{product.barcode}}
+                            {% else %}
+                              Sin codigo
+                            {% endif %}
+                          </span>
                       </div>
                       {% if request.user.is_staff %}
                       <div class="col-12 pt-1 pt-sm-0 d-flex justify-content-between">

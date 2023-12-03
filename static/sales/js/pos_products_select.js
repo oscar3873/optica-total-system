@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalOfForms = document.getElementById('id_total');
     const totalElement = document.getElementById('total');
     const discountElement = document.getElementById('id_discount');
-    const TotalSuccess = document.getElementById('total-success');
+    const TotalSuccess = document.querySelectorAll('#total-success');
 
     discountElement.addEventListener('input', updateTotal);
 
@@ -522,8 +522,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         total = parseFloat(subtotal * (1 - discount_for_sale/100)).toFixed(2);
         totalElement.textContent = `$ ${total}`;
-        TotalSuccess.textContent = `$ ${total}`;
-
+        TotalSuccess.forEach(totalsucces => {
+            totalsucces.textContent = `$ ${total}`;
+        });
         totalOfForms.value = total;
     };
 

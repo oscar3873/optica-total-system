@@ -88,7 +88,13 @@
                 </td> -->
                 <!-- <td class="align-start user_made">{{product.user_made}}</td> -->
                 <td class="align-start name">{{product.name}}</td>
-                <td class="align-start d-none d-md-table-cell barcode">{{product.barcode}}</td>
+                <td class="align-start d-none d-md-table-cell barcode">
+                    {% if product.barcode %}
+                      {{product.barcode}}
+                    {% else %}
+                      Sin codigo
+                  {% endif %}
+                </td>
                 <td class="align-start sale_price"><span class="badge badge-soft-success rounded-pill">${{product.sale_price}}</span></td>
                 <td class="align-start d-none d-md-table-cell description">{{product.description}}</td>
                 <td class="align-start d-none d-md-table-cell stock">{{product.stock}}</td>

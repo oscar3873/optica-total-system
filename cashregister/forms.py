@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import formset_factory
 from cashregister.models import CashRegister, CashRegisterDetail, Movement, Currency
+from sales.models import PaymentType
 
 
 
@@ -49,6 +50,7 @@ class CashRegisterForm(forms.ModelForm):
     )
     
     currency = forms.ModelChoiceField(
+        empty_label=None,
         queryset=Currency.objects.all(),
         widget=forms.Select(
             attrs={
@@ -97,33 +99,52 @@ class CashRegisterDetailForm(forms.ModelForm):
 
 class MovementForm(forms.ModelForm):
     
+    amount = forms.DecimalField(
+        widget=forms.NumberInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': '0.00'
+            }
+        )
+    )
+    TYPE_OPERATION = [
+        ('Ingreso', 'Ingreso'),
+        ('Egreso', 'Egreso')
+    ]
+
+    type_operation = forms.ChoiceField(
+        initial=TYPE_OPERATION[0],
+        choices=TYPE_OPERATION,
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Seleccione una opción'
+            }
+        )
+    )
+
+    description = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control',
+                'rows': '5',
+                'placeholder': 'Se retiró para la compra de ...'
+            }
+        )
+    )
+
+    payment_method = forms.ModelChoiceField(
+        queryset=PaymentType.objects.all(),
+        widget=forms.Select(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Seleccione una opción'
+            }
+        )
+    )
     class Meta:
         model = Movement
         fields = ['amount', 'type_operation', 'description', 'payment_method']
-        widgets = {
-            'amount': forms.NumberInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': '0.00'
-                }),
-            'type_operation': forms.Select(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Seleccione una opción'
-                }),
-            'description': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'rows': '5',
-                    'placeholder': 'Se retiro para compra de ...'
-                }),
-            'payment_method': forms.Select(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Seleccione una opción'
-                })
-        }
-        
-        
+
 
 CashRegisterDetailFormSet = formset_factory(CashRegisterDetailForm, extra=0)

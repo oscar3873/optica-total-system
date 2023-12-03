@@ -1,9 +1,11 @@
 let payment_method = document.getElementById('id_payment_method');
 let error_div = document.createElement('div');
 let selected_payment = 1;
+
 const customer_modal = document.getElementById('New-customer-form');
 const searchText = "Cuenta Corriente";
 const botonMasDiv = document.getElementById('boton-mas');
+
 
 for (var i = 0; i < payment_method.options.length; i++) {
     if (payment_method.options[i].text.includes(searchText)) {
@@ -87,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         checkboxContainer.appendChild(label);
                     }
 
-                    if (customer_data.has_credit_account) {                
+                    if (customer_data.has_credit_account) {    
                         // Recorre todas las opciones para encontrar la que contiene "Cuenta Corriente" en su texto
                         for (var i = 0; i < payment_method.options.length; i++) {
                             if (payment_method.options[i].text.includes(searchText)) {

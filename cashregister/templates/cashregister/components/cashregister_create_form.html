@@ -34,11 +34,7 @@
         <div class="card theme-wizard h-100 mb-5">
             <!--Card Header-->
             <div class="card-header bg-light pt-3 pb-2">
-                <div class="d-flex mb-4">
-                    <div class="col">
-                        <p class="fs--2 mb-0">Esta apertura solo es para efectivo<a class="link-600 fw-semi-bold" href="#!">{{cashregister.user_made.username}}</a></p>
-                    </div>
-                </div>
+                <p class="fs--1 mb-0">Esta apertura solo es para efectivo<a class="link-600 fw-semi-bold" href="#!">{{cashregister.user_made.username}}</a></p>
                 {% if cashregister %}
                 <p class="next">
                     <span class="text-warning">
@@ -63,40 +59,41 @@
                                 </label>
                                 {% if not cashregister %}
                                 {{form.initial_balance}}
-                                <p class="text-600 fs--2">Ingrese el monto con el que desea abrir su caja</p>
+                                <p class="text-600 fs--2">Monto de apertura</p>
                                 {% else %}
                                 <input class="form-control" type="number" disabled placeholder="0.00">
                                 {% endif %}
                                 <div class="valid-feedback">Perfecto!</div>
                                 <div class="invalid-feedback">Error. Ingrese un formato correcto. Ejemplo 1500,00 - 14523.23</div>
                             </div>
-                            <div class="col-md-5">
-                                <label for="id_initial_balance" class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                    <span class="fa-stack me-2 ms-n1">
-                                        <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                                        <i class="fa-inverse fa-stack-1x dark__text-white fas fa-money-bill-wave"></i>
-                                    </span>
-                                    <span>Moneda</span>
-                                </label>
+                            <div class="d-flex align-items-center col-md-7">
+                                <div class="col-md-10">
+                                    <label for="id_initial_balance" class="col-12 col-form-label d-flex justify-content-start align-items-center">
+                                        <span class="fa-stack me-2 ms-n1">
+                                            <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                            <i class="fa-inverse fa-stack-1x dark__text-white fas fa-money-bill-wave"></i>
+                                        </span>
+                                        <span>Moneda</span>
+                                    </label>
+                                    {% if not cashregister %}
+                                        {{form.currency}}
+                                        <p class="text-600 fs--2">Seleccione divisa</p>
+                                        {% else %}
+                                        <select class="form-control" disabled></select>
+                                    {% endif %}
+                                    
+                                    <div class="valid-feedback">Perfecto!</div>
+                                    <div class="invalid-feedback">Error. Seleccione una divisa</div>
+                                </div>
                                 {% if not cashregister %}
-                                    {{form.currency}}
-                                    <p class="text-600 fs--2">Seleccione la divisa con la que quiere abrir su caja</p>
-                                    {% else %}
-                                    <select class="form-control" disabled></select>
-                                {% endif %}
-                                
-                                <div class="valid-feedback">Perfecto!</div>
-                                <div class="invalid-feedback">Error. Seleccione una divisa</div>
+                                <div class="col-md-2">
+                                    <span id="addCurrency" class="fa-stack ms-2 mt-3" data-bs-toggle="tooltip" data-bs-target="#currency-modal" data-bs-original-title="Añadir nueva moneda" style="cursor: pointer">
+                                        <i class="fas fa-circle fa-stack-2x text-primary"></i>
+                                        <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
+                                    </span>
+                                </div>
                             </div>
-                            <div class="col-md-2">
-                                <label for="id_initial_balance" class="col-12 col-form-label d-flex justify-content-start align-items-center">
-                                </label>
-                                <span id="addCurrency" class="fa-stack me-2 ms-n1 ps-3" data-bs-toggle="tooltip" data-bs-target="#currency-modal" data-bs-original-title="Añadir nueva moneda" style="cursor: pointer">
-                                    <i class="fas fa-circle fa-stack-2x text-primary"></i>
-                                    <i class="fa-inverse fa-stack-1x dark__text-white fas fa-plus"></i>
-                                </span>
-                            </div>
-                            {% if not cashregister %}
+                            
                             <div class="col-12">
                                 <button class="btn btn-primary" type="submit">Abrir caja</button>
                             </div>
