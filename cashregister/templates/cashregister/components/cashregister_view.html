@@ -59,12 +59,12 @@
           <div class="d-flex pb-3 justify-content-between align-items-center">
             <div class="pe-3">
               <p class="text-700 fs--0 fw-medium">Balance inicial </p>
-              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.initial_balance|floatformat:2}} </h4>
+              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.initial_balance|floatformat:2|intcomma}} </h4>
               <small class="d-none d-md-inline">Monto inicial en <span class="text-warning">Efectivo</span></small>
             </div>
             <div class="ps-3">
               <p class="text-700 fs--0">Balance Actual </p>
-              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.final_balance|floatformat:2}} </h4>
+              <h4 class="text-800 fw-semi-bold mb-0">${{cashregister.final_balance|floatformat:2|intcomma}} </h4>
               
             </div>
           </div>
