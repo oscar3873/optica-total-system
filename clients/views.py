@@ -454,12 +454,10 @@ def open_credit_account(request, pk): # usar con   --->   <form method='post' ac
 def pay_credits(request, pk):
     user = request.user
     customer = Customer.objects.get(pk=pk)
-    payment = TypePaymentMethodForm(request.POST)
+    payment = TypePaymentMethodForm(request.POST)        
     
     if payment.is_valid():
         total = payment.cleaned_data['amount']
-
-    if payment.is_valid():
         pay = payment.save(commit=False)
 
         branch_actualy = set_branch_session(request)
