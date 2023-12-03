@@ -52,7 +52,7 @@
                         <p class="fw-bold fs-1 text-900 my-0">{{form.initial.type_method}}</p>
                         <p class="fs--2 fw-lighter text-600">Se consideran <span class="text-warning">todos</span> los movimientos en <span class="text-warning">{{form.initial.type_method|lower}}</span> registrados en la caja</p>
                         <span class="form-label text-600 fw-semi-bold">Total en sistema</span>
-                        <p id="{{forloop.counter}}" data-type-method="{{form.initial.type_method|lower}}" class="fw-bold fs-1 text-900 my-0">${{ form.initial.registered_amount|floatformat:2 }}</p>
+                        <p id="{{forloop.counter}}" data-type-method="{{form.initial.type_method|lower}}" class="fw-bold fs-1 text-900 my-0">${{ form.initial.registered_amount|floatformat:2|intcomma }}</p>
                         <p class="fs--2 fw-lighter text-600">Total que se registro en la caja en <span class="text-warning">{{form.initial.type_method|lower}}</span></p>
                         <label for="{{ form.counted_amount.id_for_label }}" class="form-label">Total caja fisica</label>
                         {{ form.counted_amount }}

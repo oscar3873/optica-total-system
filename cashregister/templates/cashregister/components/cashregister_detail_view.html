@@ -95,7 +95,7 @@
                     <div class="col-6 mt-4 col-sm-4">
                     <p class="fw-normal fw-semi-bold mb-1">Balance final</p>
                     </div>
-                    <div class="col mt-4 text-800 fw-bold">{{cashregister.final_balance|floatformat:2}} {{cashregister.currency.code}}</div>
+                    <div class="col mt-4 text-800 fw-bold">{{cashregister.final_balance|floatformat:2|intcomma}} {{cashregister.currency.code}}</div>
                 </div>
                 <div class="row my-0">
                     <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">monto final</span> con el que se cerro la caja</p>
@@ -104,7 +104,7 @@
                     <div class="col-6 mt-4 col-sm-4">
                     <p class="fw-normal fw-semi-bold mb-1">Balance inicial</p>
                     </div>
-                    <div class="col mt-4 text-800 fw-bold">{{cashregister.initial_balance|floatformat:2}} {{cashregister.currency.code}}</div>
+                    <div class="col mt-4 text-800 fw-bold">{{cashregister.initial_balance|floatformat:2|intcomma}} {{cashregister.currency.code}}</div>
                 </div>
                 <div class="row my-0">
                     <p class="fs--2 py-0 my-0 fw-lighter text-600">Este es el <span class="text-warning">monto inicial</span> con el que se abrio la caja</p>
@@ -199,9 +199,9 @@
                             {% for v in value %}
                                 <tr class="border-200">
                                     <td class="align-middle">{{ v.type_method }}</td>
-                                    <td class="align-middle text-center">{{ v.registered_amount|floatformat:2 }}</td>
-                                    <td class="align-middle text-end">{{ v.counted_amount|floatformat:2 }}</td>
-                                    <td class="align-middle text-end">{{ v.difference|floatformat:2 }}</td>
+                                    <td class="align-middle text-center">{{ v.registered_amount|floatformat:2|intcomma }}</td>
+                                    <td class="align-middle text-end">{{ v.counted_amount|floatformat:2|intcomma }}</td>
+                                    <td class="align-middle text-end">{{ v.difference|floatformat:2|intcomma }}</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
