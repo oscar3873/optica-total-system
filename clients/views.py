@@ -454,7 +454,9 @@ def pay_credits(request, pk):
     user = request.user
     customer = Customer.objects.get(pk=pk)
     payment = TypePaymentMethodForm(request.POST)
-    total = payment.amount
+    
+    if payment.is_valid():
+        total = payment.cleaned_data['amount']
 
     if payment.is_valid():
         pay = payment.save(commit=False)
