@@ -49,7 +49,7 @@
               
               {% if customer.credit_balance > 0 %}
                 <div class="mb-4">
-                    <p class="fw-semi-bold">No se puede <span class="text-warning">eliminar</span> al cliente "{{ customer.first_name }} {{ customer.last_name }}" ya que posee deuda</p>
+                    <p class="fw-semi-bold">No se puede <span class="text-warning">eliminar</span> al cliente "{{ customer.first_name }} {{ customer.last_name }}" ya que posee una deuda de <span class="text-warning">${{customer.credit_balance}}</span></p>
                 </div>
                 <div class="mb-4">
                     <a class="btn btn-secondary" href="{% url 'clients_app:customer_view' %}">Cancelar</a>
