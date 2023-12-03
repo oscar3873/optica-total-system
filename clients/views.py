@@ -94,7 +94,8 @@ class CustomerCreateView(LoginRequiredMixin, FormView):
             
             customer = form.save(commit=False)
             customer.user_made = self.request.user
-
+            
+            customer.credit_balance = 0
             
             branch_actualy = set_branch_session(self.request)
 
@@ -442,7 +443,7 @@ def open_credit_account(request, pk): # usar con   --->   <form method='post' ac
     if request.method == 'POST':
         if not customer.has_credit_account:
             customer.has_credit_account = True
-            customer.credit_balance = 0
+            # customer.credit_balance = 0
             customer.save()
             messages.success(request, "Se ha abierto una cuenta Corriente con exito.")
         else:
@@ -489,11 +490,14 @@ def close_credit_account(request, pk):
         messages.warning(request, "Solo administradores pueden cerrar cuenta corriente.")
         return redirect('clients_app:customer_detail', pk=customer.pk)
 
-    customer.has_credit_account = False
-    customer.user_made = user
-    customer.save()
-
-    messages.warning(request, "Se cerró Cuenta Corriente del cliente.")
+    if customer.credit_balance == 0:
+        customer.has_credit_account = False
+        customer.user_made = user
+        customer.save()
+        messages.warning(request, "Se cerró Cuenta Corriente del cliente.")
+    else:
+        messages.warning(request, "El cliente posee deuda y no se puede cerrar la cuenta corriente.")
+    
     return redirect('clients_app:customer_detail', pk=customer.pk)
 
 
