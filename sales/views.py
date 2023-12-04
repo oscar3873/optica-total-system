@@ -81,9 +81,15 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             payment_methods = saleform.cleaned_data.pop('payment_method')
             customer = saleform.cleaned_data['customer']
 
-            if not customer.has_credit_account and 'Cuenta Corriente' in payment_methods.name:
+            
+            if customer and not customer.has_credit_account and 'Cuenta Corriente' in payment_methods.name:
                 messages.error(self.request, "El metodo de pago 'Cuenta Corriente' no esta habilitado para el cliente seleccionado.")
                 return super().form_invalid(form)
+            
+            if not customer and 'Cuenta Corriente' in payment_methods.name:
+                messages.error(self.request, "El metodo de pago 'Cuenta Corriente' no esta habilitado para el cliente seleccionado.")
+                return super().form_invalid(form)
+            
 
             amount = saleform.cleaned_data.pop('amount')
             discount_sale = saleform.cleaned_data['discount']
