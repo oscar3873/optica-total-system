@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // const quantity_variant = quantity_orginal.cloneNode();
         const quantity_variant = document.createElement('input');
         quantity_variant.classList.add('form-control', 'text-center', 'px-2', 'input-spin-none', 'input-fixed-size');
+        quantity_variant.disabled = true;
         quantity_variant.type = 'number';
         quantity_variant.min = '1';
         quantity_variant.readonly = true;
