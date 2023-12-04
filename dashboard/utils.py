@@ -11,8 +11,11 @@ from cashregister.models import Movement
 from employes.models import Employee_Objetives
 from branches.models import Branch_Objetives
 
-fecha_hoy = timezone.now().date()
 
+# Convertir a la zona horaria local (en este caso, la de Argentina)
+now_local = timezone.localtime(timezone.now())
+# Obtener solo la fecha en la zona horaria local
+fecha_hoy = now_local.date()
 
 ##############################  REPORTES DE SEMANAS  #############################
 
@@ -135,7 +138,7 @@ def objetives(branch_actualy):
 
 def dayli_sales(branch_actualy):
     # Crea una lista de horas en el rango de 8 a.m. a 9 p.m.
-    horas = [datetime.combine(timezone.now(), time(i, 0)) for i in range(8, 22)]
+    horas = [datetime.combine(now_local, time(i, 0)) for i in range(8, 23)]
     # Inicializa diccionarios para almacenar los montos recaudados en cada intervalo de una hora
     monto_por_rango_completado = {str(hora.hour): 0 for hora in horas}
     monto_por_rango_pendiente = {str(hora.hour): 0 for hora in horas}
@@ -149,25 +152,29 @@ def dayli_sales(branch_actualy):
                                             deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum(F('total') - F('missing_balance')))
 
     # Llena los diccionarios con los montos recaudados en cada intervalo de una hora
+    # Llena los diccionarios con los montos recaudados en cada intervalo de una hora
     for venta in ventas_completadas:
         hora_venta = venta['created_at__time']
         monto_recaudado = venta['monto_recaudado']
         
-        for i in range(len(horas) - 1):
+        for i in range(len(horas) - 1):  # Utiliza len(horas) - 1 para evitar el error "list index out of range"
             if horas[i].time() <= hora_venta < horas[i + 1].time():
                 monto_por_rango_completado[str(horas[i].hour)] += float(monto_recaudado)
                 break
 
+    # Haz lo mismo para ventas_pendientes
+    print(horas)
     for venta in ventas_pendientes:
         hora_venta = venta['created_at__time']
         monto_recaudado = venta['monto_recaudado']
         
-        for i in range(len(horas) - 1):
+        for i in range(len(horas) - 1):  # Utiliza len(horas) - 1 para evitar el error "list index out of range"
             if horas[i].time() <= hora_venta < horas[i + 1].time():
                 monto_por_rango_pendiente[str(horas[i].hour)] += float(monto_recaudado)
                 break
     
-
+    print(monto_por_rango_completado)
+    print(monto_por_rango_pendiente)
     return monto_por_rango_completado, monto_por_rango_pendiente
 
 

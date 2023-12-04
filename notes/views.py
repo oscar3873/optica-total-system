@@ -28,7 +28,7 @@ class NoteCreateView(CustomUserPassesTestMixin, FormView):
             note = form.save(commit=False)
             note.user_made = self.request.user
             note.save()
-            send_global_message(get_notes_JSON(note))
+            # send_global_message(get_notes_JSON(note))
 
         return HttpResponseRedirect(self.get_success_url())
         
@@ -84,7 +84,7 @@ class NoteListView(CustomUserPassesTestMixin, ListView):
     model = Note
     template_name = 'notes/notes_page.html'
     context_object_name = 'notes'
-    paginate_by = 50
+    paginate_by = 7
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

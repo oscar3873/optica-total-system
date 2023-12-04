@@ -226,6 +226,12 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
     if not customer:
         customer = Customer.objects.get(id=1)
 
+    if payment_total >= total:
+        payment = payment_total
+    else:
+        payment = total - payment_total
+        sale.missing_balance = payment
+
     if customer and not 'consumidor' in customer.first_name.lower():
         if customer.has_credit_account: # and 'cuenta corriente' in payment_methods.name.lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
@@ -249,12 +255,10 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
             set_movement(payment_total, payment_methods.type_method, customer, request)
 
         else:
-            """Si el cliente NO CUENTA CORRIENTE pero paga el total de la compra - NO CRISTAL"""
-            payment = max(Decimal(0), Decimal(total) - Decimal(payment_total))
+            """Si el cliente NO CUENTA CORRIENTE - NO CRISTAL"""
             set_movement(payment, payment_methods.type_method, customer, request)
     else:
         """Si el CLIETNE NO REGISTRA"""
-        payment = max(Decimal(0), Decimal(total) - Decimal(payment_total))
         set_movement(payment,  payment_methods.type_method, None, request)
 
     # Modificamos la forma de obtener la sucursal

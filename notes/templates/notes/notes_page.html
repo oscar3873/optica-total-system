@@ -4,6 +4,7 @@
 
 {% block extra_css %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'sales/css/pos_products_select.css' %}">
 {% endblock extra_css %}
 
 {% block main %}
@@ -33,23 +34,21 @@
             <div class="d-flex justify-content-center py-2">
               <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva nota</a>
             </div>
-            <div class="container my-3 mx-0 px-0">
+            <div class="container product-container my-3 mx-0 px-0">
 
               {% if labels %}
-              <div class="d-flex flex-column">
-                {% for label in labels %}
-                <div class="border-top pt-2">
-                  <div class="row pb-2 ">
-                    <div class="col-12 d-flex align-items-center">
-                      <!-- <span class="me-2"><input type="color" class="form-control form-control-sm form-control-color" id="color-input-disabled" value="{{label.color}}" disabled></span> -->
-                      <span class="ms-3 me-2"><i class="fas fa-circle" style="color: {{label.color}};"></i></span>
-                      {{label.label}}
+                  {% for label in labels %}
+                    <div class="border-top pt-2">
+                      <div class="row pb-2">
+                        <div class="col-12 d-flex align-items-center">
+                          <!-- <span class="me-2"><input type="color" class="form-control form-control-sm form-control-color" id="color-input-disabled" value="{{label.color}}" disabled></span> -->
+                          <span class="ms-3 me-2"><i class="fas fa-circle" style="color: {{label.color}};"></i></span>
+                          {{label.label}}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                {% endfor %}
+                  {% endfor %}
               {% endif %}
-              </div>
 
             </div>
           </div>
@@ -98,7 +97,17 @@
                 </div>
                 {% endfor %}
               </div>
-              <!--Nav de paginacion-->
+              {% else %}
+              <div class="text-center py-5">
+                <h3>No hay notas disponibles</h3>
+                <div class="d-flex justify-content-center pb-3">
+                  <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva nota</a>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            <!--Nav de paginacion-->
+            <div class="card-footer">
               <nav aria-label="Notes page navigation">
                 <ul class="pagination justify-content-center">
                   <!-- Enlace a la página anterior -->
@@ -122,14 +131,6 @@
                   </li>
                 </ul>
               </nav>
-              {% else %}
-              <div class="text-center py-5">
-                <h3>No hay notas disponibles</h3>
-                <div class="d-flex justify-content-center pb-3">
-                  <a href="{% url 'note_app:new_note' %}" class="btn btn-primary me-0" type="submit">Nueva nota</a>
-                </div>
-              </div>
-              {% endif %}
             </div>
           </div>
         </div>

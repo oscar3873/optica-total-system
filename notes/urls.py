@@ -12,7 +12,7 @@ urlpatterns = [
     ),
 
     path(
-        'list/note',
+        '',
         NoteListView.as_view(),
         name='note_list'
     ),
