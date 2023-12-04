@@ -467,8 +467,12 @@ def pay_credits(request, pk):
             messages.error(request, 'Antes de realizar una Venta, debe Abrir una Caja.')
             return redirect('cashregister_app:cashregister_view')
 
-        create_in_movement(branch_actualy, request.user, pay.payment_method.type_method, pay.description, total)
-
+        mov = create_in_movement(branch_actualy, request.user, pay.payment_method.type_method, pay.description, total)
+        
+        pay.customer = customer
+        pay.movement = mov
+        pay.save()
+        
         customer.credit_balance -= total
         customer.user_made = user
         customer.save()
@@ -585,11 +589,15 @@ def pay_service_order(request, pk):
             total = sale.missing_balance if sale.state == "PENDIENTE" else 0
 
             if not service.is_done and total:
-                create_in_movement(branch_actualy, request.user, type_method.payment_method.type_method, type_method.description, total)
+                mov = create_in_movement(branch_actualy, request.user, type_method.payment_method.type_method, type_method.description, total)
                 
                 customer.credit_balance -= total if customer.credit_balance > 0 else 0
                 customer.save()
 
+                type_method.customer = customer
+                type_method.movement = mov
+                type_method.save()
+                
                 sale.state = "COMPLETADO"
                 sale.save()
 

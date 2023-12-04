@@ -37,7 +37,6 @@ class SupplierCreateView(CustomUserPassesTestMixin, FormView):
 
         banks = form.cleaned_data.get('cbu')
         for bank in banks:
-            print(type(bank))
             Supplier_Bank.objects.create(
                 supplier=supplier,
                 bank=bank,

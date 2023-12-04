@@ -147,6 +147,7 @@ def dayli_sales(branch_actualy):
     ventas_completadas = Sale.objects.filter(created_at__date=fecha_hoy, state='COMPLETADO', branch=branch_actualy,
                                             deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum('sale_payment__amount'))
     
+    
     # Realiza la consulta para obtener los montos recaudados en cada hora con estado "PENDIENTE"
     ventas_pendientes = Sale.objects.filter(created_at__date=fecha_hoy, state='PENDIENTE', branch=branch_actualy,
                                             deleted_at=None).values('created_at__time').annotate(monto_recaudado=Sum(F('total') - F('missing_balance')))
@@ -155,7 +156,7 @@ def dayli_sales(branch_actualy):
     # Llena los diccionarios con los montos recaudados en cada intervalo de una hora
     for venta in ventas_completadas:
         hora_venta = venta['created_at__time']
-        monto_recaudado = venta['monto_recaudado']
+        monto_recaudado = venta['monto_recaudado'] or 0
         
         for i in range(len(horas) - 1):  # Utiliza len(horas) - 1 para evitar el error "list index out of range"
             if horas[i].time() <= hora_venta < horas[i + 1].time():
@@ -163,18 +164,16 @@ def dayli_sales(branch_actualy):
                 break
 
     # Haz lo mismo para ventas_pendientes
-    print(horas)
+    
     for venta in ventas_pendientes:
         hora_venta = venta['created_at__time']
-        monto_recaudado = venta['monto_recaudado']
+        monto_recaudado = venta['monto_recaudado'] or 0
         
         for i in range(len(horas) - 1):  # Utiliza len(horas) - 1 para evitar el error "list index out of range"
             if horas[i].time() <= hora_venta < horas[i + 1].time():
                 monto_por_rango_pendiente[str(horas[i].hour)] += float(monto_recaudado)
                 break
     
-    print(monto_por_rango_completado)
-    print(monto_por_rango_pendiente)
     return monto_por_rango_completado, monto_por_rango_pendiente
 
 

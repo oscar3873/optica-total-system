@@ -17,7 +17,7 @@ from clients.forms import *
 from promotions.models import Promotion
 from cashregister.utils import create_in_movement, obtener_nombres_de_campos
 from core.mixins import CustomUserPassesTestMixin
-from cashregister.models import CashRegister
+from cashregister.models import CashRegister, Movement
 
 from .utils import *
 from .models import *
@@ -157,7 +157,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         for order in order_details:
             order.sale = sale
             order.save()
-
         
         messages.success(self.request, "Se ha generado la venta con éxito!")
         return HttpResponseRedirect(reverse_lazy('sales_app:sale_detail_view', kwargs={'pk': sale.id}))
@@ -281,7 +280,56 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         context['pay_form'] = TypePaymentMethodForm
         return context
     
+class SaleDeleteView(CustomUserPassesTestMixin, DeleteView):
+    model = Sale
+    template_name = 'sales/sales_delete_page.html'
+    success_url = reverse_lazy('sales_app:sales_list_view')
+    
+    def post(self, request, *args, **kwargs):
+        sale = self.get_object()
+        payments = sale.sale_payment.all()
+        for payment in payments:
+            try: 
+                mov = payment.movement
+                mov.delete()
+            except:
+                print('Moviemineto error')
+            payment.delete()
+        
+        order_detaill = sale.order_detaill.all()
 
+        for order in order_detaill:
+            order.delete()
+            
+        sale_date = sale.created_at.date()
+        try:
+            employee = sale.user_made.employee_type
+            
+            objetive = employee.employee_objetives.filter(
+                objetive__start_date__lte=sale_date, 
+                objetive__exp_date__gte=sale_date, deleted_at=None)
+            if objetive:
+                objetive = objetive.first()
+                objetive.accumulated -= sale.total
+                objetive.save()
+
+            objetive_branch = Branch_Objetives.objects.filter(objetive__branch = sale.user_made.branch,
+                objetive__start_date__lte=sale_date, 
+                objetive__exp_date__gte=sale_date, deleted_at=None)
+            if objetive_branch:
+                objetive_branch = objetive_branch.first()
+                objetive_branch.accumulated -= sale.total
+                objetive_branch.save()
+        except Exception as e:
+            print('Objetivo error: ', e)
+        
+        customer = sale.customer
+        if customer.has_credit_account:
+            customer.credit_balance -= sale.total
+            customer.save()
+        
+        return super().post(request, *args, **kwargs)
+            
 #------- VISTAS BASADAS EN FUNCIONES PARA PETICIONES AJAX -------#
 
 def show_invoice(request, pk):
@@ -479,18 +527,20 @@ def pay_missing_balance(request, pk):
             form = TypePaymentMethodForm(request.POST)
             if form.is_valid():
                 
-                success = create_in_movement(branch_actualy, request.user, form.cleaned_data['payment_method'].type_method, form.cleaned_data['description'], sale.missing_balance)
+                mov = create_in_movement(branch_actualy, request.user, form.cleaned_data['payment_method'].type_method, form.cleaned_data['description'], sale.missing_balance)
 
-                if not success:
+                if not mov:
                     messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
                     return redirect('cashregister_app:cashregister_view')
 
                 Payment.objects.create(
+                    customer = sale.customer,
                     user_made = request.user,
                     amount = sale.missing_balance,
                     payment_method = form.cleaned_data['payment_method'],
                     description = f"Pago de duada de venta Nro: {sale.pk}",
                     sale = sale,
+                    movement = mov
                 )
 
             sale.state = 'COMPLETADO'

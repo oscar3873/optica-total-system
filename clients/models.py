@@ -128,3 +128,6 @@ class ServiceOrder(BaseAbstractWithUser):
     sale = models.ForeignKey('sales.Sale', on_delete=models.PROTECT, related_name='service_order', null=True)
 
     objects = ServiceOrderManager()
+    
+    def __str__(self) -> str:
+        return "Ver orden Nº "

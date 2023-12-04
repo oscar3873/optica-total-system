@@ -85,23 +85,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 // Reemplaza el bloque de código actual para el botón de acciones
                                 const actionsButton = document.createElement('a');
-                                actionsButton.href = `/sales/detail/${sale.id}/`;
-                                actionsButton.className = 'btn btn-sm btn-falcon-default';
+                                actionsButton.href = `/sales/detail/${sale.id}`;
+                                actionsButton.className = 'btn btn-sm btn-falcon-default me-1';
                                 actionsButton.setAttribute('data-bs-toggle', 'tooltip');
                                 actionsButton.setAttribute('title', 'Ver Detalle');
                                 const actionsIcon = document.createElement('span');
                                 actionsIcon.className = 'fas fa-eye';
                                 actionsButton.appendChild(actionsIcon);
 
-                                const actionsDropdown = document.createElement('div');
-                                actionsDropdown.className = 'dropstart font-sans-serif position-static d-inline-block';
+                                // Reemplaza el bloque de código actual para el botón de acciones
+                                const deleteButton = document.createElement('a');
+                                deleteButton.href = `/sales/delete/${sale.id}`;
+                                deleteButton.className = 'btn btn-sm btn-falcon-default';
+                                deleteButton.setAttribute('data-bs-toggle', 'tooltip');
+                                deleteButton.setAttribute('title', 'Eliminar');
+                                const deleteIcon = document.createElement('span');
+                                deleteIcon.className = 'fas fa-trash text-danger';
+                                deleteButton.appendChild(deleteIcon);
 
-                                const dropdownMenu = document.createElement('div');
-                                dropdownMenu.className = 'dropdown-menu dropdown-menu-end border py-2';
-
-                                actionsDropdown.appendChild(actionsButton);
-                                actionsDropdown.appendChild(dropdownMenu);
-                                actionsCell.appendChild(actionsDropdown);
+                                actionsCell.appendChild(actionsButton);
+                                actionsCell.appendChild(deleteButton);
                                 row.appendChild(actionsCell);
 
                                 searchResults.appendChild(row);

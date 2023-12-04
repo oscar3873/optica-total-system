@@ -25,6 +25,13 @@ urlpatterns = [
         SalesListView.as_view(),
         name = 'sales_list_view'
     ),
+    
+    path(
+        'delete/<pk>',
+        SaleDeleteView.as_view(),
+        name='sale_delete_view'
+    ),
+    
     path(
         'detail/<pk>/',
         SaleDetailView.as_view(),

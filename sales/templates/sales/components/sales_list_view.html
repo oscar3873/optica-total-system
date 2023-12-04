@@ -109,7 +109,9 @@
                         <td class="align-start total">{{sale.total}}</td>
                         <td class="align-middle white-space-nowrap py-1">
                                 <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Ver Detalle'><span class="fas fa-eye"></span></a>
-                                {% comment %} <a rel="noopener" target="_blank" href="" class="btn btn-sm btn-falcon-default"><span class="fas fa-print"></span></a> {% endcomment %}
+                                {% if request.user.is_staff %}
+                                    <a href="{% url 'sales_app:sale_delete_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Eliminar'><span class="fas fa-trash text-danger"></span></a>
+                                {% endif %}
                         </td>
                         <!-- <td class="align-middle white-space-nowrap text-start">
                         <div class="dropstart font-sans-serif position-static d-inline-block">

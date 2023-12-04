@@ -96,6 +96,7 @@ class Payment(BaseAbstractWithUser):
     date_payment = models.DateField(auto_now_add=True)
     description = models.TextField(null=True, blank=True, max_length=100, default='Sin descripcion')
     sale = models.ForeignKey(Sale, on_delete=models.PROTECT, related_name='sale_payment', null=True)
+    movement = models.OneToOneField('cashregister.Movement', on_delete=models.PROTECT, related_name='mov_payment', null=True)
 
     objects = PaymentManager()
 

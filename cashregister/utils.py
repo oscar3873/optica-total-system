@@ -46,7 +46,7 @@ def create_in_movement(branch_actualy, user, type_method, description, amount):
     
     type_operation = 'Ingreso'
 
-    Movement.objects.create(
+    mov = Movement.objects.create(
         user_made = user,
         payment_method = type_method,
         amount = amount,
@@ -56,4 +56,4 @@ def create_in_movement(branch_actualy, user, type_method, description, amount):
         type_operation = type_operation,
     )
     Movement.objects.update_balance(cash_register, amount, type_operation)
-    return True
+    return mov

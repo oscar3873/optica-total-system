@@ -64,7 +64,15 @@
         <!--/.bg-holder-->
         <div class="row card-body position-relative">
             <div class=" col-6">
-                <h5>Detalle de venta: #{{sale.pk}}</h5>
+                <div class="d-flex gap-2">
+                    <h5>Detalle de venta: #{{sale.pk}}</h5>
+                    {% if request.user.is_staff %}
+                    <div>
+                        <a href="{% url 'sales_app:sale_delete_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Eliminar'><span class="fas fa-trash text-danger"></span></a>
+                    </div>
+                        
+                    {% endif %}
+                </div>
                 <p class="fs--1">{{sale.created_at}}</p>
                 <div>
                     <strong class="me-2">Estado: </strong>
@@ -93,7 +101,7 @@
                         {% if order_serivices %}
                             {% for service in order_serivices %}
                                 <p>
-                                    <a href="{% url 'clients_app:service_order_detail' service.pk %}">{{service}}</a>
+                                    <a href="{% url 'clients_app:service_order_detail' service.pk %}">{{service}} {{forloop.counter}}</a>
                                 </p>
                             {% endfor %}
                         {% endif %}

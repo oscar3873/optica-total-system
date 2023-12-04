@@ -231,7 +231,9 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
     else:
         payment = total - payment_total
         sale.missing_balance = payment
-
+        
+    mov = None
+    
     if customer and not 'consumidor' in customer.first_name.lower():
         if customer.has_credit_account: # and 'cuenta corriente' in payment_methods.name.lower():
             """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
@@ -252,14 +254,14 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
             """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
             missing_balance = max(Decimal(0), Decimal(total) - Decimal(payment_total))
             sale.missing_balance = missing_balance
-            set_movement(payment_total, payment_methods.type_method, customer, request)
+            mov = set_movement(payment_total, payment_methods.type_method, customer, request)
 
         else:
             """Si el cliente NO CUENTA CORRIENTE - NO CRISTAL"""
-            set_movement(payment, payment_methods.type_method, customer, request)
+            mov = set_movement(payment, payment_methods.type_method, customer, request)
     else:
         """Si el CLIETNE NO REGISTRA"""
-        set_movement(payment,  payment_methods.type_method, None, request)
+        mov = set_movement(payment,  payment_methods.type_method, None, request)
 
     # Modificamos la forma de obtener la sucursal
     branch_actualy = set_branch_session(request)
@@ -276,6 +278,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
         payment_method = payment_methods,
         description = f"Pago de venta Nro: {sale.pk}",
         sale = sale,
+        movement = mov
     )
 
 
@@ -289,7 +292,9 @@ def set_movement(total, type_method, customer, request):
     # Modificamos la forma de obtener la sucursal
     branch_actualy = set_branch_session(request)
     
-    create_in_movement(branch_actualy, request.user, type_method, description, total)
+    mov = create_in_movement(branch_actualy, request.user, type_method, description, total)
+    
+    return mov
 
 
 def process_service_order(request, customer):
@@ -317,8 +322,6 @@ def process_service_order(request, customer):
             customer
         )
 
-    
-
     return service
 
 
@@ -334,7 +337,8 @@ def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
 
 def up_objetives(user, sale):
     if not user.is_staff: # es empleado
-        self_objetives = user.employee_type.employee_objetives.filter(objetive__exp_date__gte=timezone.now().date())
+        self_objetives = user.employee_type.employee_objetives.filter(
+            objetive__exp_date__gte=timezone.now().date())
         accumulate_objectives(self_objetives, sale)
         
         objetives = Branch_Objetives.objects.filter(objetive__exp_date__gte=timezone.now().date())
