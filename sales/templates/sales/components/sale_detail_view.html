@@ -202,7 +202,7 @@
             {% for detail in sale_details %}
                 <tr class="border-200">
                     <td class="align-middle">
-                    <h6 class="mb-0 text-nowrap">{{detail.product.name}}</h6>
+                    <h6 class="mb-0 text-nowrap"><a href="{% url 'products_app:product_detail' detail.product.id %}">{{detail.product.name}}</a></h6>
                     <p class="mb-0">{{detaill.product.description}}</p>
                     </td>
                     <td class="align-middle text-center">{{detail.quantity}}</td>
