@@ -36,6 +36,7 @@ class CustomerForm(PersonForm):
         self.fields['h_insurance'].required = False
         self.fields['address'].required = False
         self.fields['email'].required = False
+        self.fields['birth_date'].required = False
 
         if self.instance.pk:
             insurances = self.instance.customer_insurance.values_list('h_insurance__id', flat=True)

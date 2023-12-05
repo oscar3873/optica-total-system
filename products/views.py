@@ -233,7 +233,7 @@ class ProductCreateView(CustomUserPassesTestMixin, FormView):
                 suggested_price = suggested_price + Decimal(packaging)
 
             sale_price = math.ceil(suggested_price / 50) * 50
-            product.sale_price = sale_price
+            # product.sale_price = sale_price
 
             product.user_made = user
             product.branch = branch_actualy
