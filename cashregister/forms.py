@@ -68,6 +68,7 @@ class CashRegisterForm(forms.ModelForm):
 class CloseCashRegisterForm(forms.Form):
     
     observations = forms.CharField(
+        required=False,
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control',
