@@ -342,10 +342,6 @@ def show_invoice(request, pk):
     if payments.exists():
         # Si hay al menos un pago, toma el primero (puedes ajustar la lógica según tus necesidades)
         payment = payments.first()
-        payment_method = payment.payment_method.name
-    else:
-        # Manejar el caso en el que no hay pagos
-        payment_method = None
     
     order_details = sale.order_detaill.filter(sale=sale)
     order_details_template = []
@@ -378,8 +374,7 @@ def show_invoice(request, pk):
         'payment_method': payment.payment_method.name,
         'pay': f'{sale.total - sale.missing_balance:.2f}',
         'missing_balance': f'{sale.missing_balance:.2f}',
-        'date': sale_date_str,
-        'time': created_at.time(),
+        'date': created_at,
         'payments': payments,
         'branch': sale.branch,
     }
@@ -434,7 +429,6 @@ def show_factura(request, pk):
         'payment_method': payment.payment_method.name,
         'pay': f'{sale.total - sale.missing_balance:.2f}',
         'missing_balance': f'{sale.missing_balance:.2f}',
-        'date': datetime.now().strftime('%d/%m/%Y'),  # Formato: DD/MM/AAAA
         'time': datetime.now().strftime('%H:%M'),     # Formato: HH:MM
         'receipt': receipt,
         'payments': payments

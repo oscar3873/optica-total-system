@@ -101,7 +101,7 @@
                                         <select name="branch_id" id="branch_id" class="form-select fs--1 m-2 w-75">
                                             {% for branch in branches %}
                                             <option value="{{ branch.id }}" {% if branch.id == request.session.branch_actualy %}selected{% endif %}>
-                                                {{ branch.name }}
+                                                {{ branch.address }}
                                             </option>
                                             {% endfor %}
                                         </select>

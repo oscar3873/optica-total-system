@@ -10,6 +10,11 @@ from django.utils import timezone
 from clients.forms import *
 from .models import *
 
+now_utc = timezone.now()
+now_local = timezone.localtime(now_utc)
+fecha_hoy = now_local.date()
+hora_actual = now_local.time()
+
 def get_total_and_products(formset):
     """Segun los prodcutos recibidos, se suma un total $$. 
     A demas de guardar dichos productos en una varaible all_products_to_sale"""
@@ -119,6 +124,10 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 
 def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
+    
+    print(fecha_hoy)
+    print(hora_actual)
+    
     if invoice_or_receipt in ['A', 'B']:
         
         if invoice_or_receipt == 'A':
@@ -142,9 +151,9 @@ def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
             point_of_sales = pos_afip,
             receipt_type = receipt_type,
             concept = ConceptType.objects.get(id=1),
+            issued_date = fecha_hoy,
             document_type = document,
             document_number = sale.customer.dni,
-            issued_date = sale.created_at.date(),
             total_amount = sale.total,
             net_untaxed = 0,
             net_taxed = Decimal(sale.total / Decimal(1.21)),
@@ -338,10 +347,10 @@ def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
 def up_objetives(user, sale):
     if not user.is_staff: # es empleado
         self_objetives = user.employee_type.employee_objetives.filter(
-            objetive__exp_date__gte=timezone.now().date())
+            objetive__exp_date__gte=fecha_hoy)
         accumulate_objectives(self_objetives, sale)
         
-        objetives = Branch_Objetives.objects.filter(objetive__exp_date__gte=timezone.now().date())
+        objetives = Branch_Objetives.objects.filter(objetive__exp_date__gte=fecha_hoy)
         accumulate_objectives(objetives, sale)
 
 def accumulate_objectives(objetives, sale):
