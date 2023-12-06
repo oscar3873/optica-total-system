@@ -291,9 +291,14 @@ class SaleDeleteView(CustomUserPassesTestMixin, DeleteView):
         for payment in payments:
             try: 
                 mov = payment.movement
+
+                cashregister = mov.cash_register
+                cashregister.final_balance -= mov.amount
+                cashregister.save()
+
                 mov.delete()
             except:
-                print('Moviemineto error')
+                print('Moviemiento error')
             payment.delete()
         
         order_detaill = sale.order_detaill.all()
