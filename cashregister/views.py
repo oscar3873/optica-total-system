@@ -166,8 +166,9 @@ class CashRegisterCloseView(LoginRequiredMixin, FormView):
     
     def form_valid(self, form):
         # branch = self.request.user.branch
+        branch_actualy = set_branch_session(self.request)
         observations = form.cleaned_data['observations']
-        cashregister = CashRegister.objects.filter(is_close=False, branch=self.request.user.branch).last()
+        cashregister = CashRegister.objects.filter(is_close=False, branch=branch_actualy).last()
         cashregister.observations = observations
         cashregister.is_close = True
         cashregister.save()
