@@ -131,9 +131,6 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 subtotal += get_total_and_products(formset)
                 order_details.append(process_formset(formset, promotional_products, wo_promo))
 
-        for formset in formsets:
-            if formset.is_valid():
-                update_stock(formset)
 
         promotional_products_clone = copy.copy(promotional_products)
         # Ordena los productos en cada promoción por precio
@@ -153,6 +150,10 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, contacto, amount, self.request)
         if sale.state == 'COMPLETADO':
             up_objetives(sale.user_made, sale)
+
+        for formset in formsets:
+            if formset.is_valid():
+                update_stock(formset)
 
         for order in order_details:
             order.sale = sale
