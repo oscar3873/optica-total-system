@@ -121,7 +121,8 @@ class TypePaymentMethodForm(ValidationFormMixin):
             attrs={
                 'class': 'form-control'
             }
-        )
+        ),
+        label='Monto'
     )
 
     payment_method = forms.ModelChoiceField(
@@ -131,7 +132,8 @@ class TypePaymentMethodForm(ValidationFormMixin):
             attrs={
                 'class': 'form-control'
             }
-        )
+        ),
+        label='Metodo de pago'
     )
     description = forms.CharField(
         required = False,
@@ -139,7 +141,8 @@ class TypePaymentMethodForm(ValidationFormMixin):
             attrs={
                 'class': 'form-control'
             }
-        )
+        ),
+        label='Descripcion'
     )
 
     class Meta:
