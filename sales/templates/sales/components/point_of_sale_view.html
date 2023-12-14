@@ -46,9 +46,6 @@
         
         <div class="row g-3">
             {% csrf_token %}
-            <div>
-                {{sale_form.commision_user}}
-            </div>
             <!--SECCION DERECHA-->
             <div class="col-xl-4 order-1">
                 <!--TOTAL-->
@@ -128,6 +125,15 @@
                         <div class="fw-semi-bold">Total a pagar</div>
                         <div class="fw-bold" id="total">$ 0.00</div>
                         <input type="number" name="total" value="0" step="any" id="id_total" hidden>
+                    </div>
+                    <div class="px-3 my-3 mx-2">
+                        <div class="fw-semi-bold pb-2">Comisión:</div>
+                        <select id="id_commision_user" class="form-control" name="commision_user">
+                            {% for option in sale_form.commision_user.field.choices %}
+                              <option value="{{ option.0 }}" {% if sale_form.commision_user.value == option.0 %}selected{% endif %}>{{ option.1 }}</option>
+                            {% endfor %}
+                          </select>
+                          <!-- {{ sale_form.commision_user }} -->
                     </div>
                 </div>
                 <div class="card mt-2">
