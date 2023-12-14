@@ -39,7 +39,7 @@
     <!--    Card con la presentacion del detalle de venta-->
     <!-- ===============================================-->
 
-    <a href='{% url "sales_app:show_invoice" sale.pk %}' target='_blank' class="btn btn-primary">
+    <a href='{% url "sales_app:show_invoice" sale.pk %}' target='_blank' class="btn btn-primary mb-3">
         Ver Comprobante de Pago
     </a>
     
@@ -63,17 +63,26 @@
         </div>
         <!--/.bg-holder-->
         <div class="row card-body position-relative">
-            <div class=" col-6">
-                <div class="d-flex gap-2">
-                    <h5>Detalle de venta: #{{sale.pk}}</h5>
-                    {% if request.user.is_staff %}
-                    <div>
-                        <a href="{% url 'sales_app:sale_delete_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Eliminar'><span class="fas fa-trash text-danger"></span></a>
+            
+            <div class="col-md-6 ">
+                <div class="row justify-content-center justify-content-md-start">
+                    <div class="col-10 col-md-6 mb-2">
+                        <h5>Detalle de venta: #{{sale.pk}}</h5>
+                        <small class="">Fecha: <span class=" text-900">{{sale.created_at}}</span></small>
+                        <br>
+                        <small class="">Cargada por: <span class=" text-900">{{sale.user_made}}</span></small>
+                        <br>
+                        <small class="">Comisión para: <span class=" text-900">{{sale.commision_user}}</span></small>
                     </div>
-                        
-                    {% endif %}
+                    <div class="col-2 col-md-6 ">
+                        {% if request.user.is_staff %}
+                            <a href="{% url 'sales_app:sale_delete_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Eliminar'><span class="fas fa-trash text-danger"></span></a>
+                        {% endif %}
+                    </div>
+                    
+                   
                 </div>
-                <p class="fs--1">{{sale.created_at}}</p>
+                
                 <div>
                     <strong class="me-2">Estado: </strong>
                     {% if sale.state == 'COMPLETADO' %}
@@ -93,7 +102,7 @@
             
             <!-- Si la venta contiene un cristal o lente de contacto, muestra el boton de para agregar orden de servicio -->
             {% if cristales or contactos %} 
-                <div class="col-6">
+                <div class="col-12 col-md-6 text-md-end mt-2 mt-md-0">
                     <!--Boton modal de orden de servicio-->
                     <button type="button" class="btn btn-info" data-bs-target="#serviceOrder" data-bs-toggle="modal">Orden de servicio</button>                
                     <!--Modal orden de servicio-->
