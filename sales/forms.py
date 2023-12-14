@@ -1,9 +1,14 @@
+from collections.abc import Mapping
+from typing import Any
 from django import forms
+from django.core.files.base import File
+from django.db.models.base import Model
+from django.forms.utils import ErrorList
 
 from core.mixins import ValidationFormMixin
 from products.models import Product
 from .models import *
-
+from employes.models import Employee
 class SaleForm(forms.ModelForm):
     description = forms.CharField(
         required = False,
@@ -25,13 +30,13 @@ class SaleForm(forms.ModelForm):
         widget = forms.RadioSelect()
     )
 
-    payment_method = forms.ModelChoiceField(
-        queryset=PaymentMethod.objects.all(),
-        empty_label=None,
-        widget=forms.Select(
-            attrs={'class': 'form-control'}
-        )
-    )
+    # payment_method = forms.ModelChoiceField(
+    #     queryset=PaymentMethod.objects.all(),
+    #     empty_label=None,
+    #     widget=forms.Select(
+    #         attrs={'class': 'form-control'}
+    #     )
+    # )
 
     discount = forms.IntegerField(
         required=False,
@@ -40,11 +45,17 @@ class SaleForm(forms.ModelForm):
             attrs={'class': 'form-control'}
         )
     )
-    
+
     class Meta:
         model = Sale
-        fields = ['customer', 'discount']
+        fields = ['customer', 'discount', 'commision_user']
 
+    def __init__(self, branch=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        print(kwargs)
+        self.branch = branch
+        
+        self.fields['commision_user'].queryset=Employee.objects.filter(user__branch=branch)
 
 class OrderDetailForm(forms.ModelForm):
     product = forms.ModelChoiceField(
@@ -110,6 +121,31 @@ class PaymentMethodForm(ValidationFormMixin):
             if PaymentMethod.objects.filter(name=name.lower()).exists():
                 raise forms.ValidationError('Ya existe el Metodo de Pago.')
         return name.capitalize()
+
+
+class PaymentMethodUnitForm(forms.Form):
+    payment_method = forms.ModelChoiceField(
+        queryset=PaymentMethod.objects.all(),
+        empty_label=None,
+        widget=forms.Select(
+            attrs={'class': 'form-control'}
+        )
+    )
+    
+    amount = forms.DecimalField(
+        required = True,
+        initial=0,
+        widget = forms.NumberInput(
+            attrs={'class': 'form-control'}
+        )
+    )
+        
+
+PaymentMethodsFormset = forms.formset_factory(
+    PaymentMethodUnitForm,
+    extra=1,
+    )
+
 
 
 class TypePaymentMethodForm(ValidationFormMixin):

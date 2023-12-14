@@ -1,4 +1,4 @@
-let payment_method = document.getElementById('id_payment_method');
+let payment_method = document.getElementById('id_form-0-payment_method');
 let error_div = document.createElement('div');
 let selected_payment = 0;
 

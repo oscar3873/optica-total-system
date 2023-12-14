@@ -43,8 +43,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         branch_actualy = set_branch_session(self.request)
 
-        context['sale_form'] = SaleForm
-        # context['payment_form'] = PaymentMethodsFormset
+        context['sale_form'] = SaleForm(branch=branch_actualy)
+        context['payment_method_formset'] = PaymentMethodsFormset
         context['branch_selected'] = branch_actualy.name
         context['customer_form'] = CustomerForm
         context['payment_method_form'] = PaymentMethodForm
@@ -65,8 +65,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             return redirect('cashregister_app:cashregister_view')
 
         formsets = form
-        saleform = SaleForm(self.request.POST)
-        # payment_methods = PaymentMethodsFormset(self.request.POST)
+        saleform = SaleForm(data=self.request.POST, branch=branch_actualy)
+        payment_methods = PaymentMethodsFormset(self.request.POST)
                 
         order_details = []
         all_products_to_sale = []
@@ -78,15 +78,20 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             sale = saleform.save(commit=False)
             sale.branch = branch_actualy
 
-            payment_methods = saleform.cleaned_data.pop('payment_method')
+            # payment_methods = saleform.cleaned_data.pop('payment_method')
             customer = saleform.cleaned_data['customer']
 
             
-            if customer and not customer.has_credit_account and 'Cuenta Corriente' in payment_methods.name:
+            cuenta_corriente_presente = any(
+                'Cuenta Corriente' in form.cleaned_data.get('name', '') for form in payment_methods
+                if form.is_valid()
+            )
+
+            if customer and not customer.has_credit_account and cuenta_corriente_presente:
                 messages.error(self.request, "El metodo de pago 'Cuenta Corriente' no esta habilitado para el cliente seleccionado.")
                 return super().form_invalid(form)
-            
-            if not customer and 'Cuenta Corriente' in payment_methods.name:
+                
+            if not customer and cuenta_corriente_presente:
                 messages.error(self.request, "El metodo de pago 'Cuenta Corriente' no esta habilitado para el cliente seleccionado.")
                 return super().form_invalid(form)
             
@@ -149,7 +154,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, contacto, amount, self.request)
         if sale.state == 'COMPLETADO':
-            up_objetives(sale.user_made, sale)
+            up_objetives(sale.commision_user, sale)
 
         for formset in formsets:
             if formset.is_valid():

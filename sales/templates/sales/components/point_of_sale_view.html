@@ -43,8 +43,12 @@
     <!-- ===============================================-->
 
     <form method="post">
+        
         <div class="row g-3">
             {% csrf_token %}
+            <div>
+                {{sale_form.commision_user}}
+            </div>
             <!--SECCION DERECHA-->
             <div class="col-xl-4 order-1">
                 <!--TOTAL-->
@@ -202,7 +206,13 @@
                                     <label for="">Seleccione el metodo de pago</label>
                                     <div class="col-8">
                                         <div class="form-group">
-                                            {{sale_form.payment_method}}
+                                            {# {{sale_form.payment_method}} #}
+                                            {{payment_method_formset.management_form}}
+                                            {% for payments in payment_method_formset %}
+                                            {{payments.payment_method}}
+                                            {{payments.amount}}
+                                            {% endfor %}
+                                                
                                         </div>
                                     </div>
                                     <div class="col-4" id="boton-mas">
@@ -244,6 +254,8 @@
                     </div>
                 </div>
             </div>
+
+            
 
             <!-- Modal para crear Cliente Nuevo -->
             <div id="New-customer" class="modal fade" tabindex="-1" aria-labelledby="New-customerLabel" aria-hidden="true">
