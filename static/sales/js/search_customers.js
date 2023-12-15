@@ -1,7 +1,9 @@
 let idCustomerGlobal;
 
 document.addEventListener("DOMContentLoaded", function () {
-    
+    const amountInput = document.getElementById('id_form-0-amount');
+    const addPaymentContainer = document.getElementById('add-payment-container');
+
     function configureSearch(searchInput, searchResults, fieldIdentifier) {
         searchInput.addEventListener('input', (event) => {
             let searchTerm = event.target.value.trim().toLowerCase();
@@ -116,6 +118,8 @@ document.addEventListener("DOMContentLoaded", function () {
             trash_delete.addEventListener("click", function(){
                 payment_method.disabled = false;
                 payment_method.options[selected_payment].selected = true;
+                amountInput.hidden = false;
+                addPaymentContainer.hidden = false;
                 label.remove();
             });
 
@@ -133,10 +137,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 }
                 payment_method.disabled = true;
+                amountInput.hidden = true;
+                addPaymentContainer.hidden = true;
             } else {
                 // Activa la opción seleccionada
                 payment_method.disabled = false;
                 payment_method.options[selected_payment].selected = true;
+                amountInput.hidden = false;
+                addPaymentContainer.hidden = false;
             
                 // Muestra el div con nombre 'boton-mas'
                 if (botonMasDiv) {
@@ -176,6 +184,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     payment_method.options[i].disabled = false;
                 }
             }
+            amountInput.hidden = false;
+            addPaymentContainer.hidden = false;
         } else {
             console.error("payment_method no está definido o no es accesible desde este ámbito.");
         }

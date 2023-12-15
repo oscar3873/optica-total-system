@@ -5,6 +5,8 @@ let selected_payment = 0;
 const customer_modal = document.getElementById('New-customer-form');
 const searchText = "Cuenta Corriente";
 const botonMasDiv = document.getElementById('boton-mas');
+const amountInput = document.getElementById('id_form-0-amount');
+const addPaymentContainer = document.getElementById('add-payment-container');
 
 
 for (var i = 0; i < payment_method.options.length; i++) {
@@ -84,6 +86,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             payment_method.disabled = false;
                             payment_method.options[selected_payment].selected = true;
                             label.remove();
+                            amountInput.hidden = false;
+                            addPaymentContainer.hidden = false;
                         });
                         label.appendChild(checkboxCustomer);
                         checkboxContainer.appendChild(label);
@@ -96,6 +100,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 // Selecciona la opción encontrada
                                 payment_method.options[i].selected = true;
                                 payment_method.disabled = true;
+                                amountInput.hidden = true;
+                                addPaymentContainer.hidden = true;
                                 if (botonMasDiv) {
                                     botonMasDiv.style.display = 'none';
                                 }
@@ -104,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }else{
                         payment_method.options[selected_payment].selected = true;
                         payment_method.disabled = false;
+                        amountInput.hidden = false;
+                        addPaymentContainer.hidden = false;
                         // Muestra el div con nombre 'boton-mas'
                         if (botonMasDiv) {
                             botonMasDiv.style.display = 'block'; // O 'inline' según el tipo de display que uses
