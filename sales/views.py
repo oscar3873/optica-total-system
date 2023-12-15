@@ -314,7 +314,7 @@ class SaleDeleteView(CustomUserPassesTestMixin, DeleteView):
             
         sale_date = sale.created_at.date()
         try:
-            employee = sale.user_made.employee_type
+            employee = sale.commision_user
             
             objetive = employee.employee_objetives.filter(
                 objetive__start_date__lte=sale_date, 
