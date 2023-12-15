@@ -324,7 +324,7 @@ class SaleDeleteView(CustomUserPassesTestMixin, DeleteView):
                 objetive.accumulated -= sale.total
                 objetive.save()
 
-            objetive_branch = Branch_Objetives.objects.filter(objetive__branch = sale.commision_user.branch,
+            objetive_branch = Branch_Objetives.objects.filter(objetive__branch = sale.user_made.branch,
                 objetive__start_date__lte=sale_date, 
                 objetive__exp_date__gte=sale_date, deleted_at=None)
             if objetive_branch:
