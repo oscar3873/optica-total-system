@@ -128,12 +128,7 @@
                     </div>
                     <div class="px-3 my-3 mx-2">
                         <div class="fw-semi-bold pb-2">Comisión:</div>
-                        <select id="id_commision_user" class="form-control" name="commision_user">
-                            {% for option in sale_form.commision_user.field.choices %}
-                              <option value="{{ option.0 }}" {% if sale_form.commision_user.value == option.0 %}selected{% endif %}>{{ option.1 }}</option>
-                            {% endfor %}
-                          </select>
-                          <!-- {{ sale_form.commision_user }} -->
+                            {{ sale_form.commision_user }}
                     </div>
                 </div>
                 <div class="card mt-2">
