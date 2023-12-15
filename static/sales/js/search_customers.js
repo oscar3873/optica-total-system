@@ -175,8 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
         // En este caso, deshabilitar payment_method
         let customer_selected = document.getElementById('id_customer');
         let amount_input = document.getElementById('id_amount');
+        let commision_user = document.getElementById('id_commision_user');
 
-        if (payment_method && customer_selected && amount_input.value != '') {
+        if (payment_method && customer_selected && amount_input.value != '' && commision_user.value != '') {
             payment_method.disabled = false;
             for (var i = 0; i < payment_method.options.length; i++) {
                 if (payment_method.options[i].text.includes(searchText)) {
