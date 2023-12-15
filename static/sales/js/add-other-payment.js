@@ -1,17 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
     const btnAddInputs = document.getElementById('addPayment');
     const inputsContainer = document.getElementById('payment-methods-container');
-    
+  
     
     btnAddInputs.addEventListener( "click", function() {
         const inputCount = document.getElementById('id_form-TOTAL_FORMS');
         count = inputCount.value;
-        // Array de opciones
-        let options = [
-            { value: 1, label: 'Efectivo - Efectivo' },
-            { value: 2, label: 'Transferencia - Transferencia' },
-            { value: 3, label: 'Cuenta Corriente - Cuenta Corriente' }
-        ];
+
+        // Obtén el elemento select por su ID (reemplaza 'id_form-0-payment_method' con el ID real de tu select)
+        const paymentMethodInput = document.getElementById('id_form-0-payment_method');
+        // Selecciona todos los elementos option dentro del select
+        const optionsOfSelect = paymentMethodInput.querySelectorAll('option');
+        let options = [];
+        // Recorro todas las opciones del select
+        optionsOfSelect.forEach(function(option) {
+            if(option.text != 'Cuenta Corriente - Cuenta Corriente'){
+                options.push({
+                    value: option.value,
+                    label: option.text.trim() // Trim elimina espacios en blanco al principio y al final del texto
+                });
+            }
+        });
+
 
         //Creación del select
         const selectPaymentElement = document.createElement('select');
