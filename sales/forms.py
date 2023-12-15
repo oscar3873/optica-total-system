@@ -118,9 +118,18 @@ class PaymentMethodForm(ValidationFormMixin):
         name = self.cleaned_data.get('name')
         if name:
             self.validate_length(name, 3, 'Ingrese un nombre válido.')
-            if PaymentMethod.objects.filter(name=name.lower()).exists():
-                raise forms.ValidationError('Ya existe el Metodo de Pago.')
-        return name.capitalize()
+            name = name.capitalize()
+        return name
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        print(cleaned_data)
+        payment = PaymentMethod.objects.filter(name=cleaned_data.get("name"))
+        if payment:
+            if payment.filter(type_method=cleaned_data.get('type_method')).first():
+                type_method=cleaned_data.get('type_method')
+                raise forms.ValidationError(f'Ya existe el metodo de pago "{payment.filter(type_method=type_method).first()}".')
+        return cleaned_data
 
 
 class PaymentMethodUnitForm(forms.Form):

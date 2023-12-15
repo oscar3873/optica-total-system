@@ -199,7 +199,7 @@ class PaymentMethodCreateView(CustomUserPassesTestMixin, FormView):
     @transaction.atomic
     def form_invalid(self, form):
         if self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
-            return JsonResponse({'status': 'error', 'message':'Por favor, verifique los campos.'})
+            return JsonResponse({'status': 'error', 'message':next(iter(form.errors.values()))[0]})
         return super().form_invalid(form)
     
     

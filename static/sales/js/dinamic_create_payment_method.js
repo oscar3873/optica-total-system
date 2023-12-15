@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             data.new_payment_method.name,
                             data.new_payment_method.id,
                             );
-                        var idPaymentMethodSelect = document.getElementById("id_payment_method");
+                        var idPaymentMethodSelect = document.getElementById("id_form-0-payment_method");
                         idPaymentMethodSelect.appendChild(newOption);
                         newOption.selected = true;
                         closeModal();  // Cerrar el modal después de agregar la nueva categoría
