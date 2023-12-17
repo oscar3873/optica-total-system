@@ -125,9 +125,6 @@ def process_promotion(promotional_products, promotion, products_with_discountPro
 def switch_invoice_receipt(invoice_or_receipt, sale, pos_afip):
     """Dependiendo el tipo de FACTURA O COMPROBANTE, lo guarda y lo retorna para IMPRIMIR"""
     
-    print(fecha_hoy)
-    print(hora_actual)
-    
     if invoice_or_receipt in ['A', 'B']:
         
         if invoice_or_receipt == 'A':
@@ -228,7 +225,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
 
         for methods in payment_methods:
             if methods.is_valid():
-                print("pasa por aca", methods.cleaned_data)
                 payment_total += methods.cleaned_data['amount']
                 
         if payment_total >= total:
@@ -254,7 +250,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
         
         for methods in payment_methods:
             if methods.is_valid():
-                print("pasa por aca", methods.cleaned_data)
                 method_amount = methods.cleaned_data['amount']
                 
                 mov = None

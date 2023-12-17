@@ -142,6 +142,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         for promotion, products_with_discountPromo in promotional_products.items():
             process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
         
+        print(sale)
+        
         set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
 
         if (cristal or contacto) and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
@@ -308,6 +310,11 @@ class SaleDeleteView(CustomUserPassesTestMixin, DeleteView):
             payment.delete()
         
         order_detaill = sale.order_detaill.all()
+        
+        for order_detail in order_detaill:
+            product = order_detail.product
+            product.stock += order_detail.quantity
+            product.save()
 
         for order in order_detaill:
             order.delete()

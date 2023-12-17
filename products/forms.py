@@ -199,7 +199,6 @@ class ProductForm(ValidationFormMixin):
     def clean_barcode(self):
         barcode = self.cleaned_data['barcode']
         try:
-            print(barcode)
             if barcode and len(str(barcode)) > 3:
                 Product.objects.get(barcode=barcode, branch=self.branch)
                 raise forms.ValidationError('El codigo ingresado ya existe en la surcursal.')

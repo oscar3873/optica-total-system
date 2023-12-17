@@ -52,7 +52,6 @@ class SaleForm(forms.ModelForm):
 
     def __init__(self, branch=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(kwargs)
         self.branch = branch
         
         self.fields['commision_user'].queryset=Employee.objects.filter(user__branch=branch)
@@ -126,7 +125,6 @@ class PaymentMethodForm(ValidationFormMixin):
     
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
         payment = PaymentMethod.objects.filter(name=cleaned_data.get("name"))
         if payment:
             if payment.filter(type_method=cleaned_data.get('type_method')).first():
