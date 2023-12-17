@@ -44,7 +44,7 @@
     </a>
     
     {% if sale.receipt %}
-    <a href='{% url "sales_app:show_factura" sale.pk %}' target='_blank' class="btn btn-primary">
+    <a href='{% url "sales_app:show_factura" sale.pk %}' target='_blank' class="btn btn-primary mb-3">
         Ver Factura
     </a>
     {% elif sale.state == 'COMPLETADO' %}
