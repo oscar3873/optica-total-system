@@ -48,299 +48,91 @@
                     <h3>Correccion</h3>
                 </div>
                 <div class="col">
-                    <div class="text-center">
-                        <h4>Lejos</h4>
-                    </div>
                     <div class="table-responsive scrollbar">
                         <table class="table table-bordered overflow-hidden table-fixed" id="table_from_correction">
-                            <colgroup>
-                                <col class="col-3" />
-                                <col class="col-3" />
-                                <col class="col-3" />
-                                <col class="col-3" />
-                            </colgroup>
-                            <thead>
-                                <tr class="btn-reveal-trigger">
-                                    <th scope="col"></th>
-                                    <th class="text-center" scope="col">Esferico</th>
-                                    <th class="text-center" scope="col">Cilindrico</th>
-                                    <th class="text-center" scope="col">Eje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="btn-reveal-trigger">
-                                    <td>
-                                        <p><strong>Derecho</strong></p>
-                                    </td>
-                                    
-                                    <td>
-                                        {% if service_order.correction.lej_od_esferico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{service_order.correction.lej_od_esferico}}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.lej_od_cilindrico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{service_order.correction.lej_od_cilindrico}}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.lej_od_eje %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{service_order.correction.lej_od_eje}}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr class="btn-reveal-trigger">
-                                    <td>
-                                        <p><strong>Izquierdo</strong></p>
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.lej_oi_esferico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.lej_oi_esferico }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.lej_oi_cilindrico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.lej_oi_cilindrico }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.lej_oi_eje %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.lej_oi_eje }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="text-center">
-                        <h4>Cerca</h4>
-                    </div>
-                    <div class="table-responsive scrollbar">
-                        <table class="table table-bordered overflow-hidden" id="table_from_correction">
-                            <colgroup>
-                                <col class="col-3" />
-                                <col class="col-3" />
-                                <col class="col-3" />
-                                <col class="col-3" />
-                            </colgroup>
-                            <thead>
-                                <tr class="btn-reveal-trigger">
-                                    <th scope="col"></th>
-                                    <th class="text-center" scope="col">Esferico</th>
-                                    <th class="text-center" scope="col">Cilindrico</th>
-                                    <th class="text-center" scope="col">Eje</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="btn-reveal-trigger">
-                                    <td>
-                                        <p><strong>Derecho</strong></p>
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.cer_od_esferico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.cer_od_esferico }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.cer_od_cilindrico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.cer_od_cilindrico }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.cer_od_eje %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.cer_od_eje }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                <tr class="btn-reveal-trigger">
-                                    <td>
-                                        <p><strong>Izquierdo</strong></p>
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.cer_oi_esferico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.cer_oi_esferico }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.cer_oi_cilindrico %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.cer_oi_cilindrico }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if service_order.correction.cer_oi_eje %}
-                                        <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.correction.cer_oi_eje }}</p>
-                                        {% else %}
-                                        <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            </tbody>
+                            <tr>
+                                <th>Distancia</th>
+                                <th>Ojo</th>
+                                <th>Esferico</th>
+                                <th>Cilindrico</th>
+                                <th>Eje</th>
+                            </tr>
+                            <tr>
+                                <th rowspan="2">LEJOS</th>
+                                <td>OD</td>
+                                <td>{{service_order.correction.lej_od_esferico}}</td>
+                                <td>{{service_order.correction.lej_od_cilindrico}}</td>
+                                <td>{{service_order.correction.lej_od_eje}}</td>
+                            </tr>
+                            <tr>
+                                <td>OI</td>
+                                <td>{{service_order.correction.lej_oi_esferico}}</td>
+                                <td>{{service_order.correction.lej_oi_cilindrico}}</td>
+                                <td>{{service_order.correction.lej_oi_eje}}</td>
+                            </tr>
+                            <tr>
+                                <th rowspan="2">CERCA</th>
+                                <td>OD</td>
+                                <td>{{service_order.correction.cer_od_esferico}}</td>
+                                <td>{{service_order.correction.cer_od_cilindrico}}</td>
+                                <td>{{service_order.correction.cer_od_eje}}</td>
+                            </tr>
+                            <tr>
+                                <td>OI</td>
+                                <td>{{service_order.correction.cer_oi_esferico}}</td>
+                                <td>{{service_order.correction.cer_oi_cilindrico}}</td>
+                                <td>{{service_order.correction.cer_oi_eje}}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="card mb-3">
         <div class="row justify-content-center my-3">
-            <div class="container d-flex justify-content-center text-center">
-                <h3>Interpupilar</h3>
-            </div>
-            <div class="col">
-                <div class="text-center">
-                    <h4>Lejos</h4>
+            <div class="row row-justify-content my-3">
+                <div class="container d-flex justify-content-center text-center">
+                    <h3>Medidas Interpupilares</h3>
                 </div>
-                <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Izquierdo</th>
-                            <th scope="col">Derecho</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td scope="row">
-                                <p><strong>Nasopupilar</strong></p>
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.lej_oi_nanopupilar %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.lej_oi_nanopupilar }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.lej_od_nanopupilar %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.lej_od_nanopupilar }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">
-                                <p><strong>Pelicula</strong></p>
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.lej_oi_pelicula %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.lej_oi_pelicula }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.lej_od_pelicula %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.lej_od_pelicula }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">
-                                <p><strong>Total</strong>
-                            </td>
-                            <td colspan="2">
-                                {% if service_order.interpupillary.lej_total %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.lej_total }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col">
-                <div class="text-center">
-                    <h4>Cerca</h4>
+                <div class="col">
+                    <div class="table-responsive scrollbar">
+                        <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
+                            <tr>
+                                <td></td>
+                                <td>Ojo</td>
+                                <td>Naso Pupilar</td>
+                                <td>Total</td>
+                                <td>Alto Pelicula</td>
+                            </tr>
+                            <tr>
+                                <th rowspan="2">Lejos</th>
+                                <td>OD</td>
+                                <td>{{service_order.interpupillary.lej_od_nanopupilar}}</td>
+                                <td rowspan="2">{{service_order.interpupillary.lej_total}}</td>
+                                <td>{{service_order.interpupillary.lej_od_pelicula}}</td>
+                            </tr>
+                            <tr>
+                                <td>OI</td>
+                                <td>{{service_order.interpupillary.lej_oi_nanopupilar}}</td>
+                                <td>{{service_order.interpupillary.lej_oi_pelicula}}</td>
+                            </tr>
+                            <tr>
+                                <th rowspan="2">Cerca</th>
+                                <td>OD</td>
+                                <td>{{service_order.interpupillary.cer_od_nanopupilar}}</td>
+                                <td rowspan="2">{{service_order.interpupillary.cer_total}}</td>
+                                <td>{{service_order.interpupillary.cer_od_pelicula}}</td>
+                            </tr>
+                            <tr>
+                                <td>OI</td>
+                                <td>{{service_order.interpupillary.cer_oi_nanopupilar}}</td>
+                                <td>{{service_order.interpupillary.cer_oi_pelicula}}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <table class="table table-bordered overflow-hidden" id="table_from_interpupillary">
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Izquierdo</th>
-                            <th scope="col">Derecho</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td scope="row">
-                                <p><strong>Nasopupilar</strong></p>
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.cer_oi_nanopupilar %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.cer_oi_nanopupilar }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.cer_od_nanopupilar %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.cer_od_nanopupilar }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">
-                                <p><strong>Pelicula</strong></p>
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.cer_oi_pelicula %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.cer_oi_pelicula }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if service_order.interpupillary.cer_od_pelicula %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.cer_od_pelicula }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        <tr>
-                            <td scope="row">
-                                <p><strong>Total</strong></p>
-                            </td>
-                            <td colspan="2">
-                                {% if service_order.interpupillary.cer_total %}
-                                    <p class="h5 pt-2 m-0 d-flex justify-content-center">{{ service_order.interpupillary.cer_total }}</p>
-                                    {% else %}
-                                    <p class="badge badge-success custom-badge h5 text-dark">&nbsp;</p>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
