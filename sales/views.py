@@ -147,11 +147,11 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
                 
         set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
 
-        if (cristal or contacto) and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
+        if (cristal or contacto) and amount < sale.total/2 and not customer.has_credit_account: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
         
-        if not (cristal or contacto) and amount < sale.total:
+        if not (cristal or contacto) and amount < sale.total and not customer.has_credit_account:
             messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales o Lentes de Contacto.")
             return super().form_invalid(form)
 
