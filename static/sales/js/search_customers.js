@@ -203,6 +203,8 @@ function deleteNewPayments(){
         ArrayNewPayments.forEach(function(child) {
             child.parentNode.removeChild(child);
         });
+        const countForms = document.getElementById('id_form-TOTAL_FORMS');
+        countForms.value = 1;
     }
 }
 
