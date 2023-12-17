@@ -101,6 +101,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             if discount_sale < 0:
                 messages.error(self.request, "Descuento de venta Inválido. Ingrese solo valores positivos.")
                 return super().form_invalid(form)
+        
+        else:
+            print(saleform.errors)
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
@@ -141,9 +144,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         # Ordena los productos en cada promoción por precio
         for promotion, products_with_discountPromo in promotional_products.items():
             process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
-        
-        print(sale)
-        
+                
         set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
 
         if (cristal or contacto) and amount < sale.total/2: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%

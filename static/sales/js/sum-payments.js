@@ -1,9 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const labelTotalAmount = document.getElementById('total-amount-payments');
+    const labelTotalAmount = document.getElementById('id_amount_trucho');
+    const inputAmount = document.getElementById('id_amount');
+
     const btnPay = document.getElementById('btn-pagar');
     btnPay.addEventListener('click', function() {
         let totalAmpunt = sumPayments();
-        labelTotalAmount.innerHTML = `$ ${totalAmpunt}`;
+        labelTotalAmount.innerHTML = ` ${totalAmpunt}`;
+        inputAmount.value = totalAmpunt;
     });
 
 });
