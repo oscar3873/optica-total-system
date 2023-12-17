@@ -102,6 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 payment_method.disabled = true;
                                 amountInput.hidden = true;
                                 addPaymentContainer.hidden = true;
+                                deleteNewPayments();
+                                restoreAmount();
                                 if (botonMasDiv) {
                                     botonMasDiv.style.display = 'none';
                                 }
@@ -131,3 +133,20 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+
+function deleteNewPayments(){
+    const methodsPaymentContainer = document.getElementById('payment-methods-container');
+    const listNewPayments = methodsPaymentContainer.getElementsByClassName('new-payment');
+    let ArrayNewPayments = Array.from(listNewPayments);
+    if (ArrayNewPayments.length > 0) {
+        ArrayNewPayments.forEach(function(child) {
+            child.parentNode.removeChild(child);
+        });
+    }
+}
+
+function restoreAmount(){
+    const amountInput = document.getElementById('id_form-0-amount');
+    amountInput.value = 0;
+}
