@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             $.ajax({
-                url: `/products/ajax-search-products/?search_term=${item.getAttribute('name')}`,
+                url: `/products/ajax-search-products-promotion/?search_term=${item.getAttribute('name')}`,
                 method: 'GET',
                 dataType: 'json',
                 success: function(data) {

@@ -709,6 +709,43 @@ def ajax_search_products(request):
         } for product in products]
         return JsonResponse({'data': data})
 
+def ajax_search_products_promotion(request):
+    branch = request.user.branch
+
+    
+    branch_actualy = set_branch_session(request)
+
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+
+        # Obtener el valor de search_term de la solicitud
+        search_term = request.GET.get('search_term', '')
+
+        if not search_term:
+            # En caso de que search_term esté vacío, muestra la cantidad de productos por defecto
+            products = Product.objects.get_products_branch(branch_actualy)
+        else:
+            # Usando Q por todos los campos existentes en la tabla
+            products = Product.objects.get_products_branch(branch_actualy).filter(
+                Q(name__icontains=search_term) |
+                Q(barcode__icontains=search_term) |
+                Q(description__icontains=search_term) |
+                Q(category__name__icontains=search_term) |
+                Q(brand__name__icontains=search_term)
+            )
+        # Crear una lista de diccionarios con los datos de los productos
+        data = [{
+            'id': product.id,
+            'name': product.name,
+            'barcode': product.barcode,
+            'sale_price': product.sale_price,
+            'description': product.description,
+            'stock': product.stock,
+            'category': product.category.name,
+            'brand': product.brand.name,
+            'is_staff': 1 if request.user.is_staff else 0,
+            'in_promo': 1 if product.promotions.count() > 0 else 0,
+        } for product in products]
+        return JsonResponse({'data': data})
 
 @require_http_methods(["GET"])
 def obtener_stock(request):

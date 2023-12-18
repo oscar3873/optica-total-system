@@ -163,5 +163,11 @@ urlpatterns = [
         'ajax-search-products/',
         ajax_search_products,
         name='ajax_search_products'
+    ),
+    
+    path(
+        'ajax-search-products-promotion/',
+        ajax_search_products_promotion,
+        name='ajax_search_products_promotion'
     )
 ]
