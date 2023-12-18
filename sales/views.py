@@ -98,9 +98,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
             amount = saleform.cleaned_data.pop('amount')
             discount_sale = saleform.cleaned_data['discount']
-            if discount_sale < 0:
-                messages.error(self.request, "Descuento de venta Inválido. Ingrese solo valores positivos.")
-                return super().form_invalid(form)
+
         
         else:
             print(saleform.errors)
