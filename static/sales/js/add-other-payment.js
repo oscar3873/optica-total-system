@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         //Creación del div contedor de los 2 divs
         const divContainerElement = document.createElement('div');
-        divContainerElement.classList.add('row','p-0','m-0','pt-3');
+        divContainerElement.classList.add('new-payment','row','p-0','m-0','pt-3');
         // Agrego los 2 divs contenedores
         divContainerElement.appendChild(divSelect);
         divContainerElement.appendChild(divInputAndBtnContainer);

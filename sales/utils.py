@@ -260,7 +260,7 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
                         sale.state = Sale.STATE[0][0] # COMPLETADO
                         customer.credit_balance += total * Decimal(1 - sale.discount / 100)
                         customer.save()
-                        sale.total = amount
+                        sale.total = total
                         sale.save()
 
                     # elif customer.has_credit_account:
