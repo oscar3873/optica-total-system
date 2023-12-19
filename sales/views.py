@@ -314,9 +314,7 @@ class SaleDeleteView(CustomUserPassesTestMixin, DeleteView):
             product = order_detail.product
             product.stock += order_detail.quantity
             product.save()
-
-        for order in order_detaill:
-            order.delete()
+            order_detail.delete()
             
         sale_date = sale.created_at.date()
         try:
@@ -537,8 +535,9 @@ def pay_missing_balance(request, pk):
             sale = Sale.objects.get(pk=pk)
             form = TypePaymentMethodForm(request.POST)
             if form.is_valid():
-                
-                mov = create_in_movement(branch_actualy, request.user, form.cleaned_data['payment_method'].type_method, form.cleaned_data['description'], sale.missing_balance)
+                amount = form.cleaned_data['amount']
+                payment_method = form.cleaned_data['payment_method']
+                mov = create_in_movement(branch_actualy, request.user, payment_method.type_method, form.cleaned_data['description'], amount)
 
                 if not mov:
                     messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
@@ -547,18 +546,18 @@ def pay_missing_balance(request, pk):
                 Payment.objects.create(
                     customer = sale.customer,
                     user_made = request.user,
-                    amount = sale.missing_balance,
-                    payment_method = form.cleaned_data['payment_method'],
+                    amount = amount,
+                    payment_method = payment_method,
                     description = f"Pago de duada de venta Nro: {sale.pk}",
                     sale = sale,
                     movement = mov
                 )
-
-            sale.state = 'COMPLETADO'
-            sale.missing_balance = 0
+                sale.missing_balance -= amount
+            if sale.missing_balance <= 0:
+                sale.state = "COMPLETADO"
+                up_objetives(sale.commision_user, sale)
             sale.save()
             
-            up_objetives(sale.user_made, sale)
             messages.success(request, 'Pago realizado con éxito.')
             return redirect('sales_app:sale_detail_view', pk=sale.pk)
         

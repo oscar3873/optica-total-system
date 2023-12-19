@@ -255,12 +255,16 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
                 
                 mov = None
                 
+                missing_balance -= method_amount
+                
                 if customer and not 'consumidor' in customer.first_name.lower():
                     if customer.has_credit_account: # and 'cuenta corriente' in payment_methods.name.lower():
                         """Si el cliente TIENE CUENTA CORRIENTE + Metodo: CUENTA CORRIENTE"""
                         sale.state = Sale.STATE[0][0] # COMPLETADO
                         customer.credit_balance += total * Decimal(1 - sale.discount / 100)
                         customer.save()
+                        
+                        missing_balance = 0
                         sale.total = total
                         sale.save()
 
@@ -275,7 +279,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
 
                     elif not customer.has_credit_account and product_cristal or product_contacto: 
                         """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
-                        missing_balance -= method_amount
                         # missing_balance += max(Decimal(0), Decimal(total) - Decimal(payment_total))
                         # sale.missing_balance = missing_balance
                         mov = set_movement(method_amount, methods.cleaned_data['payment_method'].type_method, customer, request)
@@ -288,6 +291,8 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
                     """Si el CLIETNE NO REGISTRA"""
                     mov = set_movement(method_amount,  methods.cleaned_data['payment_method'].type_method, None, request)
 
+                
+                
                 Payment.objects.create(
                     user_made = request.user,
                     customer = customer,
