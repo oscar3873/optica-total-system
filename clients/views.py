@@ -744,7 +744,8 @@ def print_service_order(request, pk): # pk de la orden
             'sale_date': sale_date,
             'branch_name': branch.name,
             'branch_phone': branch.phone,
-            'branch_address': branch.address
+            'branch_address': branch.address,
+            'customer': service.customer
         }
 
         # Genera el HTML en lugar de renderizarlo
