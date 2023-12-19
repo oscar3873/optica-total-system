@@ -148,7 +148,7 @@
                 <th>Prod.</th>
                 <th >Cant.</th>
                 <th >Desc.</th>
-                <th >Precio un.</th>
+                <th >Precio&nbsp;un.</th>
             </tr>
         </thead>
         <tbody>
@@ -157,7 +157,7 @@
                     <td>{{order.product.name}}</td>
                     <td>{{order.quantity}}</td>
                     <td>{{order.discount}} %</td>
-                    <td>$ {{order.product.sale_price}}</td>
+                    <td>$&nbsp;{{order.product.sale_price}}</td>
                 </tr>
             {% endfor %}
                 
@@ -165,26 +165,35 @@
         <tfoot>
             <tr>
                 <th colspan="3">SUBTOTAL</th>
-                <th colspan="1">$ {{subtotal}}</th>
+                <th colspan="1">$&nbsp;{{subtotal}}</th>
             </tr>
             
             {% if discount %}
                 <tr>
                     <th colspan="2">DESCUENTO GRAL.</th>
-                    <th colspan="1">% {{discount}}</th>
-                    <th colspan="2">-$ {{discount_amount}}</th>
+                    <th colspan="1">{{discount}}%</th>
+                    <th colspan="1">-$&nbsp;{{discount_amount}}</th>
                 </tr>
             {% endif %}
                 
             {% if discount_extra %}
             <tr>
                 <th colspan="3">DESCUENTO PROMOCION</th>
-                <th colspan="1">-$ {{discount_extra}}</th>
+                <th colspan="1">-$&nbsp;{{discount_extra}}</th>
             </tr>
             {% endif %}
+            {% if surcharge %}
+            <tr>
+                <th colspan="2">RECARGO</th>
+                <th colspan="1">{{surcharge}}%</th>
+                <th colspan="1">$&nbsp;{{surcharge_amount}}</th>
+            </tr>
+
+            {% endif %}
+
             <tr>
                 <th colspan="3">TOTAL</th>
-                <th colspan="1">$ {{total}}</th>
+                <th colspan="1">$&nbsp;{{total}}</th>
             </tr>
         </tfoot>
     </table>
@@ -202,14 +211,14 @@
                 <tr>
                     <td>{{ payment.date_payment|date:"d/m/Y" }}</td>
                     <td colspan="2">{{ payment.payment_method.name }}</td>
-                    <td>$ {{ payment.amount }}</td>
+                    <td>$&nbsp;{{ payment.amount }}</td>
                 </tr>
             {% endfor %}
         </tbody>
         <tfoot>
             <tr>
                 <th colspan="3">SALDO</th>
-                <th>$ {{ missing_balance }}</th>
+                <th>$&nbsp;{{ missing_balance }}</th>
             </tr>
         </tfoot>
     </table>

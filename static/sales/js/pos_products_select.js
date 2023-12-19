@@ -46,8 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // promotion.textContent = `Sin promociones activas`;
             promotion.setAttribute('data-promotion',`none`);
             promotion.setAttribute('data-discount','0');
-        }       
-
+        }
         const buttonRemove = document.createElement('button');
         buttonRemove.classList.add('text-danger', 'boton-Quitar');
         buttonRemove.textContent = 'Quitar';
@@ -154,7 +153,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalElement = document.getElementById('total');
     const discountElement = document.getElementById('id_discount');
     const TotalSuccess = document.querySelectorAll('#total-success');
+    const rechargeElement = document.getElementById('id_surcharge');
 
+    rechargeElement.addEventListener('input', updateTotal);
     discountElement.addEventListener('input', updateTotal);
 
     const ButtonDelete = document.getElementById("button-delete-all");
@@ -518,21 +519,32 @@ document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
     }
 
-    function updateTotal(){
+    function updateTotal() {
         var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
-        var discount_for_sale = parseFloat(discountElement.value).toFixed(2);
+        var discount_for_sale = parseFloat(discountElement.value || 0).toFixed(2);
+        var recharge_for_sale = parseFloat(rechargeElement.value || 0).toFixed(2);
         var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);
 
         if (discountElement.value === '') {
             discount_for_sale = 0;
         }
-        
-        total = parseFloat(subtotal * (1 - discount_for_sale/100)).toFixed(2);
-        totalElement.textContent = `$ ${total}`;
+
+        // Calcula el total sin recargo
+        var totalWithoutSurcharge = parseFloat(subtotal * (1 - discount_for_sale / 100)).toFixed(2);
+
+        // Calcula el monto del recargo
+        var surchargeAmount = parseFloat(totalWithoutSurcharge * (recharge_for_sale / 100)).toFixed(2);
+
+        // Agrega el recargo al total
+        total = parseFloat(totalWithoutSurcharge) + parseFloat(surchargeAmount);
+
+        totalElement.textContent = `$ ${total.toFixed(2)}`;
+
         TotalSuccess.forEach(totalsucces => {
-            totalsucces.textContent = `$ ${total}`;
+            totalsucces.textContent = `$ ${total.toFixed(2)}`;
         });
-        totalOfForms.value = total;
+
+        totalOfForms.value = total.toFixed(2);
     };
 
 

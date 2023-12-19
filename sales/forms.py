@@ -45,10 +45,18 @@ class SaleForm(forms.ModelForm):
             attrs={'class': 'form-control'}
         )
     )
+    
+    surcharge = forms.IntegerField(
+        required=False,
+        initial = 0,
+        widget = forms.NumberInput(
+            attrs={'class': 'form-control'}
+        )
+    )
 
     class Meta:
         model = Sale
-        fields = ['customer', 'discount', 'commision_user']
+        fields = ['customer', 'discount', 'commision_user', 'surcharge']
 
     def __init__(self, branch=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -57,6 +65,22 @@ class SaleForm(forms.ModelForm):
         self.fields['commision_user'].queryset=Employee.objects.filter(user__branch=branch)
         self.fields['commision_user'].required = True
         self.fields['commision_user'].widget.attrs['class'] = 'form-control'
+    
+    def clean_discount(self):
+        discount = self.cleaned_data['discount']
+        if not discount:
+            discount = 0
+        elif discount and discount < 0:
+            raise forms.ValidationError('El descuento debe ser positivo')
+        return discount
+    
+    def clean_surcharge(self):
+        surcharge = self.cleaned_data['surcharge']
+        if not surcharge:
+            surcharge = 0
+        elif surcharge and surcharge < 0:
+            raise forms.ValidationError('El recargo debe ser positivo')
+        return surcharge
 
 
 class OrderDetailForm(forms.ModelForm):

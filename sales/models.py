@@ -39,6 +39,7 @@ class Sale(BaseAbstractWithUser):
     total = models.DecimalField(max_digits=12, decimal_places=2, blank=False, null=False, verbose_name="Total")
     branch = models.ForeignKey('branches.Branch', on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
     commision_user = models.ForeignKey('employes.Employee', on_delete=models.PROTECT, related_name='sales', null=True, blank=True)
+    surcharge = models.PositiveIntegerField(verbose_name='Recargo', default=0, null=True, blank=True)
 
     def __str__(self):
         return f"COD: {self.pk} - $ {self.total}"

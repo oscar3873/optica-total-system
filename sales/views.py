@@ -76,6 +76,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
+            print(sale.surcharge)
             sale.branch = branch_actualy
 
             # payment_methods = saleform.cleaned_data.pop('payment_method')
@@ -98,7 +99,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
             amount = saleform.cleaned_data.pop('amount')
             discount_sale = saleform.cleaned_data['discount']
-
+            surcharge_sale = saleform.cleaned_data['surcharge']
         
         else:
             print(saleform.errors)
@@ -143,7 +144,7 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         for promotion, products_with_discountPromo in promotional_products.items():
             process_promotion(promotional_products_clone, promotion, products_with_discountPromo, real_price_promo)
                 
-        set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale)
+        set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale, surcharge_sale)
 
         if (cristal or contacto) and amount < sale.total/2 and not customer.has_credit_account: # Se lleva un cristal o lente de contacto, pero el monto pagado es menor al 50%
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
@@ -261,6 +262,8 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
         context['sale'] = sale = Sale.objects.get(id=self.kwargs['pk'])
         context['sale_subtotal'] = sale.subtotal
         context['sale_discount_amount'] = context['sale_subtotal'] * Decimal(sale.discount/100)
+        subtotal_discount = context['sale_subtotal'] - context['sale_discount_amount'] 
+        context['sale_surcharge'] = subtotal_discount * Decimal(sale.surcharge/100)
         context['sale_total'] = sale.total
         # Ordenes de detalle de la venta ...
         context['sale_details'] = OrderDetail.objects.filter(sale=sale)
@@ -374,14 +377,15 @@ def show_invoice(request, pk):
     sale_date_str = created_at.strftime(format)
 
     disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
+    surcharge_amount = (sale.subtotal - disocunt_amount) * Decimal(sale.surcharge/100)
 
     context = {
         'customer': customer,
         'total': f'{sale.total:.2f}',
         'order_details': order_details_template,
-        'subtotal': sum(subtotal),
+        'subtotal': f'{Decimal(sum(subtotal)):.2f}',
         'seler': sale.commision_user,
-        'promo': f'{sale.total}',
+        'promo': f'{sale.total:.2f}',
         'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
         'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
         'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
@@ -391,6 +395,8 @@ def show_invoice(request, pk):
         'date': created_at,
         'payments': payments,
         'branch': sale.branch,
+        'surcharge': f'{sale.surcharge:.2f}' if sale.surcharge > 0 else None,
+        'surcharge_amount': f'{surcharge_amount:.2f}' if surcharge_amount > 0 else None,
     }
 
     return render(request, 'sales/components/comprobante_pago.html', context)
@@ -429,14 +435,16 @@ def show_factura(request, pk):
     sale_date_str = created_at.strftime(format)
 
     disocunt_amount = sale.subtotal * Decimal(sale.discount/100)
+    surcharge_amount = (sale.subtotal - disocunt_amount) * Decimal(sale.surcharge/100)
 
+    print(surcharge_amount)
     context = {
         'customer': customer,
         'total': f'{sale.total:.2f}',
         'order_details': order_details_template,
-        'subtotal': sum(subtotal),
+        'subtotal': f'{Decimal(sum(subtotal)):.2f}',
         'seler': sale.commision_user,
-        'promo': f'{sale.total}',
+        'promo': f'{sale.total:.2f}',
         'discount': f'{sale.discount:.2f}' if sale.discount > 0 else None,
         'discount_amount': f'{disocunt_amount:.2f}' if disocunt_amount > 0 else None,
         'discount_extra': f'{sale.discount_extra:.2f}' if sale.discount_extra > 0 else None,
@@ -445,7 +453,10 @@ def show_factura(request, pk):
         'missing_balance': f'{sale.missing_balance:.2f}',
         'time': datetime.now().strftime('%H:%M'),     # Formato: HH:MM
         'receipt': receipt,
-        'payments': payments
+        'payments': payments,
+        'surcharge': f'{sale.surcharge:.2f}' if sale.surcharge > 0 else None,
+        'surcharge_amount': f'{surcharge_amount:.2f}' if surcharge_amount > 0 else None,
+        
     }
 
     return render(request, 'sales/components/factura.html', context)

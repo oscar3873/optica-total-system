@@ -353,14 +353,20 @@ def process_service_order(request, customer):
     return service
 
 
-def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale):
+def set_amounts_sale(sale, subtotal, wo_promo, real_price_promo, discount_sale, surcharge_sale):
     wo_promo = sum(wo_promo)
     real_price_promo = Decimal(sum(real_price_promo))
 
     sale.discount_extra = Decimal(subtotal - real_price_promo - wo_promo)
     sale.subtotal = Decimal(subtotal)
     sale.total = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
-    sale.total = round(sale.total, 2)
+    # Calcular el total sin recargo
+    total_without_surcharge = Decimal(real_price_promo + wo_promo) * Decimal(1 - discount_sale/100)
+
+    # Calcular el recargo
+    surcharge_amount = total_without_surcharge * Decimal(surcharge_sale/100)
+    
+    sale.total = round(total_without_surcharge + surcharge_amount, 2)
 
 
 def up_objetives(employpee, sale):

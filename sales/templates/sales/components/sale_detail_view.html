@@ -245,18 +245,10 @@
                 <th class="text-900">Descuento de venta {{sale.discount}}%:</th>
                 <td class="fw-semi-bold">- ${{sale_discount_amount|custom_intcomma}}</td>
             </tr>
-            {% if  sale.discount_extra%}
-                <tr>
-                    <th class="text-900">Descuento:</th>
-                    <td class="fw-semi-bold">- ${{sale.discount_extra|custom_intcomma}}</td>
-                </tr>
-            {% endif %}
-            {% if  sale.discount%}
-                <tr>
-                    <th class="text-900">Descuento en total de la venta {{sale.discount}}%:</th>
-                    <td class="fw-semi-bold">- ${{sale_discount_amount|custom_intcomma}}</td>
-                </tr>
-            {% endif %}
+            <tr>
+                <th class="text-900">Recargo {{sale.surcharge}}%:</th>
+                <td class="fw-semi-bold">${{sale_surcharge|custom_intcomma}}</td>
+            </tr>
             <tr class="border-top">
                 <th class="text-900">Total:</th>
                 <td class="fw-semi-bold">${{sale_total|custom_intcomma}}</td>
