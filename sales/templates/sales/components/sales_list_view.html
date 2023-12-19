@@ -105,8 +105,8 @@
                             <span class="badge rounded-pill badge-soft-danger">Pendiente</span>
                             {% endif %}
                         </td>
-                        <td class="align-start missing_balance">{{sale.missing_balance}}</td>
-                        <td class="align-start total">{{sale.total}}</td>
+                        <td class="align-start missing_balance">{{sale.missing_balance|intcomma}}</td>
+                        <td class="align-start total">{{sale.total|intcomma}}</td>
                         <td class="align-middle white-space-nowrap py-1">
                                 <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default" data-bs-toggle='tooltip' title='Ver Detalle'><span class="fas fa-eye"></span></a>
                                 {% if request.user.is_staff %}
