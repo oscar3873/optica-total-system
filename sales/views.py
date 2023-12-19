@@ -103,6 +103,9 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
         
         else:
             print(saleform.errors)
+            messages.error(self.request, next(iter(saleform.errors.values()))[0])
+            return super().form_invalid(form) 
+            
         promotions_active = Promotion.objects.filter(is_active=True, branch=branch_actualy, deleted_at=None)
         promotional_products = {promotion: [(promotion.discount)] for promotion in promotions_active}
 
