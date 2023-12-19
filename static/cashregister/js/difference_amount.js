@@ -8,6 +8,11 @@ function parseFormattedNumber(numberString) {
     return parseFloat(numberString.replace(/\./g, '').replace(/,/, '.'));
 }
 
+function parseInputNumber(inputString) {
+    // Esta función se usa para manejar los valores ingresados en los campos de entrada
+    return parseFloat(inputString.replace(/,/, '.'));
+}
+
 function formatNumberAsCurrency(number) {
     // Formatea el número como decimal sin símbolo de moneda
     const formatter = new Intl.NumberFormat('es', {
@@ -21,8 +26,13 @@ function formatNumberAsCurrency(number) {
 function updateDifferences() {
     countedAmountFields.forEach((currentValue, index) => {
         const systemAmountString = document.getElementById(`${index+1}`).textContent.replace('$', '').trim();
+        console.log("Este el total del sistema: " + systemAmountString);
         const systemAmount = parseFormattedNumber(systemAmountString);
-        const countedAmount = parseFormattedNumber(currentValue.value === '' ? '0' : currentValue.value);
+        
+        // Utiliza la función parseInputNumber para los valores de entrada
+        const countedAmount = parseInputNumber(currentValue.value === '' ? '0' : currentValue.value);
+        console.log("Este es el valor del campo: " + countedAmount);
+        
         const typeMethod = document.getElementById(`${index+1}`).dataset.typeMethod;
         const difference = isNaN(countedAmount) ? null : countedAmount - systemAmount;
         const differenceField = document.getElementById(`difference-${typeMethod}`);
