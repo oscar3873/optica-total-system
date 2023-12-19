@@ -194,8 +194,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Separadores de miles y decimales
 # https://docs.djangoproject.com/en/4.2/ref/settings/#localization
 
-THOUSAND_SEPARATOR = ','
-DECIMAL_SEPARATOR = '.'
+THOUSAND_SEPARATOR = '.'
+DECIMAL_SEPARATOR = ','
 
 # Email settings for sending emails
 EMAIL_HOST = get_secret('EMAIL_HOST')

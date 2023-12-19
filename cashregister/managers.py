@@ -72,14 +72,18 @@ class CashRegisterDetailManager(models.Manager):
         initial_balance_cashregister = cashregister.initial_balance or 0
         #Se recupera el total de ingresos y egresos de la caja
         total_amount_ingresos = movements.filter(type_operation='Ingreso').aggregate(total=models.Sum('amount'))['total'] or 0
+        print("################# Total de ingresos: ", total_amount_ingresos)
         total_amount_egresos = movements.filter(type_operation='Egreso').aggregate(total=models.Sum('amount'))['total'] or 0
+        print("################# Total de egresos: ", total_amount_egresos)
         #Se calcula el total de la caja
         total_amount = total_amount_ingresos - total_amount_egresos
+        print("################# Total de la caja: ", total_amount)
         
         #Se considera el caso para el efectivo porque la caja se abre en efectivo
         
         #harcodeado
         registered_amount = (total_amount + initial_balance_cashregister) if type_method.name == "Efectivo" else total_amount
+        print("################# Monto registrado en la caja: ", registered_amount)
         return registered_amount
 
 

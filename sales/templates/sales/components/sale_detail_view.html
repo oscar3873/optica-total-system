@@ -179,7 +179,7 @@
                         <div class="flex-1">
                             {% for payment in sale.sale_payment.all %}
                                 <h6 class="mb-0">{{payment.payment_method.name}}</h6>
-                                <p class="mb-0 fs--1"> <strong>Monto: </strong>{{payment.amount|floatformat:2|intcomma}}</p>
+                                <p class="mb-0 fs--1"> <strong>Monto: </strong>{{payment.amount|intcomma}}</p>
                                 <p class="mb-0 fs--1"> <strong>Detalle en el pago: </strong>{{payment.description}}</p>
                             {% endfor %}
                         </div>
@@ -192,7 +192,7 @@
                         <div class="d-flex gap-1">
                             <span class="fas fa-credit-card ms-1" data-fa-transform="shrink-2"></span>
                             <div class="flex-1">
-                                <p class="mb-0 fs--1"> <strong>Deuda: </strong>{{sale.missing_balance|floatformat:2|intcomma}}</p>
+                                <p class="mb-0 fs--1"> <strong>Deuda: </strong>{{sale.missing_balance|intcomma}}</p>
                             </div>
                         </div>
                         <button id="pay-missing_balance" class="btn btn-warning" data-bs-target="#Pay" data-bs-toggle="modal">
@@ -235,31 +235,31 @@
             <table class="table table-sm table-borderless fs--1 text-end">
             <tr>
                 <th class="text-900">Subtotal:</th>
-                <td class="fw-semi-bold">${{sale_subtotal|floatformat:2|intcomma}}</td>
+                <td class="fw-semi-bold">${{sale_subtotal|intcomma}}</td>
             </tr>
             <tr>
                 <th class="text-900">*Descuentos:</th>
-                <td class="fw-semi-bold">- ${{sale.discount_extra|floatformat:2|intcomma}}</td>
+                <td class="fw-semi-bold">- ${{sale.discount_extra|intcomma}}</td>
             </tr>
             <tr>
                 <th class="text-900">Descuento de venta {{sale.discount}}%:</th>
-                <td class="fw-semi-bold">- ${{sale_discount_amount|floatformat:2|intcomma}}</td>
+                <td class="fw-semi-bold">- ${{sale_discount_amount|intcomma}}</td>
             </tr>
             {% if  sale.discount_extra%}
                 <tr>
                     <th class="text-900">Descuento:</th>
-                    <td class="fw-semi-bold">- ${{sale.discount_extra|floatformat:2|intcomma}}</td>
+                    <td class="fw-semi-bold">- ${{sale.discount_extra|intcomma}}</td>
                 </tr>
             {% endif %}
             {% if  sale.discount%}
                 <tr>
                     <th class="text-900">Descuento en total de la venta {{sale.discount}}%:</th>
-                    <td class="fw-semi-bold">- ${{sale_discount_amount|floatformat:2|intcomma}}</td>
+                    <td class="fw-semi-bold">- ${{sale_discount_amount|intcomma}}</td>
                 </tr>
             {% endif %}
             <tr class="border-top">
                 <th class="text-900">Total:</th>
-                <td class="fw-semi-bold">${{sale_total|floatformat:2|intcomma}}</td>
+                <td class="fw-semi-bold">${{sale_total|intcomma}}</td>
             </tr>
             </table>
         </div>
