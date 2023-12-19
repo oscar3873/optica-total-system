@@ -179,13 +179,9 @@ AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = "es"
-
 TIME_ZONE = "America/Argentina/Buenos_Aires"
-
-USE_I18N = True
-
 USE_L10N = True
-
+USE_I18N = True
 USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -194,8 +190,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Separadores de miles y decimales
 # https://docs.djangoproject.com/en/4.2/ref/settings/#localization
 
-THOUSAND_SEPARATOR = '.'
-DECIMAL_SEPARATOR = ','
 
 # Email settings for sending emails
 EMAIL_HOST = get_secret('EMAIL_HOST')

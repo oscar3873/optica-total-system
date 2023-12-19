@@ -1,5 +1,7 @@
 {%load static%}
 {% load humanize %}
+{% load custom_filters %}
+{% load custom_filters %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -122,11 +124,11 @@
             <p class="title">RESUMEN DE CAJA</p>
             <div class="branch-info">
                 <span class="branch">Monto de apertura: </span>
-                <span class="contact">$ {{cashregister.initial_balance|intcomma}}</span>
+                <span class="contact">$ {{cashregister.initial_balance|custom_intcomma}}</span>
             </div>
             <div class="branch-info">
                 <span class="branch">Monto final: </span>
-                <span class="contact">$ {{cashregister.final_balance|intcomma}}</span>
+                <span class="contact">$ {{cashregister.final_balance|custom_intcomma}}</span>
             </div>
         </div>
     </div>

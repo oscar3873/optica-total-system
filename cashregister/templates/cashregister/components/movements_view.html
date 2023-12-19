@@ -1,5 +1,6 @@
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
 <!-- ===============================================-->
 <!--    Contentenedor del block main-->
 <!-- ===============================================-->
@@ -85,7 +86,7 @@
                 </td> -->
                 <td class="align-start user_made d-none d-sm-table-cell px-4">{{movement.user_made}}</td>
                 <td class="align-start date_movement px-4 d-none d-sm-table-cell">{{movement.date_movement|date:"d/m/Y"}}</td>
-                <td class="align-start amount px-4">{{movement.amount|intcomma}}</td>
+                <td class="align-start amount px-4">{{movement.amount|custom_intcomma}}</td>
                 <td class="align-start type_operation px-4">
                   {% if movement.type_operation == 'Ingreso' %}
                   <span class="badge rounded-pill badge-soft-success">{{movement.get_type_operation_display}}</span>
