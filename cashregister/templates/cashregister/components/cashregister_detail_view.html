@@ -151,7 +151,7 @@
                     </div>
                     <div class="col-md-auto">
                         <p class="mb-0 text-700 fs--2">
-                            {{movement.date_movement|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}
+                            {{movement.date_movement|date:"l j \d\e F \d\e\l Y" }} a las {{movement.created_at|time }}
                             <a class="btn btn-link d-none d-md-inline" href="{% url 'cashregister_app:movements_detail_view' movement.pk %}">ver detalle</a>
                         </p>
                         
