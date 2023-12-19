@@ -218,7 +218,6 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
     """
 
     payment_total = 0
-    missing_balance = 0
     if payment_methods.is_valid():
         if not customer:
             customer = Customer.objects.get(id=1)
@@ -227,11 +226,11 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
             if methods.is_valid():
                 payment_total += methods.cleaned_data['amount']
                 
-        if payment_total >= total:
-            payment = payment_total
-        else:
-            payment = total - payment_total
-            sale.missing_balance = payment
+        # if payment_total >= total:
+        #     payment = payment_total
+        # else:
+        #     payment = total - payment_total
+        #     sale.missing_balance = payment
         
         if Decimal(total) - Decimal(payment_total) > 0:
             sale.state = Sale.STATE[1][0] # "PENDIENTE"
@@ -247,6 +246,8 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
         sale.user_made = request.user
         sale.customer = customer
         sale.save()
+        
+        missing_balance = total
         
         for methods in payment_methods:
             if methods.is_valid():
@@ -274,17 +275,18 @@ def process_customer(customer, sale, payment_methods, total, product_cristal, pr
 
                     elif not customer.has_credit_account and product_cristal or product_contacto: 
                         """Si lo que el cliente NO TIENE CUENTA CORRIENTE compra tiene CRISTAL"""
-                        missing_balance += max(Decimal(0), Decimal(total) - Decimal(payment_total))
+                        missing_balance -= method_amount
+                        # missing_balance += max(Decimal(0), Decimal(total) - Decimal(payment_total))
                         # sale.missing_balance = missing_balance
                         mov = set_movement(method_amount, methods.cleaned_data['payment_method'].type_method, customer, request)
                         sale.save()
 
                     else:
                         """Si el cliente NO CUENTA CORRIENTE - NO CRISTAL"""
-                        mov = set_movement(payment, methods.cleaned_data['payment_method'].type_method, customer, request)
+                        mov = set_movement(method_amount, methods.cleaned_data['payment_method'].type_method, customer, request)
                 else:
                     """Si el CLIETNE NO REGISTRA"""
-                    mov = set_movement(payment,  methods.cleaned_data['payment_method'].type_method, None, request)
+                    mov = set_movement(method_amount,  methods.cleaned_data['payment_method'].type_method, None, request)
 
                 Payment.objects.create(
                     user_made = request.user,
