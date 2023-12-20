@@ -43,17 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
                                 nameCell.appendChild(nameText);
                                 row.appendChild(nameCell);
     
-                                const amountCell = document.createElement('td');
-                                amountCell.className = 'align-start amount px-4';
-                                const barcodeText = document.createTextNode(movement.amount);
-                                amountCell.appendChild(barcodeText);
-                                row.appendChild(amountCell);
-    
                                 const dateMovementCell = document.createElement('td');
                                 dateMovementCell.className = 'align-start date_movement px-4 d-none d-sm-table-cell';
                                 const descriptionText = document.createTextNode(movement.date_movement);
                                 dateMovementCell.appendChild(descriptionText);
                                 row.appendChild(dateMovementCell);
+
+                                const amountCell = document.createElement('td');
+                                amountCell.className = 'align-start amount px-4';
+                                const barcodeText = document.createTextNode(movement.amount);
+                                amountCell.appendChild(barcodeText);
+                                row.appendChild(amountCell);
     
                                 const typeOperationCell = document.createElement('td');
                                 typeOperationCell.className = 'align-start type_operation px-4';

@@ -504,31 +504,36 @@ def ajax_search_movements(request):
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
+        search_terms = search_term.split()
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = MovementsView().paginate_by
             movements = Movement.objects.all().filter(deleted_at = None, cash_register__branch=branch_actualy)[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla
-            movements = Movement.objects.all().filter(deleted_at = None, cash_register__branch=branch_actualy).filter(
-                Q(amount__icontains=search_term) |
-                Q(date_movement__icontains=search_term) |
-                Q(type_operation__icontains=search_term) |
-                Q(user_made__first_name__icontains=search_term) |
-                Q(user_made__last_name__icontains=search_term)
-            )[:40]
-        # Crear una lista de diccionarios con los datos de los empleados
-        # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+            query_conditions = Q()
+            for term in search_terms:
+                query_conditions |= (
+                    Q(amount__icontains=term) |
+                    Q(date_movement__icontains=term) |
+                    Q(type_operation__icontains=term) |
+                    Q(user_made__first_name__icontains=term) |
+                    Q(user_made__last_name__icontains=term)
+                )
+
+            movements = Movement.objects.filter(deleted_at=None, cash_register__branch=branch_actualy).filter(query_conditions)[:40]
+
         data = [{
             'id': movement.id,
             'amount': movement.amount,
-            'date_movement': movement.date_movement.strftime('%d/%m/%Y'),
+            'date_movement': movement.date_movement.strftime('%Y-%m-%d'),
             'type_operation': movement.type_operation,
             'user_made': str(movement.user_made),
             'is_staff': 1 if request.user.is_staff else 0
         } for movement in movements]
         # locale.setlocale(locale.LC_TIME, '')
         return JsonResponse({'data': data})
+    return redirect(reverse_lazy("cashregister_app:movements_view"))
     
 
 ############################### EXPORTAR MOVIMIENTOS ###############################

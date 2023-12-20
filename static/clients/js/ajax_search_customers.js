@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             const row = document.createElement('tr');
                             row.className = 'btn-reveal-trigger';
 
-                            const firstNameCell = document.createElement('td');
+                            const firstNameCell = document.createElement('th');
                             firstNameCell.className = 'align-start first_name';
                             const firstNameText = document.createTextNode(customer.first_name);
                             firstNameCell.appendChild(firstNameText);
@@ -37,11 +37,15 @@ document.addEventListener('DOMContentLoaded', () => {
                             lastNameCell.appendChild(lastNameText);
                             row.appendChild(lastNameCell);
 
-                            const phoneNumberCell = document.createElement('td');
+                            const phoneNumberCell = document.createElement('th');
                             phoneNumberCell.className = 'align-start phone_number d-none d-md-table-cell';
                             const phoneNumberLink = document.createElement('a');
-                            phoneNumberLink.href = `https://wa.me/${customer.phone_code}${customer.phone_number}`;
-                            phoneNumberLink.textContent = `${customer.phone_code}${customer.phone_number}`;
+                            if (customer.phone_number){
+                                phoneNumberLink.href = `https://wa.me/${customer.phone_code}${customer.phone_number}`;
+                                phoneNumberLink.textContent = `${customer.phone_code} ${customer.phone_number}`;
+                            }else{
+                                phoneNumberLink.textContent = 'Sin numero';
+                            }
                             phoneNumberCell.appendChild(phoneNumberLink);
                             row.appendChild(phoneNumberCell);
 

@@ -485,34 +485,34 @@ def gen_factura(request, pk):
 ################ SEARCH MOVEMENTS AJAX ################
 
 def ajax_search_sales(request):
-    # branch = request.user.branch
-
-    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
 
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
+        search_terms = search_term.split()
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de empleados por defecto
             paginate_by = SalesListView().paginate_by
             sales = Sale.objects.all().filter(deleted_at = None)[:paginate_by]
         else:
-            from datetime import datetime
-            formatted_search_term = datetime.strptime(search_term, '%d/%m/%Y').date() if '/' in search_term else search_term
-            # Usando Q por todos los campos existentes en la tabla
-            sales = Sale.objects.filter(deleted_at = None, branch=branch_actualy).filter(
-                Q(total__icontains=search_term) |
-                Q(missing_balance__icontains=search_term) |
-                Q(created_at__date__icontains=formatted_search_term) |
-                Q(state__icontains=search_term) |
-                Q(user_made__first_name__icontains=search_term) |
-                Q(user_made__last_name__icontains=search_term) |
-                Q(customer__first_name__icontains=search_term) |
-                Q(customer__last_name__icontains=search_term)|
-                Q(customer__dni__icontains=search_term)
-            )[:40]
+            # Usando reduce para combinar múltiples condiciones con operador OR (|)
+            query_conditions = Q()
+            for term in search_terms:
+                query_conditions |= (
+                    Q(total__icontains=term) |
+                    Q(missing_balance__icontains=term) |
+                    Q(created_at__icontains=term) |  # Cambié created_at__date__icontains a created_at__icontains
+                    Q(state__icontains=term) |
+                    Q(user_made__first_name__icontains=term) |
+                    Q(user_made__last_name__icontains=term) |
+                    Q(customer__first_name__icontains=term) |
+                    Q(customer__last_name__icontains=term) |
+                    Q(customer__dni__icontains=term)
+                )
+
+            sales = Sale.objects.filter(deleted_at=None, branch=branch_actualy).filter(query_conditions)[:40]
         # Crear una lista de diccionarios con los datos de los empleados
         # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
@@ -520,7 +520,7 @@ def ajax_search_sales(request):
             'total': sale.total,
             'missing_balance': sale.missing_balance,
             'date_time_sale': sale.created_at.time().strftime('%H:%M'),
-            'date_sale': sale.created_at.date().strftime('%d/%m/%Y'),
+            'date_sale': sale.created_at.date().strftime('%Y-%m-%d'),
             'state': sale.state,
             'customer': str(sale.customer),
             'customer_id': sale.customer.id,

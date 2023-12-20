@@ -32,7 +32,7 @@
                     <div class="row flex-between-center">
                         <div class="col-6 col-sm-auto d-flex align-items-center m-auto m-sm-0 p-0 ps-2">
                             <div>
-                                <form id="searchForm" action="{% url 'clients_app:ajax_search_customers' %}" method="GET" data-ajax-search-url="{% url 'clients_app:ajax_search_customers' %}">
+                                <form id="searchForm" method="GET" data-ajax-search-url="{% url 'clients_app:ajax_search_customers' %}">
                                     <div class="input-group">
                                         <input maxlength="50" class="form-control form-control-sm shadow-none search" id="searchInput" type="search" placeholder="Buscar" aria-label="search" />
                                         <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
@@ -73,9 +73,15 @@
                                     <th class="align-start first_name">{{ customer.first_name }}</th>
                                     <td class="align-start last_name">{{ customer.last_name }}</td>
                                     <th class="align-start phone_number d-none d-md-table-cell">
-                                        <a href="https://wa.me/{{customer.phone_code}}{{customer.phone_number}}">
-                                            {{customer.phone_code}}{{ customer.phone_number }}
-                                        </a>
+                                        
+                                        {% if customer.phone_number %}
+                                            <a href="https://wa.me/{{customer.phone_code}}{{customer.phone_number}}">
+                                                {{customer.phone_code}} {{ customer.phone_number }}
+                                            </a>
+                                        {% else %}
+                                            <div> Sin numero</div>
+                                        {% endif %}
+                                        
                                     </th>
                                     <td class="align-start dni d-none d-md-table-cell">{{ customer.dni }}
                                     </td>

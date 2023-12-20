@@ -150,10 +150,7 @@ class PromotionDeleteView(CustomUserPassesTestMixin, DeleteView):
 
 def ajax_promotional_products(request):
     branch = request.user.branch
-
     
-    branch_actualy = set_branch_session(request)
-
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         
         promotions = Promotion.objects.filter(branch=branch, is_active=True)  # Obtén todas las promociones
@@ -164,3 +161,4 @@ def ajax_promotional_products(request):
             associated_products = promotion.promotion_products.values_list('product__id', flat=True)
             list_promotion[f'{promotion.name}-{promotion.type_prom.name}'] = (promotion.type_prom.name, promotion.discount, list(associated_products))
         return JsonResponse({'promotions': list_promotion})
+    return redirect(reverse_lazy("promotions_app:promotion_list"))

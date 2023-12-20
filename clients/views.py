@@ -683,31 +683,34 @@ def export_customer_list_to_excel(request):
 
 
 
-
 ########################### RUTINAS PARA PETICIONES AJAX ####################################
 
 def ajax_search_customers(request):
     from django.db.models import Q
     
     branch_actualy = set_branch_session(request)
-
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
+        search_terms = search_term.split()
         if not search_term:
             # En caso de que search_term esté vacío, muestra la cantidad de clientes por defecto
             paginate_by = CustomerListView().paginate_by
             customers = Customer.objects.get_customers_branch(branch_actualy).filter(deleted_at=None)[:paginate_by]
         else:
-            # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
-            customers = Customer.objects.get_customers_branch(branch_actualy).filter(
-                Q(first_name__icontains=search_term) |
-                Q(last_name__icontains=search_term) |
-                Q(phone_number__icontains=search_term) |
-                Q(phone_code__icontains=search_term) |
-                Q(email__icontains=search_term) |
-                Q(dni__icontains=search_term)
-            )[:50]
+            # Usando reduce para combinar múltiples condiciones con operador OR (|)
+            query_conditions = Q()
+            for term in search_terms:
+                query_conditions |= (
+                    Q(first_name__icontains=term) |
+                    Q(last_name__icontains=term) |
+                    Q(phone_number__icontains=term) |
+                    Q(phone_code__icontains=term) |
+                    Q(email__icontains=term) |
+                    Q(dni__icontains=term)
+                )
+            customers = Customer.objects.get_customers_branch(branch_actualy).filter(query_conditions)[:50]
+
         # Crear una lista de diccionarios con los datos de los empleados
         # locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
         data = [{
@@ -724,29 +727,31 @@ def ajax_search_customers(request):
         } for customer in customers]
         return JsonResponse({'data': data})
     
+    return redirect(reverse_lazy('clients_app:customer_view'))
+
 
 def print_service_order(request, pk): # pk de la orden
-        service = ServiceOrder.objects.get(pk=pk)
-        branch = service.sale.branch
-        # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
-        html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
+    service = ServiceOrder.objects.get(pk=pk)
+    branch = service.sale.branch
+    # Lógica para obtener el HTML que deseas mostrar en la nueva pestaña
+    html_content = "<html><body><h1>Contenido HTML de ejemplo</h1></body></html>"
 
-        # Convertir la cadena en un objeto de fecha
-        # locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
-        
-        format = "%A, %d de %B de %Y"
-        
-        created_at = service.created_at
-        sale_date = created_at
-        
-        context = {
-            'service_order': service,
-            'sale_date': sale_date,
-            'branch_name': branch.name,
-            'branch_phone': branch.phone,
-            'branch_address': branch.address,
-            'customer': service.customer
-        }
+    # Convertir la cadena en un objeto de fecha
+    # locale.setlocale(locale.LC_TIME, 'es_ES.utf8')
+    
+    format = "%A, %d de %B de %Y"
+    
+    created_at = service.created_at
+    sale_date = created_at
+    
+    context = {
+        'service_order': service,
+        'sale_date': sale_date,
+        'branch_name': branch.name,
+        'branch_phone': branch.phone,
+        'branch_address': branch.address,
+        'customer': service.customer
+    }
 
-        # Genera el HTML en lugar de renderizarlo
-        return render(request, 'clients/service_order_print.html', context)
+    # Genera el HTML en lugar de renderizarlo
+    return render(request, 'clients/service_order_print.html', context)

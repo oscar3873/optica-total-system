@@ -684,9 +684,6 @@ def export_products_list_to_excel(request):
 ################ SEARCH PRODUCTS AJAX ################
 
 def ajax_search_products(request):
-    branch = request.user.branch
-
-    
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -722,10 +719,10 @@ def ajax_search_products(request):
         } for product in products]
         return JsonResponse({'data': data})
 
-def ajax_search_products_promotion(request):
-    branch = request.user.branch
+    return redirect(reverse_lazy("products_app:product_list"))
 
-    
+
+def ajax_search_products_promotion(request):
     branch_actualy = set_branch_session(request)
 
     if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
@@ -760,9 +757,11 @@ def ajax_search_products_promotion(request):
         } for product in products]
         return JsonResponse({'data': data})
 
-@require_http_methods(["GET"])
+    return redirect(reverse_lazy("promotions_app:promotion_list"))
+
+
 def obtener_stock(request):
-    if request.is_ajax():
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
         producto_id = request.GET.get('producto_id', None)
         if producto_id is not None:
             try:

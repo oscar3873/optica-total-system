@@ -85,7 +85,7 @@
                 <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
                 </td> -->
                 <td class="align-start user_made d-none d-sm-table-cell px-4">{{movement.user_made}}</td>
-                <td class="align-start date_movement px-4 d-none d-sm-table-cell">{{movement.date_movement|date:"d/m/Y"}}</td>
+                <td class="align-start date_movement px-4 d-none d-sm-table-cell">{{movement.date_movement|date:"Y-m-d"}}</td>
                 <td class="align-start amount px-4">{{movement.amount|custom_intcomma}}</td>
                 <td class="align-start type_operation px-4">
                   {% if movement.type_operation == 'Ingreso' %}

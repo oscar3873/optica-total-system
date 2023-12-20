@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import (
     DetailView, UpdateView, FormView, ListView, DeleteView
@@ -233,7 +234,7 @@ def ajax_search_employee(request):
 
         # Obtener el valor de search_term de la solicitud
         search_term = request.GET.get('search_term', '')
-
+        search_terms = search_term.split()
         all_employees = Employee.objects.filter(deleted_at=None, user__branch=branch_actualy)
 
         if not search_term:
@@ -242,13 +243,17 @@ def ajax_search_employee(request):
             employees = all_employees[:paginate_by]
         else:
             # Usando Q por todos los campos existentes en la tabla first_name, last_name, phone_number, phone_code, email
-            employees = all_employees.filter(
-                Q(user__first_name__icontains=search_term) |
-                Q(user__last_name__icontains=search_term) |
-                Q(user__phone_number__icontains=search_term) |
-                Q(user__phone_code__icontains=search_term) |
-                Q(user__email__icontains=search_term)
-            )
+            query_conditions = Q()
+            for term in search_terms:
+                query_conditions |= (
+                    Q(user__first_name__icontains=term) |
+                    Q(user__last_name__icontains=term) |
+                    Q(user__phone_number__icontains=term) |
+                    Q(user__phone_code__icontains=term) |
+                    Q(user__email__icontains=term)
+                )
+
+            employees = all_employees.filter(query_conditions)
 
         # Crear una lista de diccionarios con los datos de los empleados
         data = [{
@@ -262,3 +267,4 @@ def ajax_search_employee(request):
             'is_staff': 1 if request.user.is_staff else 0 
         } for employee in employees]
         return JsonResponse({'data': data})
+    return redirect(reverse_lazy("clients_app:customer_view"))
