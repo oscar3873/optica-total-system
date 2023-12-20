@@ -250,7 +250,7 @@
             </div>
             <h4 class="mb-1">Ha completado el proceso registro!</h4>
             <p>Si hay algún dato erroneo se lo direccionará a la primera pestaña del formulario.</p><button
-              class="btn btn-warning px-5 px-sm-6" type="submit">Finalizar<span class="fas fa-chevron-right ms-2"
+              class="btn btn-warning px-5 px-sm-6" id="guardar-formulario" type="submit">Finalizar<span class="fas fa-chevron-right ms-2"
                 data-fa-transform="shrink-3">
               </span></button>
           </div>
@@ -294,3 +294,8 @@
 
 
 {% endblock main %}
+
+{% block extra_js %}
+<script src="{% static 'core/js/disabled-submit.js' %}"></script>
+
+{% endblock extra_js %}

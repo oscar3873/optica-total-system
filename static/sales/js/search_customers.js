@@ -173,6 +173,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Agrega un evento de clic al botón "boton-realizar-venta"
     realizarVentaBtn.addEventListener('click', function() {
+        // Espera 500 milisegundos (0.5 segundos) antes de cambiar el tipo del botón
+        setTimeout(() => {
+            realizarVentaBtn.type = "button";
+        }, 1); // Ajusta el tiempo de espera según tus necesidades
         // Coloca aquí el código que deseas ejecutar al hacer clic en el botón "boton-realizar-venta"
         // En este caso, deshabilitar payment_method
         let customer_selected = document.getElementById('id_customer');
