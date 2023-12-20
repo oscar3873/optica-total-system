@@ -357,6 +357,8 @@ class ProductListView(LoginRequiredMixin, ListView):
         pk=self.request.user.pk
         context = super().get_context_data(**kwargs)
         
+        self.request.session['precio_aumentado'] = False
+        
         exclude_fields = ["id", "deleted_at", "created_at", "updated_at","cost_price","suggested_price", "user_made", "branch", "has_eyeglass_frames", "promotion"]
         context['table_column'] = obtener_nombres_de_campos(Product, *exclude_fields)
         context['features']=Product_feature.objects.filter(product_id=pk)
@@ -554,29 +556,40 @@ class UpdatePriceView(CustomUserPassesTestMixin, FormView):
 
     def form_valid(self, form, *args, **kwargs):
         if form.is_valid():
-            #me devuelve el objeto de categoria
-            brands_up = form.cleaned_data['brand']
-            categories_up = form.cleaned_data['category']
-            percentage = form.cleaned_data['percentage']
+            # Verificar si el precio ya se ha aumentado
+            if not self.request.session.get('precio_aumentado', False):
+                # Actualizar la sesión para indicar que el precio ya se ha aumentado
+                self.request.session['precio_aumentado'] = True
 
-            # Crear conjuntos para las marcas y las categorías
-            product_brand = set()
-            product_category = set()
+                #me devuelve el objeto de categoria
+                brands_up = form.cleaned_data['brand']
+                categories_up = form.cleaned_data['category']
+                percentage = form.cleaned_data['percentage']
 
-            for brand in brands_up:
-                product_brand.update(brand.product_brand.all())
+                # Crear conjuntos para las marcas y las categorías
+                product_brand = set()
+                product_category = set()
 
-            for category in categories_up:
-                product_category.update(category.product_category.all())
+                for brand in brands_up:
+                    product_brand.update(brand.product_brand.all())
 
-            # Ahora, product_brand y product_category contienen objetos únicos sin duplicados
-            products = product_category | product_brand
+                for category in categories_up:
+                    product_category.update(category.product_category.all())
 
-            for product in products:
-                new_price = product.sale_price * (1 + (percentage / 100))
-                new_price = math.ceil(new_price / 50) * 50
-                product.sale_price = Decimal(new_price)
-                product.save()
+                # Ahora, product_brand y product_category contienen objetos únicos sin duplicados
+                products = product_category | product_brand
+
+                for product in products:
+                    new_price = product.sale_price * (1 + (percentage / 100))
+                    new_price = math.ceil(new_price / 50) * 50
+                    product.sale_price = Decimal(new_price)
+                    product.save()
+
+                # Mensaje de éxito (puedes personalizar esto según tus necesidades)
+                messages.success(self.request, 'Precios actualizados exitosamente.')
+            else:
+                # Mensaje de advertencia (ya se ha actualizado el precio anteriormente)
+                messages.warning(self.request, 'Los precios ya han sido actualizados anteriormente.')
 
         return super().form_valid(form)
 
