@@ -224,7 +224,7 @@
                     </td>
                     <td class="align-middle text-center">{{detail.quantity}}</td>
                     <td class="align-middle text-end">{{detail.discount}}&nbsp;%</td>
-                    <td class="align-middle text-end">{{detail.price}}</td>
+                    <td class="align-middle text-end">{{detail.price|custom_intcomma}}</td>
                 </tr>
             {% endfor %}
             </tbody>

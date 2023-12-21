@@ -339,7 +339,6 @@ FeatureFormSet = forms.inlineformset_factory(
 class UpdatePriceForm(forms.Form):
     percentage = forms.DecimalField(
         label='Porcentaje de Aumento',
-        min_value=0,
         max_value=100,
         decimal_places=2,
         widget=forms.NumberInput(
@@ -359,8 +358,8 @@ class UpdatePriceForm(forms.Form):
         widget=forms.CheckboxSelectMultiple,
     )
 
-    def clean_percentage(self):
-        percentage = self.cleaned_data['percentage']
-        if percentage and percentage < 0:
-            raise forms.ValidationError('El porcentaje debe ser positivo')
-        return percentage
+    # def clean_percentage(self):
+    #     percentage = self.cleaned_data['percentage']
+    #     if percentage and percentage < 0:
+    #         raise forms.ValidationError('El porcentaje debe ser positivo')
+    #     return percentage

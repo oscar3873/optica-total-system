@@ -157,7 +157,7 @@
                     <td>{{order.product.name}}</td>
                     <td>{{order.quantity}}</td>
                     <td>{{order.discount}} %</td>
-                    <td>$&nbsp;{{order.product.sale_price}}</td>
+                    <td>$&nbsp;{{order.product.sale_price|custom_intcomma}}</td>
                 </tr>
             {% endfor %}
                 

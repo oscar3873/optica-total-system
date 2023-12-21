@@ -333,7 +333,7 @@ class MovementsView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class MovementsCreateView(CustomUserPassesTestMixin, FormView):
+class MovementsCreateView(LoginRequiredMixin, FormView):
     template_name = 'cashregister/movements_create_page.html'
     model = Movement
     form_class = MovementForm

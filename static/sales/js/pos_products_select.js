@@ -57,7 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const pricerow = document.createElement('th');
         pricerow.classList.add('fs-1', 'px-0', 'text-end', 'pt-0');
         var priceSelected = product.sale_price.replace(/\$/g, "");
-        pricerow.textContent = `$ ${parseFloat(priceSelected).toFixed(2)}`;
+        pricerow.textContent = '$ ' + parseFloat(priceSelected).toLocaleString('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            useGrouping: true
+        });
+        //esto de arriba es el precio que muestra en el CARRITO de compras
         pricerow.id = `price-${product.id}`;
         pricerow.setAttribute('data-price',`${product.sale_price}`);
 
@@ -297,8 +302,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const colMd4 = document.createElement('div');
         colMd4.classList.add('fs-1', 'text-end', 'ps-0', 'order-0', 'mb-2', 'mb-md-0', 'text-900');
         colMd4.id = `price-${product.id}`;
-        colMd4.textContent = `$ ${product.sale_price}`;
-        
+        colMd4.textContent = '$ ' + parseFloat(product.sale_price).toLocaleString('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            useGrouping: true
+        });
         rightColumn.appendChild(colMd4);
 
         // Promotion
@@ -514,38 +522,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-        subtotalElement.textContent = `$ ${subtotalValue.toFixed(2)}`;
+    subtotalElement.textContent = '$ ' + parseFloat(subtotalValue).toLocaleString('es-ES', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        useGrouping: true
+    });
 
         updateTotal();
     }
 
     function updateTotal() {
-        var subtotal = parseFloat(subtotalElement.textContent.replace('$', '')).toFixed(2);
-        var discount_for_sale = parseFloat(discountElement.value || 0).toFixed(2);
-        var recharge_for_sale = parseFloat(rechargeElement.value || 0).toFixed(2);
-        var total = parseFloat(totalElement.textContent.replace('$', '')).toFixed(2);
-
-        if (discountElement.value === '') {
+        var subtotal = parseFloat(subtotalElement.textContent.replace('$', '').replace('.', '')) || 0;
+        var discount_for_sale = parseFloat(discountElement.value.replace(',', '')) || 0;
+        var recharge_for_sale = parseFloat(rechargeElement.value.replace(',', '')) || 0;
+    
+        if (isNaN(discount_for_sale)) {
             discount_for_sale = 0;
         }
-
+    
         // Calcula el total sin recargo
-        var totalWithoutSurcharge = parseFloat(subtotal * (1 - discount_for_sale / 100)).toFixed(2);
-
+        var totalWithoutSurcharge = subtotal * (1 - discount_for_sale / 100);
+    
         // Calcula el monto del recargo
-        var surchargeAmount = parseFloat(totalWithoutSurcharge * (recharge_for_sale / 100)).toFixed(2);
-
+        var surchargeAmount = totalWithoutSurcharge * (recharge_for_sale / 100);
+    
         // Agrega el recargo al total
-        total = parseFloat(totalWithoutSurcharge) + parseFloat(surchargeAmount);
-
-        totalElement.textContent = `$ ${total.toFixed(2)}`;
-
-        TotalSuccess.forEach(totalsucces => {
-            totalsucces.textContent = `$ ${total.toFixed(2)}`;
+        var total = totalWithoutSurcharge + surchargeAmount;
+    
+        totalElement.textContent = '$ ' + total.toLocaleString('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            useGrouping: true
         });
-
+    
+        TotalSuccess.forEach(totalsucces => {
+            totalsucces.textContent = '$ ' + total.toLocaleString('es-ES', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+                useGrouping: true
+            });
+        });
+    
         totalOfForms.value = total.toFixed(2);
-    };
+    }
+    
 
 
     // Función para saber si un producto tiene una promocion asociada, devuelve un array con [nombrePromo,tipoDePromo]

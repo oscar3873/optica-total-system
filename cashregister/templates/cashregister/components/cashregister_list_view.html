@@ -1,5 +1,6 @@
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
 <!-- ===============================================-->
 <!--    Contentenedor del block main-->
 <!-- ===============================================-->
@@ -87,8 +88,8 @@
                 </td> -->
                 <td class="align-start user_made">{{cashregister.user_made}}</td>
                 <td class="align-start date_open ps-3">{{cashregister.date_open|date:"Y-m-d"}}</td>
-                <td class="align-start initial_balance">{{cashregister.initial_balance}}</td>
-                <td class="align-start final_balance">{{cashregister.final_balance}}</td>
+                <td class="align-start initial_balance">{{cashregister.initial_balance|custom_intcomma}}</td>
+                <td class="align-start final_balance">{{cashregister.final_balance|custom_intcomma}}</td>
                 <td class="align-start observations">{{cashregister.observations}}</td>
                 <td class="align-start is_close">
                   {% if not cashregister.is_close %}

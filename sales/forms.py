@@ -63,7 +63,6 @@ class SaleForm(forms.ModelForm):
         self.branch = branch
         
         self.fields['commision_user'].queryset=Employee.objects.filter(user__branch=branch)
-        self.fields['commision_user'].required = True
         self.fields['commision_user'].widget.attrs['class'] = 'form-control'
     
     def clean_discount(self):

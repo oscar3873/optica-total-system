@@ -116,7 +116,7 @@
                     <p class="fw-normal fw-semi-bold mb-1">Observaciones</p>
                     </div>
                     <div class="col mt-4">
-                    <p class="fst-italic text-400 mb-1">{{cashregister.description}}</p>
+                    <p class="fst-italic text-400 mb-1">{{cashregister.observations}}</p>
                     </div>
                 </div>
                 <div class="row my-0">
@@ -147,7 +147,7 @@
                     </div>
                     <div class="col-md mt-1 mt-md-0">
                         <span class="mb-0 text-900 fs-1">$ </span>
-                        <span class="mb-0 text-900 fw-bold">{{movement.amount}}</span>
+                        <span class="mb-0 text-900 fw-bold">{{movement.amount|custom_intcomma}}</span>
                     </div>
                     <div class="col-md-auto">
                         <p class="mb-0 text-700 fs--2">
@@ -181,7 +181,7 @@
                         {% else %}
                             {{value.0.user_made}}</span>
                         {% endif %}
-                        <a href="{% url 'cashregister_app:arching_ticket_view' cashregister.pk key_possition %}">
+                        <a href="{% url 'cashregister_app:arching_ticket_view' cashregister.pk key_possition %}" target="_blank">
                             <span class="fas fa-receipt"></span>
                             <span cla>Ticket</span>
                         </a>

@@ -1,3 +1,7 @@
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
 {% if sale_list %}
 <div class="col">
     <div class="card z-index-1" id="recentPurchaseTable"
@@ -40,7 +44,7 @@
                             <td class="align-middle text-center fs-0 white-space-nowrap state"><span
                                 class="badge badge rounded-pill {% if sale.state == 'COMPLETADO' %}badge-soft-success{% else %}badge-soft-warning{% endif %}">{{sale.state}}</span>
                             </td>
-                            <td class="align-middle white-space-nowrap total">{{sale.total}}</td>
+                            <td class="align-middle white-space-nowrap total">{{sale.total|custom_intcomma}}</td>
                             <td class="align-middle white-space-nowrap text-end">
                                 <div class="d-flex gap-2 py-1">
                                     <a href="{% url 'sales_app:sale_detail_view' sale.pk %}" class="btn btn-sm btn-falcon-default"><span class="fas fa-eye"></span></a>

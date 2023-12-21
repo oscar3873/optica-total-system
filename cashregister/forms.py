@@ -104,7 +104,7 @@ class MovementForm(forms.ModelForm):
         widget=forms.NumberInput(
             attrs={
                 'class': 'form-control',
-                'placeholder': '0.00'
+                'placeholder': '0,00'
             }
         )
     )

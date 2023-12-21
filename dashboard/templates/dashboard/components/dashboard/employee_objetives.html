@@ -1,3 +1,7 @@
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
 <div class="col-12 col-md-4 mb-3">
   <div class="card h-lg-100 overflow-hidden">
     <div class="card-header bg-light">
@@ -27,7 +31,7 @@
           <div class="row justify-content-start g-0 pe-3">
             <div class="col-auto pe-2">
             <div class="fs--1 fw-semi-bold">
-                <span class="text-primary">${{objective.accumulated}}</span> / ${{objective.objetive.quantity}}
+                <span class="text-primary">${{objective.accumulated|custom_intcomma}}</span> / ${{objective.objetive.quantity|custom_intcomma}}
             </div>
             </div>
             <div class="col-9 pe-card ">

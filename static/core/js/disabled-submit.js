@@ -1,7 +1,11 @@
-let button_submit = document.getElementById('guardar-formulario');
-    button_submit.addEventListener("mouseup", () => {
-        // Espera 500 milisegundos (0.5 segundos) antes de cambiar el tipo del botón
+let buttons_submit = document.getElementsByClassName('guardar-formulario');
+
+// Itera sobre la colección de elementos
+Array.from(buttons_submit).forEach(button => {
+    button.addEventListener("mouseup", () => {
+ 
         setTimeout(() => {
-            button_submit.type = "button";
+            button.type = "button";
         }, 1); // Ajusta el tiempo de espera según tus necesidades
     });
+});

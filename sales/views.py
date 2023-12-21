@@ -76,13 +76,13 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
 
         if saleform.is_valid():
             sale = saleform.save(commit=False)
-            print(sale.surcharge)
             sale.branch = branch_actualy
 
-            # payment_methods = saleform.cleaned_data.pop('payment_method')
+            if not saleform.cleaned_data['commision_user']:
+                messages.error(self.request, "Debe seleccionar un comisionista.")
+                return super().form_invalid(form)
             customer = saleform.cleaned_data['customer']
 
-            
             cuenta_corriente_presente = any(
                 'Cuenta Corriente' in form.cleaned_data.get('name', '') for form in payment_methods
                 if form.is_valid()
@@ -285,7 +285,7 @@ class SaleDetailView(LoginRequiredMixin, DetailView):
             'cristal': CristalForm,
             'tratamiento': TratamientForm,
         }
-
+        print(sale.created_at)
         context['select'] = SelectFacturaFrom
 
         context['order_serivices'] = sale.service_order.all()

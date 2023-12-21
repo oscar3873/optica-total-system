@@ -1,3 +1,8 @@
+{% load static %}
+{% load humanize %}
+{% load custom_filters %}
+
+
 <div id="data-successful-payments" data-successful-payments="{{ monto_por_rango_completado|safe }}"></div>
 <div id="data-underpayments" data-underpayments="{{ monto_por_rango_pendiente|safe }}"></div>
 <div class="col-lg-12">
@@ -8,8 +13,8 @@
         <div class="card-body bg-line-chart-gradient d-flex flex-column justify-content-between">
             <div class="row align-items-center g-0">
                 <div class="col light">
-                    <h4 class="text-white mb-0">Hoy ${{suma_total_ventas}}</h4>
-                    <p class="fs--1 fw-semi-bold text-white">Ayer <span class="opacity-50">${{suma_total_ventas_ayer}}</span></p>
+                    <h4 class="text-white mb-0">Hoy ${{suma_total_ventas|custom_intcomma}}</h4>
+                    <p class="fs--1 fw-semi-bold text-white">Ayer <span class="opacity-50">${{suma_total_ventas_ayer|custom_intcomma}}</span></p>
                 </div>
                 <div class="col-auto  d-block">
                     <select class="form-select form-select-sm mb-3" id="dashboard-chart-select">
