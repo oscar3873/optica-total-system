@@ -1,5 +1,6 @@
 {% load static %}
 {% load humanize %}
+{% load custom_filters %}
 <!-- ===============================================-->
 <!--    Contentenedor del block main-->
 <!-- ===============================================-->
@@ -95,7 +96,7 @@
                       Sin codigo
                   {% endif %}
                 </td>
-                <td class="align-start sale_price"><span class="badge badge-soft-success rounded-pill">${{product.sale_price}}</span></td>
+                <td class="align-start sale_price"><span class="badge badge-soft-success rounded-pill">${{product.sale_price|custom_intcomma}}</span></td>
                 <td class="align-start d-none d-md-table-cell description">{{product.description}}</td>
                 <td class="align-start d-none d-md-table-cell stock">{{product.stock}}</td>
                 <td class="align-start d-none d-md-table-cell category">{{product.category.name}}</td>
