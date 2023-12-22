@@ -130,7 +130,10 @@ class CashRegisterDetailView(LoginRequiredMixin, DetailView):
             "cash_register",
         )
         
+        # Obtener archering_data
         archering_data = CashRegister.objects.get_archering_data(self.get_object())
+        # Invertir el orden de archering_data
+        archering_data = dict(reversed(list(archering_data.items())))
         context['archering_data'] = archering_data
         return context
 
