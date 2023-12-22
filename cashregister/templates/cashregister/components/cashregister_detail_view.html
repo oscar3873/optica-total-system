@@ -70,7 +70,11 @@
         <div class="row mt-2">
             <p class="text-700 fs--2">
                 Abierta por 
-                <a href="">{{cashregister.user_made.first_name.title}}</a>
+                {% if request.user.is_staff %}
+                    <a href="{% url 'employees_app:profile_employee' cashregister.user_made.pk  %}">{{cashregister.user_made}} </a>
+                {% else %}
+                    {{cashregister.user_made}}</span>
+                {% endif %}
                 <!-- <span class="">el {{ cashregister.date_open|date:"l j \d\e F \d\e\l Y" }} a las {{cashregister.date_open|time }}</span> -->
             </p>
         </div>

@@ -117,7 +117,13 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             
             if formset.is_valid():
                 product = formset.cleaned_data['product']
+                quantity = formset.cleaned_data['quantity']
                 all_products_to_sale.append(product)
+
+                # Asegurarse de que la cantidad que se va a vender sea menor o igual al stock actual
+                if product.stock < quantity:
+                    messages.warning(self.request, f"No hay suficiente stock disponible para {product.name}.")
+                    return super().form_invalid(form)
 
         cristal = find_cristal_product(all_products_to_sale)
         contacto = find_contacto_product(all_products_to_sale)
@@ -153,8 +159,8 @@ class PointOfSaleView(LoginRequiredMixin, FormView):
             messages.warning(self.request, "El pago debe ser mayor al 50% del total.")
             return super().form_invalid(form)
         
-        if not (cristal or contacto) and amount < sale.total and not customer.has_credit_account:
-            messages.warning(self.request, "Los pagos parciales solo estan habilitados para la Venta con Cristales o Lentes de Contacto.")
+        if not (cristal or contacto) and amount < sale.total and (customer is None or not customer.has_credit_account):
+            messages.warning(self.request, "Los pagos parciales solo están habilitados para la Venta con Cristales o Lentes de Contacto.")
             return super().form_invalid(form)
 
         process_customer(customer, sale, payment_methods, Decimal(sale.total), cristal, contacto, amount, self.request)
