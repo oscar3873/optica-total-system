@@ -294,37 +294,94 @@
                                     <label for="{{ customer_form.first_name.id_for_label }}" class="form-label col-form-label">Nombre:</label>
                                     {{ customer_form.first_name }}
                                     <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
+                                    {% if customer_form.first_name.errors %}
+                                        {% for error in customer_form.first_name.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                                 <div class="col-md-6 pt-3">
                                     <label for="{{ customer_form.last_name.id_for_label }}" class="form-label col-form-label">Apellido:</label>
                                     {{ customer_form.last_name }}
-                                    <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>                                    
+                                    <small>Debe contener <span class="text-warning">al menos 3 caracteres.</span></small>
+                                    {% if customer_form.last_name.errors %}
+                                        {% for error in customer_form.last_name.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}                                    
                                 </div>
                                 <div class="col-md-6 pt-3">
                                     <label for="{{ customer_form.dni.id_for_label }}" class="form-label col-form-label">DNI/CUIL/CUIT:</label>
                                     {{ customer_form.dni }}
+                                    <small>Debe contener <span class="text-warning">sólo números.</span></small>
+                                    {% if customer_form.dni.errors %}
+                                        {% for error in customer_form.dni.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %} 
                                 </div>
                                 <div class="col-md-6 pt-3">
                                     <label for="{{ customer_form.birth_date.id_for_label }}" class="form-label col-form-label">Fecha de nacimiento:</label>
                                     {{ customer_form.birth_date }}
+                                    {% if customer_form.birth_date.errors %}
+                                        {% for error in customer_form.birth_date.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %} 
+                                    {% endif %}
                                 </div>
                                 <div class="col-4 pt-3">
                                     <label for="{{ customer_form.phone_code.id_for_label }}" class="form-label col-form-label">Código:</label>
                                     {{ customer_form.phone_code }}
+                                    {% if customer_form.phone_code.errors %}                                    
+                                        {% for error in customer_form.phone_code.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}                                        
+                                    {% endif %}
                                 </div>
                                 <div class="col-7 col-md-8 col-md-4 pt-3">
                                     <label for="{{ customer_form.phone_number.id_for_label }}" class="form-label col-form-label">Celular:</label>
                                     {{ customer_form.phone_number }}
+                                    {% if customer_form.phone_number.errors %}
+                                        {% for error in customer_form.phone_number.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %}  
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="row justify-content-sm-center pb-2">
                                 <div class="col-12 pt-3">
                                     <label for="{{ customer_form.email.id_for_label }}" class="form-label col-form-label">Correo:</label>
                                     {{ customer_form.email }}
+                                    {% if customer_form.email.errors %}
+                                        {% for error in customer_form.email.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %} 
+                                    {% endif %}
                                 </div>
                                 <div class="col-12 pt-3">
                                     <label for="{{ customer_form.address.id_for_label }}" class="form-label col-form-label">Domicilio:</label>
                                     {{ customer_form.address }}
+                                    {% if customer_form.address.errors %}
+                                        {% for error in customer_form.address.errors %}
+                                            <div class="text-danger fs--2">
+                                                {{error}}
+                                            </div>
+                                        {% endfor %} 
+                                    {% endif %}
                                 </div>
                                 <div class="d-flex align-items-center col pt-4 pt-sm-3">
                                     <label for="{{ customer_form.has_credit_account.id_for_label }}" class="form-label col-form-label pt-2 me-3">Tiene cuenta corriente:</label>

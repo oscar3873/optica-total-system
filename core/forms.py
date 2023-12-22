@@ -32,11 +32,13 @@ class PersonForm(ValidationFormMixin):
     )
 
     dni = forms.CharField(
-        required = False,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'DNI',
-            'class' : 'form-control',
-            'type' : 'text',
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'DNI',
+            'class': 'form-control',
+            'type': 'text',
+            'pattern': '^[0-9]+$',
+            'title': 'Ingrese solo números.'
         }),
     )
 
@@ -48,6 +50,7 @@ class PersonForm(ValidationFormMixin):
             'type' : 'text',
             }),
     )
+    
     PHONE_CODE_CHOICES = (
         ('+54', '+54'),
         ('+56', '+56'),
@@ -132,8 +135,8 @@ class PersonForm(ValidationFormMixin):
     
     def clean_dni(self):
         dni = self.cleaned_data['dni']
-        if dni:
-            self.validate_length(dni, 6, "Ingrese una DNI válida.")
+        if not dni.isdigit():
+            raise forms.ValidationError("El DNI debe contener solo números.")
         return dni
     
     def clean_email(self):
