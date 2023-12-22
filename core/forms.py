@@ -9,27 +9,26 @@ from .mixins import ValidationFormMixin
 
 class PersonForm(ValidationFormMixin):
     first_name = forms.CharField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Nombre',
-            'class' : 'form-control',
-            'autofocus' : '',
-            'type' : 'text',
-            'pattern': '^[a-zA-Z\s]+$'
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Nombre',
+            'class': 'form-control',
+            'autofocus': '',
+            'type': 'text',
+            'pattern': '^[a-zA-ZñÑ\s]+$'  # Incluye la letra ñ en la expresión regular
         }),
-        validators=[RegexValidator(r'^[a-zA-Z\s]+$', 'El nombre solo puede contener letras y espacios.')]
-
+        validators=[RegexValidator(r'^[a-zA-ZñÑ\s]+$', 'El nombre solo puede contener letras y espacios.')]
     )
-    
+
     last_name = forms.CharField(
-        required = True,
-        widget = forms.TextInput(attrs={
-            'placeholder' : 'Apellido',
-            'class' : 'form-control',
-            'type' : 'text',
-            'pattern': '^[a-zA-Z\s]+$'
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Apellido',
+            'class': 'form-control',
+            'type': 'text',
+            'pattern': '^[a-zA-ZñÑ\s]+$'  # Incluye la letra ñ en la expresión regular
         }),
-        validators=[RegexValidator(r'[a-zA-Z\s]+$', 'El apellido solo puede contener letras.')]
+        validators=[RegexValidator(r'^[a-zA-ZñÑ\s]+$', 'El apellido solo puede contener letras y espacios.')]
     )
 
     dni = forms.CharField(
