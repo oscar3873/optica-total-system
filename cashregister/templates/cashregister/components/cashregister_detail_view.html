@@ -167,7 +167,11 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="card-footer bg-light p-0"><a class="btn btn-link d-block w-100" href="{% url 'cashregister_app:movements_view' %}">Ver todos los movimientos<span class="fas fa-chevron-right fs--2 ms-1"></span></a></div>
+        <div class="card-footer bg-light p-0">
+            <a class="btn btn-link d-block w-100" href="{% url 'cashregister_app:movimientos_caja_view' cashregister.id %}">
+                Ver todos los movimientos<span class="fas fa-chevron-right fs--2 ms-1"></span>
+            </a>
+        </div>
     </div>
     <div class="card mb-3">
         <div class="card-header">

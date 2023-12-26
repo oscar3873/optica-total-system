@@ -83,6 +83,13 @@ urlpatterns = [
         MovementsDeleteView.as_view(),
         name = 'movements_delete_view'
     ),
+    
+    path(
+        'movements/caja/<int:cashregister_id>/',
+        MovimientosCajaView.as_view(), 
+        name='movimientos_caja_view'
+    ),
+    
         ########## SEARCH MOVEMENTS LIST #########
     path(
         'ajax_search_movements/',

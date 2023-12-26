@@ -1,6 +1,6 @@
 import locale
 from typing import Any
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import *
 from cashregister.forms import CashRegisterForm, MovementForm, CurrencyForm
 from django.urls import reverse_lazy
@@ -104,6 +104,47 @@ class CashRegisterListView(LoginRequiredMixin, ListView):
         
         return context
 
+
+class MovimientosCajaView(ListView):
+    model = Movement
+    template_name = 'cashregister/movements_cash_register_page.html'
+    context_object_name = 'movements'
+    
+    def get_queryset(self):
+        # Obtener el id del CashRegister de la URL
+        cashregister_id = self.kwargs.get('cashregister_id')
+        
+        # Obtener el CashRegister correspondiente o retornar 404 si no existe
+        cashregister = get_object_or_404(CashRegister, pk=cashregister_id)
+
+        # Filtrar movimientos por el CashRegister y sin eliminar
+        queryset = Movement.objects.filter(cash_register=cashregister, deleted_at=None).order_by('-created_at')
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Obtener el CashRegister de la URL
+        cashregister_id = self.kwargs.get('cashregister_id')
+        cashregister = get_object_or_404(CashRegister, pk=cashregister_id)
+
+        context['cashregister'] = cashregister
+        context['table_column_movement'] = obtener_nombres_de_campos(
+            Movement,
+            "description",
+            "currency",
+            "transaction",
+            "id",
+            "deleted_at",
+            "created_at",
+            "updated_at",
+            "withdrawal_reason",
+            "transaction",
+            "cash_register",
+        )
+
+        return context
 
 class CashRegisterDetailView(LoginRequiredMixin, DetailView):
     template_name = 'cashregister/cashregister_detail_page.html'
