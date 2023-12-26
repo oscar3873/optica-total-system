@@ -532,7 +532,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateTotal() {
-        var subtotal = parseFloat(subtotalElement.textContent.replace('$', '').replace('.', '')) || 0;
+        var subtotalText = subtotalElement.textContent.trim().replace('$', '').replace(/\./g, '').replace(',', '.') || '0';
+        var subtotal = parseFloat(subtotalText) || 0;
+    
         var discount_for_sale = parseFloat(discountElement.value.replace(',', '')) || 0;
         var recharge_for_sale = parseFloat(rechargeElement.value.replace(',', '')) || 0;
     
