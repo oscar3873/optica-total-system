@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 // Reemplaza el bloque de código actual para el botón de acciones
                                 const actionsButton = document.createElement('a');
-                                actionsButton.href = `/sales/detail/${sale.id}`;
+                                actionsButton.href = `/sales/detail/${sale.id}/`;
                                 actionsButton.className = 'btn btn-sm btn-falcon-default me-1';
                                 actionsButton.setAttribute('data-bs-toggle', 'tooltip');
                                 actionsButton.setAttribute('title', 'Ver Detalle');

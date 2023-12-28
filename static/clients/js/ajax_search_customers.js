@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             actionsDropdown.className = 'd-flex gap-2 py-0';
 
                             const actionsButton = document.createElement('a');
-                            actionsButton.href = `/customers/detail/${customer.id}`;
+                            actionsButton.href = `/customers/detail/${customer.id}/`;
                             actionsButton.className = 'btn btn-sm btn-falcon-default';
                             actionsButton.setAttribute('data-bs-toggle', 'tooltip');
                             actionsButton.setAttribute('title', 'Ver Detalle');
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             if (customer.is_staff) {
                                 const editLink = document.createElement('a');
-                                editLink.href = `/customers/update/${customer.id}`;
+                                editLink.href = `/customers/update/${customer.id}/`;
                                 editLink.className = 'btn btn-sm btn-falcon-default';
                                 editLink.setAttribute('data-bs-toggle', 'tooltip');
                                 editLink.setAttribute('title', 'Editar');
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 editLink.appendChild(editIcon);
                             
                                 const deleteLink = document.createElement('a');
-                                deleteLink.href = `/customers/delete/${customer.id}/`;
+                                deleteLink.href = `/customers/delete/${customer.id}`;
                                 deleteLink.className = 'btn btn-sm btn-falcon-default';
                                 const deleteIcon = document.createElement('span');
                                 deleteIcon.className = 'fas fa-trash text-danger';
