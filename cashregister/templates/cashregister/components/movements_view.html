@@ -65,14 +65,19 @@
             <!-- HEAD TABLA -->
             <thead class="bg-200 text-900">
               <tr>
-              {% for column in table_column %}
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="open_hs">Por</th>
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="fecha">Fecha</th>
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="hora">Hora</th>
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="monto">Monto</th>
+                <th class="sort pe-1 align-middle white-space-nowrap" data-sort="operacion">Operación</th>
+              {% comment %} {% for column in table_column %}
                 {% if column.1 == "Por" or column.1 == "Fecha" %}
                 <th class="sort px-4 align-middle white-space-nowrap d-none d-sm-table-cell" data-sort="{{column.0}}">{{column.1}}</th>
                 {% else %}
                 <th class="sort px-4 align-middle white-space-nowrap" data-sort="{{column.0}}">{{column.1}}</th>
                 {% endif %}
-              {% endfor %}
-                <th class="no-sort pe-1 align-middle data-table-row-action"></th>
+              {% endfor %} {% endcomment %}
+                <th class="no-sort pe-1 align-middle data-table-row-action">Acciones</th>
               </tr>
             </thead>
             <!-- BODY TABLA -->
@@ -84,10 +89,11 @@
                 <!-- <td class="align-middle white-space-nowrap product">Slick - Drag &amp;</td> -->
                 <!-- <td class="align-middle text-center fs-0 white-space-nowrap payment"><span class="badge badge rounded-pill badge-soft-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
                 </td> -->
-                <td class="align-start user_made d-none d-sm-table-cell px-4">{{movement.user_made}}</td>
-                <td class="align-start date_movement px-4 d-none d-sm-table-cell">{{movement.date_movement|date:"Y-m-d"}}</td>
-                <td class="align-start amount px-4">{{movement.amount|custom_intcomma}}</td>
-                <td class="align-start type_operation px-4">
+                <td class="align-start user_made d-none d-sm-table-cell">{{movement.user_made}}</td>
+                <td class="align-start date_movement d-none d-sm-table-cell">{{movement.date_movement|date:"Y-m-d"}}</td>
+                <td class="align-start date_movement d-none d-sm-table-cell">{{movement.created_at|time}}</td>
+                <td class="align-start amount">{{movement.amount|custom_intcomma}}</td>
+                <td class="align-start type_operation">
                   {% if movement.type_operation == 'Ingreso' %}
                   <span class="badge rounded-pill badge-soft-success">{{movement.get_type_operation_display}}</span>
                   {% else %}
