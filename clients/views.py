@@ -14,7 +14,7 @@ from cashregister.utils import create_in_movement, obtener_nombres_de_campos
 from cashregister.models import CashRegister, Currency, Movement
 from sales.models import Payment, Sale
 from sales.forms import PaymentMethodForm, TypePaymentMethodForm
-from sales.utils import set_movement
+from sales.utils import set_movement, up_objetives
 from django.utils import timezone
 
 from .models import *
@@ -582,33 +582,38 @@ def pay_service_order(request, pk):
         sale = service.sale
 
         branch_actualy = set_branch_session(request)
+        
+        form = TypePaymentMethodForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            payment_method = form.cleaned_data['payment_method']
+            mov = create_in_movement(branch_actualy, request.user, payment_method.type_method, form.cleaned_data['description'], amount)
 
-        type_method = TypePaymentMethodForm(request.POST)
-        if type_method.is_valid():
-            type_method = type_method.save(commit=False)
-            total = sale.missing_balance if sale.state == "PENDIENTE" else 0
+            if not mov:
+                messages.error(request, 'Antes de realizar un pago debe Abrir una Caja.')
+                return redirect('cashregister_app:cashregister_view')
 
-            if not service.is_done and total:
-                mov = create_in_movement(branch_actualy, request.user, type_method.payment_method.type_method, type_method.description, total)
-                
-                customer.credit_balance -= total if customer.credit_balance > 0 else 0
-                customer.save()
-
-                type_method.customer = customer
-                type_method.movement = mov
-                type_method.save()
-                
-                sale.state = "COMPLETADO"
-                sale.save()
-
-                messages.success(request, "La Orden de Servicio fue pagada con exito.")
-                return redirect('clients_app:customer_detail', pk=service.customer.pk)
-            else:
-                messages.warning(request, "La Orden de Servicio ya fué completada.")
-                return redirect('clients_app:customer_detail', pk=service.customer.pk)
-        else:
-            messages.error(request, "Se produjo un error al realizar pago.")
-            return redirect('clients_app:customer_detail', pk=service.customer.pk)
+            Payment.objects.create(
+                customer = sale.customer,
+                user_made = request.user,
+                amount = amount,
+                payment_method = payment_method,
+                description = f"Pago de duada de venta Nro: {sale.pk}",
+                sale = sale,
+                movement = mov
+            )
+            sale.missing_balance -= amount
+        if sale.missing_balance <= 0:
+            sale.state = "COMPLETADO"
+            up_objetives(sale.commision_user, sale)
+        sale.save()
+        
+        messages.success(request, 'Pago realizado con éxito.')
+        return redirect('clients_app:customer_detail', pk=service.customer.pk)
+    else:
+        messages.error(request, "Se produjo un error al realizar pago.")
+        return redirect('clients_app:customer_detail', pk=service.customer.pk)
+    
         
     
 def service_order_entrega(request, pk):

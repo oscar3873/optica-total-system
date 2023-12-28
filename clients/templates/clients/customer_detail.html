@@ -405,23 +405,23 @@
                             <div class="pb-3">
                                 <div class="row align-items-center">
                                     <label for="">Seleccione el método de pago</label>
-                                    <div class="col-9">
+                                    <div class="col-12">
                                         <div class="form-group">
-                                            {{pay_form.payment_method}}
+                                            {{pay_form.as_p}}
                                         </div>
                                     </div>
-                                    <div class="col-3">
+                                    {% comment %} <div class="col-3">
                                         <!-- Botón para modal de método de pago -->
                                         <button id="addPaymentMethod" class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="tooltip" data-bs-target="#payment-method-modal" data-bs-original-title="Añadir nuevo método de pago" style="cursor: pointer"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span></button>
-                                    </div>
+                                    </div> {% endcomment %}
                                 </div>
                             </div>
-                            <div class="pb-3">
+                            {% comment %} <div class="pb-3">
                                 <label for="">Descripción</label>
                                 <div class="form-group">
                                     {{pay_form.description}}
                                 </div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                         <div class="modal-footer justify-content-between">
                             <button type="submit" class="btn btn-primary">Confirmar</button>
