@@ -495,7 +495,7 @@ class MovementsUpdateView(CustomUserPassesTestMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class MovementsDetailView(CustomUserPassesTestMixin, DetailView):
+class MovementsDetailView(LoginRequiredMixin, DetailView):
     template_name = 'cashregister/movements_detail_page.html'
     model = Movement
     
